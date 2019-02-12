@@ -1,0 +1,36 @@
+test
+node_modules
+coverage
+.jshintignore
+.hshintrc
+examples
+.editorconfig
+.jshintrc
+.travis.yml
+.DS_Store
+# documentation files
+LICENSE
+CONTRIBUTING.md
+RELEASE.md
+CONTRIBUTING.md
+CHANGELOG.md
+jsdoc/
+doc/
+dependency-lint.yml
+karma.conf.js
+transform.js
+scripts/
+# this is created in the build on travis ci when it updates the docs in the gh-pages branch
+gh-pages/
+tslint.json
+typings.json
+typings
+.vscode
+.nyc_output
+.github
+.eslintrc.js
+.eslintcache
+.eslintignore
+.gitattributes
+*.ts
+!*.d.ts

@@ -1,0 +1,87 @@
+{
+  "name": "ibm-cloud-sdk-core",
+  "version": "0.0.1",
+  "description": "Core functionality to support SDKs generated with IBM's OpenAPI 3 SDK Generator.",
+  "main": "./index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IBM/node-sdk-core.git"
+  },
+  "keywords": [
+    "ibm",
+    "sdk",
+    "openapi",
+    "core"
+  ],
+  "author": "IBM Corp.",
+  "contributors": [
+    {
+      "name": "German Attanasio Ruiz",
+      "email": "germanatt@us.ibm.com"
+    },
+    {
+      "name": "Dustin Popp",
+      "email": "dustinpopp@ibm.com"
+    }
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/IBM/node-sdk-core/issues"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.1",
+    "@semantic-release/changelog": "^3.0.0",
+    "@semantic-release/git": "^7.0.1",
+    "codecov": "~3.0.2",
+    "eslint": "~5.0.0",
+    "eslint-config-google": "~0.9.1",
+    "eslint-config-prettier": "~2.9.0",
+    "eslint-plugin-node": "~6.0.1",
+    "eslint-plugin-prettier": "~2.6.1",
+    "jest": "^23.6.0",
+    "prettier": "~1.13.5",
+    "semantic-release": "^15.9.3",
+    "tslint": "~5.10.0",
+    "tslint-config-prettier": "~1.13.0",
+    "tslint-eslint-rules": "~5.3.1",
+    "typescript": "~2.9.2"
+  },
+  "dependencies": {
+    "@types/extend": "~3.0.0",
+    "@types/file-type": "~5.2.1",
+    "@types/is-stream": "~1.1.0",
+    "@types/node": "~10.3.5",
+    "@types/request": "~2.47.1",
+    "buffer-from": "~1.1.0",
+    "dotenv": "^6.2.0",
+    "extend": "~3.0.2",
+    "file-type": "^7.7.1",
+    "isstream": "~0.1.2",
+    "mime-types": "~2.1.18",
+    "request": "~2.87.0",
+    "semver": "^5.6.0",
+    "vcap_services": "~0.3.4"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "commitmsg": "commitlint -E GIT_PARAMS",
+    "tslint:config": "tslint-config-prettier-check ./tslint.json",
+    "tslint:fix": "tslint --fix -p . -c tslint.json",
+    "tslint:check": "tslint -p . -c ./tslint.json",
+    "eslint:config": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
+    "eslint:fix": "eslint . --fix",
+    "eslint:check": "eslint . --cache",
+    "lint": "npm run eslint:check && npm run tslint:check",
+    "test": "jest --silent --verbose test/unit/",
+    "test-travis": "jest --silent --runInBand test/unit/",
+    "report-coverage": "codecov"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "./coverage/",
+    "testEnvironment": "node"
+  }
+}

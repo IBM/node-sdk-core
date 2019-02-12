@@ -1,0 +1,12 @@
+# http://eslint.org/docs/user-guide/configuring#ignoring-files-and-directories
+jsdoc/
+doc/
+coverage/
+dist/
+node_modules/
+# ignore emitted js
+**/*v*.js
+!test/**/*.js
+lib/*.js
+index.js
+scripts/typedoc/
