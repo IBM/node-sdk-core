@@ -44,7 +44,7 @@ export interface FileStream extends NodeJS.ReadableStream {
 
 // custom type guards
 function isFileObject(obj: any): obj is FileObject {
-  return obj && obj.value;
+  return Boolean(obj && obj.value);
 }
 
 function isFileStream(obj: any): obj is FileStream {
@@ -52,14 +52,21 @@ function isFileStream(obj: any): obj is FileStream {
 }
 
 export function isFileParam(obj: any): boolean {
-  return (
+  return Boolean(
     obj &&
-    (isReadable(obj) || Buffer.isBuffer(obj) || isFileObject(obj) || obj.data)
+    (
+      isReadable(obj) ||
+      Buffer.isBuffer(obj) ||
+      isFileObject(obj) ||
+      (obj.data && isFileParam(obj.data))
+    )
   );
 }
 
 export function isEmptyObject(obj: any): boolean {
-  return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
+  return Boolean(
+    obj && Object.keys(obj).length === 0 && obj.constructor === Object
+  );
 }
 
 /**
@@ -78,10 +85,8 @@ export function getContentType(
   } else if (Buffer.isBuffer(inputData)) {
     // if the inputData is a Buffer
     contentType = fileType(inputData);
-  } else if (typeof inputData === 'string') {
-    // if the inputData is a string
-    contentType = fileType(Buffer.from(inputData));
   }
+
   return contentType ? contentType.mime : null;
 }
 
@@ -230,7 +235,8 @@ export function buildRequestFileObject(
 
 /**
  * this function converts an object's keys to lower case
- * @param {Object} headers - the header parameters
+ * note: does not convert nested keys
+ * @param {Object} obj - the object to convert the keys of
  * @returns {Object}
  */
 export function toLowerKeys(obj: Object): Object {
