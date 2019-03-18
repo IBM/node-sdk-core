@@ -76,18 +76,22 @@ function hasCredentials(obj: any): boolean {
   );
 }
 
+function isForICP(cred: string): boolean {
+  return cred && cred.startsWith('icp-');
+}
+
 function hasBasicCredentials(obj: any): boolean {
   return obj && obj.username && obj.password && !usesBasicForIam(obj);
 }
 
 function hasIamCredentials(obj: any): boolean {
-  return obj && (obj.iam_apikey || obj.iam_access_token);
+  return obj && (obj.iam_apikey || obj.iam_access_token) && !isForICP(obj.iam_apikey);
 }
 
 // returns true if the user provides basic auth creds with the intention
 // of using IAM auth
 function usesBasicForIam(obj: any): boolean {
-  return obj.username === 'apikey' && !obj.password.startsWith('icp-');
+  return obj.username === 'apikey' && !isForICP(obj.password);
 }
 
 // returns true if the string has a curly bracket or quote as the first or last character
@@ -322,6 +326,15 @@ export class BaseService {
           'api_key, and iam_access_token.';
         throw new Error(errorMessage);
       }
+      // handle iam_apikey containing an ICP api key
+      if (isForICP(_options.iam_apikey)) {
+        _options.username = 'apikey';
+        _options.password = _options.iam_apikey;
+        // remove apikey so code doesnt confuse credentials as iam
+        delete _options.iam_apikey;
+        delete options.iam_apikey;
+      }
+
       if (!hasIamCredentials(_options) && !usesBasicForIam(_options)) {
         if (hasBasicCredentials(_options)) {
           // Calculate and add Authorization header to base options

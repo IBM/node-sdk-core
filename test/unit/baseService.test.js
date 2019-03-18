@@ -348,6 +348,23 @@ describe('BaseService', function() {
     expect(instance._options.rejectUnauthorized).toBe(true);
   });
 
+  it('should convert an iam_apikey that starts with "icp-" to basic auth', () => {
+    const icpKey = 'icp-1234';
+    const instance = new TestService({
+      iam_apikey: icpKey,
+      username: 'thiswillbegone',
+      password: 'thiswillbegone',
+    });
+
+    const authHeader = instance._options.headers.Authorization;
+
+    expect(instance._options.username).toBe('apikey');
+    expect(instance._options.password).toBe(icpKey);
+    expect(instance._options.iam_apikey).not.toBeDefined();
+    expect(instance.tokenManager).toBeNull();
+    expect(authHeader.startsWith('Basic')).toBe(true);
+  });
+
   describe('check credentials for common problems', function() {
     function assertConstructorThrows(params) {
       expect(() => {
