@@ -109,7 +109,7 @@ export function stripTrailingSlash(url: string): string {
 export function getMissingParams(
   params: { [key: string]: any },
   requires: string[]
-): string[] | Error {
+): null | Error {
   let missing;
   if (!requires) {
     return null;
