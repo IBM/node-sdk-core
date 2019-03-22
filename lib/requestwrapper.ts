@@ -67,6 +67,39 @@ function isAuthenticationError(error: any): boolean {
 }
 
 /**
+ * Return true if object has a specified property that is a string
+ * @private
+ * @param {Object} obj - object to look for property in
+ * @param {string} property - name of the property to look for
+ * @returns {boolean} true if property exists and is string
+ */
+function hasStringProperty(obj: any, property: string): boolean {
+  return Boolean(obj[property] && typeof obj[property] === 'string');
+}
+
+/**
+ * Look for service error message in common places, by priority
+ * first look in `errors[0].message`, then in `error`, then in
+ * `message`
+ * @private
+ * @param {Object} response - error response body received from service
+ * @returns {string | undefined} the error message if is was found, undefined otherwise
+ */
+function parseServiceErrorMessage(response: any): string | undefined {
+  let message;
+
+  if (Array.isArray(response.errors) && response.errors.length > 0 && hasStringProperty(response.errors[0], 'message')) {
+    message = response.errors[0].message;
+  } else if (hasStringProperty(response, 'error')) {
+    message = response.error;
+  } else if (hasStringProperty(response, 'message')) {
+    message = response.message;
+  }
+
+  return message;
+}
+
+/**
  * Format error returned by axios
  * @param  {Function} cb the request callback
  * @private
@@ -78,6 +111,7 @@ export function formatError(axiosError: any) {
   const error: any = new Error();
 
   // axios specific handling
+  // this branch is for an error received from the service
   if (axiosError.response) {
     axiosError = axiosError.response;
     // The request was made and the server responded with a status code
@@ -87,9 +121,7 @@ export function formatError(axiosError: any) {
 
     error.name = axiosError.statusText;
     error.code = axiosError.status;
-    error.message = axiosError.data.error && typeof axiosError.data.error === 'string' 
-      ? axiosError.data.error
-      : axiosError.statusText;
+    error.message = parseServiceErrorMessage(axiosError.data) || axiosError.statusText;
 
     // some services bury the useful error message within 'data'
     // adding it to the error under the key 'body' as a string or object
