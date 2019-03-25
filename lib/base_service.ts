@@ -187,7 +187,7 @@ export class BaseService {
    *
    * @returns {Credentials}
    */
-  public getCredentials(): Credentials {
+  public getServiceCredentials(): Credentials {
     const credentials = {} as Credentials;
     if (this._options.username) {
       credentials.username = this._options.username;
