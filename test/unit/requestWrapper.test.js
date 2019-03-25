@@ -10,6 +10,12 @@ describe('formatError', () => {
       statusText: 'Not Found',
       status: 404,
       data: {
+        errors: [
+          {
+            message: 'First error: no model found.',
+          },
+        ],
+        message: 'Cant find the model.',
         error: 'Model not found.',
         code: 404,
       },
@@ -25,14 +31,45 @@ describe('formatError', () => {
     message: 'error in building the request',
   };
 
-  it('should build an error from a basic error response', () => {
+  it('should get the message from errors[0].message', () => {
+    const error = formatError(basicAxiosError);
+    expect(error instanceof Error).toBe(true);
+    expect(error.name).toBe('Not Found');
+    expect(error.code).toBe(404);
+    expect(error.message).toBe('First error: no model found.');
+    expect(typeof error.body).toBe('string');
+    expect(error.headers).toEqual(basicAxiosError.response.headers);
+  });
+
+  it('should get the message from error', () => {
+    delete basicAxiosError.response.data.errors;
     const error = formatError(basicAxiosError);
     expect(error instanceof Error).toBe(true);
     expect(error.name).toBe('Not Found');
     expect(error.code).toBe(404);
     expect(error.message).toBe('Model not found.');
-    expect(error.body).toBe('{"error":"Model not found.","code":404}');
+    expect(error.body).toBe(
+      '{"message":"Cant find the model.","error":"Model not found.","code":404}'
+    );
     expect(error.headers).toEqual(basicAxiosError.response.headers);
+  });
+
+  it('should get the message from message', () => {
+    delete basicAxiosError.response.data.error;
+    const error = formatError(basicAxiosError);
+    expect(error instanceof Error).toBe(true);
+    expect(error.name).toBe('Not Found');
+    expect(error.code).toBe(404);
+    expect(error.message).toBe('Cant find the model.');
+    expect(error.body).toBe('{"message":"Cant find the model.","code":404}');
+    expect(error.headers).toEqual(basicAxiosError.response.headers);
+  });
+
+  it('should get error from status text when not found', () => {
+    delete basicAxiosError.response.data.message;
+    const error = formatError(basicAxiosError);
+    expect(error instanceof Error).toBe(true);
+    expect(error.message).toBe('Not Found');
   });
 
   it('check the unauthenticated thing - 401', () => {
@@ -60,13 +97,6 @@ describe('formatError', () => {
 
     // clean up
     delete basicAxiosError.response.data.context;
-  });
-
-  it('check what happens when there is no data.error', () => {
-    delete basicAxiosError.response.data.error;
-    const error = formatError(basicAxiosError);
-    expect(error instanceof Error).toBe(true);
-    expect(error.message).toBe('Not Found');
   });
 
   it('check error with circular ref in data', () => {
