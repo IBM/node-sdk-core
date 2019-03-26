@@ -81,7 +81,7 @@ describe('BaseService', function() {
 
   it('should return hard-coded credentials', function() {
     const instance = new TestService({ username: 'user', password: 'pass' });
-    const actual = instance.getCredentials();
+    const actual = instance.getServiceCredentials();
     const expected = {
       username: 'user',
       password: 'pass',
@@ -95,7 +95,7 @@ describe('BaseService', function() {
     process.env.TEST_PASSWORD = 'env_pass';
     process.env.TEST_URL = 'http://foo';
     const instance = new TestService();
-    const actual = instance.getCredentials();
+    const actual = instance.getServiceCredentials();
     const expected = {
       username: 'env_user',
       password: 'env_pass',
@@ -108,7 +108,7 @@ describe('BaseService', function() {
     process.env.TEST_USERNAME = 'env_user';
     process.env.TEST_PASSWORD = 'env_pass';
     const instance = new TestService();
-    const actual = instance.getCredentials();
+    const actual = instance.getServiceCredentials();
     const expected = {
       username: 'env_user',
       password: 'env_pass',
@@ -130,7 +130,7 @@ describe('BaseService', function() {
       ],
     });
     const instance = new TestService();
-    const actual = instance.getCredentials();
+    const actual = instance.getServiceCredentials();
     const expected = {
       username: 'vcap_user',
       password: 'vcap_pass',
@@ -155,7 +155,7 @@ describe('BaseService', function() {
       ],
     });
     const instance = new TestService();
-    const actual = instance.getCredentials();
+    const actual = instance.getServiceCredentials();
     const expected = {
       iam_apikey: '123456789',
       url: 'https://gateway.watsonplatform.net/test/api',
@@ -168,7 +168,7 @@ describe('BaseService', function() {
   it('should prefer hard-coded credentials over ibm credentials file', function() {
     process.env.IBM_CREDENTIALS_FILE = __dirname + '/../resources/ibm-credentials.env';
     const instance = new TestService({ username: 'user', password: 'pass' });
-    const actual = instance.getCredentials();
+    const actual = instance.getServiceCredentials();
     const expected = {
       username: 'user',
       password: 'pass',
@@ -182,7 +182,7 @@ describe('BaseService', function() {
     process.env.TEST_USERNAME = 'env_user';
     process.env.TEST_PASSWORD = 'env_pass';
     const instance = new TestService();
-    const actual = instance.getCredentials();
+    const actual = instance.getServiceCredentials();
     const expected = {
       username: '123456789',
       password: 'abcd',
@@ -206,7 +206,7 @@ describe('BaseService', function() {
     process.env.TEST_USERNAME = 'env_user';
     process.env.TEST_PASSWORD = 'env_pass';
     const instance = new TestService();
-    const actual = instance.getCredentials();
+    const actual = instance.getServiceCredentials();
     const expected = {
       username: 'env_user',
       password: 'env_pass',
@@ -277,7 +277,7 @@ describe('BaseService', function() {
   it('should create a token manager instance if env variables specify iam credentials', function() {
     process.env.TEST_IAM_APIKEY = 'test1234';
     const instance = new TestService();
-    const actual = instance.getCredentials();
+    const actual = instance.getServiceCredentials();
     const expected = {
       iam_apikey: 'test1234',
       url: 'https://gateway.watsonplatform.net/test/api',
