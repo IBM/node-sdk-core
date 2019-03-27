@@ -77,7 +77,8 @@
     "lint": "npm run eslint:check && npm run tslint:check",
     "test": "jest --silent --verbose test/unit/",
     "test-travis": "jest --silent --runInBand test/unit/",
-    "report-coverage": "codecov"
+    "report-coverage": "codecov",
+    "prepare": "tsc"
   },
   "jest": {
     "collectCoverage": true,
