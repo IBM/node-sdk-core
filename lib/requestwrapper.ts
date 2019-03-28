@@ -27,6 +27,13 @@ const pkg = require('../package.json');
 const isBrowser = typeof window === 'object';
 const globalTransactionId = 'x-global-transaction-id';
 
+// axios sets the default Content-Type for `post`, `put`, and `patch` operations
+// to 'application/x-www-form-urlencoded'. This causes problems, so overriding the
+// defaults here
+['post', 'put', 'patch'].forEach(method => {
+  axios.defaults.headers[method]['Content-Type'] = 'application/json';
+});
+
 /**
  * @private
  * @param {string} path
