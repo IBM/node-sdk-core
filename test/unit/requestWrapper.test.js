@@ -17,6 +17,7 @@ describe('formatError', () => {
         ],
         message: 'Cant find the model.',
         error: 'Model not found.',
+        errorMessage: 'There is just no finding this model.',
         code: 404,
       },
       headers: {
@@ -48,9 +49,6 @@ describe('formatError', () => {
     expect(error.name).toBe('Not Found');
     expect(error.code).toBe(404);
     expect(error.message).toBe('Model not found.');
-    expect(error.body).toBe(
-      '{"message":"Cant find the model.","error":"Model not found.","code":404}'
-    );
     expect(error.headers).toEqual(basicAxiosError.response.headers);
   });
 
@@ -61,12 +59,22 @@ describe('formatError', () => {
     expect(error.name).toBe('Not Found');
     expect(error.code).toBe(404);
     expect(error.message).toBe('Cant find the model.');
-    expect(error.body).toBe('{"message":"Cant find the model.","code":404}');
+    expect(error.headers).toEqual(basicAxiosError.response.headers);
+  });
+
+  it('should get the message from errorMessage', () => {
+    delete basicAxiosError.response.data.message;
+    const error = formatError(basicAxiosError);
+    expect(error instanceof Error).toBe(true);
+    expect(error.name).toBe('Not Found');
+    expect(error.code).toBe(404);
+    expect(error.message).toBe('There is just no finding this model.');
+    expect(error.body).toBe('{"errorMessage":"There is just no finding this model.","code":404}');
     expect(error.headers).toEqual(basicAxiosError.response.headers);
   });
 
   it('should get error from status text when not found', () => {
-    delete basicAxiosError.response.data.message;
+    delete basicAxiosError.response.data.errorMessage;
     const error = formatError(basicAxiosError);
     expect(error instanceof Error).toBe(true);
     expect(error.message).toBe('Not Found');

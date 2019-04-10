@@ -87,7 +87,7 @@ function hasStringProperty(obj: any, property: string): boolean {
 /**
  * Look for service error message in common places, by priority
  * first look in `errors[0].message`, then in `error`, then in
- * `message`
+ * `message`, then in `errorMessage`
  * @private
  * @param {Object} response - error response body received from service
  * @returns {string | undefined} the error message if is was found, undefined otherwise
@@ -101,6 +101,8 @@ function parseServiceErrorMessage(response: any): string | undefined {
     message = response.error;
   } else if (hasStringProperty(response, 'message')) {
     message = response.message;
+  } else if (hasStringProperty(response, 'errorMessage')) {
+    message = response.errorMessage;
   }
 
   return message;
