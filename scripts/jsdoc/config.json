@@ -1,0 +1,21 @@
+{
+  "source": {
+    "include": [ "./" ],
+    "exclude": [
+      "./.github/",
+      "./coverage/",
+      "./dist/",
+      "./scripts/",
+      "./node_modules/",
+      "./test/",
+      "./eslintrc.js"
+    ]
+  },
+  "opts": {
+    "package": "package.json",
+    "readme": "README.md",
+    "recurse": true,
+    "destination": "./doc/"
+  },
+  "plugins": ["plugins/markdown"]
+}
