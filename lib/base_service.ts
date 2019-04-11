@@ -145,10 +145,6 @@ export class BaseService {
         'the "new" keyword is required to create Watson service instances'
       );
     }
-    const isNodeFour = semver.satisfies(process.version, '4.x')
-    if (isNodeFour) {
-      console.warn('WARNING: Support for Node v4.x is deprecated and will no longer be tested. Support will be officially dropped in the next major version.');
-    }
     const options = extend({}, userOptions);
     const _options = this.initCredentials(options);
     if (options.url) {
@@ -256,7 +252,7 @@ export class BaseService {
 
   /**
    * Wrapper around `sendRequest` that determines whether or not IAM tokens
-   * are being used to authenticate the request. If so, the token is 
+   * are being used to authenticate the request. If so, the token is
    * retrieved by the token manager.
    *
    * @param {Object} parameters - service request options passed in by user

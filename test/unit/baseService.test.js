@@ -32,6 +32,25 @@ describe('BaseService', function() {
     process.env = env;
   });
 
+  it('should fail to instantiate if the instance is not instantiated with new', () => {
+    expect(() => {
+      // prettier-ignore
+      const base = BaseService({
+        use_unauthenticated: true,
+        version: 'v1',
+      });
+    }).toThrow();
+  });
+
+  it('should strip trailing slash of url during instantiation', () => {
+    const testService = new TestService({
+      use_unauthenticated: true,
+      version: 'v1',
+      url: 'https://example.ibm.com/',
+    });
+    expect(testService.getServiceCredentials().url).toBe('https://example.ibm.com');
+  });
+
   it('should not fail without credentials if use_unauthenticated is true', function() {
     expect(function() {
       new TestService({
