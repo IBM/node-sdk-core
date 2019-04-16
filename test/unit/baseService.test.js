@@ -35,7 +35,8 @@ describe('BaseService', function() {
   it('should fail to instantiate if the instance is not instantiated with new', () => {
     expect(() => {
       // prettier-ignore
-      const base = BaseService({
+      // eslint-disable-next-line new-cap
+      BaseService({
         use_unauthenticated: true,
         version: 'v1',
       });
