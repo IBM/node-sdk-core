@@ -51,7 +51,7 @@ const fromHeader = (buffer: Buffer): string => {
  * @param {String|ReadableStream|FileObject|Buffer|File} file - string filename or url, or binary File/Blob object
  * @return {String|undefined}
  */
-const fromFilename = (file: String | ReadableStream| FileObject |Buffer | File): string => {
+const fromFilename = (file: String | NodeJS.ReadableStream | FileObject | Buffer | File): string => {
   const ext: string = extname(
     (typeof file === 'string' && file) || file['name'] || ''
   );
