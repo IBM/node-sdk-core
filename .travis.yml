@@ -1,0 +1,19 @@
+language: node_js
+sudo: false
+node_js:
+- 6
+- 8
+- 10
+script:
+- npm run prepare
+- npm run test-travis
+- sh scripts/typedoc/generate_typedoc.sh
+after_success:
+- npm run report-coverage
+- scripts/jsdoc/publish.sh
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: npx semantic-release
+  on:
+    node: 10
