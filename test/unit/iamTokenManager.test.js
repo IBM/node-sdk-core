@@ -199,4 +199,152 @@ describe('iam_token_manager_v1', function() {
       done();
     });
   });
+
+  it('should use the default Authorization header - no clientid, no secret', function(done) {
+    const instance = new IamTokenManagerV1({ iamApikey: 'abcd-1234' });
+
+    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+      _callback();
+    });
+
+    instance.getToken(function() {
+      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const authHeader = sendRequestArgs.options.headers.Authorization;
+      expect(authHeader).toBe('Basic Yng6Yng=');
+      done();
+    });
+  });
+
+  it('should use a non-default Authorization header - client id and secret via ctor', function(done) {
+    const instance = new IamTokenManagerV1({
+      iamApikey: 'abcd-1234',
+      iamClientId: 'foo',
+      iamSecret: 'bar',
+    });
+
+    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+      _callback();
+    });
+
+    instance.getToken(function() {
+      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const authHeader = sendRequestArgs.options.headers.Authorization;
+      expect(authHeader).not.toBe('Basic Yng6Yng=');
+      done();
+    });
+  });
+
+  it('should use the default Authorization header - clientid only via ctor', function(done) {
+    const instance = new IamTokenManagerV1({
+      iamApikey: 'abcd-1234',
+      iamClientId: 'foo',
+    });
+
+    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+      _callback();
+    });
+
+    instance.getToken(function() {
+      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const authHeader = sendRequestArgs.options.headers.Authorization;
+      expect(authHeader).toBe('Basic Yng6Yng=');
+      done();
+    });
+  });
+
+  it('should use the default Authorization header, secret only via ctor', function(done) {
+    const instance = new IamTokenManagerV1({
+      iamApikey: 'abcd-1234',
+      iamSecret: 'bar',
+    });
+
+    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+      _callback();
+    });
+
+    instance.getToken(function() {
+      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const authHeader = sendRequestArgs.options.headers.Authorization;
+      expect(authHeader).toBe('Basic Yng6Yng=');
+      done();
+    });
+  });
+
+  it('should use a non-default Authorization header - client id and secret via setter', function(done) {
+    const instance = new IamTokenManagerV1({
+      iamApikey: 'abcd-1234',
+    });
+
+    instance.setIamAuthorizationInfo('foo', 'bar');
+
+    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+      _callback();
+    });
+
+    instance.getToken(function() {
+      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const authHeader = sendRequestArgs.options.headers.Authorization;
+      expect(authHeader).not.toBe('Basic Yng6Yng=');
+      done();
+    });
+  });
+
+  it('should use the default Authorization header - clientid only via setter', function(done) {
+    const instance = new IamTokenManagerV1({
+      iamApikey: 'abcd-1234',
+    });
+
+    instance.setIamAuthorizationInfo('foo', null);
+
+    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+      _callback();
+    });
+
+    instance.getToken(function() {
+      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const authHeader = sendRequestArgs.options.headers.Authorization;
+      expect(authHeader).toBe('Basic Yng6Yng=');
+      done();
+    });
+  });
+
+  it('should use the default Authorization header, secret only via ctor', function(done) {
+    const instance = new IamTokenManagerV1({
+      iamApikey: 'abcd-1234',
+      iamSecret: 'bar',
+    });
+
+    instance.setIamAuthorizationInfo(null, 'bar');
+
+    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+      _callback();
+    });
+
+    instance.getToken(function() {
+      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const authHeader = sendRequestArgs.options.headers.Authorization;
+      expect(authHeader).toBe('Basic Yng6Yng=');
+      done();
+    });
+  });
+
+  it('should use the default Authorization header, nulls passed to setter', function(done) {
+    const instance = new IamTokenManagerV1({
+      iamApikey: 'abcd-1234',
+      iamSecret: 'bar',
+    });
+
+    instance.setIamAuthorizationInfo(null, null);
+
+    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+      _callback();
+    });
+
+    instance.getToken(function() {
+      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const authHeader = sendRequestArgs.options.headers.Authorization;
+      expect(authHeader).toBe('Basic Yng6Yng=');
+      done();
+    });
+  });
 });

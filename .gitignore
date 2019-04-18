@@ -17,3 +17,5 @@ index.js
 **/*.js.map
 coverage.lcov
 .swagger-codegen-ignore
+/.settings/
+/.project

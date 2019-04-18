@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import bufferFrom = require('buffer-from');
 import extend = require('extend');
 import { sendRequest } from '../lib/requestwrapper';
 
@@ -21,6 +22,8 @@ export type Options = {
   iamApikey?: string;
   iamAccessToken?: string;
   iamUrl?: string;
+  iamClientId?: string;
+  iamSecret?: string;
 }
 
 // this interface is a representation of the response
@@ -41,6 +44,8 @@ export class IamTokenManagerV1 {
   protected tokenInfo: IamTokenData;
   private iamApikey: string;
   private userAccessToken: string;
+  private iamClientId: string;
+  private iamSecret: string;
 
   /**
    * IAM Token Manager Service
@@ -54,13 +59,19 @@ export class IamTokenManagerV1 {
    * @constructor
    */
   constructor(options: Options) {
-    this.iamUrl = options.iamUrl || 'https://iam.bluemix.net/identity/token';
+    this.iamUrl = options.iamUrl || 'https://iam.cloud.ibm.com/identity/token';
     this.tokenInfo = {} as IamTokenData;
     if (options.iamApikey) {
       this.iamApikey = options.iamApikey;
     }
     if (options.iamAccessToken) {
       this.userAccessToken = options.iamAccessToken;
+    }
+    if (options.iamClientId) {
+      this.iamClientId = options.iamClientId;
+    }
+    if (options.iamSecret) {
+      this.iamSecret = options.iamSecret;
     }
   }
 
@@ -97,6 +108,22 @@ export class IamTokenManagerV1 {
   }
 
   /**
+   * Set the IAM 'client_id' and 'secret' values.
+   * These values are used to compute the Authorization header used
+   * when retrieving or refreshing the IAM access token.
+   * If these values are not set, then a default Authorization header
+   * will be used when interacting with the IAM token server.
+   *
+   * @param {string} iamClientId - The client id 
+   * @param {string} iamSecret - The secret
+   * @returns {void}
+   */
+  public setIamAuthorizationInfo(iamClientId: string, iamSecret: string): void {
+    this.iamClientId = iamClientId;
+    this.iamSecret = iamSecret;
+  }
+
+  /**
    * Set a self-managed IAM access token.
    * The access token should be valid and not yet expired.
    *
@@ -125,7 +152,7 @@ export class IamTokenManagerV1 {
         method: 'POST',
         headers: {
           'Content-type': 'application/x-www-form-urlencoded',
-          Authorization: 'Basic Yng6Yng='
+          Authorization: this.computeIamAuthHeader()
         },
         form: {
           grant_type: 'urn:ibm:params:oauth:grant-type:apikey',
@@ -150,7 +177,7 @@ export class IamTokenManagerV1 {
         method: 'POST',
         headers: {
           'Content-type': 'application/x-www-form-urlencoded',
-          Authorization: 'Basic Yng6Yng='
+          Authorization: this.computeIamAuthHeader()
         },
         form: {
           grant_type: 'refresh_token',
@@ -212,5 +239,23 @@ export class IamTokenManagerV1 {
    */
   private saveTokenInfo(tokenResponse: IamTokenData): void {
     this.tokenInfo = extend({}, tokenResponse);
+  }
+
+  /**
+   * Compute and return the Authorization header to be used with the
+   * IAM token server interactions (retrieve and refresh access token).
+   */
+  private computeIamAuthHeader(): string {
+	// Use bx:bx as default auth header creds.
+	let clientId = 'bx';
+	let secret = 'bx';
+	
+	// If both the clientId and secret were specified by the user, then use them.
+	if (this.iamClientId && this.iamSecret) {
+      clientId = this.iamClientId;
+      secret = this.iamSecret;
+	}
+    const encodedCreds = bufferFrom(`${clientId}:${secret}`).toString('base64');
+    return `Basic ${encodedCreds}`;
   }
 }
