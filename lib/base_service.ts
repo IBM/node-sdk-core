@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-// new Buffer() is deprecated, replaced with Buffer.from() in node v4.5.0+ -
-// `buffer-from` uses the new api when possible but falls back to the old one otherwise
-import bufferFrom = require('buffer-from');
 import extend = require('extend');
 import semver = require('semver');
 import vcapServices = require('vcap_services');
@@ -317,7 +314,7 @@ export class BaseService {
       if (!hasIamCredentials(_options) && !usesBasicForIam(_options)) {
         if (hasBasicCredentials(_options)) {
           // Calculate and add Authorization header to base options
-          const encodedCredentials = bufferFrom(
+          const encodedCredentials = Buffer.from(
             `${_options.username}:${_options.password}`
           ).toString('base64');
           const authHeader = { Authorization: `Basic ${encodedCredentials}` };
