@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import bufferFrom = require('buffer-from');
 import extend = require('extend');
 import { sendRequest } from '../lib/requestwrapper';
 
@@ -255,7 +254,7 @@ export class IamTokenManagerV1 {
       clientId = this.iamClientId;
       secret = this.iamSecret;
 	}
-    const encodedCreds = bufferFrom(`${clientId}:${secret}`).toString('base64');
+    const encodedCreds = Buffer.from(`${clientId}:${secret}`).toString('base64');
     return `Basic ${encodedCreds}`;
   }
 }
