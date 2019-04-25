@@ -17,6 +17,22 @@
 import extend = require('extend');
 import { sendRequest } from '../lib/requestwrapper';
 
+/**
+ * Check for only one of two elements being defined.
+ * Returns true if a is defined and b is undefined,
+ * or vice versa. Returns false if both are defined
+ * or both are undefined.
+ *
+ * @param {any} a - The first object
+ * @param {any} b - The second object
+ * @returns {boolean}
+ */
+function onlyOne(a: any, b: any): boolean {
+  return Boolean((a && !b) || (b && !a));
+}
+
+const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the defaults will be used.';
+
 export type Options = {
   iamApikey?: string;
   iamAccessToken?: string;
@@ -72,6 +88,10 @@ export class IamTokenManagerV1 {
     if (options.iamSecret) {
       this.iamSecret = options.iamSecret;
     }
+    if (onlyOne(options.iamClientId, options.iamSecret)) {
+      // tslint:disable-next-line
+      console.log(CLIENT_ID_SECRET_WARNING);
+    }
   }
 
   /**
@@ -120,6 +140,10 @@ export class IamTokenManagerV1 {
   public setIamAuthorizationInfo(iamClientId: string, iamSecret: string): void {
     this.iamClientId = iamClientId;
     this.iamSecret = iamSecret;
+    if (onlyOne(iamClientId, iamSecret)) {
+      // tslint:disable-next-line
+      console.log(CLIENT_ID_SECRET_WARNING);
+    }
   }
 
   /**
