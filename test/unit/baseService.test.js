@@ -285,6 +285,41 @@ describe('BaseService', function() {
     });
   });
 
+  it('should pass all credentials to token manager when given iam creds', function() {
+    const instance = new TestService({
+      iam_apikey: 'key1234',
+      iam_access_token: 'real-token-84',
+      iam_url: 'iam.com/api',
+      iam_client_id: 'abc',
+      iam_secret: 'abc',
+    });
+
+    expect(instance.tokenManager).toBeDefined();
+    expect(instance.tokenManager).not.toBeNull();
+    expect(instance.tokenManager.iamApikey).toBeDefined();
+    expect(instance.tokenManager.userAccessToken).toBeDefined();
+    expect(instance.tokenManager.iamUrl).toBeDefined();
+    expect(instance.tokenManager.iamClientId).toBeDefined();
+    expect(instance.tokenManager.iamSecret).toBeDefined();
+  });
+
+  it('should pass all credentials to token manager when given iam with basic', function() {
+    const instance = new TestService({
+      username: 'apikey',
+      password: 'key1234',
+      iam_url: 'iam.com/api',
+      iam_client_id: 'abc',
+      iam_secret: 'abc',
+    });
+
+    expect(instance.tokenManager).toBeDefined();
+    expect(instance.tokenManager).not.toBeNull();
+    expect(instance.tokenManager.iamApikey).toBeDefined();
+    expect(instance.tokenManager.iamUrl).toBeDefined();
+    expect(instance.tokenManager.iamClientId).toBeDefined();
+    expect(instance.tokenManager.iamSecret).toBeDefined();
+  });
+
   it('should not fail if setAccessToken is called and token manager is null', function() {
     const instance = new TestService({ username: 'user', password: 'pass' });
     expect(instance.tokenManager).toBeNull();
