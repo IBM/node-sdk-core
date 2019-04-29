@@ -1,9 +1,13 @@
+/* eslint-disable no-alert, no-console */
 'use strict';
 
 const requestWrapper = require('../../lib/requestwrapper');
 requestWrapper.sendRequest = jest.fn();
 
 const IamTokenManagerV1 = require('../../iam-token-manager/v1').IamTokenManagerV1;
+
+const CLIENT_ID_SECRET_WARNING =
+  'Warning: Client ID and Secret must BOTH be given, or the defaults will be used.';
 
 describe('iam_token_manager_v1', function() {
   beforeEach(() => {
@@ -235,10 +239,17 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should use the default Authorization header - clientid only via ctor', function(done) {
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+
     const instance = new IamTokenManagerV1({
       iamApikey: 'abcd-1234',
       iamClientId: 'foo',
     });
+
+    // verify warning was triggered
+    expect(console.log).toHaveBeenCalled();
+    expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
+    console.log.mockRestore();
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
       _callback();
@@ -253,10 +264,16 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should use the default Authorization header, secret only via ctor', function(done) {
+    jest.spyOn(console, 'log').mockImplementation(() => {});
     const instance = new IamTokenManagerV1({
       iamApikey: 'abcd-1234',
       iamSecret: 'bar',
     });
+
+    // verify warning was triggered
+    expect(console.log).toHaveBeenCalled();
+    expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
+    console.log.mockRestore();
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
       _callback();
@@ -294,7 +311,14 @@ describe('iam_token_manager_v1', function() {
       iamApikey: 'abcd-1234',
     });
 
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+
     instance.setIamAuthorizationInfo('foo', null);
+
+    // verify warning was triggered
+    expect(console.log).toHaveBeenCalled();
+    expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
+    console.log.mockRestore();
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
       _callback();
@@ -308,13 +332,19 @@ describe('iam_token_manager_v1', function() {
     });
   });
 
-  it('should use the default Authorization header, secret only via ctor', function(done) {
+  it('should use the default Authorization header, secret only via setter', function(done) {
     const instance = new IamTokenManagerV1({
       iamApikey: 'abcd-1234',
-      iamSecret: 'bar',
     });
 
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+
     instance.setIamAuthorizationInfo(null, 'bar');
+
+    // verify warning was triggered
+    expect(console.log).toHaveBeenCalled();
+    expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
+    console.log.mockRestore();
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
       _callback();
@@ -331,7 +361,6 @@ describe('iam_token_manager_v1', function() {
   it('should use the default Authorization header, nulls passed to setter', function(done) {
     const instance = new IamTokenManagerV1({
       iamApikey: 'abcd-1234',
-      iamSecret: 'bar',
     });
 
     instance.setIamAuthorizationInfo(null, null);
