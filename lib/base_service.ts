@@ -15,7 +15,6 @@
  */
 
 import extend = require('extend');
-import semver = require('semver');
 import vcapServices = require('vcap_services');
 import { IamTokenManagerV1 } from '../iam-token-manager/v1';
 import { stripTrailingSlash } from './helper';
