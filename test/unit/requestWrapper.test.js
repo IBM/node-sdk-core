@@ -293,6 +293,37 @@ describe('sendRequest', () => {
       done();
     });
   });
+
+  it('should keep parameters in options that are not explicity set in requestwrapper', done => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        rejectUnauthorized: true,
+        url:
+          'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id',
+        headers: {
+          'test-header': 'test-header-value',
+        },
+        responseType: 'buffer',
+      },
+      options: {
+        otherParam: 500,
+      },
+    };
+
+    axios.mockResolvedValue('res');
+
+    sendRequest(parameters, (err, body, res) => {
+      // assert results
+      expect(axios.mock.calls[0][0].otherParam).toEqual(500);
+      expect(res).toEqual('res');
+      expect(axios.mock.calls.length).toBe(1);
+      done();
+    });
+  });
 });
 
 describe('formatError', () => {
