@@ -6,6 +6,10 @@ import path = require('path');
 const filename: string = 'ibm-credentials.env';
 
 export function readCredentialsFile() {
+  if (!fs.existsSync) {
+    return {};
+  }
+
   // first look for an env variable called IBM_CREDENTIALS_FILE
   // it should be the path to the file
 
