@@ -1,3 +1,10 @@
+## [0.2.2](https://github.com/IBM/node-sdk-core/compare/v0.2.1...v0.2.2) (2019-05-01)
+
+
+### Bug Fixes
+
+* carry user options from constructor to axios parameters ([65d55ec](https://github.com/IBM/node-sdk-core/commit/65d55ec))
+
 ## [0.2.1](https://github.com/IBM/node-sdk-core/compare/v0.2.0...v0.2.1) (2019-04-29)
 
 
