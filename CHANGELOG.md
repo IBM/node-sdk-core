@@ -1,3 +1,11 @@
+## [0.2.3](https://github.com/IBM/node-sdk-core/compare/v0.2.2...v0.2.3) (2019-05-07)
+
+
+### Bug Fixes
+
+* do not read credentials file in webpack override scenario ([9af4567](https://github.com/IBM/node-sdk-core/commit/9af4567))
+* do not read credentials file in webpack override scenario ([#19](https://github.com/IBM/node-sdk-core/issues/19)) ([ec64ae1](https://github.com/IBM/node-sdk-core/commit/ec64ae1))
+
 ## [0.2.2](https://github.com/IBM/node-sdk-core/compare/v0.2.1...v0.2.2) (2019-05-01)
 
 
