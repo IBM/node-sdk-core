@@ -38,7 +38,7 @@ export type Options = {
   iamAccessToken?: string;
   iamUrl?: string;
   iamClientId?: string;
-  iamSecret?: string;
+  iamClientSecret?: string;
 }
 
 // this interface is a representation of the response
@@ -60,7 +60,7 @@ export class IamTokenManagerV1 {
   private iamApikey: string;
   private userAccessToken: string;
   private iamClientId: string;
-  private iamSecret: string;
+  private iamClientSecret: string;
 
   /**
    * IAM Token Manager Service
@@ -85,10 +85,10 @@ export class IamTokenManagerV1 {
     if (options.iamClientId) {
       this.iamClientId = options.iamClientId;
     }
-    if (options.iamSecret) {
-      this.iamSecret = options.iamSecret;
+    if (options.iamClientSecret) {
+      this.iamClientSecret = options.iamClientSecret;
     }
-    if (onlyOne(options.iamClientId, options.iamSecret)) {
+    if (onlyOne(options.iamClientId, options.iamClientSecret)) {
       // tslint:disable-next-line
       console.log(CLIENT_ID_SECRET_WARNING);
     }
@@ -127,20 +127,20 @@ export class IamTokenManagerV1 {
   }
 
   /**
-   * Set the IAM 'client_id' and 'secret' values.
+   * Set the IAM 'client_id' and 'client_secret' values.
    * These values are used to compute the Authorization header used
    * when retrieving or refreshing the IAM access token.
    * If these values are not set, then a default Authorization header
    * will be used when interacting with the IAM token server.
    *
    * @param {string} iamClientId - The client id 
-   * @param {string} iamSecret - The secret
+   * @param {string} iamClientSecret - The client secret
    * @returns {void}
    */
-  public setIamAuthorizationInfo(iamClientId: string, iamSecret: string): void {
+  public setIamAuthorizationInfo(iamClientId: string, iamClientSecret: string): void {
     this.iamClientId = iamClientId;
-    this.iamSecret = iamSecret;
-    if (onlyOne(iamClientId, iamSecret)) {
+    this.iamClientSecret = iamClientSecret;
+    if (onlyOne(iamClientId, iamClientSecret)) {
       // tslint:disable-next-line
       console.log(CLIENT_ID_SECRET_WARNING);
     }
@@ -271,14 +271,14 @@ export class IamTokenManagerV1 {
   private computeIamAuthHeader(): string {
 	// Use bx:bx as default auth header creds.
 	let clientId = 'bx';
-	let secret = 'bx';
+	let clientSecret = 'bx';
 	
 	// If both the clientId and secret were specified by the user, then use them.
-	if (this.iamClientId && this.iamSecret) {
+	if (this.iamClientId && this.iamClientSecret) {
       clientId = this.iamClientId;
-      secret = this.iamSecret;
+      clientSecret = this.iamClientSecret;
 	}
-    const encodedCreds = Buffer.from(`${clientId}:${secret}`).toString('base64');
+    const encodedCreds = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
     return `Basic ${encodedCreds}`;
   }
 }

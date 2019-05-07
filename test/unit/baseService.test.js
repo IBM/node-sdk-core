@@ -291,7 +291,7 @@ describe('BaseService', function() {
       iam_access_token: 'real-token-84',
       iam_url: 'iam.com/api',
       iam_client_id: 'abc',
-      iam_secret: 'abc',
+      iam_client_secret: 'abc',
     });
 
     expect(instance.tokenManager).toBeDefined();
@@ -300,7 +300,7 @@ describe('BaseService', function() {
     expect(instance.tokenManager.userAccessToken).toBeDefined();
     expect(instance.tokenManager.iamUrl).toBeDefined();
     expect(instance.tokenManager.iamClientId).toBeDefined();
-    expect(instance.tokenManager.iamSecret).toBeDefined();
+    expect(instance.tokenManager.iamClientSecret).toBeDefined();
   });
 
   it('should pass all credentials to token manager when given iam with basic', function() {
@@ -309,7 +309,7 @@ describe('BaseService', function() {
       password: 'key1234',
       iam_url: 'iam.com/api',
       iam_client_id: 'abc',
-      iam_secret: 'abc',
+      iam_client_secret: 'abc',
     });
 
     expect(instance.tokenManager).toBeDefined();
@@ -317,7 +317,7 @@ describe('BaseService', function() {
     expect(instance.tokenManager.iamApikey).toBeDefined();
     expect(instance.tokenManager.iamUrl).toBeDefined();
     expect(instance.tokenManager.iamClientId).toBeDefined();
-    expect(instance.tokenManager.iamSecret).toBeDefined();
+    expect(instance.tokenManager.iamClientSecret).toBeDefined();
   });
 
   it('should not fail if setAccessToken is called and token manager is null', function() {
