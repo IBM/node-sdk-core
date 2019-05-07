@@ -1,3 +1,10 @@
+## [0.2.4](https://github.com/IBM/node-sdk-core/compare/v0.2.3...v0.2.4) (2019-05-07)
+
+
+### Bug Fixes
+
+* **IAM:** renamed UserOptions iam_secret to iam_client_secret to be consistent with other cores ([f755c9c](https://github.com/IBM/node-sdk-core/commit/f755c9c))
+
 ## [0.2.3](https://github.com/IBM/node-sdk-core/compare/v0.2.2...v0.2.3) (2019-05-07)
 
 
