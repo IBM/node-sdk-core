@@ -4,6 +4,23 @@ const readCredentialsFunctions = require('../../lib/read-credentials-file');
 const constructFilepath = readCredentialsFunctions.constructFilepath;
 const fileExistsAtPath = readCredentialsFunctions.fileExistsAtPath;
 const readCredentialsFile = readCredentialsFunctions.readCredentialsFile;
+const fs = require('fs');
+
+describe('browser scenario', () => {
+  const existSync = fs.existsSync;
+  beforeAll(() => {
+    fs.existsSync = undefined;
+  });
+
+  it('should return empty object when webpack override fs with empty object', () => {
+    const cred = readCredentialsFile();
+    expect(cred).toEqual({});
+  });
+
+  afterAll(() => {
+    fs.existsSync = existSync;
+  });
+});
 
 describe('read ibm credentials file', () => {
   const locationOfActualFile = __dirname + '/../resources';
