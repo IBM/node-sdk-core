@@ -40,7 +40,7 @@ export interface UserOptions {
   iam_apikey?: string;
   iam_url?: string;
   iam_client_id?: string;
-  iam_secret?: string;
+  iam_client_secret?: string;
   disable_ssl_verification?: boolean;
 }
 
@@ -126,7 +126,7 @@ export class BaseService {
    * @param {string} [options.iam_access_token] - iam access token provided and managed by user
    * @param {string} [options.iam_url] - url for iam service api, needed for services in staging
    * @param {string} [options.iam_client_id] - client id (username) for request to iam service
-   * @param {string} [options.iam_secret] - secret (password) for request to iam service
+   * @param {string} [options.iam_client_secret] - secret (password) for request to iam service
    * @param {string} [options.username] - required unless use_unauthenticated is set
    * @param {string} [options.password] - required unless use_unauthenticated is set
    * @param {boolean} [options.use_unauthenticated] - skip credential requirement
@@ -166,14 +166,14 @@ export class BaseService {
         iamAccessToken: _options.iam_access_token,
         iamUrl: _options.iam_url,
         iamClientId: _options.iam_client_id,
-        iamSecret: _options.iam_secret
+        iamClientSecret: _options.iam_client_secret
       });
     } else if (usesBasicForIam(_options)) {
       this.tokenManager = new IamTokenManagerV1({
         iamApikey: _options.password,
         iamUrl: _options.iam_url,
         iamClientId: _options.iam_client_id,
-        iamSecret: _options.iam_secret
+        iamClientSecret: _options.iam_client_secret
       });
     } else {
       this.tokenManager = null;

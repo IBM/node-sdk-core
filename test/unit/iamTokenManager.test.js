@@ -223,7 +223,7 @@ describe('iam_token_manager_v1', function() {
     const instance = new IamTokenManagerV1({
       iamApikey: 'abcd-1234',
       iamClientId: 'foo',
-      iamSecret: 'bar',
+      iamClientSecret: 'bar',
     });
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
@@ -267,7 +267,7 @@ describe('iam_token_manager_v1', function() {
     jest.spyOn(console, 'log').mockImplementation(() => {});
     const instance = new IamTokenManagerV1({
       iamApikey: 'abcd-1234',
-      iamSecret: 'bar',
+      iamClientSecret: 'bar',
     });
 
     // verify warning was triggered
