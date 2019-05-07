@@ -298,7 +298,7 @@ export class BaseService {
     // but prefer credentials provided programatically
     _options = extend(
       {},
-      this.getCredentialsFromIBMCloud(this.name),
+      this.getCredentialsFromCloud(this.name),
       this.getCredentialsFromEnvironment(process.env, this.name),
       this.getCredentialsFromEnvironment(readCredentialsFile(), this.name),
       options,
@@ -385,7 +385,7 @@ export class BaseService {
    * @private
    * @returns {Credentials}
    */
-  private getCredentialsFromIBMCloud(vcapServicesName: string): Credentials {
+  private getCredentialsFromCloud(vcapServicesName: string): Credentials {
     let credentials: Credentials;
     let temp: any;
     if (this.name === 'visual_recognition') {
