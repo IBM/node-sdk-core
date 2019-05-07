@@ -294,11 +294,11 @@ export class BaseService {
       _options = extend(_options, options);
       return _options;
     }
-    // Get credentials from environment properties or Bluemix,
+    // Get credentials from environment properties or IBM Cloud,
     // but prefer credentials provided programatically
     _options = extend(
       {},
-      this.getCredentialsFromBluemix(this.name),
+      this.getCredentialsFromIbmCloud(this.name),
       this.getCredentialsFromEnvironment(process.env, this.name),
       this.getCredentialsFromEnvironment(readCredentialsFile(), this.name),
       options,
@@ -380,12 +380,12 @@ export class BaseService {
     };
   }
   /**
-   * Pulls credentials from VCAP_SERVICES env property that bluemix sets
+   * Pulls credentials from VCAP_SERVICES env property that IBM Cloud sets
    * @param {string} vcap_services_name
    * @private
    * @returns {Credentials}
    */
-  private getCredentialsFromBluemix(vcapServicesName: string): Credentials {
+  private getCredentialsFromIbmCloud(vcapServicesName: string): Credentials {
     let credentials: Credentials;
     let temp: any;
     if (this.name === 'visual_recognition') {
