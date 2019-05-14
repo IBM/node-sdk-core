@@ -4,7 +4,7 @@ import { FileObject } from '../lib/helper';
 // This module attempts to identify common content-types based on the filename or header
 // It is not exhaustive, and for best results, you should always manually specify the content-type option.
 // See the complete list of supported content-types at
-// https://console.bluemix.net/docs/services/speech-to-text/input.html#formats
+// https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-input#formats
 
 // *some* file types can be identified by the first 3-4 bytes of the file
 const headerContentTypes: { [key: string]: string } = {

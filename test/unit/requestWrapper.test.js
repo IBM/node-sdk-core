@@ -421,7 +421,7 @@ describe('formatError', () => {
   it('check the unauthenticated thing - iam', () => {
     basicAxiosError.response.status = 400;
     basicAxiosError.response.data.context = {
-      url: 'http://iam.bluemix.net',
+      url: 'https://iam.cloud.ibm.com/identity/token',
     };
     const error = formatError(basicAxiosError);
     expect(error instanceof Error).toBe(true);
