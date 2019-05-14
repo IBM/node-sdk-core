@@ -34,6 +34,11 @@ const globalTransactionId = 'x-global-transaction-id';
   axios.defaults.headers[method]['Content-Type'] = 'application/json';
 });
 
+// allow user to debug axios
+if (process.env.NODE_DEBUG === 'axios') {
+  require('axios-debug')(axios); // tslint:disable-line:no-var-requires
+}
+
 /**
  * @private
  * @param {string} path

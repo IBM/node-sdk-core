@@ -1,10 +1,18 @@
 'use strict';
 const fs = require('fs');
-const formatError = require('../../lib/requestwrapper').formatError;
+process.env.NODE_DEBUG = 'axios';
 const sendRequest = require('../../lib/requestwrapper').sendRequest;
+const formatError = require('../../lib/requestwrapper').formatError;
 
 jest.mock('axios');
 const axios = require('axios');
+
+describe('axios', () => {
+  it('should enable debug', () => {
+    expect(axios.interceptors.request.use).toHaveBeenCalled();
+    expect(axios.interceptors.response.use).toHaveBeenCalled();
+  });
+});
 
 describe('sendRequest', () => {
   afterEach(() => {
