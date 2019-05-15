@@ -1,3 +1,10 @@
+## [0.2.5](https://github.com/IBM/node-sdk-core/compare/v0.2.4...v0.2.5) (2019-05-15)
+
+
+### Bug Fixes
+
+* allow users to debug axios traffic ([fd41509](https://github.com/IBM/node-sdk-core/commit/fd41509))
+
 ## [0.2.4](https://github.com/IBM/node-sdk-core/compare/v0.2.3...v0.2.4) (2019-05-07)
 
 
