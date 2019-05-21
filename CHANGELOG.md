@@ -1,3 +1,10 @@
+## [0.2.6](https://github.com/IBM/node-sdk-core/compare/v0.2.5...v0.2.6) (2019-05-21)
+
+
+### Bug Fixes
+
+* temporarily disable gzipping until axios bug fix is released ([b26a310](https://github.com/IBM/node-sdk-core/commit/b26a310))
+
 ## [0.2.5](https://github.com/IBM/node-sdk-core/compare/v0.2.4...v0.2.5) (2019-05-15)
 
 
