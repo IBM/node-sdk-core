@@ -45,7 +45,7 @@ describe('sendRequest', () => {
         'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
       );
       expect(axios.mock.calls[0][0].headers).toEqual({
-        'Accept-Encoding': 'gzip',
+        // 'Accept-Encoding': 'gzip',
         'test-header': 'test-header-value',
       });
       expect(axios.mock.calls[0][0].httpsAgent.options.rejectUnauthorized).toEqual(
@@ -134,7 +134,7 @@ describe('sendRequest', () => {
         'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
       );
       expect(axios.mock.calls[0][0].headers).toEqual({
-        'Accept-Encoding': 'gzip',
+        // 'Accept-Encoding': 'gzip',
         'test-header': 'override-header-value',
         'add-header': 'add-header-value',
       });
@@ -207,7 +207,7 @@ describe('sendRequest', () => {
         'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
       );
       expect(axios.mock.calls[0][0].headers).toMatchObject({
-        'Accept-Encoding': 'gzip',
+        // 'Accept-Encoding': 'gzip',
         'test-header': 'override-header-value',
         'add-header': 'add-header-value',
       });
