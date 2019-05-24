@@ -1,3 +1,11 @@
+## [0.2.7](https://github.com/IBM/node-sdk-core/compare/v0.2.6...v0.2.7) (2019-05-24)
+
+
+### Bug Fixes
+
+* remove node request objects from detailed response ([9ac5673](https://github.com/IBM/node-sdk-core/commit/9ac5673))
+* remove node request objects from detailed response ([#25](https://github.com/IBM/node-sdk-core/issues/25)) ([192d8cf](https://github.com/IBM/node-sdk-core/commit/192d8cf))
+
 ## [0.2.6](https://github.com/IBM/node-sdk-core/compare/v0.2.5...v0.2.6) (2019-05-21)
 
 
