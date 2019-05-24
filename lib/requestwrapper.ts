@@ -291,6 +291,8 @@ export function sendRequest(parameters, _callback) {
 
   axios(extend(true, {}, options, requestParams))
     .then(res => {
+      delete res.config;
+      delete res.request;
       // the other sdks use the interface `result` for the body
       _callback(null, res.data, res);
     })
