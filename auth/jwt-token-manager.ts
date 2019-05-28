@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 IBM Corp. All Rights Reserved.
+ * Copyright 2019 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,7 +107,8 @@ export class JwtTokenManager {
    * @returns {void}
    */
   protected requestToken(cb: Function): void {
-    cb(null, 'token');
+    const err = new Error('`requestToken` MUST be overridden by a subclass of JwtTokenManager.');
+    cb(err, null);
   }
 
   /**
@@ -142,8 +143,8 @@ export class JwtTokenManager {
 
     const fractionOfTtl = 0.8;
     const currentTime = getCurrentTime();
-    const refreshTime = expireTime - (timeToLive * (1.0 - fractionOfTtl));
-    return refreshTime < currentTime;
+    const timeForNewToken = expireTime - (timeToLive * (1.0 - fractionOfTtl));
+    return timeForNewToken < currentTime;
   }
 
   /**

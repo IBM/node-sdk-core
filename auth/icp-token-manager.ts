@@ -26,7 +26,7 @@ export type Options = {
 }
 
 // this interface is a representation of the response
-// object from the ICP service
+// object from the ICP4D authentication service
 export interface IcpTokenData {
   username: string;
   role: string;
@@ -40,7 +40,7 @@ export interface IcpTokenData {
   accessToken: string;
 }
 
-export class IcpTokenManagerV1 extends JwtTokenManager {
+export class Icp4dTokenManagerV1 extends JwtTokenManager {
   private username: string;
   private password: string;
 
@@ -50,9 +50,10 @@ export class IcpTokenManagerV1 extends JwtTokenManager {
    * Retreives, stores, and refreshes ICP tokens.
    *
    * @param {Object} options
-   * @param {String} options.icpApikey
-   * @param {String} options.icpAccessToken
-   * @param {String} options.url - url of the icp api to retrieve tokens from
+   * @param {String} options.username
+   * @param {String} options.password
+   * @param {String} options.accessToken - user-managed access token
+   * @param {String} options.url - URL for the ICP4D cluster
    * @constructor
    */
   constructor(options: Options) {
@@ -76,12 +77,19 @@ export class IcpTokenManagerV1 extends JwtTokenManager {
   }
 
   /**
+   * Callback for handling response.
+   *
+   * @callback requestTokenCallback
+   * @param {Error} An error if there is one, null otherwise
+   * @param {Object} The response if request is successful, null otherwise
+   */
+  /**
    * Request an ICP token using a basic auth header.
    *
-   * @param {Function} cb - The callback that handles the response.
+   * @param {requestTokenCallback} callback - The callback that handles the response.
    * @returns {void}
    */
-  protected requestToken(cb: Function): void {
+  protected requestToken(callback: Function): void {
     const parameters = {
       options: {
         url: this.url,
@@ -92,6 +100,6 @@ export class IcpTokenManagerV1 extends JwtTokenManager {
         },
       }
     };
-    sendRequest(parameters, cb);
+    sendRequest(parameters, callback);
   }
 }

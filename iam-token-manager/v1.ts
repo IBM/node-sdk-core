@@ -115,12 +115,19 @@ export class IamTokenManagerV1 extends JwtTokenManager {
   }
 
   /**
+   * Callback for handling response.
+   *
+   * @callback requestTokenCallback
+   * @param {Error} An error if there is one, null otherwise
+   * @param {Object} The response if request is successful, null otherwise
+   */
+  /**
    * Request an IAM token using an API key.
    *
-   * @param {Function} cb - The callback that handles the response.
+   * @param {requestTokenCallback} callback - The callback that handles the response.
    * @returns {void}
    */
-  protected requestToken(cb: Function): void {
+  protected requestToken(callback: Function): void {
     // Use bx:bx as default auth header creds.
     let clientId = 'bx';
     let clientSecret = 'bx';
@@ -147,6 +154,6 @@ export class IamTokenManagerV1 extends JwtTokenManager {
         }
       }
     };
-    sendRequest(parameters, cb);
+    sendRequest(parameters, callback);
   }
 }

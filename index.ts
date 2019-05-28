@@ -20,7 +20,7 @@
 
 export { BaseService } from './lib/base_service';
 export { IamTokenManagerV1 } from './iam-token-manager/v1';
-export { IcpTokenManagerV1 } from './auth/icp-token-manager';
+export { Icp4dTokenManagerV1 } from './auth/icp-token-manager';
 export * from './lib/helper';
 export { default as qs } from './lib/querystring';
 export { default as contentType } from './lib/content-type';
