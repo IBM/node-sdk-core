@@ -17,6 +17,19 @@ import { BaseService } from 'ibm-cloud-sdk-core';
 class YourSDK extends BaseService { ... }
 ```
 
+## Authentication Types
+There are several flavors of authentication supported in this package. To specify the intended authentication pattern to use, the user can pass in the parameter `authentication_type`. This parameter is optional, but it may become required in a future major release. The options for this parameter are `basic`, `iam`, and `icp4d`.
+
+### basic
+This indicates Basic Auth is to be used. Users will pass in a `username` and `password` and the SDK will generate a Basic Auth header to send with requests to the service.
+
+### iam
+This indicates that IAM token authentication is to be used. Users can pass in an `iam_apikey` or an `iam_access_token`. If an API key is used, the SDK will manage the token for the user. In either case, the SDK will generate a Bearer Auth header to send with requests to the service.
+
+### icp4d
+This indicates that the service is an instance of ICP4D, which has its own version of token authentication. Users can pass in a `username` and `password`, or an `icp_access_token`. If a username and password is given, the SDK will manage the token for the user.
+A `url` is **required** for this type. In order to use ICP4D authentication, this option **must** be passed in.
+
 ## Available Modules
 ### BaseService
 This Class is the base class that all generated service-specific classes inherit from. It implements credentials handling and other shared behavior.
