@@ -16,7 +16,7 @@
 
 import extend = require('extend');
 import vcapServices = require('vcap_services');
-import { IcpTokenManagerV1 } from '../auth/icp-token-manager';
+import { Icp4dTokenManagerV1 } from '../auth/icp-token-manager';
 import { IamTokenManagerV1 } from '../iam-token-manager/v1';
 import { stripTrailingSlash } from './helper';
 import { readCredentialsFile } from './read-credentials-file';
@@ -178,34 +178,38 @@ export class BaseService {
       _options.authentication_type = _options.authentication_type.toLowerCase();
     }
 
+    // rejectUnauthorized should only be false if disable_ssl_verification is true
+    // used to disable ssl checking for icp
+    this._options.rejectUnauthorized = !options.disable_ssl_verification;
+
     if (_options.authentication_type === 'iam' || hasIamCredentials(_options)) {
       this.tokenManager = new IamTokenManagerV1({
         iamApikey: _options.iam_apikey || _options.password,
         accessToken: _options.iam_access_token,
         url: _options.iam_url,
         iamClientId: _options.iam_client_id,
-        iamClientSecret: _options.iam_client_secret
+        iamClientSecret: _options.iam_client_secret,
+        disableSslVerification: options.disable_ssl_verification,
       });
     } else if (usesBasicForIam(_options)) {
       this.tokenManager = new IamTokenManagerV1({
         iamApikey: _options.password,
         url: _options.iam_url,
         iamClientId: _options.iam_client_id,
-        iamClientSecret: _options.iam_client_secret
+        iamClientSecret: _options.iam_client_secret,
+        disableSslVerification: options.disable_ssl_verification,
       });
     } else if (isForICP4D(_options)) {
-      this.tokenManager = new IcpTokenManagerV1({
+      this.tokenManager = new Icp4dTokenManagerV1({
         url: _options.url,
         username: _options.username,
         password: _options.password,
-        accessToken: _options.icp_access_token
+        accessToken: _options.icp_access_token,
+        disableSslVerification: options.disable_ssl_verification,
       });
     } else {
       this.tokenManager = null;
     }
-    // rejectUnauthorized should only be false if disable_ssl_verification is true
-    // used to disable ssl checking for icp
-    this._options.rejectUnauthorized = !options.disable_ssl_verification;
   }
 
   /**
@@ -260,13 +264,15 @@ export class BaseService {
     if (this.tokenManager) {
       this.tokenManager.setAccessToken(access_token);
     } else if (this._options.authentication_type === 'icp4d') {
-      this.tokenManager = new IcpTokenManagerV1({
+      this.tokenManager = new Icp4dTokenManagerV1({
         accessToken: access_token,
-        url: this._options.url
+        url: this._options.url,
+        disableSslVerification: this._options.disable_ssl_verification,
       });
     } else {
       this.tokenManager = new IamTokenManagerV1({
-        accessToken: access_token
+        accessToken: access_token,
+        disableSslVerification: this._options.disable_ssl_verification,
       });
     }
   }

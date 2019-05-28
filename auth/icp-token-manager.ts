@@ -23,6 +23,7 @@ export type Options = {
   accessToken?: string;
   username?: string;
   password?: string;
+  disableSslVerification?: boolean;
 }
 
 // this interface is a representation of the response
@@ -54,6 +55,7 @@ export class Icp4dTokenManagerV1 extends JwtTokenManager {
    * @param {String} options.password
    * @param {String} options.accessToken - user-managed access token
    * @param {String} options.url - URL for the ICP4D cluster
+   * @param {Boolean} options.disableSslVerification - disable SSL verification for token request
    * @constructor
    */
   constructor(options: Options) {
@@ -98,6 +100,7 @@ export class Icp4dTokenManagerV1 extends JwtTokenManager {
           Authorization:
             this.computeBasicAuthHeader(this.username, this.password),
         },
+        rejectUnauthorized: this.rejectUnauthorized,
       }
     };
     sendRequest(parameters, callback);
