@@ -62,6 +62,7 @@ export interface Credentials {
   icp_access_token?: string;
   iam_apikey?: string;
   iam_url?: string;
+  authentication_type?: string;
 }
 
 function hasCredentials(obj: any): boolean {
@@ -171,6 +172,12 @@ export class BaseService {
       options,
       _options
     );
+
+    // make authentication_type non-case-sensitive
+    if (typeof _options.authentication_type === 'string') {
+      _options.authentication_type = _options.authentication_type.toLowerCase();
+    }
+
     if (_options.authentication_type === 'iam' || hasIamCredentials(_options)) {
       this.tokenManager = new IamTokenManagerV1({
         iamApikey: _options.iam_apikey || _options.password,
@@ -230,6 +237,9 @@ export class BaseService {
     }
     if (this._options.icp_access_token) {
       credentials.icp_access_token = this._options.icp_access_token;
+    }
+    if (this._options.authentication_type) {
+      credentials.authentication_type = this._options.authentication_type;
     }
     return credentials;
   }

@@ -4,6 +4,11 @@
 const requestWrapper = require('../../lib/requestwrapper');
 requestWrapper.sendRequest = jest.fn();
 
+const jwt = require('jsonwebtoken');
+jwt.decode = jest.fn(() => {
+  return { exp: 100, iat: 100 };
+});
+
 const IamTokenManagerV1 = require('../../iam-token-manager/v1').IamTokenManagerV1;
 
 const CLIENT_ID_SECRET_WARNING =
@@ -22,19 +27,16 @@ describe('iam_token_manager_v1', function() {
     const userManagedToken = 'abcd-1234';
     const instance = new IamTokenManagerV1({ iamAccessToken: userManagedToken });
     const requestMock = jest.spyOn(instance, 'requestToken');
-    const refreshMock = jest.spyOn(instance, 'refreshToken');
 
     instance.getToken(function(err, token) {
       expect(token).toBe(userManagedToken);
       expect(requestMock).not.toHaveBeenCalled();
-      expect(refreshMock).not.toHaveBeenCalled();
       done();
     });
   });
 
   it('should turn an iam apikey into an access token', function(done) {
     const instance = new IamTokenManagerV1({ iamApikey: 'abcd-1234' });
-    const refreshMock = jest.spyOn(instance, 'refreshToken');
 
     const accessToken = '9012';
     const iamResponse = {
@@ -51,7 +53,6 @@ describe('iam_token_manager_v1', function() {
 
     instance.getToken(function(err, token) {
       expect(token).toBe(accessToken);
-      expect(refreshMock).not.toHaveBeenCalled();
       done();
     });
   });
@@ -85,7 +86,7 @@ describe('iam_token_manager_v1', function() {
 
     instance.getToken(function(err, token) {
       expect(token).toBe(accessToken);
-      expect(requestMock).not.toHaveBeenCalled();
+      expect(requestMock).toHaveBeenCalled();
       done();
     });
   });
@@ -93,7 +94,6 @@ describe('iam_token_manager_v1', function() {
   it('should use a valid access token if one is stored', function(done) {
     const instance = new IamTokenManagerV1({ iamApikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
-    const refreshMock = jest.spyOn(instance, 'refreshToken');
 
     const accessToken = '1234';
     const currentTokenInfo = {
@@ -105,10 +105,11 @@ describe('iam_token_manager_v1', function() {
     };
 
     instance.tokenInfo = currentTokenInfo;
+    instance.timeToLive = currentTokenInfo.expires_in;
+    instance.expireTime = currentTokenInfo.expiration;
 
     instance.getToken(function(err, token) {
       expect(token).toBe(accessToken);
-      expect(refreshMock).not.toHaveBeenCalled();
       expect(requestMock).not.toHaveBeenCalled();
       done();
     });
@@ -117,7 +118,6 @@ describe('iam_token_manager_v1', function() {
   it('should return a user-managed access token if one is set post-construction', function(done) {
     const instance = new IamTokenManagerV1({ iamApikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
-    const refreshMock = jest.spyOn(instance, 'refreshToken');
 
     const accessToken = '9012';
     const currentTokenInfo = {
@@ -133,7 +133,6 @@ describe('iam_token_manager_v1', function() {
 
     instance.getToken(function(err, token) {
       expect(token).toBe(accessToken);
-      expect(refreshMock).not.toHaveBeenCalled();
       expect(requestMock).not.toHaveBeenCalled();
       done();
     });
@@ -167,14 +166,13 @@ describe('iam_token_manager_v1', function() {
 
     instance.getToken(function(err, token) {
       expect(token).toBe(accessToken);
-      expect(requestMock).not.toHaveBeenCalled();
+      expect(requestMock).toHaveBeenCalled();
       done();
     });
   });
 
   it('should request a new token when refresh token does not have expiration field', function(done) {
     const instance = new IamTokenManagerV1({ iamApikey: 'abcd-1234' });
-    const refreshMock = jest.spyOn(instance, 'refreshToken');
 
     const currentTokenInfo = {
       access_token: '1234',
@@ -199,7 +197,6 @@ describe('iam_token_manager_v1', function() {
 
     instance.getToken(function(err, token) {
       expect(token).toBe(accessToken);
-      expect(refreshMock).not.toHaveBeenCalled();
       done();
     });
   });
@@ -208,7 +205,7 @@ describe('iam_token_manager_v1', function() {
     const instance = new IamTokenManagerV1({ iamApikey: 'abcd-1234' });
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
-      _callback();
+      _callback(null, { access_token: 'abcd' });
     });
 
     instance.getToken(function() {
@@ -227,7 +224,7 @@ describe('iam_token_manager_v1', function() {
     });
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
-      _callback();
+      _callback(null, { access_token: 'abcd' });
     });
 
     instance.getToken(function() {
@@ -252,7 +249,7 @@ describe('iam_token_manager_v1', function() {
     console.log.mockRestore();
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
-      _callback();
+      _callback(null, { access_token: 'abcd' });
     });
 
     instance.getToken(function() {
@@ -276,7 +273,7 @@ describe('iam_token_manager_v1', function() {
     console.log.mockRestore();
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
-      _callback();
+      _callback(null, { access_token: 'abcd' });
     });
 
     instance.getToken(function() {
@@ -295,7 +292,7 @@ describe('iam_token_manager_v1', function() {
     instance.setIamAuthorizationInfo('foo', 'bar');
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
-      _callback();
+      _callback(null, { access_token: 'abcd' });
     });
 
     instance.getToken(function() {
@@ -321,7 +318,7 @@ describe('iam_token_manager_v1', function() {
     console.log.mockRestore();
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
-      _callback();
+      _callback(null, { access_token: 'abcd' });
     });
 
     instance.getToken(function() {
@@ -347,7 +344,7 @@ describe('iam_token_manager_v1', function() {
     console.log.mockRestore();
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
-      _callback();
+      _callback(null, { access_token: 'abcd' });
     });
 
     instance.getToken(function() {
@@ -366,7 +363,7 @@ describe('iam_token_manager_v1', function() {
     instance.setIamAuthorizationInfo(null, null);
 
     requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
-      _callback();
+      _callback(null, { access_token: 'abcd' });
     });
 
     instance.getToken(function() {

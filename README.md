@@ -24,6 +24,9 @@ This Class is the base class that all generated service-specific classes inherit
 ### IamTokenManagerV1
 This Class contains logic for managing an IAM token over its lifetime. Tokens can be requested or set manually. When requested, the token manager will either return the current token, request a new token or refresh the current token if it is expired. If a token is manually set, it must be managed by the user.
 
+### IcpTokenManagerV1
+This Class is similar in function to IamTokenManagerV1. The only difference is that the `url` parameter is required, it takes a `username` and `password` instead of an API key, and manages tokens for instances of ICP4D. To use this token manager in an SDK, the parameter `authentication_type` must be set to `icp4d` in the constructor.
+
 ### isFileParam
 This function takes an Object and returns `true` if the object is a Stream, a Buffer, has a `value` property, or has a `data` property that is a file param (checked recursively).
 
