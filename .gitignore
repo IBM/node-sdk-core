@@ -9,6 +9,7 @@ doc/
 .env
 .eslintcache
 lib/*.js
+auth/*.js
 iam-token-manager/*.js
 index.js
 .nyc_output

@@ -15,6 +15,7 @@
  */
 
 import extend = require('extend');
+import { JwtTokenManager } from '../auth/jwt-token-manager';
 import { sendRequest } from '../lib/requestwrapper';
 
 /**
@@ -34,9 +35,11 @@ function onlyOne(a: any, b: any): boolean {
 const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the defaults will be used.';
 
 export type Options = {
-  iamApikey?: string;
-  iamAccessToken?: string;
+  url?: string;
   iamUrl?: string;
+  iamApikey?: string;
+  accessToken?: string;
+  iamAccessToken?: string;
   iamClientId?: string;
   iamClientSecret?: string;
 }
@@ -52,13 +55,8 @@ export interface IamTokenData {
   expiration: number;
 }
 
-export class IamTokenManagerV1 {
-  name: string;
-  serviceVersion: string;
-  protected iamUrl: string;
-  protected tokenInfo: IamTokenData;
+export class IamTokenManagerV1 extends JwtTokenManager {
   private iamApikey: string;
-  private userAccessToken: string;
   private iamClientId: string;
   private iamClientSecret: string;
 
@@ -74,8 +72,10 @@ export class IamTokenManagerV1 {
    * @constructor
    */
   constructor(options: Options) {
-    this.iamUrl = options.iamUrl || 'https://iam.cloud.ibm.com/identity/token';
-    this.tokenInfo = {} as IamTokenData;
+    super(options);
+
+    this.url = this.url || options.iamUrl || 'https://iam.cloud.ibm.com/identity/token';
+
     if (options.iamApikey) {
       this.iamApikey = options.iamApikey;
     }
@@ -91,38 +91,6 @@ export class IamTokenManagerV1 {
     if (onlyOne(options.iamClientId, options.iamClientSecret)) {
       // tslint:disable-next-line
       console.log(CLIENT_ID_SECRET_WARNING);
-    }
-  }
-
-  /**
-   * This function sends an access token back through a callback. The source of the token
-   * is determined by the following logic:
-   * 1. If user provides their own managed access token, assume it is valid and send it
-   * 2. If this class is managing tokens and does not yet have one, make a request for one
-   * 3. If this class is managing tokens and the token has expired, refresh it
-   * 4. If this class is managing tokens and has a valid token stored, send it
-   *
-   * @param {Function} cb - callback function that the token will be passed to
-   */
-  public getToken(cb: Function) {
-    if (this.userAccessToken) {
-      // 1. use user-managed token
-      return cb(null, this.userAccessToken);
-    } else if (!this.tokenInfo.access_token || this.isRefreshTokenExpired()) {
-      // 2. request an initial token
-      this.requestToken((err, tokenResponse) => {
-        this.saveTokenInfo(tokenResponse);
-        return cb(err, this.tokenInfo.access_token);
-      });
-    } else if (this.isTokenExpired()) {
-      // 3. refresh a token
-      this.refreshToken((err, tokenResponse) => {
-        this.saveTokenInfo(tokenResponse);
-        return cb(err, this.tokenInfo.access_token);
-      });
-    } else {
-      // 4. use valid managed token
-      return cb(null, this.tokenInfo.access_token);
     }
   }
 
@@ -147,35 +115,30 @@ export class IamTokenManagerV1 {
   }
 
   /**
-   * Set a self-managed IAM access token.
-   * The access token should be valid and not yet expired.
-   *
-   * By using this method, you accept responsibility for managing the
-   * access token yourself. You must set a new access token before this
-   * one expires. Failing to do so will result in authentication errors
-   * after this token expires.
-   *
-   * @param {string} iamAccessToken - A valid, non-expired IAM access token
-   * @returns {void}
-   */
-  public setAccessToken(iamAccessToken: string): void {
-    this.userAccessToken = iamAccessToken;
-  }
-
-  /**
    * Request an IAM token using an API key.
    *
    * @param {Function} cb - The callback that handles the response.
    * @returns {void}
    */
-  private requestToken(cb: Function): void {
+  protected requestToken(cb: Function): void {
+    // Use bx:bx as default auth header creds.
+    let clientId = 'bx';
+    let clientSecret = 'bx';
+
+    // If both the clientId and secret were specified by the user, then use them.
+    if (this.iamClientId && this.iamClientSecret) {
+        clientId = this.iamClientId;
+        clientSecret = this.iamClientSecret;
+    }
+
     const parameters = {
       options: {
-        url: this.iamUrl,
+        url: this.url,
         method: 'POST',
         headers: {
           'Content-type': 'application/x-www-form-urlencoded',
-          Authorization: this.computeIamAuthHeader()
+          Authorization:
+            this.computeBasicAuthHeader(clientId, clientSecret),
         },
         form: {
           grant_type: 'urn:ibm:params:oauth:grant-type:apikey',
@@ -185,100 +148,5 @@ export class IamTokenManagerV1 {
       }
     };
     sendRequest(parameters, cb);
-  }
-
-  /**
-   * Refresh an IAM token using a refresh token.
-   *
-   * @param {Function} cb - The callback that handles the response.
-   * @returns {void}
-   */
-  private refreshToken(cb: Function) {
-    const parameters = {
-      options: {
-        url: this.iamUrl,
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/x-www-form-urlencoded',
-          Authorization: this.computeIamAuthHeader()
-        },
-        form: {
-          grant_type: 'refresh_token',
-          refresh_token: this.tokenInfo.refresh_token
-        }
-      }
-    };
-    sendRequest(parameters, cb);
-  }
-
-  /**
-   * Check if currently stored token is expired.
-   * 
-   * Using a buffer to prevent the edge case of the 
-   * token expiring before the request could be made.
-   *
-   * The buffer will be a fraction of the total TTL. Using 80%.
-   *
-   * @private
-   * @returns {boolean}
-   */
-  private isTokenExpired(): boolean {
-    if (!this.tokenInfo.expires_in || !this.tokenInfo.expiration) {
-      return true;
-    };
-    const fractionOfTtl = 0.8;
-    const timeToLive = this.tokenInfo.expires_in;
-    const expireTime = this.tokenInfo.expiration;
-    const currentTime = Math.floor(Date.now() / 1000);
-    const refreshTime = expireTime - (timeToLive * (1.0 - fractionOfTtl));
-    return refreshTime < currentTime;
-  }
-
-  /**
-   * Used as a fail-safe to prevent the condition of a refresh token expiring,
-   * which could happen after around 30 days. This function will return true
-   * if it has been at least 7 days and 1 hour since the last token was
-   * retrieved.
-   *
-   * @private
-   * @returns {boolean}
-   */
-  private isRefreshTokenExpired(): boolean {
-    if (!this.tokenInfo.expiration) {
-      return true;
-    };
-    const sevenDays = 7 * 24 * 3600;
-    const currentTime = Math.floor(Date.now() / 1000);
-    const newTokenTime = this.tokenInfo.expiration + sevenDays;
-    return newTokenTime < currentTime;
-  }
-
-  /**
-   * Save the response from the IAM service request to the object's state.
-   *
-   * @param {IamTokenData} tokenResponse - Response object from IAM service request
-   * @private
-   * @returns {void}
-   */
-  private saveTokenInfo(tokenResponse: IamTokenData): void {
-    this.tokenInfo = extend({}, tokenResponse);
-  }
-
-  /**
-   * Compute and return the Authorization header to be used with the
-   * IAM token server interactions (retrieve and refresh access token).
-   */
-  private computeIamAuthHeader(): string {
-	// Use bx:bx as default auth header creds.
-	let clientId = 'bx';
-	let clientSecret = 'bx';
-	
-	// If both the clientId and secret were specified by the user, then use them.
-	if (this.iamClientId && this.iamClientSecret) {
-      clientId = this.iamClientId;
-      clientSecret = this.iamClientSecret;
-	}
-    const encodedCreds = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-    return `Basic ${encodedCreds}`;
   }
 }

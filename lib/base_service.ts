@@ -16,6 +16,7 @@
 
 import extend = require('extend');
 import vcapServices = require('vcap_services');
+import { IcpTokenManagerV1 } from '../auth/icp-token-manager';
 import { IamTokenManagerV1 } from '../iam-token-manager/v1';
 import { stripTrailingSlash } from './helper';
 import { readCredentialsFile } from './read-credentials-file';
@@ -37,10 +38,12 @@ export interface UserOptions {
   headers?: HeaderOptions;
   token?: string;
   iam_access_token?: string;
+  icp_access_token?: string;
   iam_apikey?: string;
   iam_url?: string;
   iam_client_id?: string;
   iam_client_secret?: string;
+  authentication_type?: string;
   disable_ssl_verification?: boolean;
 }
 
@@ -56,6 +59,7 @@ export interface Credentials {
   password?: string;
   url?: string;
   iam_access_token?: string;
+  icp_access_token?: string;
   iam_apikey?: string;
   iam_url?: string;
 }
@@ -65,12 +69,17 @@ function hasCredentials(obj: any): boolean {
     obj &&
     ((obj.username && obj.password) ||
       obj.iam_access_token ||
-      obj.iam_apikey)
+      obj.iam_apikey ||
+      obj.icp_access_token)
   );
 }
 
 function isForICP(cred: string): boolean {
   return cred && cred.startsWith('icp-');
+}
+
+function isForICP4D(obj: any): boolean {
+  return obj && (obj.authentication_type === 'icp4d' || obj.icp_access_token);
 }
 
 function hasBasicCredentials(obj: any): boolean {
@@ -127,6 +136,8 @@ export class BaseService {
    * @param {string} [options.iam_url] - url for iam service api, needed for services in staging
    * @param {string} [options.iam_client_id] - client id (username) for request to iam service
    * @param {string} [options.iam_client_secret] - secret (password) for request to iam service
+   * @param {string} [options.icp_access_token] - icp access token provided and managed by user
+   * @param {string} [options.authentication_type] - authentication pattern to be used. can be iam, basic, or icp4d
    * @param {string} [options.username] - required unless use_unauthenticated is set
    * @param {string} [options.password] - required unless use_unauthenticated is set
    * @param {boolean} [options.use_unauthenticated] - skip credential requirement
@@ -160,20 +171,27 @@ export class BaseService {
       options,
       _options
     );
-    if (hasIamCredentials(_options)) {
+    if (_options.authentication_type === 'iam' || hasIamCredentials(_options)) {
       this.tokenManager = new IamTokenManagerV1({
-        iamApikey: _options.iam_apikey,
-        iamAccessToken: _options.iam_access_token,
-        iamUrl: _options.iam_url,
+        iamApikey: _options.iam_apikey || _options.password,
+        accessToken: _options.iam_access_token,
+        url: _options.iam_url,
         iamClientId: _options.iam_client_id,
         iamClientSecret: _options.iam_client_secret
       });
     } else if (usesBasicForIam(_options)) {
       this.tokenManager = new IamTokenManagerV1({
         iamApikey: _options.password,
-        iamUrl: _options.iam_url,
+        url: _options.iam_url,
         iamClientId: _options.iam_client_id,
         iamClientSecret: _options.iam_client_secret
+      });
+    } else if (isForICP4D(_options)) {
+      this.tokenManager = new IcpTokenManagerV1({
+        url: _options.url,
+        username: _options.username,
+        password: _options.password,
+        accessToken: _options.icp_access_token
       });
     } else {
       this.tokenManager = null;
@@ -210,6 +228,9 @@ export class BaseService {
     if (this._options.iam_url) {
       credentials.iam_url = this._options.iam_url;
     }
+    if (this._options.icp_access_token) {
+      credentials.icp_access_token = this._options.icp_access_token;
+    }
     return credentials;
   }
 
@@ -222,15 +243,20 @@ export class BaseService {
    * one expires. Failing to do so will result in authentication errors
    * after this token expires.
    *
-   * @param {string} iam_access_token - A valid, non-expired IAM access token
+   * @param {string} access_token - A valid, non-expired IAM access token
    * @returns {void}
    */
-  public setAccessToken(iam_access_token: string) { // tslint:disable-line variable-name
+  public setAccessToken(access_token: string) { // tslint:disable-line variable-name
     if (this.tokenManager) {
-      this.tokenManager.setAccessToken(iam_access_token);
+      this.tokenManager.setAccessToken(access_token);
+    } else if (this._options.authentication_type === 'icp4d') {
+      this.tokenManager = new IcpTokenManagerV1({
+        accessToken: access_token,
+        url: this._options.url
+      });
     } else {
       this.tokenManager = new IamTokenManagerV1({
-        iamAccessToken: iam_access_token
+        accessToken: access_token
       });
     }
   }
@@ -309,7 +335,7 @@ export class BaseService {
         const errorMessage = 'Insufficient credentials provided in ' +
           'constructor argument. Refer to the documentation for the ' +
           'required parameters. Common examples are username/password and ' +
-          'iam_access_token.';
+          'iam_apikey.';
         throw new Error(errorMessage);
       }
       // handle iam_apikey containing an ICP api key
@@ -322,7 +348,7 @@ export class BaseService {
       }
 
       if (!hasIamCredentials(_options) && !usesBasicForIam(_options)) {
-        if (hasBasicCredentials(_options)) {
+        if (_options.authentication_type === 'basic' || hasBasicCredentials(_options)) {
           // Calculate and add Authorization header to base options
           const encodedCredentials = Buffer.from(
             `${_options.username}:${_options.password}`
@@ -369,6 +395,8 @@ export class BaseService {
     const iamAccessToken: string = envObj[`${_name}_IAM_ACCESS_TOKEN`] || envObj[`${nameWithUnderscore}_IAM_ACCESS_TOKEN`];
     const iamApiKey: string = envObj[`${_name}_IAM_APIKEY`] || envObj[`${nameWithUnderscore}_IAM_APIKEY`];
     const iamUrl: string = envObj[`${_name}_IAM_URL`] || envObj[`${nameWithUnderscore}_IAM_URL`];
+    const icpAccessToken: string = envObj[`${_name}_ICP_ACCESS_TOKEN`] || envObj[`${nameWithUnderscore}_ICP_ACCESS_TOKEN`];
+    const authenticationType: string = envObj[`${_name}_AUTHENTICATION_TYPE`] || envObj[`${nameWithUnderscore}_AUTHENTICATION_TYPE`];
 
     return {
       username,
@@ -376,7 +404,9 @@ export class BaseService {
       url,
       iam_access_token: iamAccessToken,
       iam_apikey: iamApiKey,
-      iam_url: iamUrl
+      iam_url: iamUrl,
+      icp_access_token: icpAccessToken,
+      authentication_type: authenticationType,
     };
   }
   /**
