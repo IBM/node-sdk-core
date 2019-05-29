@@ -189,7 +189,6 @@ export class BaseService {
         url: _options.iam_url,
         iamClientId: _options.iam_client_id,
         iamClientSecret: _options.iam_client_secret,
-        disableSslVerification: options.disable_ssl_verification,
       });
     } else if (usesBasicForIam(_options)) {
       this.tokenManager = new IamTokenManagerV1({
@@ -197,7 +196,6 @@ export class BaseService {
         url: _options.iam_url,
         iamClientId: _options.iam_client_id,
         iamClientSecret: _options.iam_client_secret,
-        disableSslVerification: options.disable_ssl_verification,
       });
     } else if (isForICP4D(_options)) {
       this.tokenManager = new Icp4dTokenManagerV1({
@@ -272,7 +270,6 @@ export class BaseService {
     } else {
       this.tokenManager = new IamTokenManagerV1({
         accessToken: access_token,
-        disableSslVerification: this._options.disable_ssl_verification,
       });
     }
   }

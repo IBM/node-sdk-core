@@ -25,7 +25,6 @@ function getCurrentTime(): number {
 export type Options = {
   accessToken?: string;
   url?: string;
-  disableSslVerification?: boolean;
 }
 
 export class JwtTokenManager {
@@ -45,7 +44,6 @@ export class JwtTokenManager {
    * @param {Object} options
    * @param {String} options.url - url of the api to retrieve tokens from
    * @param {String} [options.accessToken] - user-managed access token
-   * @param {String} [options.disableSslVerification] - pass in to disable SSL verification on requests. defaults to false
    * @constructor
    */
   constructor(options: Options) {
@@ -60,8 +58,6 @@ export class JwtTokenManager {
     if (options.accessToken) {
       this.userAccessToken = options.accessToken;
     }
-
-    this.rejectUnauthorized = !options.disableSslVerification;
   }
 
   /**

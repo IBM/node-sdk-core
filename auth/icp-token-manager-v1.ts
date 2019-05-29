@@ -76,6 +76,7 @@ export class Icp4dTokenManagerV1 extends JwtTokenManager {
       this.password = options.password;
     }
     // username and password are required too, unless there's access token
+    this.rejectUnauthorized = !options.disableSslVerification;
   }
 
   /**

@@ -42,7 +42,6 @@ export type Options = {
   iamAccessToken?: string;
   iamClientId?: string;
   iamClientSecret?: string;
-  disableSslVerification?: boolean;
 }
 
 // this interface is a representation of the response
@@ -70,7 +69,6 @@ export class IamTokenManagerV1 extends JwtTokenManager {
    * @param {String} options.iamApikey
    * @param {String} options.iamAccessToken
    * @param {String} options.iamUrl - url of the iam api to retrieve tokens from
-   * @param {Boolean} options.disableSslVerification - disable SSL verification for token request
    * @constructor
    */
   constructor(options: Options) {
@@ -154,7 +152,6 @@ export class IamTokenManagerV1 extends JwtTokenManager {
           apikey: this.iamApikey,
           response_type: 'cloud_iam'
         },
-        rejectUnauthorized: this.rejectUnauthorized,
       }
     };
     sendRequest(parameters, callback);
