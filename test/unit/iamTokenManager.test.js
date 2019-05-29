@@ -1,21 +1,27 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-const requestWrapper = require('../../lib/requestwrapper');
-requestWrapper.sendRequest = jest.fn();
-
+jest.mock('../../lib/requestwrapper');
+const { RequestWrapper } = require('../../lib/requestwrapper');
 const IamTokenManagerV1 = require('../../iam-token-manager/v1').IamTokenManagerV1;
+const mockSendRequest = jest.fn();
+
+RequestWrapper.mockImplementation(() => {
+  return {
+    sendRequest: mockSendRequest,
+  };
+});
 
 const CLIENT_ID_SECRET_WARNING =
   'Warning: Client ID and Secret must BOTH be given, or the defaults will be used.';
 
 describe('iam_token_manager_v1', function() {
   beforeEach(() => {
-    requestWrapper.sendRequest.mockReset();
+    mockSendRequest.mockReset();
   });
 
   afterAll(() => {
-    requestWrapper.sendRequest.mockRestore();
+    mockSendRequest.mockRestore();
   });
 
   it('should return an access token given by the user', function(done) {
@@ -45,7 +51,7 @@ describe('iam_token_manager_v1', function() {
       expiration: Math.floor(Date.now() / 1000) + 3600,
     };
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback(null, iamResponse);
     });
 
@@ -79,7 +85,7 @@ describe('iam_token_manager_v1', function() {
       expiration: Math.floor(Date.now() / 1000) + 3600,
     };
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback(null, iamResponse);
     });
 
@@ -161,7 +167,7 @@ describe('iam_token_manager_v1', function() {
       expiration: Math.floor(Date.now() / 1000) + 3600,
     };
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback(null, iamResponse);
     });
 
@@ -193,7 +199,7 @@ describe('iam_token_manager_v1', function() {
       expiration: Math.floor(Date.now() / 1000) + 3600,
     };
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback(null, iamResponse);
     });
 
@@ -207,12 +213,12 @@ describe('iam_token_manager_v1', function() {
   it('should use the default Authorization header - no clientid, no secret', function(done) {
     const instance = new IamTokenManagerV1({ iamApikey: 'abcd-1234' });
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback();
     });
 
     instance.getToken(function() {
-      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
       expect(authHeader).toBe('Basic Yng6Yng=');
       done();
@@ -226,12 +232,12 @@ describe('iam_token_manager_v1', function() {
       iamClientSecret: 'bar',
     });
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback();
     });
 
     instance.getToken(function() {
-      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
       expect(authHeader).not.toBe('Basic Yng6Yng=');
       done();
@@ -251,12 +257,12 @@ describe('iam_token_manager_v1', function() {
     expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
     console.log.mockRestore();
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback();
     });
 
     instance.getToken(function() {
-      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
       expect(authHeader).toBe('Basic Yng6Yng=');
       done();
@@ -275,12 +281,12 @@ describe('iam_token_manager_v1', function() {
     expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
     console.log.mockRestore();
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback();
     });
 
     instance.getToken(function() {
-      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
       expect(authHeader).toBe('Basic Yng6Yng=');
       done();
@@ -294,12 +300,12 @@ describe('iam_token_manager_v1', function() {
 
     instance.setIamAuthorizationInfo('foo', 'bar');
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback();
     });
 
     instance.getToken(function() {
-      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
       expect(authHeader).not.toBe('Basic Yng6Yng=');
       done();
@@ -320,12 +326,12 @@ describe('iam_token_manager_v1', function() {
     expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
     console.log.mockRestore();
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback();
     });
 
     instance.getToken(function() {
-      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
       expect(authHeader).toBe('Basic Yng6Yng=');
       done();
@@ -346,12 +352,12 @@ describe('iam_token_manager_v1', function() {
     expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
     console.log.mockRestore();
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback();
     });
 
     instance.getToken(function() {
-      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
       expect(authHeader).toBe('Basic Yng6Yng=');
       done();
@@ -365,12 +371,12 @@ describe('iam_token_manager_v1', function() {
 
     instance.setIamAuthorizationInfo(null, null);
 
-    requestWrapper.sendRequest.mockImplementation((parameters, _callback) => {
+    mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback();
     });
 
     instance.getToken(function() {
-      const sendRequestArgs = requestWrapper.sendRequest.mock.calls[0][0];
+      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
       expect(authHeader).toBe('Basic Yng6Yng=');
       done();

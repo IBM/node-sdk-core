@@ -15,7 +15,7 @@
  */
 
 import extend = require('extend');
-import { sendRequest } from '../lib/requestwrapper';
+import { RequestWrapper } from '../lib/requestwrapper';
 
 /**
  * Check for only one of two elements being defined.
@@ -42,7 +42,7 @@ export type Options = {
 }
 
 // this interface is a representation of the response
-// object from the IAM service, hence the snake_case 
+// object from the IAM service, hence the snake_case
 // parameter names
 export interface IamTokenData {
   access_token: string;
@@ -61,6 +61,7 @@ export class IamTokenManagerV1 {
   private userAccessToken: string;
   private iamClientId: string;
   private iamClientSecret: string;
+  private requestWrapperInstance;
 
   /**
    * IAM Token Manager Service
@@ -92,6 +93,8 @@ export class IamTokenManagerV1 {
       // tslint:disable-next-line
       console.log(CLIENT_ID_SECRET_WARNING);
     }
+
+    this.requestWrapperInstance = new RequestWrapper({});
   }
 
   /**
@@ -133,7 +136,7 @@ export class IamTokenManagerV1 {
    * If these values are not set, then a default Authorization header
    * will be used when interacting with the IAM token server.
    *
-   * @param {string} iamClientId - The client id 
+   * @param {string} iamClientId - The client id
    * @param {string} iamClientSecret - The client secret
    * @returns {void}
    */
@@ -184,7 +187,7 @@ export class IamTokenManagerV1 {
         }
       }
     };
-    sendRequest(parameters, cb);
+    this.requestWrapperInstance.sendRequest(parameters, cb);
   }
 
   /**
@@ -208,13 +211,13 @@ export class IamTokenManagerV1 {
         }
       }
     };
-    sendRequest(parameters, cb);
+    this.requestWrapperInstance.sendRequest(parameters, cb);
   }
 
   /**
    * Check if currently stored token is expired.
-   * 
-   * Using a buffer to prevent the edge case of the 
+   *
+   * Using a buffer to prevent the edge case of the
    * token expiring before the request could be made.
    *
    * The buffer will be a fraction of the total TTL. Using 80%.
@@ -272,7 +275,7 @@ export class IamTokenManagerV1 {
 	// Use bx:bx as default auth header creds.
 	let clientId = 'bx';
 	let clientSecret = 'bx';
-	
+
 	// If both the clientId and secret were specified by the user, then use them.
 	if (this.iamClientId && this.iamClientSecret) {
       clientId = this.iamClientId;
