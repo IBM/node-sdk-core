@@ -44,6 +44,7 @@ export class RequestWrapper {
       httpsAgent: new https.Agent({
         rejectUnauthorized: axiosOptions.rejectUnauthorized
       }),
+      maxContentLength: Infinity,
       headers: {
         post: {
           'Content-Type':'application/json'
