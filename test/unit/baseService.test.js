@@ -298,7 +298,7 @@ describe('BaseService', function() {
     expect(instance.tokenManager).not.toBeNull();
     expect(instance.tokenManager.iamApikey).toBeDefined();
     expect(instance.tokenManager.userAccessToken).toBeDefined();
-    expect(instance.tokenManager.iamUrl).toBeDefined();
+    expect(instance.tokenManager.url).toBeDefined();
     expect(instance.tokenManager.iamClientId).toBeDefined();
     expect(instance.tokenManager.iamClientSecret).toBeDefined();
   });
@@ -315,7 +315,7 @@ describe('BaseService', function() {
     expect(instance.tokenManager).toBeDefined();
     expect(instance.tokenManager).not.toBeNull();
     expect(instance.tokenManager.iamApikey).toBeDefined();
-    expect(instance.tokenManager.iamUrl).toBeDefined();
+    expect(instance.tokenManager.url).toBeDefined();
     expect(instance.tokenManager.iamClientId).toBeDefined();
     expect(instance.tokenManager.iamClientSecret).toBeDefined();
   });

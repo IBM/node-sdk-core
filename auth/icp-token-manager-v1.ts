@@ -16,7 +16,7 @@
 
 import extend = require('extend');
 import { sendRequest } from '../lib/requestwrapper';
-import { JwtTokenManager } from './jwt-token-manager';
+import { JwtTokenManager } from './jwt-token-manager-v1';
 
 export type Options = {
   url: string;
