@@ -1,7 +1,15 @@
 'use strict';
 
+jest.mock('../../lib/requestwrapper');
+const { RequestWrapper } = require('../../lib/requestwrapper');
 const BaseService = require('../../lib/base_service').BaseService;
-const requestwrapper = require('../../lib/requestwrapper');
+const mockSendRequest = jest.fn();
+
+RequestWrapper.mockImplementation(() => {
+  return {
+    sendRequest: mockSendRequest,
+  };
+});
 const util = require('util');
 
 function TestService(options) {
@@ -12,21 +20,14 @@ TestService.prototype.name = 'test';
 TestService.prototype.version = 'v1';
 TestService.URL = 'https://gateway.watsonplatform.net/test/api';
 
-// set up mock for sendRequest
-const sendRequestMock = jest.spyOn(requestwrapper, 'sendRequest');
 const responseMessage = 'response';
-sendRequestMock.mockImplementation((params, cb) => {
-  cb(null, responseMessage);
-});
-afterEach(() => {
-  sendRequestMock.mockClear();
-});
 
 describe('BaseService', function() {
   let env;
   beforeEach(function() {
     env = process.env;
     process.env = {};
+    RequestWrapper.mockClear();
   });
   afterEach(function() {
     process.env = env;
@@ -249,12 +250,17 @@ describe('BaseService', function() {
       cb(null, accessToken);
     });
 
+    mockSendRequest.mockImplementation((param, callback) => {
+      callback(null, responseMessage);
+    });
+
     instance.createRequest(parameters, function(err, res) {
-      const authHeader = sendRequestMock.mock.calls[0][0].defaultOptions.headers.Authorization;
+      const authHeader = mockSendRequest.mock.calls[0][0].defaultOptions.headers.Authorization;
       expect(`Bearer ${accessToken}`).toBe(authHeader);
       expect(res).toBe(responseMessage);
 
       getTokenMock.mockReset();
+      mockSendRequest.mockClear();
       done();
     });
   });
@@ -270,7 +276,7 @@ describe('BaseService', function() {
 
     instance.createRequest({}, function(err, res) {
       expect(err).toBe(errorMessage);
-      expect(sendRequestMock).not.toHaveBeenCalled();
+      expect(mockSendRequest).not.toHaveBeenCalled();
       getTokenMock.mockReset();
       done();
     });
