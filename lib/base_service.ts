@@ -20,7 +20,7 @@ import { IamTokenManagerV1 } from '../auth/iam-token-manager-v1';
 import { Icp4dTokenManagerV1 } from '../auth/icp4d-token-manager-v1';
 import { stripTrailingSlash } from './helper';
 import { readCredentialsFile } from './read-credentials-file';
-import { sendRequest } from './requestwrapper';
+import { RequestWrapper } from './requestwrapper';
 
 // custom interfaces
 export interface HeaderOptions {
@@ -128,6 +128,7 @@ export class BaseService {
   protected _options: BaseServiceOptions;
   protected serviceDefaults: object;
   protected tokenManager;
+  private requestWrapperInstance;
 
   /**
    * Internal base class that other services inherit from
@@ -208,6 +209,8 @@ export class BaseService {
     } else {
       this.tokenManager = null;
     }
+
+    this.requestWrapperInstance = new RequestWrapper(this._options);
   }
 
   /**
@@ -313,10 +316,10 @@ export class BaseService {
         }
         parameters.defaultOptions.headers.Authorization =
           `Bearer ${accessToken}`;
-        return sendRequest(parameters, callback);
+        return this.requestWrapperInstance.sendRequest(parameters, callback);
       });
     } else {
-      return sendRequest(parameters, callback);
+      return this.requestWrapperInstance.sendRequest(parameters, callback);
     }
   }
 

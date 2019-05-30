@@ -15,7 +15,6 @@
  */
 
 import extend = require('extend');
-import { sendRequest } from '../lib/requestwrapper';
 import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
 
 export type Options = {
@@ -104,6 +103,6 @@ export class Icp4dTokenManagerV1 extends JwtTokenManagerV1 {
         rejectUnauthorized: this.rejectUnauthorized,
       }
     };
-    sendRequest(parameters, callback);
+    this.requestWrapperInstance.sendRequest(parameters, callback);
   }
 }

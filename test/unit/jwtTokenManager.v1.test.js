@@ -19,6 +19,7 @@ describe('iam_token_manager_v1', () => {
     expect(instance.userAccessToken).toBe(ACCESS_TOKEN);
     expect(instance.tokenName).toBe('access_token');
     expect(instance.tokenInfo).toEqual({});
+    expect(instance.requestWrapperInstance).toBeDefined();
   });
 
   describe('getToken', () => {

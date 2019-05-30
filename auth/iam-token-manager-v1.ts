@@ -16,7 +16,6 @@
 
 import extend = require('extend');
 import { JwtTokenManagerV1 } from '../auth/jwt-token-manager-v1';
-import { sendRequest } from '../lib/requestwrapper';
 
 /**
  * Check for only one of two elements being defined.
@@ -154,6 +153,6 @@ export class IamTokenManagerV1 extends JwtTokenManagerV1 {
         },
       }
     };
-    sendRequest(parameters, callback);
+    this.requestWrapperInstance.sendRequest(parameters, callback);
   }
 }

@@ -16,7 +16,7 @@
 
 import extend = require('extend');
 import jwt = require('jsonwebtoken');
-import { sendRequest } from '../lib/requestwrapper';
+import { RequestWrapper } from '../lib/requestwrapper';
 
 function getCurrentTime(): number {
   return Math.floor(Date.now() / 1000);
@@ -32,6 +32,7 @@ export class JwtTokenManagerV1 {
   protected tokenName: string;
   protected userAccessToken: string;
   protected rejectUnauthorized: boolean; // for icp4d only
+  protected requestWrapperInstance;
   private tokenInfo: any;
   private expireTime: number;
 
@@ -59,6 +60,8 @@ export class JwtTokenManagerV1 {
     if (options.accessToken) {
       this.userAccessToken = options.accessToken;
     }
+
+    this.requestWrapperInstance = new RequestWrapper();
   }
 
   /**
