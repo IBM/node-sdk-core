@@ -94,7 +94,7 @@ export class IamTokenManagerV1 {
       console.log(CLIENT_ID_SECRET_WARNING);
     }
 
-    this.requestWrapperInstance = new RequestWrapper({});
+    this.requestWrapperInstance = new RequestWrapper();
   }
 
   /**
