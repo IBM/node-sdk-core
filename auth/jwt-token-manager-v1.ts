@@ -27,13 +27,12 @@ export type Options = {
   url?: string;
 }
 
-export class JwtTokenManager {
+export class JwtTokenManagerV1 {
   protected url: string;
   protected tokenName: string;
   protected userAccessToken: string;
-  protected rejectUnauthorized: boolean;
+  protected rejectUnauthorized: boolean; // for icp4d only
   private tokenInfo: any;
-  private timeToLive: number;
   private expireTime: number;
 
   /**
@@ -47,8 +46,10 @@ export class JwtTokenManager {
    * @constructor
    */
   constructor(options: Options) {
-    this.tokenInfo = {};
+    // all parameters are optional
+    options = options || {} as Options;
 
+    this.tokenInfo = {};
     this.tokenName = 'access_token';
 
     if (options.url) {
@@ -77,8 +78,16 @@ export class JwtTokenManager {
     } else if (!this.tokenInfo[this.tokenName] || this.isTokenExpired()) {
       // 2. request a new token
       this.requestToken((err, tokenResponse) => {
-        this.saveTokenInfo(tokenResponse);
-        return cb(err, this.tokenInfo[this.tokenName]);
+        if (!err) {
+          try {
+            this.saveTokenInfo(tokenResponse);
+          } catch(e) {
+            // send lower level error through callback for user to handle
+            err = e;
+          }
+        }
+        // return null for access_token if there is an error
+        return cb(err, this.tokenInfo[this.tokenName] || null);
       });
     } else {
       // 3. use valid, sdk-managed token
@@ -109,7 +118,7 @@ export class JwtTokenManager {
    * @returns {void}
    */
   protected requestToken(cb: Function): void {
-    const err = new Error('`requestToken` MUST be overridden by a subclass of JwtTokenManager.');
+    const err = new Error('`requestToken` MUST be overridden by a subclass of JwtTokenManagerV1.');
     cb(err, null);
   }
 
@@ -126,31 +135,25 @@ export class JwtTokenManager {
   }
 
   /**
-   * Check if currently stored token is expired.
-   *
-   * Using a buffer to prevent the edge case of the
-   * token expiring before the request could be made.
-   *
-   * The buffer will be a fraction of the total TTL. Using 80%.
+   * Check if currently stored token is "expired"
+   * i.e. past the window to request a new token
    *
    * @private
    * @returns {boolean}
    */
   private isTokenExpired(): boolean {
-    const { timeToLive, expireTime } = this;
+    const { expireTime } = this;
 
-    if (!timeToLive || !expireTime) {
+    if (!expireTime) {
       return true;
     }
 
-    const fractionOfTtl = 0.8;
     const currentTime = getCurrentTime();
-    const timeForNewToken = expireTime - (timeToLive * (1.0 - fractionOfTtl));
-    return timeForNewToken < currentTime;
+    return expireTime < currentTime;
   }
 
   /**
-   * Decode the access token and save the response from the JWT service to the object's state.
+   * Save the JWT service response and the calculated expiration time to the object's state.
    *
    * @param tokenResponse - Response object from JWT service request
    * @private
@@ -159,14 +162,38 @@ export class JwtTokenManager {
   private saveTokenInfo(tokenResponse): void {
     const accessToken = tokenResponse[this.tokenName];
 
-    // the time of expiration is found by decoding the JWT access token
-    const decodedResponse = jwt.decode(accessToken);
-    const { exp, iat } = decodedResponse;
+    if (!accessToken) {
+      throw new Error('Access token not present in response');
+    }
 
-    // exp is the time of expire and iat is the time of token retrieval
-    this.timeToLive = exp - iat;
-    this.expireTime = exp;
-
+    this.expireTime = this.calculateTimeForNewToken(accessToken);
     this.tokenInfo = extend({}, tokenResponse);
+  }
+
+  /**
+   * Decode the access token and calculate the time to request a new token.
+   *
+   * A time buffer prevents the edge case of the token expiring before the request could be made.
+   * The buffer will be a fraction of the total time to live - we are using 80%
+   *
+   * @param accessToken - JSON Web Token received from the service
+   * @private
+   * @returns {void}
+   */
+  private calculateTimeForNewToken(accessToken): number {
+    // the time of expiration is found by decoding the JWT access token
+    // exp is the time of expire and iat is the time of token retrieval
+    let timeForNewToken;
+    const decodedResponse = jwt.decode(accessToken);
+    if (decodedResponse) {
+      const { exp, iat } = decodedResponse;
+      const fractionOfTtl = 0.8;
+      const timeToLive = exp - iat;
+      timeForNewToken = exp - (timeToLive * (1.0 - fractionOfTtl));
+    } else {
+      throw new Error('Access token recieved is not a valid JWT');
+    }
+
+    return timeForNewToken;
   }
 }

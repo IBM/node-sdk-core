@@ -17,7 +17,7 @@
 import extend = require('extend');
 import vcapServices = require('vcap_services');
 import { IamTokenManagerV1 } from '../auth/iam-token-manager-v1';
-import { Icp4dTokenManagerV1 } from '../auth/icp-token-manager-v1';
+import { Icp4dTokenManagerV1 } from '../auth/icp4d-token-manager-v1';
 import { stripTrailingSlash } from './helper';
 import { readCredentialsFile } from './read-credentials-file';
 import { sendRequest } from './requestwrapper';

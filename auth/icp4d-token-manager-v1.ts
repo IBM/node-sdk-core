@@ -16,7 +16,7 @@
 
 import extend = require('extend');
 import { sendRequest } from '../lib/requestwrapper';
-import { JwtTokenManager } from './jwt-token-manager-v1';
+import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
 
 export type Options = {
   url: string;
@@ -41,7 +41,7 @@ export interface IcpTokenData {
   accessToken: string;
 }
 
-export class Icp4dTokenManagerV1 extends JwtTokenManager {
+export class Icp4dTokenManagerV1 extends JwtTokenManagerV1 {
   private username: string;
   private password: string;
 
@@ -66,9 +66,9 @@ export class Icp4dTokenManagerV1 extends JwtTokenManager {
     if (this.url) {
       this.url = this.url + '/v1/preauth/validateAuth';
     } else {
-      // this is required
-      console.error('`url` is a required parameter for the ICP token manager.');
+      throw new Error('`url` is a required parameter for Icp4dTokenManagerV1');
     }
+
     if (options.username) {
       this.username = options.username;
     }

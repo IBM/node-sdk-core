@@ -15,7 +15,7 @@
  */
 
 import extend = require('extend');
-import { JwtTokenManager } from '../auth/jwt-token-manager-v1';
+import { JwtTokenManagerV1 } from '../auth/jwt-token-manager-v1';
 import { sendRequest } from '../lib/requestwrapper';
 
 /**
@@ -55,7 +55,7 @@ export interface IamTokenData {
   expiration: number;
 }
 
-export class IamTokenManagerV1 extends JwtTokenManager {
+export class IamTokenManagerV1 extends JwtTokenManagerV1 {
   private iamApikey: string;
   private iamClientId: string;
   private iamClientSecret: string;
