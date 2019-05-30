@@ -1,3 +1,10 @@
+## [0.2.8](https://github.com/IBM/node-sdk-core/compare/v0.2.7...v0.2.8) (2019-05-30)
+
+
+### Bug Fixes
+
+* default request body size to Infinity ([6cea2b9](https://github.com/IBM/node-sdk-core/commit/6cea2b9))
+
 ## [0.2.7](https://github.com/IBM/node-sdk-core/compare/v0.2.6...v0.2.7) (2019-05-24)
 
 
