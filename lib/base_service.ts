@@ -162,10 +162,13 @@ export class BaseService {
       );
     }
     const options = extend({}, userOptions);
+
     const _options = this.initCredentials(options);
+
     if (options.url) {
       _options.url = stripTrailingSlash(options.url);
     }
+
     const serviceClass = this.constructor as typeof BaseService;
     this._options = extend(
       { qs: {}, url: serviceClass.URL },
@@ -174,18 +177,13 @@ export class BaseService {
       _options
     );
 
-    // make authentication_type non-case-sensitive
-    if (typeof _options.authentication_type === 'string') {
-      _options.authentication_type = _options.authentication_type.toLowerCase();
-    }
-
     // rejectUnauthorized should only be false if disable_ssl_verification is true
     // used to disable ssl checking for icp
     this._options.rejectUnauthorized = !options.disable_ssl_verification;
 
     if (_options.authentication_type === 'iam' || hasIamCredentials(_options)) {
       this.tokenManager = new IamTokenManagerV1({
-        iamApikey: _options.iam_apikey || _options.password,
+        iamApikey: _options.iam_apikey,
         accessToken: _options.iam_access_token,
         url: _options.iam_url,
         iamClientId: _options.iam_client_id,
@@ -346,6 +344,12 @@ export class BaseService {
       options,
       _options
     );
+
+    // make authentication_type non-case-sensitive
+    if (typeof _options.authentication_type === 'string') {
+      _options.authentication_type = _options.authentication_type.toLowerCase();
+    }
+
     if (!_options.use_unauthenticated) {
       if (!hasCredentials(_options)) {
         const errorMessage = 'Insufficient credentials provided in ' +
@@ -363,7 +367,7 @@ export class BaseService {
         delete options.iam_apikey;
       }
 
-      if (!hasIamCredentials(_options) && !usesBasicForIam(_options)) {
+      if (!hasIamCredentials(_options) && !usesBasicForIam(_options) && !isForICP4D(_options)) {
         if (_options.authentication_type === 'basic' || hasBasicCredentials(_options)) {
           // Calculate and add Authorization header to base options
           const encodedCredentials = Buffer.from(
