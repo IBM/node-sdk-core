@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-const { Icp4dTokenManagerV1 } = require('../../auth/icp4d-token-manager-v1');
+const { Icp4dTokenManagerV1 } = require('../../auth');
 
 // mock sendRequest
 jest.mock('../../lib/requestwrapper');

@@ -15,7 +15,8 @@
  */
 
 import extend = require('extend');
-import { JwtTokenManagerV1 } from '../auth/jwt-token-manager-v1';
+import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
+import { computeBasicAuthHeader } from './utils';
 
 /**
  * Check for only one of two elements being defined.
@@ -143,8 +144,7 @@ export class IamTokenManagerV1 extends JwtTokenManagerV1 {
         method: 'POST',
         headers: {
           'Content-type': 'application/x-www-form-urlencoded',
-          Authorization:
-            this.computeBasicAuthHeader(clientId, clientSecret),
+          Authorization: computeBasicAuthHeader(clientId, clientSecret),
         },
         form: {
           grant_type: 'urn:ibm:params:oauth:grant-type:apikey',

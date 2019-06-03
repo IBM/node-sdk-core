@@ -16,6 +16,7 @@
 
 import extend = require('extend');
 import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
+import { computeBasicAuthHeader } from './utils';
 
 export type Options = {
   url: string;
@@ -97,8 +98,7 @@ export class Icp4dTokenManagerV1 extends JwtTokenManagerV1 {
         url: this.url,
         method: 'GET',
         headers: {
-          Authorization:
-            this.computeBasicAuthHeader(this.username, this.password),
+          Authorization: computeBasicAuthHeader(this.username, this.password),
         },
         rejectUnauthorized: this.rejectUnauthorized,
       }

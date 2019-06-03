@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-const { JwtTokenManagerV1 } = require('../../auth/jwt-token-manager-v1');
+const { JwtTokenManagerV1 } = require('../../auth');
 const jwt = require('jsonwebtoken');
 
 function getCurrentTime() {
@@ -155,13 +155,6 @@ describe('iam_token_manager_v1', () => {
       expect(res).toBeNull();
       done();
     });
-  });
-
-  it('should return a basic auth header with computeBasicAuthHeader', () => {
-    const instance = new JwtTokenManagerV1();
-
-    const header = instance.computeBasicAuthHeader('bx', 'bx');
-    expect(header).toBe('Basic Yng6Yng=');
   });
 
   describe('isTokenExpired', () => {

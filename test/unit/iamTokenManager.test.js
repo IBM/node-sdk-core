@@ -9,7 +9,7 @@ jwt.decode = jest.fn(() => {
   return { exp: 100, iat: 100 };
 });
 
-const IamTokenManagerV1 = require('../../iam-token-manager/v1').IamTokenManagerV1;
+const { IamTokenManagerV1 } = require('../../iam-token-manager/v1'); // testing compatibility
 const mockSendRequest = jest.fn();
 
 RequestWrapper.mockImplementation(() => {

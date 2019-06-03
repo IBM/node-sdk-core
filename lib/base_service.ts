@@ -16,8 +16,7 @@
 
 import extend = require('extend');
 import vcapServices = require('vcap_services');
-import { IamTokenManagerV1 } from '../auth/iam-token-manager-v1';
-import { Icp4dTokenManagerV1 } from '../auth/icp4d-token-manager-v1';
+import { computeBasicAuthHeader, IamTokenManagerV1, Icp4dTokenManagerV1 } from '../auth';
 import { stripTrailingSlash } from './helper';
 import { readCredentialsFile } from './read-credentials-file';
 import { RequestWrapper } from './requestwrapper';
@@ -370,10 +369,8 @@ export class BaseService {
       if (!hasIamCredentials(_options) && !usesBasicForIam(_options) && !isForICP4D(_options)) {
         if (_options.authentication_type === 'basic' || hasBasicCredentials(_options)) {
           // Calculate and add Authorization header to base options
-          const encodedCredentials = Buffer.from(
-            `${_options.username}:${_options.password}`
-          ).toString('base64');
-          const authHeader = { Authorization: `Basic ${encodedCredentials}` };
+          const encodedCredentials = computeBasicAuthHeader(_options.username, _options.password);
+          const authHeader = { Authorization: `${encodedCredentials}` };
           _options.headers = extend(authHeader, _options.headers);
         }
       }

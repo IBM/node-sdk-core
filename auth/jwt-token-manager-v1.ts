@@ -126,18 +126,6 @@ export class JwtTokenManagerV1 {
   }
 
   /**
-   * Compute and return a Basic Authorization header from a username and password.
-   *
-   * @param {string} username - The username or client id
-   * @param {string} password - The password or client secret
-   * @returns {string}
-   */
-  protected computeBasicAuthHeader(username, password): string {
-    const encodedCreds = Buffer.from(`${username}:${password}`).toString('base64');
-    return `Basic ${encodedCreds}`;
-  }
-
-  /**
    * Check if currently stored token is "expired"
    * i.e. past the window to request a new token
    *
