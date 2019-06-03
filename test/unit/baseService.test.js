@@ -108,7 +108,7 @@ describe('BaseService', function() {
       iam_access_token: 'test',
       iam_apikey: 'test',
       iam_url: 'test',
-      icp_access_token: 'test',
+      icp4d_access_token: 'test',
       authentication_type: 'test',
     });
     const creds = instance.getServiceCredentials();
@@ -119,7 +119,7 @@ describe('BaseService', function() {
     expect(creds.iam_access_token).toBeDefined();
     expect(creds.iam_apikey).toBeDefined();
     expect(creds.iam_url).toBeDefined();
-    expect(creds.icp_access_token).toBeDefined();
+    expect(creds.icp4d_access_token).toBeDefined();
     expect(creds.authentication_type).toBeDefined();
   });
 
@@ -142,7 +142,7 @@ describe('BaseService', function() {
     process.env.TEST_IAM_ACCESS_TOKEN = 'test';
     process.env.TEST_IAM_APIKEY = 'test';
     process.env.TEST_IAM_URL = 'test';
-    process.env.TEST_ICP_ACCESS_TOKEN = 'test';
+    process.env.TEST_ICP4D_ACCESS_TOKEN = 'test';
     process.env.TEST_AUTHENTICATION_TYPE = 'test';
 
     const instance = new TestService();
@@ -154,7 +154,7 @@ describe('BaseService', function() {
       iam_access_token: 'test',
       iam_apikey: 'test',
       iam_url: 'test',
-      icp_access_token: 'test',
+      icp4d_access_token: 'test',
       authentication_type: 'test',
     };
     expect(actual).toEqual(expected);
@@ -435,9 +435,9 @@ describe('BaseService', function() {
     expect(instance._options.headers).toBeUndefined();
   });
 
-  it('should create an icp4d token manager instance if given icp_access_token', function() {
+  it('should create an icp4d token manager instance if given icp4d_access_token', function() {
     const instance = new TestService({
-      icp_access_token: 'test',
+      icp4d_access_token: 'test',
       url: 'service.com',
     });
     expect(instance.tokenManager).toBeDefined();
@@ -514,7 +514,7 @@ describe('BaseService', function() {
   it('should convert authentication_type to lower case', function() {
     const instance = new TestService({
       authentication_type: 'ICP4D',
-      icp_access_token: 'abc123',
+      icp4d_access_token: 'abc123',
       url: 'someservice.com',
     });
 
