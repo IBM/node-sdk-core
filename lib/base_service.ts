@@ -37,7 +37,7 @@ export interface UserOptions {
   headers?: HeaderOptions;
   token?: string;
   iam_access_token?: string;
-  icp_access_token?: string;
+  icp4d_access_token?: string;
   iam_apikey?: string;
   iam_url?: string;
   iam_client_id?: string;
@@ -58,7 +58,7 @@ export interface Credentials {
   password?: string;
   url?: string;
   iam_access_token?: string;
-  icp_access_token?: string;
+  icp4d_access_token?: string;
   iam_apikey?: string;
   iam_url?: string;
   authentication_type?: string;
@@ -70,7 +70,7 @@ function hasCredentials(obj: any): boolean {
     ((obj.username && obj.password) ||
       obj.iam_access_token ||
       obj.iam_apikey ||
-      obj.icp_access_token)
+      obj.icp4d_access_token)
   );
 }
 
@@ -79,7 +79,7 @@ function isForICP(cred: string): boolean {
 }
 
 function isForICP4D(obj: any): boolean {
-  return obj && (obj.authentication_type === 'icp4d' || obj.icp_access_token);
+  return obj && (obj.authentication_type === 'icp4d' || obj.icp4d_access_token);
 }
 
 function hasBasicCredentials(obj: any): boolean {
@@ -137,7 +137,7 @@ export class BaseService {
    * @param {string} [options.iam_url] - url for iam service api, needed for services in staging
    * @param {string} [options.iam_client_id] - client id (username) for request to iam service
    * @param {string} [options.iam_client_secret] - secret (password) for request to iam service
-   * @param {string} [options.icp_access_token] - icp access token provided and managed by user
+   * @param {string} [options.icp4d_access_token] - icp access token provided and managed by user
    * @param {string} [options.authentication_type] - authentication pattern to be used. can be iam, basic, or icp4d
    * @param {string} [options.username] - required unless use_unauthenticated is set
    * @param {string} [options.password] - required unless use_unauthenticated is set
@@ -200,7 +200,7 @@ export class BaseService {
         url: _options.url,
         username: _options.username,
         password: _options.password,
-        accessToken: _options.icp_access_token,
+        accessToken: _options.icp4d_access_token,
         disableSslVerification: options.disable_ssl_verification,
       });
     } else {
@@ -237,8 +237,8 @@ export class BaseService {
     if (this._options.iam_url) {
       credentials.iam_url = this._options.iam_url;
     }
-    if (this._options.icp_access_token) {
-      credentials.icp_access_token = this._options.icp_access_token;
+    if (this._options.icp4d_access_token) {
+      credentials.icp4d_access_token = this._options.icp4d_access_token;
     }
     if (this._options.authentication_type) {
       credentials.authentication_type = this._options.authentication_type;
@@ -412,7 +412,7 @@ export class BaseService {
     const iamAccessToken: string = envObj[`${_name}_IAM_ACCESS_TOKEN`] || envObj[`${nameWithUnderscore}_IAM_ACCESS_TOKEN`];
     const iamApiKey: string = envObj[`${_name}_IAM_APIKEY`] || envObj[`${nameWithUnderscore}_IAM_APIKEY`];
     const iamUrl: string = envObj[`${_name}_IAM_URL`] || envObj[`${nameWithUnderscore}_IAM_URL`];
-    const icpAccessToken: string = envObj[`${_name}_ICP_ACCESS_TOKEN`] || envObj[`${nameWithUnderscore}_ICP_ACCESS_TOKEN`];
+    const icp4dAccessToken: string = envObj[`${_name}_ICP4D_ACCESS_TOKEN`] || envObj[`${nameWithUnderscore}_ICP4D_ACCESS_TOKEN`];
     const authenticationType: string = envObj[`${_name}_AUTHENTICATION_TYPE`] || envObj[`${nameWithUnderscore}_AUTHENTICATION_TYPE`];
 
     return {
@@ -422,7 +422,7 @@ export class BaseService {
       iam_access_token: iamAccessToken,
       iam_apikey: iamApiKey,
       iam_url: iamUrl,
-      icp_access_token: icpAccessToken,
+      icp4d_access_token: icp4dAccessToken,
       authentication_type: authenticationType,
     };
   }
