@@ -35,7 +35,7 @@ A `url` is **required** for this type. In order to use an SDK-managed token with
 This Class is the base class that all generated service-specific classes inherit from. It implements credentials handling and other shared behavior.
 
 ### IamTokenManagerV1
-This Class contains logic for managing an IAM token over its lifetime. Tokens can be requested or set manually. When requested, the token manager will either return the current token, request a new token or refresh the current token if it is expired. If a token is manually set, it must be managed by the user.
+This Class contains logic for managing an IAM token over its lifetime. Tokens can be requested or set manually. When requested, the token manager will either return the current token or request a new token if one is not saved or the the current token is expired. If a token is manually set, it must be managed by the user.
 
 ### Icp4dTokenManagerV1
 This Class is similar in function to IamTokenManagerV1. The only difference is that the `url` parameter is required, it takes a `username` and `password` instead of an API key, and manages tokens for instances of ICP4D. To use this token manager in an SDK, the parameter `authentication_type` must be set to `icp4d` in the constructor.

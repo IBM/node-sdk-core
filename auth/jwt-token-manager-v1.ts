@@ -39,7 +39,7 @@ export class JwtTokenManagerV1 {
   /**
    * Token Manager Service
    *
-   * Retreives, stores, and refreshes JSON web tokens.
+   * Retreives and stores JSON web tokens.
    *
    * @param {Object} options
    * @param {String} options.url - url of the api to retrieve tokens from

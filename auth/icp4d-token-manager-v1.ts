@@ -48,7 +48,7 @@ export class Icp4dTokenManagerV1 extends JwtTokenManagerV1 {
   /**
    * ICP Token Manager Service
    *
-   * Retreives, stores, and refreshes ICP tokens.
+   * Retreives and stores ICP access tokens.
    *
    * @param {Object} options
    * @param {String} options.username

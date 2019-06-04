@@ -63,7 +63,7 @@ export class IamTokenManagerV1 extends JwtTokenManagerV1 {
   /**
    * IAM Token Manager Service
    *
-   * Retreives, stores, and refreshes IAM tokens.
+   * Retreives and stores IAM access tokens.
    *
    * @param {Object} options
    * @param {String} options.iamApikey
@@ -97,7 +97,7 @@ export class IamTokenManagerV1 extends JwtTokenManagerV1 {
   /**
    * Set the IAM 'client_id' and 'client_secret' values.
    * These values are used to compute the Authorization header used
-   * when retrieving or refreshing the IAM access token.
+   * when retrieving the IAM access token.
    * If these values are not set, then a default Authorization header
    * will be used when interacting with the IAM token server.
    *
