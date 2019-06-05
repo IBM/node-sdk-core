@@ -1,3 +1,13 @@
+# [0.3.0](https://github.com/IBM/node-sdk-core/compare/v0.2.8...v0.3.0) (2019-06-05)
+
+
+### Features
+
+* add `IcpTokenManagerV1` as a top-level export of the package ([cfa3e1b](https://github.com/IBM/node-sdk-core/commit/cfa3e1b))
+* add new token manager for ICP4D ([ee1ddad](https://github.com/IBM/node-sdk-core/commit/ee1ddad))
+* add new token manager for ICP4D ([#26](https://github.com/IBM/node-sdk-core/issues/26)) ([2097a64](https://github.com/IBM/node-sdk-core/commit/2097a64))
+* carry `disable_ssl_verification` through to token managers ([4f2f789](https://github.com/IBM/node-sdk-core/commit/4f2f789))
+
 ## [0.2.8](https://github.com/IBM/node-sdk-core/compare/v0.2.7...v0.2.8) (2019-05-30)
 
 
