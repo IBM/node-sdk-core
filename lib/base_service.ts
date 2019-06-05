@@ -36,8 +36,9 @@ export interface UserOptions {
   use_unauthenticated?: boolean;
   headers?: HeaderOptions;
   token?: string;
-  iam_access_token?: string;
   icp4d_access_token?: string;
+  icp4d_url?: string;
+  iam_access_token?: string;
   iam_apikey?: string;
   iam_url?: string;
   iam_client_id?: string;
@@ -57,8 +58,9 @@ export interface Credentials {
   username?: string;
   password?: string;
   url?: string;
-  iam_access_token?: string;
   icp4d_access_token?: string;
+  icp4d_url?: string;
+  iam_access_token?: string;
   iam_apikey?: string;
   iam_url?: string;
   authentication_type?: string;
@@ -137,7 +139,8 @@ export class BaseService {
    * @param {string} [options.iam_url] - url for iam service api, needed for services in staging
    * @param {string} [options.iam_client_id] - client id (username) for request to iam service
    * @param {string} [options.iam_client_secret] - secret (password) for request to iam service
-   * @param {string} [options.icp4d_access_token] - icp access token provided and managed by user
+   * @param {string} [options.icp4d_access_token] - icp for data access token provided and managed by user
+   * @param {string} [options.icp4d_url] - icp for data base url - used for authentication
    * @param {string} [options.authentication_type] - authentication pattern to be used. can be iam, basic, or icp4d
    * @param {string} [options.username] - required unless use_unauthenticated is set
    * @param {string} [options.password] - required unless use_unauthenticated is set
@@ -196,8 +199,11 @@ export class BaseService {
         iamClientSecret: _options.iam_client_secret,
       });
     } else if (isForICP4D(_options)) {
+      if (!_options.icp4d_url && !_options.icp4d_access_token) {
+        throw new Error('`icp4d_url` is required when using an SDK-managed token for ICP4D.');
+      }
       this.tokenManager = new Icp4dTokenManagerV1({
-        url: _options.url,
+        url: _options.icp4d_url,
         username: _options.username,
         password: _options.password,
         accessToken: _options.icp4d_access_token,
@@ -240,6 +246,9 @@ export class BaseService {
     if (this._options.icp4d_access_token) {
       credentials.icp4d_access_token = this._options.icp4d_access_token;
     }
+    if (this._options.icp4d_url) {
+      credentials.icp4d_url = this._options.icp4d_url;
+    }
     if (this._options.authentication_type) {
       credentials.authentication_type = this._options.authentication_type;
     }
@@ -264,7 +273,7 @@ export class BaseService {
     } else if (this._options.authentication_type === 'icp4d') {
       this.tokenManager = new Icp4dTokenManagerV1({
         accessToken: access_token,
-        url: this._options.url,
+        url: this._options.icp4d_url,
         disableSslVerification: this._options.disable_ssl_verification,
       });
     } else {
@@ -413,6 +422,7 @@ export class BaseService {
     const iamApiKey: string = envObj[`${_name}_IAM_APIKEY`] || envObj[`${nameWithUnderscore}_IAM_APIKEY`];
     const iamUrl: string = envObj[`${_name}_IAM_URL`] || envObj[`${nameWithUnderscore}_IAM_URL`];
     const icp4dAccessToken: string = envObj[`${_name}_ICP4D_ACCESS_TOKEN`] || envObj[`${nameWithUnderscore}_ICP4D_ACCESS_TOKEN`];
+    const icp4dUrl: string = envObj[`${_name}_ICP4D_URL`] || envObj[`${nameWithUnderscore}_ICP4D_URL`];
     const authenticationType: string = envObj[`${_name}_AUTHENTICATION_TYPE`] || envObj[`${nameWithUnderscore}_AUTHENTICATION_TYPE`];
 
     return {
@@ -423,6 +433,7 @@ export class BaseService {
       iam_apikey: iamApiKey,
       iam_url: iamUrl,
       icp4d_access_token: icp4dAccessToken,
+      icp4d_url: icp4dUrl,
       authentication_type: authenticationType,
     };
   }

@@ -109,6 +109,7 @@ describe('BaseService', function() {
       iam_apikey: 'test',
       iam_url: 'test',
       icp4d_access_token: 'test',
+      icp4d_url: 'test',
       authentication_type: 'test',
     });
     const creds = instance.getServiceCredentials();
@@ -120,6 +121,7 @@ describe('BaseService', function() {
     expect(creds.iam_apikey).toBeDefined();
     expect(creds.iam_url).toBeDefined();
     expect(creds.icp4d_access_token).toBeDefined();
+    expect(creds.icp4d_url).toBeDefined();
     expect(creds.authentication_type).toBeDefined();
   });
 
@@ -143,6 +145,7 @@ describe('BaseService', function() {
     process.env.TEST_IAM_APIKEY = 'test';
     process.env.TEST_IAM_URL = 'test';
     process.env.TEST_ICP4D_ACCESS_TOKEN = 'test';
+    process.env.TEST_ICP4D_URL = 'test';
     process.env.TEST_AUTHENTICATION_TYPE = 'test';
 
     const instance = new TestService();
@@ -155,6 +158,7 @@ describe('BaseService', function() {
       iam_apikey: 'test',
       iam_url: 'test',
       icp4d_access_token: 'test',
+      icp4d_url: 'test',
       authentication_type: 'test',
     };
     expect(actual).toEqual(expected);
@@ -428,7 +432,8 @@ describe('BaseService', function() {
       authentication_type: 'ICP4D', // using all caps to prove case insensitivity
       username: 'test',
       password: 'test',
-      url: 'service.com',
+      url: 'service.com/api',
+      icp4d_url: 'host.com:1234',
     });
     expect(instance.tokenManager).toBeDefined();
     expect(instance.tokenManager).not.toBeNull();
@@ -436,6 +441,27 @@ describe('BaseService', function() {
   });
 
   it('should create an icp4d token manager instance if given icp4d_access_token', function() {
+    const instance = new TestService({
+      icp4d_access_token: 'test',
+      url: 'service.com',
+    });
+    expect(instance.tokenManager).toBeDefined();
+    expect(instance.tokenManager).not.toBeNull();
+    expect(instance._options.headers).toBeUndefined();
+  });
+
+  it('should throw an error if an icp4d url is not given when using sdk-managed tokens', function() {
+    expect(() => {
+      new TestService({
+        username: 'test',
+        password: 'test',
+        authentication_type: 'icp4d',
+        url: 'service.com',
+      });
+    }).toThrow();
+  });
+
+  it('should not throw an error if an icp4d url is missing when using user-managed tokens', function() {
     const instance = new TestService({
       icp4d_access_token: 'test',
       url: 'service.com',

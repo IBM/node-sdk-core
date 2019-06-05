@@ -13,7 +13,7 @@ RequestWrapper.mockImplementation(() => {
   };
 });
 
-describe('iam_token_manager_v1', () => {
+describe('icp4d_token_manager_v1', () => {
   describe('constructor', () => {
     it('should initialize base variables', () => {
       const instance = new Icp4dTokenManagerV1({
@@ -42,6 +42,10 @@ describe('iam_token_manager_v1', () => {
 
     it('should throw an error if `url` is not given', () => {
       expect(() => new Icp4dTokenManagerV1()).toThrow();
+    });
+
+    it('should not throw an error if `url` is not given but using user-managed access token', () => {
+      expect(() => new Icp4dTokenManagerV1({ accessToken: 'token' })).not.toThrow();
     });
   });
 

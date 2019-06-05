@@ -65,7 +65,8 @@ export class Icp4dTokenManagerV1 extends JwtTokenManagerV1 {
 
     if (this.url) {
       this.url = this.url + '/v1/preauth/validateAuth';
-    } else {
+    } else if (!this.userAccessToken) {
+      // url is not needed if the user specifies their own access token
       throw new Error('`url` is a required parameter for Icp4dTokenManagerV1');
     }
 
