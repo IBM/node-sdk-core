@@ -15,13 +15,13 @@
  */
 
 /**
- * @module ibm-cloud-sdk-core
+ * Compute and return a Basic Authorization header from a username and password.
+ *
+ * @param {string} username - The username or client id
+ * @param {string} password - The password or client secret
+ * @returns {string} - A Basic Auth header with format "Basic <encoded-credentials>"
  */
-
-export { BaseService } from './lib/base_service';
-export { IamTokenManagerV1 } from './auth/iam-token-manager-v1';
-export { Icp4dTokenManagerV1 } from './auth/icp4d-token-manager-v1';
-export * from './lib/helper';
-export { default as qs } from './lib/querystring';
-export { default as contentType } from './lib/content-type';
-export * from './lib/stream-to-promise';
+export function computeBasicAuthHeader(username: string, password: string): string {
+  const encodedCreds = Buffer.from(`${username}:${password}`).toString('base64');
+  return `Basic ${encodedCreds}`;
+}

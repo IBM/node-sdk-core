@@ -100,6 +100,31 @@ describe('BaseService', function() {
     expect(instance._options.headers['X-Watson-Authorization-Token']).toBe('foo');
   });
 
+  it('should return all credentials with getServiceCredentials', function() {
+    const instance = new TestService({
+      username: 'test',
+      password: 'test',
+      url: 'test',
+      iam_access_token: 'test',
+      iam_apikey: 'test',
+      iam_url: 'test',
+      icp4d_access_token: 'test',
+      icp4d_url: 'test',
+      authentication_type: 'test',
+    });
+    const creds = instance.getServiceCredentials();
+
+    expect(creds.username).toBeDefined();
+    expect(creds.password).toBeDefined();
+    expect(creds.url).toBeDefined();
+    expect(creds.iam_access_token).toBeDefined();
+    expect(creds.iam_apikey).toBeDefined();
+    expect(creds.iam_url).toBeDefined();
+    expect(creds.icp4d_access_token).toBeDefined();
+    expect(creds.icp4d_url).toBeDefined();
+    expect(creds.authentication_type).toBeDefined();
+  });
+
   it('should return hard-coded credentials', function() {
     const instance = new TestService({ username: 'user', password: 'pass' });
     const actual = instance.getServiceCredentials();
@@ -111,16 +136,30 @@ describe('BaseService', function() {
     expect(actual).toEqual(expected);
   });
 
-  it('should return credentials and url from the environment', function() {
-    process.env.TEST_USERNAME = 'env_user';
-    process.env.TEST_PASSWORD = 'env_pass';
+  it('should return all credentials and url from the environment', function() {
+    process.env.TEST_USERNAME = 'test';
+    process.env.TEST_PASSWORD = 'test';
     process.env.TEST_URL = 'http://foo';
+    process.env.TEST_API_KEY = 'test';
+    process.env.TEST_IAM_ACCESS_TOKEN = 'test';
+    process.env.TEST_IAM_APIKEY = 'test';
+    process.env.TEST_IAM_URL = 'test';
+    process.env.TEST_ICP4D_ACCESS_TOKEN = 'test';
+    process.env.TEST_ICP4D_URL = 'test';
+    process.env.TEST_AUTHENTICATION_TYPE = 'test';
+
     const instance = new TestService();
     const actual = instance.getServiceCredentials();
     const expected = {
-      username: 'env_user',
-      password: 'env_pass',
+      username: 'test',
+      password: 'test',
       url: 'http://foo',
+      iam_access_token: 'test',
+      iam_apikey: 'test',
+      iam_url: 'test',
+      icp4d_access_token: 'test',
+      icp4d_url: 'test',
+      authentication_type: 'test',
     };
     expect(actual).toEqual(expected);
   });
@@ -304,7 +343,7 @@ describe('BaseService', function() {
     expect(instance.tokenManager).not.toBeNull();
     expect(instance.tokenManager.iamApikey).toBeDefined();
     expect(instance.tokenManager.userAccessToken).toBeDefined();
-    expect(instance.tokenManager.iamUrl).toBeDefined();
+    expect(instance.tokenManager.url).toBeDefined();
     expect(instance.tokenManager.iamClientId).toBeDefined();
     expect(instance.tokenManager.iamClientSecret).toBeDefined();
   });
@@ -321,7 +360,7 @@ describe('BaseService', function() {
     expect(instance.tokenManager).toBeDefined();
     expect(instance.tokenManager).not.toBeNull();
     expect(instance.tokenManager.iamApikey).toBeDefined();
-    expect(instance.tokenManager.iamUrl).toBeDefined();
+    expect(instance.tokenManager.url).toBeDefined();
     expect(instance.tokenManager.iamClientId).toBeDefined();
     expect(instance.tokenManager.iamClientSecret).toBeDefined();
   });
@@ -329,6 +368,22 @@ describe('BaseService', function() {
   it('should not fail if setAccessToken is called and token manager is null', function() {
     const instance = new TestService({ username: 'user', password: 'pass' });
     expect(instance.tokenManager).toBeNull();
+
+    instance.setAccessToken('abcd-1234');
+    expect(instance.tokenManager).toBeDefined();
+    expect(instance.tokenManager).not.toBeNull();
+  });
+
+  it('should create an icp4d token manager if setAccessToken is called and auth type is `icp4d`', function() {
+    const instance = new TestService({
+      username: 'user',
+      password: 'pass',
+      url: 'service.com',
+    });
+    expect(instance.tokenManager).toBeNull();
+
+    // this is sort of a bizarre use case...
+    instance._options.authentication_type = 'icp4d';
 
     instance.setAccessToken('abcd-1234');
     expect(instance.tokenManager).toBeDefined();
@@ -357,6 +412,62 @@ describe('BaseService', function() {
     expect(instance.tokenManager).toBeDefined();
     expect(instance.tokenManager).not.toBeNull();
     expect(instance.tokenManager.iamApikey).toBe(apikey);
+    expect(instance._options.headers).toBeUndefined();
+  });
+
+  it('should create an iam token manager instance if authentication_type is `iam`', function() {
+    const apikey = 'abcd-1234';
+    const instance = new TestService({
+      authentication_type: 'iam',
+      iam_apikey: apikey,
+    });
+    expect(instance.tokenManager).toBeDefined();
+    expect(instance.tokenManager).not.toBeNull();
+    expect(instance.tokenManager.iamApikey).toBe(apikey);
+    expect(instance._options.headers).toBeUndefined();
+  });
+
+  it('should create an icp4d token manager instance if authentication_type is `icp4d`', function() {
+    const instance = new TestService({
+      authentication_type: 'ICP4D', // using all caps to prove case insensitivity
+      username: 'test',
+      password: 'test',
+      url: 'service.com/api',
+      icp4d_url: 'host.com:1234',
+    });
+    expect(instance.tokenManager).toBeDefined();
+    expect(instance.tokenManager).not.toBeNull();
+    expect(instance._options.headers).toBeUndefined();
+  });
+
+  it('should create an icp4d token manager instance if given icp4d_access_token', function() {
+    const instance = new TestService({
+      icp4d_access_token: 'test',
+      url: 'service.com',
+    });
+    expect(instance.tokenManager).toBeDefined();
+    expect(instance.tokenManager).not.toBeNull();
+    expect(instance._options.headers).toBeUndefined();
+  });
+
+  it('should throw an error if an icp4d url is not given when using sdk-managed tokens', function() {
+    expect(() => {
+      new TestService({
+        username: 'test',
+        password: 'test',
+        authentication_type: 'icp4d',
+        url: 'service.com',
+      });
+    }).toThrow();
+  });
+
+  it('should not throw an error if an icp4d url is missing when using user-managed tokens', function() {
+    const instance = new TestService({
+      icp4d_access_token: 'test',
+      url: 'service.com',
+    });
+    expect(instance.tokenManager).toBeDefined();
+    expect(instance.tokenManager).not.toBeNull();
     expect(instance._options.headers).toBeUndefined();
   });
 
@@ -424,6 +535,16 @@ describe('BaseService', function() {
     expect(instance._options.iam_apikey).not.toBeDefined();
     expect(instance.tokenManager).toBeNull();
     expect(authHeader.startsWith('Basic')).toBe(true);
+  });
+
+  it('should convert authentication_type to lower case', function() {
+    const instance = new TestService({
+      authentication_type: 'ICP4D',
+      icp4d_access_token: 'abc123',
+      url: 'someservice.com',
+    });
+
+    expect(instance._options.authentication_type).toBe('icp4d');
   });
 
   describe('check credentials for common problems', function() {

@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-/**
- * @module ibm-cloud-sdk-core
- */
-
-export { BaseService } from './lib/base_service';
-export { IamTokenManagerV1 } from './auth/iam-token-manager-v1';
-export { Icp4dTokenManagerV1 } from './auth/icp4d-token-manager-v1';
-export * from './lib/helper';
-export { default as qs } from './lib/querystring';
-export { default as contentType } from './lib/content-type';
-export * from './lib/stream-to-promise';
+export { IamTokenManagerV1 } from './iam-token-manager-v1';
+export { Icp4dTokenManagerV1 } from './icp4d-token-manager-v1';
+export { JwtTokenManagerV1 } from './jwt-token-manager-v1';
+export * from './utils';

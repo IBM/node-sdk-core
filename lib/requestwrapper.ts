@@ -22,8 +22,6 @@ import querystring = require('querystring');
 import { PassThrough as readableStream } from 'stream';
 import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileParam } from './helper';
 
-// tslint:disable-next-line:no-var-requires
-const pkg = require('../package.json');
 const isBrowser = typeof window === 'object';
 const globalTransactionId = 'x-global-transaction-id';
 
