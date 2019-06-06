@@ -30,6 +30,23 @@ describe('sendRequest', () => {
     mockAxiosInstance.mockReset();
   });
 
+  const axiosResolveValue = {
+    data: 'test',
+    config: 'test',
+    request: 'test',
+    statusText: 'test',
+    status: 200,
+    headers: 'test',
+  };
+
+  const expectedResult = {
+    data: 'test',
+    result: 'test',
+    statusText: 'test',
+    status: 200,
+    headers: 'test',
+  };
+
   it('should send a request with default parameters', done => {
     const parameters = {
       defaultOptions: {
@@ -46,7 +63,7 @@ describe('sendRequest', () => {
       },
     };
 
-    mockAxiosInstance.mockResolvedValue('res');
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
 
     requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
       // assert results
@@ -62,7 +79,7 @@ describe('sendRequest', () => {
       expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual(
         parameters.defaultOptions.responseType
       );
-      expect(res).toEqual('res');
+      expect(res).toEqual(expectedResult);
       expect(mockAxiosInstance.mock.calls.length).toBe(1);
       done();
     });
@@ -130,7 +147,7 @@ describe('sendRequest', () => {
     mockAxiosInstance.mockImplementation(requestParams => {
       // This runs the paramsSerializer code in the payload we send with axios
       serializedParams = requestParams.paramsSerializer(requestParams.params);
-      return Promise.resolve('res');
+      return Promise.resolve(axiosResolveValue);
     });
 
     requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
@@ -150,7 +167,7 @@ describe('sendRequest', () => {
         version: '2018-10-15',
       });
       expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
-      expect(res).toEqual('res');
+      expect(res).toEqual(expectedResult);
       expect(mockAxiosInstance.mock.calls.length).toBe(1);
       done();
     });
@@ -200,7 +217,7 @@ describe('sendRequest', () => {
 
     mockAxiosInstance.mockImplementation(requestParams => {
       requestParams.paramsSerializer(requestParams.params);
-      return Promise.resolve('res');
+      return Promise.resolve(axiosResolveValue);
     });
 
     requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
@@ -235,7 +252,7 @@ describe('sendRequest', () => {
         'Content-Disposition: form-data; name=\\"no_data\\"'
       );
 
-      expect(res).toEqual('res');
+      expect(res).toEqual(expectedResult);
       expect(mockAxiosInstance.mock.calls.length).toBe(1);
       done();
     });
@@ -274,7 +291,7 @@ describe('sendRequest', () => {
 
     mockAxiosInstance.mockImplementation(requestParams => {
       requestParams.paramsSerializer(requestParams.params);
-      return Promise.resolve('res');
+      return Promise.resolve(axiosResolveValue);
     });
 
     requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
@@ -292,7 +309,7 @@ describe('sendRequest', () => {
       expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.options.method);
       expect(mockAxiosInstance.mock.calls[0][0].params).toEqual(parameters.options.qs);
       expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
-      expect(res).toEqual('res');
+      expect(res).toEqual(expectedResult);
       expect(mockAxiosInstance.mock.calls.length).toBe(1);
       done();
     });
@@ -325,7 +342,7 @@ describe('sendRequest', () => {
   //     requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
   //       // assert results
   //       expect(mockAxiosInstance.mock.calls[0][0].otherParam).toEqual(500);
-  //       expect(res).toEqual('res');
+  //       expect(res).toEqual(expectedResult);
   //       expect(mockAxiosInstance.mock.calls.length).toBe(1);
   //       done();
   //     });

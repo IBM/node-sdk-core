@@ -226,6 +226,7 @@ export class RequestWrapper {
       delete res.config;
       delete res.request;
       // the other sdks use the interface `result` for the body
+      res.result = res.data;
       _callback(null, res.data, res);
     })
     .catch(error => {
