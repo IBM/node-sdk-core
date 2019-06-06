@@ -1,3 +1,10 @@
+## [0.3.1](https://github.com/IBM/node-sdk-core/compare/v0.3.0...v0.3.1) (2019-06-06)
+
+
+### Bug Fixes
+
+* expose the body in the detailed response under the field `result` ([f4aa4f9](https://github.com/IBM/node-sdk-core/commit/f4aa4f9))
+
 # [0.3.0](https://github.com/IBM/node-sdk-core/compare/v0.2.8...v0.3.0) (2019-06-05)
 
 
