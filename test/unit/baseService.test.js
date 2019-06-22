@@ -108,6 +108,8 @@ describe('BaseService', function() {
       iam_access_token: 'test',
       iam_apikey: 'test',
       iam_url: 'test',
+      iam_client_id: 'test',
+      iam_client_secret: 'test',
       icp4d_access_token: 'test',
       icp4d_url: 'test',
       authentication_type: 'test',
@@ -120,6 +122,8 @@ describe('BaseService', function() {
     expect(creds.iam_access_token).toBeDefined();
     expect(creds.iam_apikey).toBeDefined();
     expect(creds.iam_url).toBeDefined();
+    expect(creds.iam_client_id).toBeDefined();
+    expect(creds.iam_client_secret).toBeDefined();
     expect(creds.icp4d_access_token).toBeDefined();
     expect(creds.icp4d_url).toBeDefined();
     expect(creds.authentication_type).toBeDefined();
@@ -144,6 +148,8 @@ describe('BaseService', function() {
     process.env.TEST_IAM_ACCESS_TOKEN = 'test';
     process.env.TEST_IAM_APIKEY = 'test';
     process.env.TEST_IAM_URL = 'test';
+    process.env.TEST_IAM_CLIENT_ID = 'test';
+    process.env.TEST_IAM_CLIENT_SECRET = 'test';
     process.env.TEST_ICP4D_ACCESS_TOKEN = 'test';
     process.env.TEST_ICP4D_URL = 'test';
     process.env.TEST_AUTHENTICATION_TYPE = 'test';
@@ -157,6 +163,8 @@ describe('BaseService', function() {
       iam_access_token: 'test',
       iam_apikey: 'test',
       iam_url: 'test',
+      iam_client_id: 'test',
+      iam_client_secret: 'test',
       icp4d_access_token: 'test',
       icp4d_url: 'test',
       authentication_type: 'test',

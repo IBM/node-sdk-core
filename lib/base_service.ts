@@ -63,6 +63,8 @@ export interface Credentials {
   iam_access_token?: string;
   iam_apikey?: string;
   iam_url?: string;
+  iam_client_id?: string;
+  iam_client_secret?: string;
   authentication_type?: string;
 }
 
@@ -243,6 +245,12 @@ export class BaseService {
     if (this._options.iam_url) {
       credentials.iam_url = this._options.iam_url;
     }
+    if (this._options.iam_client_id) {
+      credentials.iam_client_id = this._options.iam_client_id;
+    }
+    if (this._options.iam_client_secret) {
+      credentials.iam_client_secret = this._options.iam_client_secret;
+    }
     if (this._options.icp4d_access_token) {
       credentials.icp4d_access_token = this._options.icp4d_access_token;
     }
@@ -421,6 +429,8 @@ export class BaseService {
     const iamAccessToken: string = envObj[`${_name}_IAM_ACCESS_TOKEN`] || envObj[`${nameWithUnderscore}_IAM_ACCESS_TOKEN`];
     const iamApiKey: string = envObj[`${_name}_IAM_APIKEY`] || envObj[`${nameWithUnderscore}_IAM_APIKEY`];
     const iamUrl: string = envObj[`${_name}_IAM_URL`] || envObj[`${nameWithUnderscore}_IAM_URL`];
+    const iamClientId: string = envObj[`${_name}_IAM_CLIENT_ID`] || envObj[`${_name}_IAM_CLIENT_ID`];
+    const iamClientSecret: string = envObj[`${_name}_IAM_CLIENT_SECRET`] || envObj[`${_name}_IAM_CLIENT_SECRET`];
     const icp4dAccessToken: string = envObj[`${_name}_ICP4D_ACCESS_TOKEN`] || envObj[`${nameWithUnderscore}_ICP4D_ACCESS_TOKEN`];
     const icp4dUrl: string = envObj[`${_name}_ICP4D_URL`] || envObj[`${nameWithUnderscore}_ICP4D_URL`];
     const authenticationType: string = envObj[`${_name}_AUTHENTICATION_TYPE`] || envObj[`${nameWithUnderscore}_AUTHENTICATION_TYPE`];
@@ -432,6 +442,8 @@ export class BaseService {
       iam_access_token: iamAccessToken,
       iam_apikey: iamApiKey,
       iam_url: iamUrl,
+      iam_client_id: iamClientId,
+      iam_client_secret: iamClientSecret,
       icp4d_access_token: icp4dAccessToken,
       icp4d_url: icp4dUrl,
       authentication_type: authenticationType,
