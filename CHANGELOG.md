@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/IBM/node-sdk-core/compare/v0.3.1...v0.3.2) (2019-06-23)
+
+
+### Bug Fixes
+
+* read iam client id and secret from environment variables ([#30](https://github.com/IBM/node-sdk-core/issues/30)) ([2247d0a](https://github.com/IBM/node-sdk-core/commit/2247d0a))
+
 ## [0.3.1](https://github.com/IBM/node-sdk-core/compare/v0.3.0...v0.3.1) (2019-06-06)
 
 
