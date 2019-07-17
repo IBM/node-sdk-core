@@ -165,6 +165,18 @@ export class BaseService {
         'the "new" keyword is required to create Watson service instances'
       );
     }
+
+    // deprecate node versions 6 and 8
+    // these will be removed in v5
+    const isNodeSix = semver.satisfies(process.version, '6.x');
+    const isNodeEight = semver.satisfies(process.version, '8.x');
+    if (isNodeSix) {
+      console.warn('Node v6 will not be supported in the SDK in the next major release (09/2019). Version 6 reached end of life in April 2019.');
+    }
+    if (isNodeEight) {
+      console.warn('Node v8 will not be supported in the SDK in the next major release (09/2019). Version 8 reaches end of life on 31 December 2019.');
+    }
+
     const options = extend({}, userOptions);
 
     const _options = this.initCredentials(options);
