@@ -1,9 +1,10 @@
 language: node_js
 sudo: false
 node_js:
-- 6
-- 8
 - 10
+- 12
+cache:
+  npm: false
 script:
 - npm run prepare
 - npm run lint
@@ -17,4 +18,5 @@ deploy:
   skip_cleanup: true
   script: npx semantic-release
   on:
-    node: 10
+    node: 12
+    repo: IBM/node-sdk-core
