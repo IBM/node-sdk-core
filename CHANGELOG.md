@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/IBM/node-sdk-core/compare/v0.3.2...v0.3.3) (2019-07-17)
+
+
+### Bug Fixes
+
+* add deprecation notice for node versions 6 and 8 ([#32](https://github.com/IBM/node-sdk-core/issues/32)) ([9e3c667](https://github.com/IBM/node-sdk-core/commit/9e3c667))
+
 ## [0.3.2](https://github.com/IBM/node-sdk-core/compare/v0.3.1...v0.3.2) (2019-06-23)
 
 
