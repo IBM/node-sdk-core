@@ -15,6 +15,7 @@
  */
 
 import extend = require('extend');
+import semver = require('semver');
 import vcapServices = require('vcap_services');
 import { computeBasicAuthHeader, IamTokenManagerV1, Icp4dTokenManagerV1 } from '../auth';
 import { stripTrailingSlash } from './helper';
