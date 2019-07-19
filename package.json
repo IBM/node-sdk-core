@@ -69,7 +69,7 @@
     "vcap_services": "~0.3.4"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=10"
   },
   "scripts": {
     "commitmsg": "commitlint -E GIT_PARAMS",
