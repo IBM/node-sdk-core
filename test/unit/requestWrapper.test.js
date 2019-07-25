@@ -15,37 +15,42 @@ mockAxiosInstance.interceptors = {
 axios.default.create.mockReturnValue(mockAxiosInstance);
 
 const { RequestWrapper } = require('../../lib/requestwrapper');
-let requestWrapperInstance;
+const requestWrapperInstance = new RequestWrapper();
 
 describe('axios', () => {
   it('should enable debug', () => {
-    requestWrapperInstance = new RequestWrapper();
+    // these should have been called when requestWrapperInstance was instantiated
     expect(mockAxiosInstance.interceptors.request.use).toHaveBeenCalledTimes(1);
     expect(mockAxiosInstance.interceptors.response.use).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('sendRequest', () => {
+  let axiosResolveValue;
+  let expectedResult;
+
+  beforeEach(() => {
+    // these objects get messed with, so reset them before each test
+    axiosResolveValue = {
+      data: 'test',
+      config: 'test',
+      request: 'test',
+      statusText: 'test',
+      status: 200,
+      headers: 'test',
+    };
+
+    expectedResult = {
+      result: 'test',
+      statusText: 'test',
+      status: 200,
+      headers: 'test',
+    };
+  });
+
   afterEach(() => {
     mockAxiosInstance.mockReset();
   });
-
-  const axiosResolveValue = {
-    data: 'test',
-    config: 'test',
-    request: 'test',
-    statusText: 'test',
-    status: 200,
-    headers: 'test',
-  };
-
-  const expectedResult = {
-    data: 'test',
-    result: 'test',
-    statusText: 'test',
-    status: 200,
-    headers: 'test',
-  };
 
   it('should send a request with default parameters', done => {
     const parameters = {
@@ -65,7 +70,7 @@ describe('sendRequest', () => {
 
     mockAxiosInstance.mockResolvedValue(axiosResolveValue);
 
-    requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
+    requestWrapperInstance.sendRequest(parameters, (err, res) => {
       // assert results
       expect(mockAxiosInstance.mock.calls[0][0].data).toEqual('post=body');
       expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
@@ -103,10 +108,9 @@ describe('sendRequest', () => {
 
     mockAxiosInstance.mockRejectedValue('error');
 
-    requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
+    requestWrapperInstance.sendRequest(parameters, (err, res) => {
       // assert results
       expect(err).toEqual(expect.anything());
-      expect(body).toBeUndefined();
       expect(res).toBeUndefined();
       done();
     });
@@ -150,7 +154,7 @@ describe('sendRequest', () => {
       return Promise.resolve(axiosResolveValue);
     });
 
-    requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
+    requestWrapperInstance.sendRequest(parameters, (err, res) => {
       // assert results
       expect(serializedParams).toBe('version=2018-10-15&array_style=a%2Cb');
       expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
@@ -220,7 +224,7 @@ describe('sendRequest', () => {
       return Promise.resolve(axiosResolveValue);
     });
 
-    requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
+    requestWrapperInstance.sendRequest(parameters, (err, res) => {
       // assert results
       expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
         'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
@@ -294,7 +298,7 @@ describe('sendRequest', () => {
       return Promise.resolve(axiosResolveValue);
     });
 
-    requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
+    requestWrapperInstance.sendRequest(parameters, (err, res) => {
       // assert results
       expect(mockAxiosInstance.mock.calls[0][0].data).toEqual('a=a&b=b');
       expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
@@ -339,7 +343,7 @@ describe('sendRequest', () => {
   //
   //     mockAxiosInstance.mockResolvedValue('res');
   //
-  //     requestWrapperInstance.sendRequest(parameters, (err, body, res) => {
+  //     requestWrapperInstance.sendRequest(parameters, (err, res) => {
   //       // assert results
   //       expect(mockAxiosInstance.mock.calls[0][0].otherParam).toEqual(500);
   //       expect(res).toEqual(expectedResult);
