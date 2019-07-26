@@ -205,11 +205,16 @@ export class RequestWrapper {
 
     this.axiosInstance(requestParams)
     .then(res => {
+      // these objects contain circular json structures and are not always relevant to the user
+      // if the user wants them, they can be accessed through the debug properties
       delete res.config;
       delete res.request;
+
       // the other sdks use the interface `result` for the body
       res.result = res.data;
-      _callback(null, res.data, res);
+      delete res.data;
+
+      _callback(null, res);
     })
     .catch(error => {
       _callback(this.formatError(error));
