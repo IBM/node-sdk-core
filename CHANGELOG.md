@@ -1,3 +1,10 @@
+## [0.3.4](https://github.com/IBM/node-sdk-core/compare/v0.3.3...v0.3.4) (2019-08-05)
+
+
+### Bug Fixes
+
+* extend constructor options type to allow additional properties ([#35](https://github.com/IBM/node-sdk-core/issues/35)) ([70af0c9](https://github.com/IBM/node-sdk-core/commit/70af0c9))
+
 ## [0.3.3](https://github.com/IBM/node-sdk-core/compare/v0.3.2...v0.3.3) (2019-07-17)
 
 
