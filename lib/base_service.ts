@@ -46,6 +46,8 @@ export interface UserOptions {
   iam_client_secret?: string;
   authentication_type?: string;
   disable_ssl_verification?: boolean;
+  /** Allow additional request config parameters */
+  [propName: string]: any;
 }
 
 export interface BaseServiceOptions extends UserOptions {
