@@ -42,6 +42,7 @@ export type Options = {
   iamAccessToken?: string;
   iamClientId?: string;
   iamClientSecret?: string;
+  requestWrapper?: any;
 }
 
 // this interface is a representation of the response
