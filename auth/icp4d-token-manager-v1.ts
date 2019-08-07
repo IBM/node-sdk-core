@@ -24,6 +24,7 @@ export type Options = {
   username?: string;
   password?: string;
   disableSslVerification?: boolean;
+  requestWrapper?: any;
 }
 
 // this interface is a representation of the response

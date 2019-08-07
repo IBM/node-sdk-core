@@ -25,6 +25,7 @@ function getCurrentTime(): number {
 export type Options = {
   accessToken?: string;
   url?: string;
+  requestWrapper?: any;
 }
 
 export class JwtTokenManagerV1 {
@@ -61,7 +62,8 @@ export class JwtTokenManagerV1 {
       this.userAccessToken = options.accessToken;
     }
 
-    this.requestWrapperInstance = new RequestWrapper();
+    // not required, but the SDK will always pass in a request wrapper instance
+    this.requestWrapperInstance = options.requestWrapper || new RequestWrapper();
   }
 
   /**

@@ -200,6 +200,8 @@ export class BaseService {
     // used to disable ssl checking for icp
     this._options.rejectUnauthorized = !options.disable_ssl_verification;
 
+    this.requestWrapperInstance = new RequestWrapper(this._options);
+
     if (_options.authentication_type === 'iam' || hasIamCredentials(_options)) {
       this.tokenManager = new IamTokenManagerV1({
         iamApikey: _options.iam_apikey,
@@ -207,6 +209,7 @@ export class BaseService {
         url: _options.iam_url,
         iamClientId: _options.iam_client_id,
         iamClientSecret: _options.iam_client_secret,
+        requestWrapper: this.requestWrapperInstance,
       });
     } else if (usesBasicForIam(_options)) {
       this.tokenManager = new IamTokenManagerV1({
@@ -214,6 +217,7 @@ export class BaseService {
         url: _options.iam_url,
         iamClientId: _options.iam_client_id,
         iamClientSecret: _options.iam_client_secret,
+        requestWrapper: this.requestWrapperInstance,
       });
     } else if (isForICP4D(_options)) {
       if (!_options.icp4d_url && !_options.icp4d_access_token) {
@@ -225,12 +229,11 @@ export class BaseService {
         password: _options.password,
         accessToken: _options.icp4d_access_token,
         disableSslVerification: options.disable_ssl_verification,
+        requestWrapper: this.requestWrapperInstance,
       });
     } else {
       this.tokenManager = null;
     }
-
-    this.requestWrapperInstance = new RequestWrapper(this._options);
   }
 
   /**
@@ -298,10 +301,12 @@ export class BaseService {
         accessToken: access_token,
         url: this._options.icp4d_url,
         disableSslVerification: this._options.disable_ssl_verification,
+        requestWrapper: this.requestWrapperInstance,
       });
     } else {
       this.tokenManager = new IamTokenManagerV1({
         accessToken: access_token,
+        requestWrapper: this.requestWrapperInstance,
       });
     }
   }
