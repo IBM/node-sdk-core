@@ -58,11 +58,8 @@ export class BaseService {
    */
   constructor(userOptions: UserOptions) {
     if (!(this instanceof BaseService)) {
-      // it might be better to just create a new instance and return that..
-      // but that can't be done here, it has to be done in each individual service.
-      // So this is still a good failsafe even in that case.
       throw new Error(
-        'the "new" keyword is required to create Watson service instances'
+        'the "new" keyword is required to create service instances'
       );
     }
 

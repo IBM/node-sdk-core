@@ -15,14 +15,14 @@
  */
 
 import extend = require('extend');
+import { Authenticator } from './authenticator';
 import { AuthenticatorInterface } from './authenticator-interface';
-import { BaseAuthenticator } from './base-authenticator';
 
 export type Options = {
   bearerToken: string;
 }
 
-export class BearerTokenAuthenticator extends BaseAuthenticator implements AuthenticatorInterface {
+export class BearerTokenAuthenticator extends Authenticator implements AuthenticatorInterface {
   protected requiredOptions = ['bearerToken'];
   private bearerToken: string;
 

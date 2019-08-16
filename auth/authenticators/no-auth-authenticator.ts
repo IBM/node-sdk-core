@@ -15,9 +15,9 @@
  */
 
 import { AuthenticatorInterface } from './authenticator-interface';
-import { BaseAuthenticator } from './base-authenticator';
+import { Authenticator } from './authenticator';
 
-export class NoauthAuthenticator extends BaseAuthenticator implements AuthenticatorInterface {
+export class NoauthAuthenticator extends Authenticator implements AuthenticatorInterface {
   /**
    * Noauth Authenticator Class
    *

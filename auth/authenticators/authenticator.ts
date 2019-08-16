@@ -18,12 +18,19 @@ import { OutgoingHttpHeaders } from 'http';
 import { getMissingParams } from '../../lib/helper';
 import { checkCredentials } from '../utils/helpers'; // just using '../utils' here leads to a test failure. need to open an issue against typescript
 
-export class BaseAuthenticator {
+export class Authenticator {
   /**
    * Base Authenticator Class
    *
    * Provides the Base Authenticator class for others to extend.
    */
+  constructor() {
+    if (!(this instanceof Authenticator)) {
+      throw new Error(
+        'the "new" keyword is required to create authenticator instances'
+      );
+    }
+  }
 
   public authenticate(options: any, callback: Function): void {
     throw new Error('Should be implemented by subclass!');

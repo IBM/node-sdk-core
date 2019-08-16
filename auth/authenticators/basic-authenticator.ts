@@ -16,15 +16,15 @@
 
 import extend = require('extend');
 import { computeBasicAuthHeader } from '../utils';
+import { Authenticator } from './authenticator';
 import { AuthenticatorInterface } from './authenticator-interface';
-import { BaseAuthenticator } from './base-authenticator';
 
 export type Options = {
   username?: string;
   password?: string;
 }
 
-export class BasicAuthenticator extends BaseAuthenticator implements AuthenticatorInterface {
+export class BasicAuthenticator extends Authenticator implements AuthenticatorInterface {
   protected requiredOptions = ['username', 'password'];
   private username: string;
   private password: string;

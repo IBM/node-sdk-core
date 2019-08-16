@@ -17,8 +17,8 @@
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import { JwtTokenManagerV1 } from '../token-managers';
+import { Authenticator } from './authenticator';
 import { AuthenticatorInterface } from './authenticator-interface';
-import { BaseAuthenticator } from './base-authenticator';
 
 export type BaseOptions = {
   headers?: OutgoingHttpHeaders;
@@ -28,7 +28,7 @@ export type BaseOptions = {
   [propName: string]: any;
 }
 
-export class TokenRequestBasedAuthenticator extends BaseAuthenticator implements AuthenticatorInterface {
+export class TokenRequestBasedAuthenticator extends Authenticator implements AuthenticatorInterface {
   protected tokenManager: any;
   protected url: string;
   protected headers: OutgoingHttpHeaders;

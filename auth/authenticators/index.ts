@@ -15,7 +15,7 @@
  */
 
 export { AuthenticatorInterface } from './authenticator-interface';
-export { BaseAuthenticator } from './base-authenticator';
+export { Authenticator } from './authenticator';
 export { BasicAuthenticator } from './basic-authenticator';
 export { BearerTokenAuthenticator } from './bearer-token-authenticator';
 export { CloudPakForDataAuthenticator } from './cloud-pak-for-data-authenticator';
