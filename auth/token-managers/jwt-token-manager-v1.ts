@@ -24,7 +24,6 @@ function getCurrentTime(): number {
 }
 
 export type Options = {
-  accessToken?: string;
   url?: string;
   /** Allow additional request config parameters */
   [propName: string]: any;
@@ -33,7 +32,6 @@ export type Options = {
 export class JwtTokenManagerV1 {
   protected url: string;
   protected tokenName: string;
-  protected userAccessToken: string;
   protected disableSslVerification: boolean;
   protected headers: OutgoingHttpHeaders;
   protected requestWrapperInstance;
@@ -61,15 +59,11 @@ export class JwtTokenManagerV1 {
       this.url = options.url;
     }
 
-    if (options.accessToken) {
-      this.userAccessToken = options.accessToken;
-    }
-
     // request options
     this.disableSslVerification = Boolean(options.disableSslVerification);
     this.headers = options.headers || {};
 
-    // any bonus reqeust options, like `proxy`, will be sent here
+    // any bonus reqeust options, like `proxy`, will be passed here
     this.requestWrapperInstance = new RequestWrapper(options);
   }
 
@@ -84,11 +78,8 @@ export class JwtTokenManagerV1 {
    * @param {Function} cb - callback function that the token will be passed to
    */
   public getToken(cb: Function) {
-    if (this.userAccessToken) {
-      // 1. use user-managed token
-      return cb(null, this.userAccessToken);
-    } else if (!this.tokenInfo[this.tokenName] || this.isTokenExpired()) {
-      // 2. request a new token
+    if (!this.tokenInfo[this.tokenName] || this.isTokenExpired()) {
+      // 1. request a new token
       this.requestToken((err, tokenResponse) => {
         if (!err) {
           try {
@@ -102,25 +93,9 @@ export class JwtTokenManagerV1 {
         return cb(err, this.tokenInfo[this.tokenName] || null);
       });
     } else {
-      // 3. use valid, sdk-managed token
+      // 2. use valid, managed token
       return cb(null, this.tokenInfo[this.tokenName]);
     }
-  }
-
-  /**
-   * Set a self-managed access token.
-   * The access token should be valid and not yet expired.
-   *
-   * By using this method, you accept responsibility for managing the
-   * access token yourself. You must set a new access token before this
-   * one expires. Failing to do so will result in authentication errors
-   * after this token expires.
-   *
-   * @param {string} accessToken - A valid, non-expired access token
-   * @returns {void}
-   */
-  public setAccessToken(accessToken: string): void {
-    this.userAccessToken = accessToken;
   }
 
   /**

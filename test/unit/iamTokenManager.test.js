@@ -30,6 +30,10 @@ describe('iam_token_manager_v1', function() {
     mockSendRequest.mockRestore();
   });
 
+  it('should throw an error if apikey is not provided', () => {
+    expect(() => new IamTokenManagerV1()).toThrow();
+  });
+
   it('should turn an iam apikey into an access token', function(done) {
     const instance = new IamTokenManagerV1({ apikey: 'abcd-1234' });
 
@@ -102,29 +106,6 @@ describe('iam_token_manager_v1', function() {
     instance.tokenInfo = currentTokenInfo;
     instance.timeToLive = currentTokenInfo.expires_in;
     instance.expireTime = currentTokenInfo.expiration;
-
-    instance.getToken(function(err, token) {
-      expect(token).toBe(accessToken);
-      expect(requestMock).not.toHaveBeenCalled();
-      done();
-    });
-  });
-
-  it('should return a user-managed access token if one is set post-construction', function(done) {
-    const instance = new IamTokenManagerV1({ apikey: 'abcd-1234' });
-    const requestMock = jest.spyOn(instance, 'requestToken');
-
-    const accessToken = '9012';
-    const currentTokenInfo = {
-      access_token: '1234',
-      refresh_token: '5678',
-      token_type: 'Bearer',
-      expires_in: 3600,
-      expiration: Math.floor(Date.now() / 1000) + 3000,
-    };
-
-    instance.tokenInfo = currentTokenInfo;
-    instance.setAccessToken(accessToken);
 
     instance.getToken(function(err, token) {
       expect(token).toBe(accessToken);

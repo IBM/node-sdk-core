@@ -13,25 +13,20 @@ const ACCESS_TOKEN = 'abc123';
 describe('iam_token_manager_v1', () => {
   it('should initialize base variables', () => {
     const url = 'service.com';
-    const instance = new JwtTokenManagerV1({ url, accessToken: ACCESS_TOKEN });
+    const instance = new JwtTokenManagerV1({ url });
 
     expect(instance.url).toBe(url);
-    expect(instance.userAccessToken).toBe(ACCESS_TOKEN);
     expect(instance.tokenName).toBe('access_token');
     expect(instance.tokenInfo).toEqual({});
     expect(instance.requestWrapperInstance).toBeDefined();
   });
 
-  describe('getToken', () => {
-    it('should return user-managed token if present', done => {
-      const instance = new JwtTokenManagerV1({ accessToken: ACCESS_TOKEN });
-      instance.getToken((err, res) => {
-        expect(err).toBeNull();
-        expect(res).toBe(ACCESS_TOKEN);
-        done();
-      });
-    });
+  it('should pass all options to the request wrapper instance', () => {
+    const instance = new JwtTokenManagerV1({ proxy: false });
+    expect(instance.requestWrapperInstance.axiosInstance.defaults.proxy).toBe(false);
+  });
 
+  describe('getToken', () => {
     it('should request a token if no token is stored', done => {
       const instance = new JwtTokenManagerV1();
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
@@ -135,16 +130,6 @@ describe('iam_token_manager_v1', () => {
         done();
       });
     });
-  });
-
-  it('should set userAccessToken with setAccessToken', () => {
-    const instance = new JwtTokenManagerV1();
-
-    expect(instance.url).toBe(undefined);
-    expect(instance.userAccessToken).toBe(undefined);
-
-    instance.setAccessToken(ACCESS_TOKEN);
-    expect(instance.userAccessToken).toBe(ACCESS_TOKEN);
   });
 
   it('should callback with error if requestToken is not overriden', done => {

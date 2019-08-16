@@ -15,13 +15,13 @@
  */
 
 import extend = require('extend');
-import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
+import { getMissingParams } from '../../lib/helper';
 import { computeBasicAuthHeader } from '../utils';
+import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
 
 // we should make these options extend the ones from the base class
 export type Options = {
   url: string;
-  accessToken?: string;
   username?: string;
   password?: string;
   disableSslVerification?: boolean;
@@ -64,19 +64,22 @@ export class Cp4dTokenManagerV1 extends JwtTokenManagerV1 {
 
     this.tokenName = 'accessToken';
 
-    if (this.url) {
-      this.url = this.url + '/v1/preauth/validateAuth';
-    } else if (!this.userAccessToken) {
-      // url is not needed if the user specifies their own access token
-      throw new Error('`url` is a required parameter for Cp4dTokenManagerV1');
+    // check for required params
+    const requiredOptions = ['username', 'password', 'url'];
+    const missingParamsError = getMissingParams(options, requiredOptions);
+    if (missingParamsError) {
+      throw missingParamsError;
     }
 
-    if (options.username) {
-      this.username = options.username;
+    const tokenApiPath = '/v1/preauth/validateAuth';
+
+    // do not append the path if user already has
+    if (this.url && !this.url.endsWith(tokenApiPath)) {
+      this.url = this.url + tokenApiPath;
     }
-    if (options.password) {
-      this.password = options.password;
-    }
+
+    this.username = options.username;
+    this.password = options.password;
   }
 
   /**

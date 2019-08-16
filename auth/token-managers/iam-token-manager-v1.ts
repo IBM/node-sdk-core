@@ -16,6 +16,7 @@
 
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
+import { getMissingParams } from '../../lib/helper';
 import { computeBasicAuthHeader } from '../utils';
 import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
 
@@ -73,8 +74,15 @@ export class IamTokenManagerV1 extends JwtTokenManagerV1 {
    */
   constructor(options: Options) {
     super(options);
+
+    // check for required params
+    const requiredOptions = ['apikey'];
+    const missingParamsError = getMissingParams(options, requiredOptions);
+    if (missingParamsError) {
+      throw missingParamsError;
+    }
     
-    this.apikey = options.apikey; // verify???
+    this.apikey = options.apikey;
 
     this.url = this.url || 'https://iam.cloud.ibm.com/identity/token';
 

@@ -3,36 +3,39 @@
 const { CloudPakForDataAuthenticator } = require('../../auth');
 const { Cp4dTokenManagerV1 } = require('../../auth');
 
+const USERNAME = 'danmullen';
+const PASSWORD = 'gogators';
+const URL = 'myicp.com:1234';
+const CONFIG = {
+  username: USERNAME,
+  password: PASSWORD,
+  url: URL,
+  disableSslVerification: true,
+  headers: {
+    'X-My-Header': 'some-value',
+  },
+};
+
 // mock the `getToken` method in the token manager - dont make any rest calls
 const fakeToken = 'iam-acess-token';
 const mockedTokenManager = new Cp4dTokenManagerV1({
-  username: 'abc',
-  password: '123',
-  url: 'myicp.com:1234',
+  username: USERNAME,
+  password: PASSWORD,
+  url: URL,
 });
 const getTokenSpy = jest.spyOn(mockedTokenManager, 'getToken').mockImplementation(callback => {
   callback(null, fakeToken);
 });
 
 describe('CP4D Authenticator', () => {
-  const config = {
-    username: 'danmullen',
-    password: 'gogators',
-    url: 'myicp.com:1234',
-    disableSslVerification: true,
-    headers: {
-      'X-My-Header': 'some-value',
-    },
-  };
+  it('should store all CONFIG options on the class', () => {
+    const authenticator = new CloudPakForDataAuthenticator(CONFIG);
 
-  it('should store all config options on the class', () => {
-    const authenticator = new CloudPakForDataAuthenticator(config);
-
-    expect(authenticator.username).toBe(config.username);
-    expect(authenticator.password).toBe(config.password);
-    expect(authenticator.url).toBe(config.url);
-    expect(authenticator.disableSslVerification).toBe(config.disableSslVerification);
-    expect(authenticator.headers).toEqual(config.headers);
+    expect(authenticator.username).toBe(CONFIG.username);
+    expect(authenticator.password).toBe(CONFIG.password);
+    expect(authenticator.url).toBe(CONFIG.url);
+    expect(authenticator.disableSslVerification).toBe(CONFIG.disableSslVerification);
+    expect(authenticator.headers).toEqual(CONFIG.headers);
 
     // should also create a token manager
     expect(authenticator.tokenManager).toBeInstanceOf(Cp4dTokenManagerV1);
@@ -40,24 +43,44 @@ describe('CP4D Authenticator', () => {
 
   it('should throw an error when username is not provided', () => {
     expect(() => {
-      new CloudPakForDataAuthenticator({ password: '123' });
+      new CloudPakForDataAuthenticator({ password: PASSWORD });
     }).toThrow();
   });
 
   it('should throw an error when password is not provided', () => {
     expect(() => {
-      new CloudPakForDataAuthenticator({ username: 'abc' });
+      new CloudPakForDataAuthenticator({ username: USERNAME });
     }).toThrow();
   });
 
   it('should throw an error when url is not provided', () => {
     expect(() => {
-      new CloudPakForDataAuthenticator({ password: '123', username: 'abc' });
+      new CloudPakForDataAuthenticator({ password: PASSWORD, username: USERNAME });
     }).toThrow();
   });
 
+  it('should throw an error when username has a bad character', () => {
+    expect(() => {
+      new CloudPakForDataAuthenticator({
+        username: '"<your-username>"',
+        password: PASSWORD,
+        url: URL,
+      });
+    }).toThrow(/Revise these credentials/);
+  });
+
+  it('should throw an error when password has a bad character', () => {
+    expect(() => {
+      new CloudPakForDataAuthenticator({
+        username: USERNAME,
+        password: '{some-password}',
+        url: URL,
+      });
+    }).toThrow(/Revise these credentials/);
+  });
+
   it('should update the options and send `null` in the callback', done => {
-    const authenticator = new CloudPakForDataAuthenticator(config);
+    const authenticator = new CloudPakForDataAuthenticator(CONFIG);
 
     // override the created token manager with the mocked one
     authenticator.tokenManager = mockedTokenManager;
@@ -76,8 +99,8 @@ describe('CP4D Authenticator', () => {
   });
 
   it('should re-set disableSslVerification using the setter', () => {
-    const authenticator = new CloudPakForDataAuthenticator(config);
-    expect(authenticator.disableSslVerification).toBe(config.disableSslVerification);
+    const authenticator = new CloudPakForDataAuthenticator(CONFIG);
+    expect(authenticator.disableSslVerification).toBe(CONFIG.disableSslVerification);
 
     const newValue = false;
     authenticator.setDisableSslVerification(newValue);
@@ -88,8 +111,8 @@ describe('CP4D Authenticator', () => {
   });
 
   it('should re-set the headers using the setter', () => {
-    const authenticator = new CloudPakForDataAuthenticator(config);
-    expect(authenticator.headers).toEqual(config.headers);
+    const authenticator = new CloudPakForDataAuthenticator(CONFIG);
+    expect(authenticator.headers).toEqual(CONFIG.headers);
 
     const newHeader = { 'X-New-Header': 'updated-header' };
     authenticator.setHeaders(newHeader);

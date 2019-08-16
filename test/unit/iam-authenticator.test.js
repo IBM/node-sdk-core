@@ -42,6 +42,12 @@ describe('IAM Authenticator', () => {
     }).toThrow();
   });
 
+  it('should throw an error when username has a bad character', () => {
+    expect(() => {
+      new IamAuthenticator({ apikey: '"<your-apikey>"' });
+    }).toThrow(/Revise these credentials/);
+  });
+
   it('should update the options and send `null` in the callback', done => {
     const authenticator = new IamAuthenticator({ apikey: 'testjustanapikey' });
 

@@ -13,27 +13,43 @@ RequestWrapper.mockImplementation(() => {
   };
 });
 
-describe('icp4d_token_manager_v1', () => {
+const USERNAME = 'sherlock';
+const PASSWORD = 'holmes';
+const URL = 'tokenservice.com';
+const FULL_URL = 'tokenservice.com/v1/preauth/validateAuth';
+
+describe('CP4D Token Manager', () => {
   describe('constructor', () => {
     it('should initialize base variables', () => {
       const instance = new Cp4dTokenManagerV1({
         url: 'tokenservice.com',
-        username: 'sherlock',
-        password: 'holmes',
-        accessToken: 'abc123',
+        username: USERNAME,
+        password: PASSWORD,
       });
 
       expect(instance.tokenName).toBe('accessToken');
-      expect(instance.url).toBe('tokenservice.com/v1/preauth/validateAuth');
-      expect(instance.username).toBe('sherlock');
-      expect(instance.password).toBe('holmes');
+      expect(instance.url).toBe(FULL_URL);
+      expect(instance.username).toBe(USERNAME);
+      expect(instance.password).toBe(PASSWORD);
       expect(instance.disableSslVerification).toBe(false);
-      expect(instance.userAccessToken).toBe('abc123');
+    });
+
+    it('should not append the token path if supplied by user', () => {
+      const url = FULL_URL;
+      const instance = new Cp4dTokenManagerV1({
+        url,
+        username: USERNAME,
+        password: PASSWORD,
+      });
+
+      expect(instance.url).toBe(url);
     });
 
     it('should set disableSslVerification', () => {
       const instance = new Cp4dTokenManagerV1({
-        url: 'tokenservice.com',
+        username: USERNAME,
+        password: PASSWORD,
+        url: URL,
         disableSslVerification: true,
       });
 
@@ -41,18 +57,45 @@ describe('icp4d_token_manager_v1', () => {
     });
 
     it('should throw an error if `url` is not given', () => {
-      expect(() => new Cp4dTokenManagerV1()).toThrow();
+      expect(
+        () =>
+          new Cp4dTokenManagerV1({
+            username: USERNAME,
+            password: PASSWORD,
+          })
+      ).toThrow();
     });
 
-    it('should not throw an error if `url` is not given but using user-managed access token', () => {
-      expect(() => new Cp4dTokenManagerV1({ accessToken: 'token' })).not.toThrow();
+    it('should throw an error if `username` is not given', () => {
+      expect(
+        () =>
+          new Cp4dTokenManagerV1({
+            password: PASSWORD,
+            url: URL,
+          })
+      ).toThrow();
+    });
+
+    it('should throw an error if `password` is not given', () => {
+      expect(
+        () =>
+          new Cp4dTokenManagerV1({
+            username: 'abc',
+            url: URL,
+          })
+      ).toThrow();
     });
   });
 
   describe('requestToken', () => {
     it('should call sendRequest with all request options', () => {
       const noop = () => {};
-      const instance = new Cp4dTokenManagerV1({ url: 'tokenservice.com' });
+      const instance = new Cp4dTokenManagerV1({
+        url: URL,
+        username: USERNAME,
+        password: PASSWORD,
+      });
+
       instance.requestToken(noop);
 
       // extract arguments sendRequest was called with
@@ -61,13 +104,12 @@ describe('icp4d_token_manager_v1', () => {
 
       expect(mockSendRequest).toHaveBeenCalled();
       expect(params.options).toBeDefined();
-      expect(params.options.url).toBe('tokenservice.com/v1/preauth/validateAuth');
+      expect(params.options.url).toBe(FULL_URL);
       expect(params.options.method).toBe('GET');
       expect(params.options.rejectUnauthorized).toBe(true);
       expect(params.options.headers).toBeDefined();
 
-      // encoding of undefined:undefined
-      expect(params.options.headers.Authorization).toBe('Basic dW5kZWZpbmVkOnVuZGVmaW5lZA==');
+      expect(params.options.headers.Authorization).toBe('Basic c2hlcmxvY2s6aG9sbWVz');
       expect(callback).toBe(noop);
     });
   });
