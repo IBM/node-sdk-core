@@ -2,5 +2,5 @@
     --out ./doc \
     ./lib/base_service.ts ./lib/content-type.ts \
     ./lib/helper.ts ./lib/querystring.ts \
-    ./lib/read-credentials-file.ts ./lib/requestwrapper.ts \
+    ./lib/requestwrapper.ts \
     ./lib/stream-to-promise.ts --target "ES5"
