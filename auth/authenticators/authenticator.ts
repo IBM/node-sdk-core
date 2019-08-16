@@ -17,8 +17,9 @@
 import { OutgoingHttpHeaders } from 'http';
 import { getMissingParams } from '../../lib/helper';
 import { checkCredentials } from '../utils/helpers'; // just using '../utils' here leads to a test failure. need to open an issue against typescript
+import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
-export class Authenticator {
+export class Authenticator implements AuthenticatorInterface {
   /**
    * Base Authenticator Class
    *
@@ -32,7 +33,7 @@ export class Authenticator {
     }
   }
 
-  public authenticate(options: any, callback: Function): void {
+  public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
     throw new Error('Should be implemented by subclass!');
   }
 

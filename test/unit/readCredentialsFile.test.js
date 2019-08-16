@@ -1,10 +1,7 @@
 'use strict';
 
-const readCredentialsFunctions = require('../../lib/read-credentials-file');
-const constructFilepath = readCredentialsFunctions.constructFilepath;
-const fileExistsAtPath = readCredentialsFunctions.fileExistsAtPath;
-const readCredentialsFile = readCredentialsFunctions.readCredentialsFile;
 const fs = require('fs');
+const { constructFilepath, fileExistsAtPath, readCredentialsFile } = require('../../auth');
 
 describe('browser scenario', () => {
   const existSync = fs.existsSync;

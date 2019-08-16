@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { AuthenticatorInterface } from './authenticator-interface';
 import { Authenticator } from './authenticator';
+import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
 export class NoauthAuthenticator extends Authenticator implements AuthenticatorInterface {
   /**
@@ -29,7 +29,7 @@ export class NoauthAuthenticator extends Authenticator implements AuthenticatorI
     super();
   }
 
-  public authenticate(options: any, callback: Function): void {
+  public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
     // immediately proceed to request. it will probably fail
     callback(null);
   }

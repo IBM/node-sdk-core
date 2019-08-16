@@ -17,7 +17,7 @@
 import extend = require('extend');
 import { computeBasicAuthHeader } from '../utils';
 import { Authenticator } from './authenticator';
-import { AuthenticatorInterface } from './authenticator-interface';
+import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
 export type Options = {
   username?: string;
@@ -48,7 +48,7 @@ export class BasicAuthenticator extends Authenticator implements AuthenticatorIn
     this.password = options.password;
   }
 
-  public authenticate(options: any, callback: Function): void {
+  public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
     const authHeaderString = computeBasicAuthHeader(this.username, this.password);
     const authHeader = { Authorization: authHeaderString }
 

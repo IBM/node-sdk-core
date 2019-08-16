@@ -41,7 +41,7 @@ export class BaseService {
   name: string;
   serviceVersion: string;
   protected baseOptions: BaseServiceOptions;
-  private authenticator: any;
+  private authenticator: AuthenticatorInterface;
   private requestWrapperInstance;
 
   /**
