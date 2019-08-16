@@ -15,8 +15,9 @@
  */
 
 import extend = require('extend');
+import { OutgoingHttpHeaders } from 'http';
+import { computeBasicAuthHeader } from '../utils';
 import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
-import { computeBasicAuthHeader } from './utils';
 
 /**
  * Check for only one of two elements being defined.
@@ -35,13 +36,12 @@ function onlyOne(a: any, b: any): boolean {
 const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the defaults will be used.';
 
 export type Options = {
+  apikey: string;
   url?: string;
-  iamUrl?: string;
-  iamApikey?: string;
-  accessToken?: string;
-  iamAccessToken?: string;
-  iamClientId?: string;
-  iamClientSecret?: string;
+  clientId?: string;
+  clientSecret?: string;
+  disableSslVerification?: boolean;
+  headers?: OutgoingHttpHeaders;
 }
 
 // this interface is a representation of the response
@@ -56,9 +56,9 @@ export interface IamTokenData {
 }
 
 export class IamTokenManagerV1 extends JwtTokenManagerV1 {
-  private iamApikey: string;
-  private iamClientId: string;
-  private iamClientSecret: string;
+  private apikey: string;
+  private clientId: string;
+  private clientSecret: string;
 
   /**
    * IAM Token Manager Service
@@ -66,29 +66,25 @@ export class IamTokenManagerV1 extends JwtTokenManagerV1 {
    * Retreives and stores IAM access tokens.
    *
    * @param {Object} options
-   * @param {String} options.iamApikey
+   * @param {String} options.apikey
    * @param {String} options.iamAccessToken
    * @param {String} options.iamUrl - url of the iam api to retrieve tokens from
    * @constructor
    */
   constructor(options: Options) {
     super(options);
+    
+    this.apikey = options.apikey; // verify???
 
-    this.url = this.url || options.iamUrl || 'https://iam.cloud.ibm.com/identity/token';
+    this.url = this.url || 'https://iam.cloud.ibm.com/identity/token';
 
-    if (options.iamApikey) {
-      this.iamApikey = options.iamApikey;
+    if (options.clientId) {
+      this.clientId = options.clientId;
     }
-    if (options.iamAccessToken) {
-      this.userAccessToken = options.iamAccessToken;
+    if (options.clientSecret) {
+      this.clientSecret = options.clientSecret;
     }
-    if (options.iamClientId) {
-      this.iamClientId = options.iamClientId;
-    }
-    if (options.iamClientSecret) {
-      this.iamClientSecret = options.iamClientSecret;
-    }
-    if (onlyOne(options.iamClientId, options.iamClientSecret)) {
+    if (onlyOne(options.clientId, options.clientSecret)) {
       // tslint:disable-next-line
       console.log(CLIENT_ID_SECRET_WARNING);
     }
@@ -101,14 +97,14 @@ export class IamTokenManagerV1 extends JwtTokenManagerV1 {
    * If these values are not set, then a default Authorization header
    * will be used when interacting with the IAM token server.
    *
-   * @param {string} iamClientId - The client id 
-   * @param {string} iamClientSecret - The client secret
+   * @param {string} clientId - The client id 
+   * @param {string} clientSecret - The client secret
    * @returns {void}
    */
-  public setIamAuthorizationInfo(iamClientId: string, iamClientSecret: string): void {
-    this.iamClientId = iamClientId;
-    this.iamClientSecret = iamClientSecret;
-    if (onlyOne(iamClientId, iamClientSecret)) {
+  public setAuthorizationInfo(clientId: string, clientSecret: string): void {
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
+    if (onlyOne(clientId, clientSecret)) {
       // tslint:disable-next-line
       console.log(CLIENT_ID_SECRET_WARNING);
     }
@@ -133,24 +129,28 @@ export class IamTokenManagerV1 extends JwtTokenManagerV1 {
     let clientSecret = 'bx';
 
     // If both the clientId and secret were specified by the user, then use them.
-    if (this.iamClientId && this.iamClientSecret) {
-        clientId = this.iamClientId;
-        clientSecret = this.iamClientSecret;
+    if (this.clientId && this.clientSecret) {
+        clientId = this.clientId;
+        clientSecret = this.clientSecret;
     }
+
+    // these cannot be overwritten
+    const requiredHeaders = {
+      'Content-type': 'application/x-www-form-urlencoded',
+      Authorization: computeBasicAuthHeader(clientId, clientSecret),
+    };
 
     const parameters = {
       options: {
         url: this.url,
         method: 'POST',
-        headers: {
-          'Content-type': 'application/x-www-form-urlencoded',
-          Authorization: computeBasicAuthHeader(clientId, clientSecret),
-        },
+        headers: extend(true, {}, this.headers, requiredHeaders),
         form: {
           grant_type: 'urn:ibm:params:oauth:grant-type:apikey',
-          apikey: this.iamApikey,
+          apikey: this.apikey,
           response_type: 'cloud_iam'
         },
+        rejectUnauthorized: !this.disableSslVerification,
       }
     };
     this.requestWrapperInstance.sendRequest(parameters, callback);

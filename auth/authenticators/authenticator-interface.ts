@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export * from './authenticators';
-export * from './token-managers';
-export * from './utils';
+export interface AuthenticatorInterface {
+  authenticate(options: any, callback: Function): void
+}

@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-/**
- * Compute and return a Basic Authorization header from a username and password.
- *
- * @param {string} username - The username or client id
- * @param {string} password - The password or client secret
- * @returns {string} - A Basic Auth header with format "Basic <encoded-credentials>"
- */
-export function computeBasicAuthHeader(username: string, password: string): string {
-  const encodedCreds = Buffer.from(`${username}:${password}`).toString('base64');
-  return `Basic ${encodedCreds}`;
+import { AuthenticatorInterface } from './authenticator-interface';
+import { BaseAuthenticator } from './base-authenticator';
+
+export class NoauthAuthenticator extends BaseAuthenticator implements AuthenticatorInterface {
+  /**
+   * Noauth Authenticator Class
+   *
+   * Provides a way to use a service without specifying credentials.
+   *
+   * @constructor
+   */
+  constructor() {    
+    super();
+  }
+
+  public authenticate(options: any, callback: Function): void {
+    // immediately proceed to request. it will probably fail
+    callback(null);
+  }
 }

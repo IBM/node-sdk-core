@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-const { Icp4dTokenManagerV1 } = require('../../auth');
+const { Cp4dTokenManagerV1 } = require('../../auth');
 
 // mock sendRequest
 jest.mock('../../lib/requestwrapper');
@@ -16,7 +16,7 @@ RequestWrapper.mockImplementation(() => {
 describe('icp4d_token_manager_v1', () => {
   describe('constructor', () => {
     it('should initialize base variables', () => {
-      const instance = new Icp4dTokenManagerV1({
+      const instance = new Cp4dTokenManagerV1({
         url: 'tokenservice.com',
         username: 'sherlock',
         password: 'holmes',
@@ -27,32 +27,32 @@ describe('icp4d_token_manager_v1', () => {
       expect(instance.url).toBe('tokenservice.com/v1/preauth/validateAuth');
       expect(instance.username).toBe('sherlock');
       expect(instance.password).toBe('holmes');
-      expect(instance.rejectUnauthorized).toBe(true);
+      expect(instance.disableSslVerification).toBe(false);
       expect(instance.userAccessToken).toBe('abc123');
     });
 
-    it('should set rejectUnauthorized based on disableSslVerification', () => {
-      const instance = new Icp4dTokenManagerV1({
+    it('should set disableSslVerification', () => {
+      const instance = new Cp4dTokenManagerV1({
         url: 'tokenservice.com',
         disableSslVerification: true,
       });
 
-      expect(instance.rejectUnauthorized).toBe(false);
+      expect(instance.disableSslVerification).toBe(true);
     });
 
     it('should throw an error if `url` is not given', () => {
-      expect(() => new Icp4dTokenManagerV1()).toThrow();
+      expect(() => new Cp4dTokenManagerV1()).toThrow();
     });
 
     it('should not throw an error if `url` is not given but using user-managed access token', () => {
-      expect(() => new Icp4dTokenManagerV1({ accessToken: 'token' })).not.toThrow();
+      expect(() => new Cp4dTokenManagerV1({ accessToken: 'token' })).not.toThrow();
     });
   });
 
   describe('requestToken', () => {
     it('should call sendRequest with all request options', () => {
       const noop = () => {};
-      const instance = new Icp4dTokenManagerV1({ url: 'tokenservice.com' });
+      const instance = new Cp4dTokenManagerV1({ url: 'tokenservice.com' });
       instance.requestToken(noop);
 
       // extract arguments sendRequest was called with

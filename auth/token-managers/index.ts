@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 IBM Corp. All Rights Reserved.
+ * Copyright 2019 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-/**
- * @module iam-token-manager-v1
- */
-
-// Exporting the module here for compatibility. To be removed in major release.
-
-import { IamTokenManagerV1 } from '../auth/iam-token-manager-v1';
-export { IamTokenManagerV1 };
+ export { IamTokenManagerV1 } from './iam-token-manager-v1';
+ export { Cp4dTokenManagerV1 } from './cp4d-token-manager-v1';
+ export { JwtTokenManagerV1 } from './jwt-token-manager-v1';

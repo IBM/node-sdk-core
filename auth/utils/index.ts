@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
-export * from './authenticators';
-export * from './token-managers';
-export * from './utils';
+export * from './helpers';
+export { getAuthenticatorFromEnvironment } from './get-authenticator-from-environment';
+export { readCredentialsFile } from './read-credentials-file';
+export { readExternalSources } from './read-external-sources';

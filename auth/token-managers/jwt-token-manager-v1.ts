@@ -15,8 +15,9 @@
  */
 
 import extend = require('extend');
+import { OutgoingHttpHeaders } from 'http';
 import jwt = require('jsonwebtoken');
-import { RequestWrapper } from '../lib/requestwrapper';
+import { RequestWrapper } from '../../lib/requestwrapper';
 
 function getCurrentTime(): number {
   return Math.floor(Date.now() / 1000);
@@ -25,13 +26,16 @@ function getCurrentTime(): number {
 export type Options = {
   accessToken?: string;
   url?: string;
+  /** Allow additional request config parameters */
+  [propName: string]: any;
 }
 
 export class JwtTokenManagerV1 {
   protected url: string;
   protected tokenName: string;
   protected userAccessToken: string;
-  protected rejectUnauthorized: boolean; // for icp4d only
+  protected disableSslVerification: boolean;
+  protected headers: OutgoingHttpHeaders;
   protected requestWrapperInstance;
   private tokenInfo: any;
   private expireTime: number;
@@ -61,7 +65,12 @@ export class JwtTokenManagerV1 {
       this.userAccessToken = options.accessToken;
     }
 
-    this.requestWrapperInstance = new RequestWrapper();
+    // request options
+    this.disableSslVerification = Boolean(options.disableSslVerification);
+    this.headers = options.headers || {};
+
+    // any bonus reqeust options, like `proxy`, will be sent here
+    this.requestWrapperInstance = new RequestWrapper(options);
   }
 
   /**
