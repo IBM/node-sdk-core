@@ -34,7 +34,7 @@ function onlyOne(a: any, b: any): boolean {
   return Boolean((a && !b) || (b && !a));
 }
 
-const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the defaults will be used.';
+const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
 
 export type Options = {
   apikey: string;
@@ -132,21 +132,15 @@ export class IamTokenManagerV1 extends JwtTokenManagerV1 {
    * @returns {void}
    */
   protected requestToken(callback: Function): void {
-    // Use bx:bx as default auth header creds.
-    let clientId = 'bx';
-    let clientSecret = 'bx';
-
-    // If both the clientId and secret were specified by the user, then use them.
-    if (this.clientId && this.clientSecret) {
-        clientId = this.clientId;
-        clientSecret = this.clientSecret;
-    }
-
     // these cannot be overwritten
     const requiredHeaders = {
       'Content-type': 'application/x-www-form-urlencoded',
-      Authorization: computeBasicAuthHeader(clientId, clientSecret),
-    };
+    } as OutgoingHttpHeaders;
+
+    // If both the clientId and secret were specified by the user, then use them.
+    if (this.clientId && this.clientSecret) {
+      requiredHeaders.Authorization = computeBasicAuthHeader(this.clientId, this.clientSecret);
+    }
 
     const parameters = {
       options: {

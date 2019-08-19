@@ -155,7 +155,7 @@ describe('Base Service', () => {
       authenticator: AUTHENTICATOR,
     });
 
-    const fromCredsFile = testService.readOptionsFromCredentialsFile();
+    const fromCredsFile = testService.readOptionsFromExternalConfig();
 
     expect(fromCredsFile.url).toBe(url);
     expect(fromCredsFile.disableSslVerification).toBe(disableSsl);
@@ -259,13 +259,13 @@ describe('Base Service', () => {
     });
   });
 
-  it('readOptionsFromCredentialsFile should return an empty object if no properties are found', () => {
+  it('readOptionsFromExternalConfig should return an empty object if no properties are found', () => {
     readExternalSourcesMock.mockImplementation(() => null);
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
 
-    expect(testService.readOptionsFromCredentialsFile()).toEqual(EMPTY_OBJECT);
+    expect(testService.readOptionsFromExternalConfig()).toEqual(EMPTY_OBJECT);
   });
 
   it('should check url for common problems', () => {

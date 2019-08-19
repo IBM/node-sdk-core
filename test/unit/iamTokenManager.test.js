@@ -19,7 +19,7 @@ RequestWrapper.mockImplementation(() => {
 });
 
 const CLIENT_ID_SECRET_WARNING =
-  'Warning: Client ID and Secret must BOTH be given, or the defaults will be used.';
+  'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
 
 describe('iam_token_manager_v1', function() {
   beforeEach(() => {
@@ -177,7 +177,7 @@ describe('iam_token_manager_v1', function() {
     });
   });
 
-  it('should use the default Authorization header - no clientid, no secret', function(done) {
+  it('should not specify an Authorization header if user provides no clientid, no secret', function(done) {
     const instance = new IamTokenManagerV1({ apikey: 'abcd-1234' });
 
     mockSendRequest.mockImplementation((parameters, _callback) => {
@@ -187,12 +187,12 @@ describe('iam_token_manager_v1', function() {
     instance.getToken(function() {
       const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).toBe('Basic Yng6Yng=');
+      expect(authHeader).not.toBeDefined();
       done();
     });
   });
 
-  it('should use a non-default Authorization header - client id and secret via ctor', function(done) {
+  it('should use an Authorization header based on client id and secret via ctor', function(done) {
     const instance = new IamTokenManagerV1({
       apikey: 'abcd-1234',
       clientId: 'foo',
@@ -206,12 +206,12 @@ describe('iam_token_manager_v1', function() {
     instance.getToken(function() {
       const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).not.toBe('Basic Yng6Yng=');
+      expect(authHeader).toBe('Basic Zm9vOmJhcg==');
       done();
     });
   });
 
-  it('should use the default Authorization header - clientid only via ctor', function(done) {
+  it('should not use an Authorization header - clientid only via ctor', function(done) {
     jest.spyOn(console, 'log').mockImplementation(() => {});
 
     const instance = new IamTokenManagerV1({
@@ -231,12 +231,12 @@ describe('iam_token_manager_v1', function() {
     instance.getToken(function() {
       const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).toBe('Basic Yng6Yng=');
+      expect(authHeader).not.toBeDefined();
       done();
     });
   });
 
-  it('should use the default Authorization header, secret only via ctor', function(done) {
+  it('should not use an Authorization header - secret only via ctor', function(done) {
     jest.spyOn(console, 'log').mockImplementation(() => {});
     const instance = new IamTokenManagerV1({
       apikey: 'abcd-1234',
@@ -255,12 +255,12 @@ describe('iam_token_manager_v1', function() {
     instance.getToken(function() {
       const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).toBe('Basic Yng6Yng=');
+      expect(authHeader).not.toBeDefined();
       done();
     });
   });
 
-  it('should use a non-default Authorization header - client id and secret via setter', function(done) {
+  it('should use an Authorization header based on client id and secret via setter', function(done) {
     const instance = new IamTokenManagerV1({
       apikey: 'abcd-1234',
     });
@@ -274,12 +274,12 @@ describe('iam_token_manager_v1', function() {
     instance.getToken(function() {
       const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).not.toBe('Basic Yng6Yng=');
+      expect(authHeader).toBe('Basic Zm9vOmJhcg==');
       done();
     });
   });
 
-  it('should use the default Authorization header - clientid only via setter', function(done) {
+  it('should not use an Authorization header -- clientid only via setter', function(done) {
     const instance = new IamTokenManagerV1({
       apikey: 'abcd-1234',
     });
@@ -300,12 +300,12 @@ describe('iam_token_manager_v1', function() {
     instance.getToken(function() {
       const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).toBe('Basic Yng6Yng=');
+      expect(authHeader).not.toBeDefined();
       done();
     });
   });
 
-  it('should use the default Authorization header, secret only via setter', function(done) {
+  it('should not use an Authorization header - secret only via setter', function(done) {
     const instance = new IamTokenManagerV1({
       apikey: 'abcd-1234',
     });
@@ -326,12 +326,12 @@ describe('iam_token_manager_v1', function() {
     instance.getToken(function() {
       const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).toBe('Basic Yng6Yng=');
+      expect(authHeader).not.toBeDefined();
       done();
     });
   });
 
-  it('should use the default Authorization header, nulls passed to setter', function(done) {
+  it('should not use an Authorization header - nulls passed to setter', function(done) {
     const instance = new IamTokenManagerV1({
       apikey: 'abcd-1234',
     });
@@ -345,7 +345,7 @@ describe('iam_token_manager_v1', function() {
     instance.getToken(function() {
       const sendRequestArgs = mockSendRequest.mock.calls[0][0];
       const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).toBe('Basic Yng6Yng=');
+      expect(authHeader).not.toBeDefined();
       done();
     });
   });

@@ -30,9 +30,10 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
   private password: string;
 
   /**
-   * IAM Authenticator Class
+   * Cloud Pak for Data Authenticator Class
    *
-   * Handles the IAM authentication pattern.
+   * Handles the CP4D authentication pattern:
+   * A username and password are provided and used to retrieve a bearer token.
    *
    * @param {Object} options
    * @constructor

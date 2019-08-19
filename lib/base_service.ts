@@ -86,7 +86,7 @@ export class BaseService {
     this.baseOptions = extend(
       { qs: {}, url: serviceClass.URL },
       options,
-      this.readOptionsFromCredentialsFile(),
+      this.readOptionsFromExternalConfig(),
       _options
     );
 
@@ -122,7 +122,7 @@ export class BaseService {
     });
   }
 
-  private readOptionsFromCredentialsFile() {
+  private readOptionsFromExternalConfig() {
     const results = {} as any;
     const properties = readExternalSources(this.name);
 

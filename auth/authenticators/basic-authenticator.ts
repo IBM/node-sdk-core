@@ -30,7 +30,7 @@ export class BasicAuthenticator extends Authenticator implements AuthenticatorIn
   private password: string;
 
   /**
-   * Basic Auth Config Class
+   * Basic Authenticator Class
    *
    * Handles the Basic Authentication pattern.
    *

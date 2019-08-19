@@ -86,11 +86,13 @@ export class TokenRequestBasedAuthenticator extends Authenticator implements Aut
 
   public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
     this.tokenManager.getToken((err, token) => {
-      if (err) { callback(err) };
-
-      const authHeader = { Authorization: `Bearer ${token}` };
-      options.headers = extend(true, {}, options.headers, authHeader);
-      callback(null);
+      if (err) {
+        callback(err);
+      } else {
+        const authHeader = { Authorization: `Bearer ${token}` };
+        options.headers = extend(true, {}, options.headers, authHeader);
+        callback(null);
+      }
     });
   }
 }

@@ -34,4 +34,18 @@ describe('Request Based Token Authenticator', () => {
     // also, verify that the underlying token manager has been updated
     expect(authenticator.tokenManager.headers).toEqual(config.headers);
   });
+
+  it('should call the callback in authenticate with an error if the token request fails', done => {
+    const authenticator = new TokenRequestBasedAuthenticator(config);
+    const fakeError = new Error('fake error');
+    const getTokenSpy = jest
+      .spyOn(authenticator.tokenManager, 'getToken')
+      .mockImplementation(cb => cb(fakeError));
+
+    authenticator.authenticate({}, err => {
+      expect(getTokenSpy).toHaveBeenCalled();
+      expect(err).toBe(fakeError);
+      done();
+    });
+  });
 });

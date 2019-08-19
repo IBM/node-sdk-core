@@ -63,7 +63,7 @@ export class JwtTokenManagerV1 {
     this.disableSslVerification = Boolean(options.disableSslVerification);
     this.headers = options.headers || {};
 
-    // any bonus reqeust options, like `proxy`, will be passed here
+    // any config options for the internal request library, like `proxy`, will be passed here
     this.requestWrapperInstance = new RequestWrapper(options);
   }
 
