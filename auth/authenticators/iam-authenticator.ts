@@ -64,6 +64,6 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
     this.clientSecret = clientSecret;
 
     // update properties in token manager
-    this.tokenManager.setAuthorizationInfo(clientId, clientSecret);
+    this.tokenManager.setClientIdAndSecret(clientId, clientSecret);
   }
 }

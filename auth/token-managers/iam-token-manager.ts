@@ -102,14 +102,14 @@ export class IamTokenManager extends JwtTokenManager {
    * Set the IAM 'client_id' and 'client_secret' values.
    * These values are used to compute the Authorization header used
    * when retrieving the IAM access token.
-   * If these values are not set, then a default Authorization header
-   * will be used when interacting with the IAM token server.
+   * If these values are not set, no Authorization header will be
+   * set on the request (it is not required).
    *
    * @param {string} clientId - The client id 
    * @param {string} clientSecret - The client secret
    * @returns {void}
    */
-  public setAuthorizationInfo(clientId: string, clientSecret: string): void {
+  public setClientIdAndSecret(clientId: string, clientSecret: string): void {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     if (onlyOne(clientId, clientSecret)) {
