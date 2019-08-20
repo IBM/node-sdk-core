@@ -9,7 +9,7 @@ jwt.decode = jest.fn(() => {
   return { exp: 100, iat: 100 };
 });
 
-const { IamTokenManagerV1 } = require('../../auth');
+const { IamTokenManager } = require('../../auth');
 const mockSendRequest = jest.fn();
 
 RequestWrapper.mockImplementation(() => {
@@ -31,11 +31,11 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should throw an error if apikey is not provided', () => {
-    expect(() => new IamTokenManagerV1()).toThrow();
+    expect(() => new IamTokenManager()).toThrow();
   });
 
   it('should turn an iam apikey into an access token', function(done) {
-    const instance = new IamTokenManagerV1({ apikey: 'abcd-1234' });
+    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
 
     const accessToken = '9012';
     const iamResponse = {
@@ -57,7 +57,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should refresh an expired access token', function(done) {
-    const instance = new IamTokenManagerV1({ apikey: 'abcd-1234' });
+    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
 
     const currentTokenInfo = {
@@ -91,7 +91,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should use a valid access token if one is stored', function(done) {
-    const instance = new IamTokenManagerV1({ apikey: 'abcd-1234' });
+    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
 
     const accessToken = '1234';
@@ -115,7 +115,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should refresh an access token without expires_in field', function(done) {
-    const instance = new IamTokenManagerV1({ apikey: 'abcd-1234' });
+    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
 
     const currentTokenInfo = {
@@ -148,7 +148,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should request a new token when refresh token does not have expiration field', function(done) {
-    const instance = new IamTokenManagerV1({ apikey: 'abcd-1234' });
+    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
 
     const currentTokenInfo = {
       access_token: '1234',
@@ -178,7 +178,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should not specify an Authorization header if user provides no clientid, no secret', function(done) {
-    const instance = new IamTokenManagerV1({ apikey: 'abcd-1234' });
+    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
 
     mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback(null, { access_token: 'abcd' });
@@ -193,7 +193,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should use an Authorization header based on client id and secret via ctor', function(done) {
-    const instance = new IamTokenManagerV1({
+    const instance = new IamTokenManager({
       apikey: 'abcd-1234',
       clientId: 'foo',
       clientSecret: 'bar',
@@ -214,7 +214,7 @@ describe('iam_token_manager_v1', function() {
   it('should not use an Authorization header - clientid only via ctor', function(done) {
     jest.spyOn(console, 'log').mockImplementation(() => {});
 
-    const instance = new IamTokenManagerV1({
+    const instance = new IamTokenManager({
       apikey: 'abcd-1234',
       clientId: 'foo',
     });
@@ -238,7 +238,7 @@ describe('iam_token_manager_v1', function() {
 
   it('should not use an Authorization header - secret only via ctor', function(done) {
     jest.spyOn(console, 'log').mockImplementation(() => {});
-    const instance = new IamTokenManagerV1({
+    const instance = new IamTokenManager({
       apikey: 'abcd-1234',
       clientSecret: 'bar',
     });
@@ -261,7 +261,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should use an Authorization header based on client id and secret via setter', function(done) {
-    const instance = new IamTokenManagerV1({
+    const instance = new IamTokenManager({
       apikey: 'abcd-1234',
     });
 
@@ -280,7 +280,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should not use an Authorization header -- clientid only via setter', function(done) {
-    const instance = new IamTokenManagerV1({
+    const instance = new IamTokenManager({
       apikey: 'abcd-1234',
     });
 
@@ -306,7 +306,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should not use an Authorization header - secret only via setter', function(done) {
-    const instance = new IamTokenManagerV1({
+    const instance = new IamTokenManager({
       apikey: 'abcd-1234',
     });
 
@@ -332,7 +332,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should not use an Authorization header - nulls passed to setter', function(done) {
-    const instance = new IamTokenManagerV1({
+    const instance = new IamTokenManager({
       apikey: 'abcd-1234',
     });
 

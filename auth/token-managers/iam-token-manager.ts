@@ -18,7 +18,7 @@ import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import { getMissingParams } from '../../lib/helper';
 import { computeBasicAuthHeader } from '../utils';
-import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
+import { JwtTokenManager } from './jwt-token-manager';
 
 /**
  * Check for only one of two elements being defined.
@@ -56,7 +56,7 @@ export interface IamTokenData {
   expiration: number;
 }
 
-export class IamTokenManagerV1 extends JwtTokenManagerV1 {
+export class IamTokenManager extends JwtTokenManager {
   private apikey: string;
   private clientId: string;
   private clientSecret: string;

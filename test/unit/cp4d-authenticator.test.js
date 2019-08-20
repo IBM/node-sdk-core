@@ -1,7 +1,7 @@
 'use strict';
 
 const { CloudPakForDataAuthenticator } = require('../../auth');
-const { Cp4dTokenManagerV1 } = require('../../auth');
+const { Cp4dTokenManager } = require('../../auth');
 
 const USERNAME = 'danmullen';
 const PASSWORD = 'gogators';
@@ -18,7 +18,7 @@ const CONFIG = {
 
 // mock the `getToken` method in the token manager - dont make any rest calls
 const fakeToken = 'iam-acess-token';
-const mockedTokenManager = new Cp4dTokenManagerV1({
+const mockedTokenManager = new Cp4dTokenManager({
   username: USERNAME,
   password: PASSWORD,
   url: URL,
@@ -38,7 +38,7 @@ describe('CP4D Authenticator', () => {
     expect(authenticator.headers).toEqual(CONFIG.headers);
 
     // should also create a token manager
-    expect(authenticator.tokenManager).toBeInstanceOf(Cp4dTokenManagerV1);
+    expect(authenticator.tokenManager).toBeInstanceOf(Cp4dTokenManager);
   });
 
   it('should throw an error when username is not provided', () => {

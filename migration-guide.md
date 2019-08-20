@@ -26,5 +26,7 @@ const service = new MyService({
   - Note that this method will only read from _one external source at a time_. It will not combine credentials from multiple sources, which was the behavior previously.
 
 #### Token Managers
-- `Icp4dTokenManagerV1` renamed to `Cp4dTokenManagerV1`
+- `Icp4dTokenManagerV1` renamed to `Cp4dTokenManager`
+- `IamTokenManagerV1` renamed to `IamTokenManager`
+- `JwtTokenManagerV1` renamed to `JwtTokenManager`
 - Token managers no longer support the `accessToken` parameter. There is no need for a token manager when a user is managing their own token. This behavior is replaced by the `BearerTokenAuthenticator` class.

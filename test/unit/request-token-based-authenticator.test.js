@@ -1,7 +1,7 @@
 'use strict';
 
 const { TokenRequestBasedAuthenticator } = require('../../auth');
-const { JwtTokenManagerV1 } = require('../../auth');
+const { JwtTokenManager } = require('../../auth');
 
 describe('Request Based Token Authenticator', () => {
   const config = {
@@ -20,7 +20,7 @@ describe('Request Based Token Authenticator', () => {
     expect(authenticator.headers).toEqual(config.headers);
 
     // should also create a token manager
-    expect(authenticator.tokenManager).toBeInstanceOf(JwtTokenManagerV1);
+    expect(authenticator.tokenManager).toBeInstanceOf(JwtTokenManager);
   });
 
   it('should not re-set headers when a non-object is passed to the setter', () => {

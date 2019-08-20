@@ -15,7 +15,7 @@
  */
 
 import { OutgoingHttpHeaders } from 'http';
-import { Cp4dTokenManagerV1 } from '../token-managers';
+import { Cp4dTokenManager } from '../token-managers';
 import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 
 export interface Options extends BaseOptions {
@@ -48,6 +48,6 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
 
     // the param names are shared between the authenticator and the token manager
     // so we can just pass along the options object
-    this.tokenManager = new Cp4dTokenManagerV1(options);
+    this.tokenManager = new Cp4dTokenManager(options);
   }
 }

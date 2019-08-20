@@ -16,7 +16,7 @@
 
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
-import { JwtTokenManagerV1 } from '../token-managers';
+import { JwtTokenManager } from '../token-managers';
 import { Authenticator } from './authenticator';
 import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
@@ -51,9 +51,9 @@ export class TokenRequestBasedAuthenticator extends Authenticator implements Aut
     // default to empty object
     this.headers = options.headers || {};
 
-    // this class must be extended by a subclass - the JwtTokenManagerV1
+    // this class must be extended by a subclass - the JwtTokenManager
     // will fail upon requesting a token
-    this.tokenManager = new JwtTokenManagerV1(options);
+    this.tokenManager = new JwtTokenManager(options);
   }
 
   /**

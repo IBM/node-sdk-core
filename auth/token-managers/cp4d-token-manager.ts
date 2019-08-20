@@ -17,7 +17,7 @@
 import extend = require('extend');
 import { getMissingParams } from '../../lib/helper';
 import { computeBasicAuthHeader } from '../utils';
-import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
+import { JwtTokenManager } from './jwt-token-manager';
 
 // we should make these options extend the ones from the base class
 export type Options = {
@@ -42,7 +42,7 @@ export interface CpdTokenData {
   accessToken: string;
 }
 
-export class Cp4dTokenManagerV1 extends JwtTokenManagerV1 {
+export class Cp4dTokenManager extends JwtTokenManager {
   private username: string;
   private password: string;
 

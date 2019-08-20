@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
- export { IamTokenManagerV1 } from './iam-token-manager-v1';
- export { Cp4dTokenManagerV1 } from './cp4d-token-manager-v1';
- export { JwtTokenManagerV1 } from './jwt-token-manager-v1';
+ export { IamTokenManager } from './iam-token-manager';
+ export { Cp4dTokenManager } from './cp4d-token-manager';
+ export { JwtTokenManager } from './jwt-token-manager';

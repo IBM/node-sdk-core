@@ -15,7 +15,7 @@
  */
 
 import { OutgoingHttpHeaders } from 'http';
-import { IamTokenManagerV1 } from '../token-managers';
+import { IamTokenManager } from '../token-managers';
 import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 
 export interface Options extends BaseOptions {
@@ -49,7 +49,7 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
     
     // the param names are shared between the authenticator and the token manager
     // so we can just pass along the options object
-    this.tokenManager = new IamTokenManagerV1(options);
+    this.tokenManager = new IamTokenManager(options);
   }
 
   /**

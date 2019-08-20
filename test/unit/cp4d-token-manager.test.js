@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-const { Cp4dTokenManagerV1 } = require('../../auth');
+const { Cp4dTokenManager } = require('../../auth');
 
 // mock sendRequest
 jest.mock('../../lib/requestwrapper');
@@ -21,7 +21,7 @@ const FULL_URL = 'tokenservice.com/v1/preauth/validateAuth';
 describe('CP4D Token Manager', () => {
   describe('constructor', () => {
     it('should initialize base variables', () => {
-      const instance = new Cp4dTokenManagerV1({
+      const instance = new Cp4dTokenManager({
         url: 'tokenservice.com',
         username: USERNAME,
         password: PASSWORD,
@@ -36,7 +36,7 @@ describe('CP4D Token Manager', () => {
 
     it('should not append the token path if supplied by user', () => {
       const url = FULL_URL;
-      const instance = new Cp4dTokenManagerV1({
+      const instance = new Cp4dTokenManager({
         url,
         username: USERNAME,
         password: PASSWORD,
@@ -46,7 +46,7 @@ describe('CP4D Token Manager', () => {
     });
 
     it('should set disableSslVerification', () => {
-      const instance = new Cp4dTokenManagerV1({
+      const instance = new Cp4dTokenManager({
         username: USERNAME,
         password: PASSWORD,
         url: URL,
@@ -59,7 +59,7 @@ describe('CP4D Token Manager', () => {
     it('should throw an error if `url` is not given', () => {
       expect(
         () =>
-          new Cp4dTokenManagerV1({
+          new Cp4dTokenManager({
             username: USERNAME,
             password: PASSWORD,
           })
@@ -69,7 +69,7 @@ describe('CP4D Token Manager', () => {
     it('should throw an error if `username` is not given', () => {
       expect(
         () =>
-          new Cp4dTokenManagerV1({
+          new Cp4dTokenManager({
             password: PASSWORD,
             url: URL,
           })
@@ -79,7 +79,7 @@ describe('CP4D Token Manager', () => {
     it('should throw an error if `password` is not given', () => {
       expect(
         () =>
-          new Cp4dTokenManagerV1({
+          new Cp4dTokenManager({
             username: 'abc',
             url: URL,
           })
@@ -90,7 +90,7 @@ describe('CP4D Token Manager', () => {
   describe('requestToken', () => {
     it('should call sendRequest with all request options', () => {
       const noop = () => {};
-      const instance = new Cp4dTokenManagerV1({
+      const instance = new Cp4dTokenManager({
         url: URL,
         username: USERNAME,
         password: PASSWORD,

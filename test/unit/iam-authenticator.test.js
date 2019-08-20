@@ -1,11 +1,11 @@
 'use strict';
 
 const { IamAuthenticator } = require('../../auth');
-const { IamTokenManagerV1 } = require('../../auth');
+const { IamTokenManager } = require('../../auth');
 
 // mock the `getToken` method in the token manager - dont make any rest calls
 const fakeToken = 'iam-acess-token';
-const mockedTokenManager = new IamTokenManagerV1({ apikey: '123' });
+const mockedTokenManager = new IamTokenManager({ apikey: '123' });
 const getTokenSpy = jest.spyOn(mockedTokenManager, 'getToken').mockImplementation(callback => {
   callback(null, fakeToken);
 });
@@ -33,7 +33,7 @@ describe('IAM Authenticator', () => {
     expect(authenticator.headers).toEqual(config.headers);
 
     // should also create a token manager
-    expect(authenticator.tokenManager).toBeInstanceOf(IamTokenManagerV1);
+    expect(authenticator.tokenManager).toBeInstanceOf(IamTokenManager);
   });
 
   it('should throw an error when apikey is not provided', () => {

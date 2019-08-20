@@ -29,7 +29,7 @@ export type Options = {
   [propName: string]: any;
 }
 
-export class JwtTokenManagerV1 {
+export class JwtTokenManager {
   protected url: string;
   protected tokenName: string;
   protected disableSslVerification: boolean;
