@@ -265,7 +265,7 @@ describe('iam_token_manager_v1', function() {
       apikey: 'abcd-1234',
     });
 
-    instance.setAuthorizationInfo('foo', 'bar');
+    instance.setClientIdAndSecret('foo', 'bar');
 
     mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback(null, { access_token: 'abcd' });
@@ -286,7 +286,7 @@ describe('iam_token_manager_v1', function() {
 
     jest.spyOn(console, 'log').mockImplementation(() => {});
 
-    instance.setAuthorizationInfo('foo', null);
+    instance.setClientIdAndSecret('foo', null);
 
     // verify warning was triggered
     expect(console.log).toHaveBeenCalled();
@@ -312,7 +312,7 @@ describe('iam_token_manager_v1', function() {
 
     jest.spyOn(console, 'log').mockImplementation(() => {});
 
-    instance.setAuthorizationInfo(null, 'bar');
+    instance.setClientIdAndSecret(null, 'bar');
 
     // verify warning was triggered
     expect(console.log).toHaveBeenCalled();
@@ -336,7 +336,7 @@ describe('iam_token_manager_v1', function() {
       apikey: 'abcd-1234',
     });
 
-    instance.setAuthorizationInfo(null, null);
+    instance.setClientIdAndSecret(null, null);
 
     mockSendRequest.mockImplementation((parameters, _callback) => {
       _callback(null, { access_token: 'abcd' });
