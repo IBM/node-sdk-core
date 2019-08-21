@@ -1,10 +1,7 @@
 'use strict';
 
-const readCredentialsFunctions = require('../../lib/read-credentials-file');
-const constructFilepath = readCredentialsFunctions.constructFilepath;
-const fileExistsAtPath = readCredentialsFunctions.fileExistsAtPath;
-const readCredentialsFile = readCredentialsFunctions.readCredentialsFile;
 const fs = require('fs');
+const { constructFilepath, fileExistsAtPath, readCredentialsFile } = require('../../auth');
 
 describe('browser scenario', () => {
   const existSync = fs.existsSync;
@@ -70,8 +67,14 @@ describe('read ibm credentials file', () => {
   describe('read credentials file', () => {
     it('should return credentials as an object if file exists', () => {
       const obj = readCredentialsFile();
-      expect(obj.TEST_USERNAME).toBe('123456789');
-      expect(obj.TEST_PASSWORD).toBe('abcd');
+      expect(obj.TEST_SERVICE_AUTH_TYPE).toBe('iam');
+      expect(obj.TEST_SERVICE_APIKEY).toBe('12345');
+      expect(obj.TEST_SERVICE_AUTH_URL).toBe('iam.staging.com/api');
+      expect(obj.TEST_SERVICE_CLIENT_ID).toBe('my-id');
+      expect(obj.TEST_SERVICE_CLIENT_SECRET).toBe('my-secret');
+      expect(obj.TEST_SERVICE_AUTH_DISABLE_SSL).toBe('true');
+      expect(obj.TEST_SERVICE_URL).toBe('service.com/api');
+      expect(obj.TEST_SERVICE_DISABLE_SSL).toBe('true');
     });
 
     it('should return credentials as an object for alternate filename', () => {

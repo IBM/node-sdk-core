@@ -57,8 +57,7 @@
   },
   "include": [
     "./lib/*.ts",
-    "./iam-token-manager/*.ts",
-    "./auth/*.ts",
+    "./auth/**/*.ts",
     "index.ts"
   ]
 }

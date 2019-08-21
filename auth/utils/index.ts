@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-/**
- * Compute and return a Basic Authorization header from a username and password.
- *
- * @param {string} username - The username or client id
- * @param {string} password - The password or client secret
- * @returns {string} - A Basic Auth header with format "Basic <encoded-credentials>"
- */
-export function computeBasicAuthHeader(username: string, password: string): string {
-  const encodedCreds = Buffer.from(`${username}:${password}`).toString('base64');
-  return `Basic ${encodedCreds}`;
-}
+export * from './helpers';
+export * from './read-credentials-file';
+export { getAuthenticatorFromEnvironment } from './get-authenticator-from-environment';
+export { readExternalSources } from './read-external-sources';
