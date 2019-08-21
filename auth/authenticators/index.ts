@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
-export * from './authenticators';
-export * from './token-managers';
-export * from './utils';
+export { AuthenticatorInterface } from './authenticator-interface';
+export { Authenticator } from './authenticator';
+export { BasicAuthenticator } from './basic-authenticator';
+export { BearerTokenAuthenticator } from './bearer-token-authenticator';
+export { CloudPakForDataAuthenticator } from './cloud-pak-for-data-authenticator';
+export { IamAuthenticator } from './iam-authenticator';
+export { NoauthAuthenticator } from './no-auth-authenticator';
+export { TokenRequestBasedAuthenticator } from './token-request-based-authenticator';

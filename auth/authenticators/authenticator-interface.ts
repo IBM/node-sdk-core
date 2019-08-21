@@ -14,6 +14,18 @@
  * limitations under the License.
  */
 
-export * from './authenticators';
-export * from './token-managers';
-export * from './utils';
+import { OutgoingHttpHeaders } from 'http';
+
+// This could just be the type for the `baseOptions` field of the Base Service
+// but to avoid a circular dependency or a refactor, this will do for now
+export interface AuthenticateOptions {
+  headers?: OutgoingHttpHeaders;
+  [propName: string]: any;
+}
+
+// callback can send one arg, error or null
+export type AuthenticateCallback = (result: null | Error) => void;
+
+export interface AuthenticatorInterface {
+  authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void
+}
