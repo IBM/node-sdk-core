@@ -15,24 +15,25 @@
  */
 
 import extend = require('extend');
+import { OutgoingHttpHeaders } from 'http';
 import jwt = require('jsonwebtoken');
-import { RequestWrapper } from '../lib/requestwrapper';
+import { RequestWrapper } from '../../lib/requestwrapper';
 
 function getCurrentTime(): number {
   return Math.floor(Date.now() / 1000);
 }
 
 export type Options = {
-  accessToken?: string;
   url?: string;
-  requestWrapper?: any;
+  /** Allow additional request config parameters */
+  [propName: string]: any;
 }
 
-export class JwtTokenManagerV1 {
+export class JwtTokenManager {
   protected url: string;
   protected tokenName: string;
-  protected userAccessToken: string;
-  protected rejectUnauthorized: boolean; // for icp4d only
+  protected disableSslVerification: boolean;
+  protected headers: OutgoingHttpHeaders;
   protected requestWrapperInstance;
   private tokenInfo: any;
   private expireTime: number;
@@ -58,12 +59,12 @@ export class JwtTokenManagerV1 {
       this.url = options.url;
     }
 
-    if (options.accessToken) {
-      this.userAccessToken = options.accessToken;
-    }
+    // request options
+    this.disableSslVerification = Boolean(options.disableSslVerification);
+    this.headers = options.headers || {};
 
-    // not required, but the SDK will always pass in a request wrapper instance
-    this.requestWrapperInstance = options.requestWrapper || new RequestWrapper();
+    // any config options for the internal request library, like `proxy`, will be passed here
+    this.requestWrapperInstance = new RequestWrapper(options);
   }
 
   /**
@@ -77,11 +78,8 @@ export class JwtTokenManagerV1 {
    * @param {Function} cb - callback function that the token will be passed to
    */
   public getToken(cb: Function) {
-    if (this.userAccessToken) {
-      // 1. use user-managed token
-      return cb(null, this.userAccessToken);
-    } else if (!this.tokenInfo[this.tokenName] || this.isTokenExpired()) {
-      // 2. request a new token
+    if (!this.tokenInfo[this.tokenName] || this.isTokenExpired()) {
+      // 1. request a new token
       this.requestToken((err, tokenResponse) => {
         if (!err) {
           try {
@@ -95,25 +93,9 @@ export class JwtTokenManagerV1 {
         return cb(err, this.tokenInfo[this.tokenName] || null);
       });
     } else {
-      // 3. use valid, sdk-managed token
+      // 2. use valid, managed token
       return cb(null, this.tokenInfo[this.tokenName]);
     }
-  }
-
-  /**
-   * Set a self-managed access token.
-   * The access token should be valid and not yet expired.
-   *
-   * By using this method, you accept responsibility for managing the
-   * access token yourself. You must set a new access token before this
-   * one expires. Failing to do so will result in authentication errors
-   * after this token expires.
-   *
-   * @param {string} accessToken - A valid, non-expired access token
-   * @returns {void}
-   */
-  public setAccessToken(accessToken: string): void {
-    this.userAccessToken = accessToken;
   }
 
   /**

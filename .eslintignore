@@ -8,6 +8,6 @@ node_modules/
 **/*v*.js
 !test/**/*.js
 lib/*.js
-auth/*.js
+auth/**/*.js
 index.js
 scripts/typedoc/

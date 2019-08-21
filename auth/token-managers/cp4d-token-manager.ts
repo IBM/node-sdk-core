@@ -15,12 +15,13 @@
  */
 
 import extend = require('extend');
-import { JwtTokenManagerV1 } from './jwt-token-manager-v1';
-import { computeBasicAuthHeader } from './utils';
+import { getMissingParams } from '../../lib/helper';
+import { computeBasicAuthHeader } from '../utils';
+import { JwtTokenManager } from './jwt-token-manager';
 
+// we should make these options extend the ones from the base class
 export type Options = {
   url: string;
-  accessToken?: string;
   username?: string;
   password?: string;
   disableSslVerification?: boolean;
@@ -28,8 +29,8 @@ export type Options = {
 }
 
 // this interface is a representation of the response
-// object from the ICP4D authentication service
-export interface IcpTokenData {
+// object from the CP4D authentication service
+export interface CpdTokenData {
   username: string;
   role: string;
   permissions: string[];
@@ -42,7 +43,7 @@ export interface IcpTokenData {
   accessToken: string;
 }
 
-export class Icp4dTokenManagerV1 extends JwtTokenManagerV1 {
+export class Cp4dTokenManager extends JwtTokenManager {
   private username: string;
   private password: string;
 
@@ -55,7 +56,7 @@ export class Icp4dTokenManagerV1 extends JwtTokenManagerV1 {
    * @param {String} options.username
    * @param {String} options.password
    * @param {String} options.accessToken - user-managed access token
-   * @param {String} options.url - URL for the ICP4D cluster
+   * @param {String} options.url - URL for the CP4D cluster
    * @param {Boolean} options.disableSslVerification - disable SSL verification for token request
    * @constructor
    */
@@ -64,21 +65,22 @@ export class Icp4dTokenManagerV1 extends JwtTokenManagerV1 {
 
     this.tokenName = 'accessToken';
 
-    if (this.url) {
-      this.url = this.url + '/v1/preauth/validateAuth';
-    } else if (!this.userAccessToken) {
-      // url is not needed if the user specifies their own access token
-      throw new Error('`url` is a required parameter for Icp4dTokenManagerV1');
+    // check for required params
+    const requiredOptions = ['username', 'password', 'url'];
+    const missingParamsError = getMissingParams(options, requiredOptions);
+    if (missingParamsError) {
+      throw missingParamsError;
     }
 
-    if (options.username) {
-      this.username = options.username;
+    const tokenApiPath = '/v1/preauth/validateAuth';
+
+    // do not append the path if user already has
+    if (this.url && !this.url.endsWith(tokenApiPath)) {
+      this.url = this.url + tokenApiPath;
     }
-    if (options.password) {
-      this.password = options.password;
-    }
-    // username and password are required too, unless there's access token
-    this.rejectUnauthorized = !options.disableSslVerification;
+
+    this.username = options.username;
+    this.password = options.password;
   }
 
   /**
@@ -89,20 +91,23 @@ export class Icp4dTokenManagerV1 extends JwtTokenManagerV1 {
    * @param {Object} The response if request is successful, null otherwise
    */
   /**
-   * Request an ICP token using a basic auth header.
+   * Request an CP4D token using a basic auth header.
    *
    * @param {requestTokenCallback} callback - The callback that handles the response.
    * @returns {void}
    */
   protected requestToken(callback: Function): void {
+    // these cannot be overwritten
+    const requiredHeaders = {
+      Authorization: computeBasicAuthHeader(this.username, this.password),
+    };
+
     const parameters = {
       options: {
         url: this.url,
         method: 'GET',
-        headers: {
-          Authorization: computeBasicAuthHeader(this.username, this.password),
-        },
-        rejectUnauthorized: this.rejectUnauthorized,
+        headers: extend(true, {}, this.headers, requiredHeaders),
+        rejectUnauthorized: !this.disableSslVerification,
       }
     };
     this.requestWrapperInstance.sendRequest(parameters, callback);

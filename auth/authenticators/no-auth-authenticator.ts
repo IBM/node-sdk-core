@@ -14,6 +14,23 @@
  * limitations under the License.
  */
 
-export * from './authenticators';
-export * from './token-managers';
-export * from './utils';
+import { Authenticator } from './authenticator';
+import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
+
+export class NoauthAuthenticator extends Authenticator implements AuthenticatorInterface {
+  /**
+   * Noauth Authenticator Class
+   *
+   * Provides a way to use a service without specifying credentials.
+   *
+   * @constructor
+   */
+  constructor() {    
+    super();
+  }
+
+  public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
+    // immediately proceed to request. it will probably fail
+    callback(null);
+  }
+}

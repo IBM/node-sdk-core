@@ -40,7 +40,9 @@ export class RequestWrapper {
     // defaults here
     const axiosConfig = {
       httpsAgent: new https.Agent({
-        rejectUnauthorized: axiosOptions.rejectUnauthorized
+        // disableSslVerification is the parameter we expose to the user,
+        // it is the opposite of rejectUnauthorized
+        rejectUnauthorized: !axiosOptions.disableSslVerification
       }),
       maxContentLength: Infinity,
       headers: {
