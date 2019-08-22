@@ -22,7 +22,7 @@ import {
   BearerTokenAuthenticator,
   CloudPakForDataAuthenticator,
   IamAuthenticator,
-  NoauthAuthenticator,
+  NoAuthAuthenticator,
 } from '../authenticators';
 
 import { readExternalSources } from './read-external-sources';
@@ -58,8 +58,8 @@ export function getAuthenticatorFromEnvironment(serviceName: string) {
   let authenticator;
 
   switch (credentials.authType) {
-    case 'noauth':
-      authenticator = new NoauthAuthenticator();
+    case 'noAuth':
+      authenticator = new NoAuthAuthenticator();
       break;
     case 'basic':
       authenticator = new BasicAuthenticator(credentials);
