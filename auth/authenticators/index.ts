@@ -20,5 +20,5 @@ export { BasicAuthenticator } from './basic-authenticator';
 export { BearerTokenAuthenticator } from './bearer-token-authenticator';
 export { CloudPakForDataAuthenticator } from './cloud-pak-for-data-authenticator';
 export { IamAuthenticator } from './iam-authenticator';
-export { NoauthAuthenticator } from './no-auth-authenticator';
+export { NoAuthAuthenticator } from './no-auth-authenticator';
 export { TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
