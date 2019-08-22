@@ -19,12 +19,12 @@ RequestWrapper.mockImplementation(() => {
 });
 
 // mock the authenticator
-const noauthLocation = '../../auth/authenticators/no-auth-authenticator';
-jest.mock(noauthLocation);
-const { NoauthAuthenticator } = require(noauthLocation);
+const noAuthLocation = '../../auth/authenticators/no-auth-authenticator';
+jest.mock(noAuthLocation);
+const { NoAuthAuthenticator } = require(noAuthLocation);
 const authenticateMock = jest.fn();
 
-NoauthAuthenticator.mockImplementation(() => {
+NoAuthAuthenticator.mockImplementation(() => {
   return {
     authenticate: authenticateMock,
   };
@@ -37,7 +37,7 @@ const { BaseService } = require('../../lib/base_service');
 const NO_OP = () => {};
 const DEFAULT_URL = 'https://gateway.watsonplatform.net/test/api';
 const DEFAULT_NAME = 'test';
-const AUTHENTICATOR = new NoauthAuthenticator();
+const AUTHENTICATOR = new NoAuthAuthenticator();
 const EMPTY_OBJECT = {}; // careful that nothing is ever added to this object
 
 setupFakeService(); // set up the TestService "class"
@@ -247,7 +247,7 @@ describe('Base Service', () => {
       authenticator: AUTHENTICATOR,
     });
 
-    // note that the NoauthAuthenticator can't actually call the callback with an error,
+    // note that the NoAuthAuthenticator can't actually call the callback with an error,
     // but others can
     const fakeError = new Error('token request failed');
     authenticateMock.mockImplementation((_, callback) => callback(fakeError));
