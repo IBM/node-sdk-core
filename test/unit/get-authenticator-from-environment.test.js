@@ -6,7 +6,7 @@ const {
   BearerTokenAuthenticator,
   CloudPakForDataAuthenticator,
   IamAuthenticator,
-  NoauthAuthenticator,
+  NoAuthAuthenticator,
 } = require('../../auth');
 
 // create a mock for the read-external-sources module
@@ -31,10 +31,10 @@ describe('Get Authenticator From Environment Module', () => {
     expect(() => getAuthenticatorFromEnvironment(SERVICE_NAME)).toThrow();
   });
 
-  it('should get noauth authenticator', () => {
+  it('should get no auth authenticator', () => {
     setUpNoauthPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
-    expect(authenticator).toBeInstanceOf(NoauthAuthenticator);
+    expect(authenticator).toBeInstanceOf(NoAuthAuthenticator);
     expect(readExternalSourcesMock).toHaveBeenCalled();
   });
 
@@ -87,7 +87,7 @@ describe('Get Authenticator From Environment Module', () => {
 // mock payloads for the read-external-sources module
 function setUpNoauthPayload() {
   readExternalSourcesMock.mockImplementation(() => ({
-    authType: 'noauth',
+    authType: 'noAuth',
   }));
 }
 
