@@ -1,10 +1,10 @@
 'use strict';
 
-const { NoauthAuthenticator } = require('../../auth');
+const { NoAuthAuthenticator } = require('../../auth');
 
-describe('Noauth Authenticator', () => {
+describe('NoAuth Authenticator', () => {
   it('should call callback on authenticate', done => {
-    const authenticator = new NoauthAuthenticator();
+    const authenticator = new NoAuthAuthenticator();
     authenticator.authenticate({}, err => {
       expect(err).toBeNull();
       done();

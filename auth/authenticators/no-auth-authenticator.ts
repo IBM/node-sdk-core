@@ -17,9 +17,9 @@
 import { Authenticator } from './authenticator';
 import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
-export class NoauthAuthenticator extends Authenticator implements AuthenticatorInterface {
+export class NoAuthAuthenticator extends Authenticator implements AuthenticatorInterface {
   /**
-   * Noauth Authenticator Class
+   * NoAuth Authenticator Class
    *
    * Provides a way to use a service without specifying credentials.
    *
