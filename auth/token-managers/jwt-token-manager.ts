@@ -83,7 +83,7 @@ export class JwtTokenManager {
       this.requestToken((err, tokenResponse) => {
         if (!err) {
           try {
-            this.saveTokenInfo(tokenResponse);
+            this.saveTokenInfo(tokenResponse.result);
           } catch(e) {
             // send lower level error through callback for user to handle
             err = e;
