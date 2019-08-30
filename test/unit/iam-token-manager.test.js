@@ -18,6 +18,17 @@ RequestWrapper.mockImplementation(() => {
   };
 });
 
+const ACCESS_TOKEN = '9012';
+const IAM_RESPONSE = {
+  result: {
+    access_token: ACCESS_TOKEN,
+    refresh_token: '3456',
+    token_type: 'Bearer',
+    expires_in: 3600,
+    expiration: Math.floor(Date.now() / 1000) + 3600,
+  },
+};
+
 const CLIENT_ID_SECRET_WARNING =
   'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
 
@@ -37,21 +48,12 @@ describe('iam_token_manager_v1', function() {
   it('should turn an iam apikey into an access token', function(done) {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
 
-    const accessToken = '9012';
-    const iamResponse = {
-      access_token: accessToken,
-      refresh_token: '3456',
-      token_type: 'Bearer',
-      expires_in: 3600,
-      expiration: Math.floor(Date.now() / 1000) + 3600,
-    };
-
     mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, iamResponse);
+      _callback(null, IAM_RESPONSE);
     });
 
     instance.getToken(function(err, token) {
-      expect(token).toBe(accessToken);
+      expect(token).toBe(ACCESS_TOKEN);
       done();
     });
   });
@@ -70,21 +72,12 @@ describe('iam_token_manager_v1', function() {
 
     instance.tokenInfo = currentTokenInfo;
 
-    const accessToken = '9012';
-    const iamResponse = {
-      access_token: accessToken,
-      refresh_token: '3456',
-      token_type: 'Bearer',
-      expires_in: 3600,
-      expiration: Math.floor(Date.now() / 1000) + 3600,
-    };
-
     mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, iamResponse);
+      _callback(null, IAM_RESPONSE);
     });
 
     instance.getToken(function(err, token) {
-      expect(token).toBe(accessToken);
+      expect(token).toBe(ACCESS_TOKEN);
       expect(requestMock).toHaveBeenCalled();
       done();
     });
@@ -94,9 +87,8 @@ describe('iam_token_manager_v1', function() {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
 
-    const accessToken = '1234';
     const currentTokenInfo = {
-      access_token: accessToken,
+      access_token: ACCESS_TOKEN,
       refresh_token: '5678',
       token_type: 'Bearer',
       expires_in: 3600,
@@ -108,7 +100,7 @@ describe('iam_token_manager_v1', function() {
     instance.expireTime = currentTokenInfo.expiration;
 
     instance.getToken(function(err, token) {
-      expect(token).toBe(accessToken);
+      expect(token).toBe(ACCESS_TOKEN);
       expect(requestMock).not.toHaveBeenCalled();
       done();
     });
@@ -127,21 +119,12 @@ describe('iam_token_manager_v1', function() {
 
     instance.tokenInfo = currentTokenInfo;
 
-    const accessToken = '9012';
-    const iamResponse = {
-      access_token: accessToken,
-      refresh_token: '3456',
-      token_type: 'Bearer',
-      expires_in: 3600,
-      expiration: Math.floor(Date.now() / 1000) + 3600,
-    };
-
     mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, iamResponse);
+      _callback(null, IAM_RESPONSE);
     });
 
     instance.getToken(function(err, token) {
-      expect(token).toBe(accessToken);
+      expect(token).toBe(ACCESS_TOKEN);
       expect(requestMock).toHaveBeenCalled();
       done();
     });
@@ -158,21 +141,12 @@ describe('iam_token_manager_v1', function() {
 
     instance.tokenInfo = currentTokenInfo;
 
-    const accessToken = '9012';
-    const iamResponse = {
-      access_token: accessToken,
-      refresh_token: '3456',
-      token_type: 'Bearer',
-      expires_in: 3600,
-      expiration: Math.floor(Date.now() / 1000) + 3600,
-    };
-
     mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, iamResponse);
+      _callback(null, IAM_RESPONSE);
     });
 
     instance.getToken(function(err, token) {
-      expect(token).toBe(accessToken);
+      expect(token).toBe(ACCESS_TOKEN);
       done();
     });
   });
