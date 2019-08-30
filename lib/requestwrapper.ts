@@ -206,21 +206,27 @@ export class RequestWrapper {
     };
 
     this.axiosInstance(requestParams)
-    .then(res => {
-      // these objects contain circular json structures and are not always relevant to the user
-      // if the user wants them, they can be accessed through the debug properties
-      delete res.config;
-      delete res.request;
+      // placing `catch` block first because it is for catching request errors
+      // if it is after the `then` block, it will also catch errors if they occur
+      // inside of the `then` block
+      .catch(error => {
+        _callback(this.formatError(error));
+      })
+      .then(res => {
+        // sometimes error responses will still trigger the `then` block - escape that behavior here
+        if (!res) { return };
 
-      // the other sdks use the interface `result` for the body
-      res.result = res.data;
-      delete res.data;
+        // these objects contain circular json structures and are not always relevant to the user
+        // if the user wants them, they can be accessed through the debug properties
+        delete res.config;
+        delete res.request;
 
-      _callback(null, res);
-    })
-    .catch(error => {
-      _callback(this.formatError(error));
-    });
+        // the other sdks use the interface `result` for the body
+        res.result = res.data;
+        delete res.data;
+
+        _callback(null, res);
+      });
   }
 
   /**
