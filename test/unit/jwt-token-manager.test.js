@@ -10,7 +10,7 @@ function getCurrentTime() {
 
 const ACCESS_TOKEN = 'abc123';
 
-describe('iam_token_manager_v1', () => {
+describe('JWT Token Manager', () => {
   it('should initialize base variables', () => {
     const url = 'service.com';
     const instance = new JwtTokenManager({ url });
@@ -37,7 +37,7 @@ describe('iam_token_manager_v1', () => {
 
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
-        .mockImplementation(cb => cb(null, { access_token: ACCESS_TOKEN }));
+        .mockImplementation(cb => cb(null, { result: { access_token: ACCESS_TOKEN } }));
 
       instance.getToken((err, res) => {
         expect(requestTokenSpy).toHaveBeenCalled();
@@ -64,7 +64,7 @@ describe('iam_token_manager_v1', () => {
 
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
-        .mockImplementation(cb => cb(null, { access_token: ACCESS_TOKEN }));
+        .mockImplementation(cb => cb(null, { result: { access_token: ACCESS_TOKEN } }));
 
       instance.getToken((err, res) => {
         expect(requestTokenSpy).toHaveBeenCalled();
