@@ -31,3 +31,6 @@ const service = new MyService({
 - `JwtTokenManagerV1` renamed to `JwtTokenManager`
 - Token managers no longer support the `accessToken` parameter. There is no need for a token manager when a user is managing their own token. This behavior is replaced by the `BearerTokenAuthenticator` class.
 - In the IAM Token Manager: the method `setAuthorizationInfo` is renamed to `setClientIdAndSecret`
+
+#### URL parameter name changed
+The variable name for the stored, URL parameter has been changed from `url` to `serviceUrl`. Note that `url` can still be compatibility passed into the constructor as an alias for `serviceUrl`. However, if you try to access the `url` property directly in your code, this is a breaking change.

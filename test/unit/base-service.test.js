@@ -70,14 +70,34 @@ describe('Base Service', () => {
     }).toThrow();
   });
 
-  it('should strip trailing slash of url during instantiation', () => {
+  it('should strip trailing slash of serviceUrl during instantiation', () => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
-      version: 'v1',
+      serviceUrl: 'https://example.ibm.com/',
+    });
+
+    expect(testService.baseOptions.serviceUrl).toBe('https://example.ibm.com');
+  });
+
+  it('should accept `url` instead of `serviceUrl` for compaitiblity', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
       url: 'https://example.ibm.com/',
     });
 
-    expect(testService.baseOptions.url).toBe('https://example.ibm.com');
+    expect(testService.baseOptions.serviceUrl).toBe('https://example.ibm.com');
+  });
+
+  it('should support setting the service url after instantiation', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+
+    expect(testService.baseOptions.serviceUrl).toBe(DEFAULT_URL);
+
+    const newUrl = 'new.com';
+    testService.setServiceUrl(newUrl);
+    expect(testService.baseOptions.serviceUrl).toBe(newUrl);
   });
 
   it('should throw an error if an authenticator is not passed in', () => {
@@ -120,7 +140,7 @@ describe('Base Service', () => {
       authenticator: AUTHENTICATOR,
       disableSslVerification: false,
       proxy: false,
-      url: DEFAULT_URL,
+      serviceUrl: DEFAULT_URL,
       qs: EMPTY_OBJECT,
     });
   });
@@ -134,20 +154,20 @@ describe('Base Service', () => {
     expect(testService.baseOptions.qs).toEqual(EMPTY_OBJECT);
   });
 
-  it('should use the default service url', () => {
+  it('should use the default service serviceUrl', () => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
 
-    expect(testService.baseOptions.url).toBe(DEFAULT_URL);
+    expect(testService.baseOptions.serviceUrl).toBe(DEFAULT_URL);
   });
 
-  it('should read url and disableSslVerification from env', () => {
-    const url = 'abc123.com';
+  it('should read serviceUrl and disableSslVerification from env', () => {
+    const serviceUrl = 'abc123.com';
     const disableSsl = true;
 
     readExternalSourcesMock.mockImplementation(() => ({
-      url,
+      url: serviceUrl,
       disableSsl,
     }));
 
@@ -157,7 +177,7 @@ describe('Base Service', () => {
 
     const fromCredsFile = testService.readOptionsFromExternalConfig();
 
-    expect(fromCredsFile.url).toBe(url);
+    expect(fromCredsFile.serviceUrl).toBe(serviceUrl);
     expect(fromCredsFile.disableSslVerification).toBe(disableSsl);
     expect(readExternalSourcesMock).toHaveBeenCalled();
     expect(readExternalSourcesMock.mock.calls[0][0]).toBe(DEFAULT_NAME);
@@ -170,12 +190,12 @@ describe('Base Service', () => {
 
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
-      url: 'withtrailingslash.com/api/',
+      serviceUrl: 'withtrailingslash.com/api/',
       proxy: false,
     });
 
     expect(testService.baseOptions).toEqual({
-      url: 'withtrailingslash.com/api',
+      serviceUrl: 'withtrailingslash.com/api',
       disableSslVerification: true,
       proxy: false,
       qs: EMPTY_OBJECT,
@@ -192,11 +212,11 @@ describe('Base Service', () => {
 
     const parameters = {
       defaultOptions: {
-        url: DEFAULT_URL,
+        serviceUrl: DEFAULT_URL,
         Accept: 'application/json',
       },
       options: {
-        url: '/v2/assistants/{assistant_id}/sessions',
+        serviceUrl: '/v2/assistants/{assistant_id}/sessions',
         method: 'POST',
         path: {
           id: '123',
@@ -219,11 +239,11 @@ describe('Base Service', () => {
 
     const parameters = {
       defaultOptions: {
-        url: DEFAULT_URL,
+        serviceUrl: DEFAULT_URL,
         Accept: 'application/json',
       },
       options: {
-        url: '/v2/assistants/{assistant_id}/sessions',
+        serviceUrl: '/v2/assistants/{assistant_id}/sessions',
         method: 'POST',
         path: {
           id: '123',
@@ -268,11 +288,11 @@ describe('Base Service', () => {
     expect(testService.readOptionsFromExternalConfig()).toEqual(EMPTY_OBJECT);
   });
 
-  it('should check url for common problems', () => {
+  it('should check serviceUrl for common problems', () => {
     expect(() => {
       new TestService({
         authenticator: AUTHENTICATOR,
-        url: 'myapi.com/{instanceId}',
+        serviceUrl: 'myapi.com/{instanceId}',
       });
     }).toThrow(/Revise these credentials/);
   });
