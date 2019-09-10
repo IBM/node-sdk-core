@@ -54,24 +54,34 @@ export function getAuthenticatorFromEnvironment(serviceName: string) {
     delete credentials.authDisableSsl; 
   }
 
+  // default the auth type to `iam` if authType is undefined, or not a string
+  let { authType } = credentials;
+  if (!authType || typeof authType !== 'string') {
+    authType = 'iam';
+  }
+
   // create and return the appropriate authenticator
   let authenticator;
 
-  switch (credentials.authType) {
-    case 'noAuth':
+  // fold authType to lower case for case insensitivity
+  switch (authType.toLowerCase()) {
+    case 'noauth':
       authenticator = new NoAuthAuthenticator();
       break;
     case 'basic':
       authenticator = new BasicAuthenticator(credentials);
       break;
-    case 'bearerToken':
+    case 'bearertoken':
       authenticator = new BearerTokenAuthenticator(credentials);
       break;
     case 'cp4d':
       authenticator = new CloudPakForDataAuthenticator(credentials);
       break;
-    default: // default the authentication type to iam
+    case 'iam':
       authenticator = new IamAuthenticator(credentials);
+      break;
+    default:
+      throw new Error('Invalid value for AUTH_TYPE: ' + authType);
   }
 
   return authenticator;

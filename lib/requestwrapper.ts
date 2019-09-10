@@ -122,8 +122,16 @@ export class RequestWrapper {
    */
   public sendRequest(parameters, _callback) {
     const options = extend(true, {}, parameters.defaultOptions, parameters.options);
-    const { path, body, form, formData, qs, method } = options;
-    let { url, headers } = options;
+    const { path, body, form, formData, qs, method, serviceUrl } = options;
+    let { headers, url } = options;
+
+    // validate service url parameter has been set
+    if (!serviceUrl || typeof serviceUrl !== 'string') {
+      return _callback(new Error('The service URL is required'), null);
+    }
+
+    // use default service url if `url` parameter is not specified in generated method
+    url = url || serviceUrl;
 
     const multipartForm = new FormData();
 
@@ -171,7 +179,7 @@ export class RequestWrapper {
 
     // Add service default endpoint if options.url start with /
     if (url && url.charAt(0) === '/') {
-      url = parameters.defaultOptions.url + url;
+      url = serviceUrl + url;
     }
 
     let data = body;
