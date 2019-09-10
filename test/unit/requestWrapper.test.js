@@ -59,7 +59,7 @@ describe('sendRequest', () => {
         formData: '',
         qs: {},
         method: 'POST',
-        url:
+        serviceUrl:
           'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id',
         headers: {
           'test-header': 'test-header-value',
@@ -97,7 +97,7 @@ describe('sendRequest', () => {
         formData: '',
         qs: {},
         method: 'POST',
-        url:
+        serviceUrl:
           'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id',
         headers: {
           'test-header': 'test-header-value',
@@ -124,7 +124,7 @@ describe('sendRequest', () => {
           version: '2017-10-15',
         },
         method: 'POST',
-        url: 'https://example.ibm.com',
+        serviceUrl: 'https://example.ibm.com',
         headers: {
           'test-header': 'test-header-value',
         },
@@ -185,7 +185,7 @@ describe('sendRequest', () => {
           version: '2017-10-15',
         },
         method: 'POST',
-        url: 'https://example.ibm.com',
+        serviceUrl: 'https://example.ibm.com',
         headers: {
           'test-header': 'test-header-value',
         },
@@ -270,7 +270,7 @@ describe('sendRequest', () => {
           version: '2017-10-15',
         },
         method: 'POST',
-        url: 'https://example.ibm.com',
+        serviceUrl: 'https://example.ibm.com',
         headers: {
           'test-header': 'test-header-value',
         },
@@ -319,6 +319,31 @@ describe('sendRequest', () => {
     });
   });
 
+  it('should call callback with an error if `serviceUrl` is not set', done => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        headers: {
+          'test-header': 'test-header-value',
+        },
+        responseType: 'buffer',
+      },
+    };
+
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    requestWrapperInstance.sendRequest(parameters, (err, res) => {
+      // assert results
+      expect(err).toBeInstanceOf(Error);
+      expect(res).toBeNull();
+      expect(mockAxiosInstance).not.toHaveBeenCalled();
+      done();
+    });
+  });
+
   // Need to rewrite this to test instantiation with userOptions
 
   //   it('should keep parameters in options that are not explicitly set in requestwrapper', done => {
@@ -329,7 +354,7 @@ describe('sendRequest', () => {
   //         qs: {},
   //         method: 'POST',
   //         rejectUnauthorized: true,
-  //         url:
+  //         serviceUrl:
   //           'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id',
   //         headers: {
   //           'test-header': 'test-header-value',
