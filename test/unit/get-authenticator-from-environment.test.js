@@ -31,8 +31,8 @@ describe('Get Authenticator From Environment Module', () => {
     expect(() => getAuthenticatorFromEnvironment(SERVICE_NAME)).toThrow();
   });
 
-  it('should get no auth authenticator', () => {
-    setUpNoauthPayload();
+  it('should get no auth authenticator - tests case insentivity of auth type', () => {
+    setUpNoAuthPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(NoAuthAuthenticator);
     expect(readExternalSourcesMock).toHaveBeenCalled();
@@ -82,12 +82,19 @@ describe('Get Authenticator From Environment Module', () => {
     expect(authenticator).toBeInstanceOf(IamAuthenticator);
     expect(authenticator.apikey).toBe(APIKEY);
   });
+
+  it('should throw an error when an unsupported auth type is provided', () => {
+    readExternalSourcesMock.mockImplementation(() => ({ apikey: APIKEY, authType: 'unsupported' }));
+    expect(() => {
+      getAuthenticatorFromEnvironment(SERVICE_NAME);
+    }).toThrow();
+  });
 });
 
 // mock payloads for the read-external-sources module
-function setUpNoauthPayload() {
+function setUpNoAuthPayload() {
   readExternalSourcesMock.mockImplementation(() => ({
-    authType: 'noAuth',
+    authType: 'noauth',
   }));
 }
 

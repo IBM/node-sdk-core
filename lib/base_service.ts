@@ -23,7 +23,8 @@ import { stripTrailingSlash } from './helper';
 import { RequestWrapper } from './requestwrapper';
 
 export interface UserOptions {
-  url?: string;
+  url?: string; // deprecated
+  serviceUrl?: string;
   version?: string;
   headers?: OutgoingHttpHeaders;
   disableSslVerification?: boolean;
@@ -66,12 +67,17 @@ export class BaseService {
     const _options = {} as BaseServiceOptions;
     const options = extend({}, userOptions);
 
-    if (options.url) {
-      _options.url = stripTrailingSlash(options.url);
+    // for compatibility
+    if (options.url && !options.serviceUrl) {
+      options.serviceUrl = options.url;
     }
 
-    // check url for common user errors
-    const credentialProblems = checkCredentials(options, ['url']);
+    if (options.serviceUrl) {
+      _options.serviceUrl = stripTrailingSlash(options.serviceUrl);
+    }
+
+    // check serviceUrl for common user errors
+    const credentialProblems = checkCredentials(options, ['serviceUrl']);
     if (credentialProblems) {
       throw new Error(credentialProblems);
     }
@@ -84,7 +90,7 @@ export class BaseService {
 
     const serviceClass = this.constructor as typeof BaseService;
     this.baseOptions = extend(
-      { qs: {}, url: serviceClass.URL },
+      { qs: {}, serviceUrl: serviceClass.URL },
       options,
       this.readOptionsFromExternalConfig(),
       _options
@@ -92,7 +98,7 @@ export class BaseService {
 
     this.requestWrapperInstance = new RequestWrapper(this.baseOptions);
 
-    // set authenticator
+    // enforce that an authenticator is set
     if (!options.authenticator) {
       throw new Error('Authenticator must be set.');
     }
@@ -107,6 +113,15 @@ export class BaseService {
    */
   public getAuthenticator(): any {
     return this.authenticator;
+  }
+
+  /**
+   * Set the service URL to send requests to.
+   *
+   * @param {string} the base URL for the service
+   */
+  public setServiceUrl(url: string): void {
+    this.baseOptions.serviceUrl = url;
   }
 
   /**
@@ -144,7 +159,7 @@ export class BaseService {
       const { url, disableSsl } = properties;
 
       if (url) {
-        results.url = url;
+        results.serviceUrl = url;
       }
       if (disableSsl === true) {
         results.disableSslVerification = disableSsl;
