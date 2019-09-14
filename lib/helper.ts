@@ -43,12 +43,21 @@ export interface FileStream extends NodeJS.ReadableStream {
 }
 
 // custom type guards
-function isFileObject(obj: any): obj is FileObject {
+export function isFileObject(obj: any): obj is FileObject {
   return Boolean(obj && obj.value);
 }
 
 function isFileStream(obj: any): obj is FileStream {
   return obj && isReadable(obj) && obj.path;
+}
+
+export function isFileParamAttributes(obj: any): obj is FileParamAttributes {
+  return obj && obj.data &&
+   (
+     isReadable(obj.data) ||
+     Buffer.isBuffer(obj.data) ||
+     isFileObject(obj.data)
+   );
 }
 
 export function isFileParam(obj: any): boolean {
@@ -58,7 +67,7 @@ export function isFileParam(obj: any): boolean {
       isReadable(obj) ||
       Buffer.isBuffer(obj) ||
       isFileObject(obj) ||
-      (obj.data && isFileParam(obj.data))
+      isFileParamAttributes(obj)
     )
   );
 }
@@ -164,6 +173,7 @@ export function getFormat(
  * this function builds a `form-data` object for each file parameter
  * @param {FileParamAttributes} fileParams - the file parameter attributes
  * @param {NodeJS.ReadableStream|Buffer|FileObject} fileParams.data - the data content of the file
+ * @param (string) fileParams.filename - the filename of the file
  * @param {string} fileParams.contentType - the content type of the file
  * @returns {FileObject}
  */

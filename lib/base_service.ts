@@ -338,7 +338,20 @@ export class BaseService {
    * are being used to authenticate the request. If so, the token is
    * retrieved by the token manager.
    *
-   * @param {Object} parameters - service request options passed in by user
+   * @param {Object} parameters - service request options passed in by user.
+   * @param {string} parameters.options.method - the http method.
+   * @param {string} parameters.options.url - the URL of the service.
+   * @param {string} parameters.options.path - the path to be appended to the service URL.
+   * @param {string} parameters.options.qs - the querystring to be included in the URL.
+   * @param {string} parameters.options.body - the data to be sent as the request body.
+   * @param {Object} parameters.options.form - an object containing the key/value pairs for a www-form-urlencoded request.
+   * @param {Object} parameters.options.formData - an object containing the contents for a multipart/form-data request.
+   * The following processing is performed on formData values:
+   * - string: no special processing -- the value is sent as is
+   * - object: the value is converted to a JSON string before insertion into the form body
+   * - NodeJS.ReadableStream|FileObject|Buffer|FileParamAttributes: sent as a file, with any associated metadata
+   * - array: each element of the array is sent as a separate form part using any special processing as described above
+   * @param {HeaderOptions} parameters.options.headers - additional headers to be passed on the request.
    * @param {Function} callback - callback function to pass the response back to
    * @returns {ReadableStream|undefined}
    */
