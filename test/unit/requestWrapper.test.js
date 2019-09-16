@@ -200,11 +200,11 @@ describe('sendRequest', () => {
           'add-header': 'add-header-value',
         },
         formData: {
-          file: fs.createReadStream('../blank.wav'),
+          file: fs.createReadStream(__dirname + '/../resources/blank.wav'),
           null_item: null,
           custom_file: {
             filename: 'custom.wav',
-            data: fs.createReadStream('../blank.wav'),
+            data: fs.createReadStream(__dirname + '/../resources/blank.wav'),
           },
           array_item: ['a', 'b'],
           object_item: { a: 'a', b: 'b' },
@@ -242,6 +242,13 @@ describe('sendRequest', () => {
       expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).toMatch(
         'Content-Disposition: form-data; name=\\"array_item\\"'
       );
+      // There should be two "array_item" parts
+      expect(
+        (
+          JSON.stringify(mockAxiosInstance.mock.calls[0][0].data).match(/name=\\"array_item\\"/g) ||
+          []
+        ).length
+      ).toEqual(2);
       expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).toMatch(
         'Content-Disposition: form-data; name=\\"custom_file\\"'
       );

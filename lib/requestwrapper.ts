@@ -20,7 +20,7 @@ import FormData = require('form-data');
 import https = require('https');
 import querystring = require('querystring');
 import { PassThrough as readableStream } from 'stream';
-import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileParam } from './helper';
+import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileObject, isFileParam, isFileParamAttributes } from './helper';
 
 const isBrowser = typeof window === 'object';
 const globalTransactionId = 'x-global-transaction-id';
@@ -127,48 +127,30 @@ export class RequestWrapper {
 
     // Form params
     if (formData) {
-      // Remove keys with undefined/null values
-      // Remove empty objects
-      // Remove non-valid inputs for buildRequestFileObject,
-      // i.e things like {contentType: <contentType>}
       Object.keys(formData).forEach(key => {
-        if (formData[key] == null ||
-          isEmptyObject(formData[key]) ||
-          (formData[key].hasOwnProperty('contentType') && !formData[key].hasOwnProperty('data'))) {
-          delete formData[key];
-        }
-      });
-      // Convert file form parameters to request-style objects
-      Object.keys(formData).forEach(key => {
-        if (formData[key].data != null) {
-          formData[key] = buildRequestFileObject(formData[key]);
-        }
-      });
+        const values = Array.isArray(formData[key]) ? formData[key] : [formData[key]];
+        // Skip keys with undefined/null values or empty object value
+        values.filter(v => v != null && !isEmptyObject(v)).forEach(value => {
 
-      // Stringify arrays
-      Object.keys(formData).forEach(key => {
-        if (Array.isArray(formData[key])) {
-          formData[key] = formData[key].join(',');
-        }
-      });
+          // Special case of empty file object
+          if (value.hasOwnProperty('contentType') && !value.hasOwnProperty('data')) {
+            return;
+          }
 
-      // Convert non-file form parameters to strings
-      Object.keys(formData).forEach(key => {
-        if (!isFileParam(formData[key]) &&
-          !Array.isArray(formData[key]) &&
-          typeof formData[key] === 'object') {
-          (formData[key] = JSON.stringify(formData[key]));
-        }
-      });
+          // Convert file form parameters to request-style objects
+          if (isFileParamAttributes(value)) {
+            value = buildRequestFileObject(value);
+          }
 
-      // build multipart form data
-      Object.keys(formData).forEach(key => {
-        // handle files differently to maintain options
-        if (formData[key].value) {
-          multipartForm.append(key, formData[key].value, formData[key].options);
-        } else {
-          multipartForm.append(key, formData[key]);
-        }
+          if (isFileObject(value)) {
+            multipartForm.append(key, value.value, value.options);
+          } else {
+            if (typeof value === 'object' && !isFileParam(value)) {
+              value = JSON.stringify(value);
+            }
+            multipartForm.append(key, value);
+          }
+        });
       });
     }
 
