@@ -1,3 +1,10 @@
+## [0.3.6](https://github.com/IBM/node-sdk-core/compare/v0.3.5...v0.3.6) (2019-09-16)
+
+
+### Bug Fixes
+
+* Fix handling of array form parameters. ([#43](https://github.com/IBM/node-sdk-core/issues/43)) ([bad8960](https://github.com/IBM/node-sdk-core/commit/bad8960))
+
 ## [0.3.5](https://github.com/IBM/node-sdk-core/compare/v0.3.4...v0.3.5) (2019-08-07)
 
 

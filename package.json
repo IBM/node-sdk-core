@@ -1,6 +1,6 @@
 {
   "name": "ibm-cloud-sdk-core",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Core functionality to support SDKs generated with IBM's OpenAPI 3 SDK Generator.",
   "main": "./index",
   "repository": {
