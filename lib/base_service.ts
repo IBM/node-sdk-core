@@ -138,7 +138,7 @@ export class BaseService {
    * The following processing is performed on formData values:
    * - string: no special processing -- the value is sent as is
    * - object: the value is converted to a JSON string before insertion into the form body
-   * - NodeJS.ReadableStream|FileObject|Buffer|FileParamAttributes: sent as a file, with any associated metadata
+   * - NodeJS.ReadableStream|Buffer|FileWithMetadata: sent as a file, with any associated metadata
    * - array: each element of the array is sent as a separate form part using any special processing as described above
    * @param {HeaderOptions} parameters.options.headers - additional headers to be passed on the request.
    * @param {Function} callback - callback function to pass the response back to
