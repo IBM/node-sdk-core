@@ -20,7 +20,7 @@ import FormData = require('form-data');
 import https = require('https');
 import querystring = require('querystring');
 import { PassThrough as readableStream } from 'stream';
-import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileObject, isFileParam, isFileParamAttributes } from './helper';
+import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileData, isFileWithMetadata } from './helper';
 
 const isBrowser = typeof window === 'object';
 const globalTransactionId = 'x-global-transaction-id';
@@ -147,15 +147,11 @@ export class RequestWrapper {
             return;
           }
 
-          // Convert file form parameters to request-style objects
-          if (isFileParamAttributes(value)) {
-            value = buildRequestFileObject(value);
-          }
-
-          if (isFileObject(value)) {
-            multipartForm.append(key, value.value, value.options);
+          if (isFileWithMetadata(value)) {
+            const fileObj = buildRequestFileObject(value);
+            multipartForm.append(key, fileObj.value, fileObj.options);
           } else {
-            if (typeof value === 'object' && !isFileParam(value)) {
+            if (typeof value === 'object' && !isFileData(value)) {
               value = JSON.stringify(value);
             }
             multipartForm.append(key, value);
