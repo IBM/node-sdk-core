@@ -49,9 +49,6 @@ This Class contains logic for managing an IAM token over its lifetime. Tokens ca
 ### Icp4dTokenManagerV1
 This Class is similar in function to IamTokenManagerV1. The only difference is that the `url` parameter is required, it takes a `username` and `password` instead of an API key, and manages tokens for instances of ICP4D. To use this token manager in an SDK, the parameter `authentication_type` must be set to `icp4d` in the constructor.
 
-### isFileParam
-This function takes an Object and returns `true` if the object is a Stream, a Buffer, has a `value` property, or has a `data` property that is a file param (checked recursively).
-
 ### isEmptyObject
 This function takes an Object and returns `true` if it is an empty object.
 
@@ -69,9 +66,6 @@ This function returns `true` if the given string is HTML.
 
 ### getFormat
 This function takes a parameters object and a list of "formats". It returns the first match from the formats array that is a key in the parameters object, or `null` if there are no matches.
-
-### buildRequestFileObject
-This function builds a "form-data" object for each file parameter.
 
 ### toLowerKeys
 This function takes an Object and returns the same object with all of the top-level keys converted to lower case. Note: it does not convert nested keys.
