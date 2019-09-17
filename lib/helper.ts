@@ -20,7 +20,6 @@ import { isReadable } from 'isstream';
 import { lookup } from 'mime-types';
 import { basename } from 'path';
 
-// exported interfaces
 export interface FileObject {
   value: NodeJS.ReadableStream | Buffer | string;
   options?: FileOptions;
@@ -32,8 +31,8 @@ export interface FileOptions {
   contentType?: string;
 }
 
-export interface FileParamAttributes {
-  data: NodeJS.ReadableStream | Buffer | FileObject;
+export interface FileWithMetadata {
+  data: NodeJS.ReadableStream | Buffer;
   contentType: string;
   filename: string;
 }
@@ -43,33 +42,16 @@ export interface FileStream extends NodeJS.ReadableStream {
 }
 
 // custom type guards
-export function isFileObject(obj: any): obj is FileObject {
-  return Boolean(obj && obj.value);
-}
-
 function isFileStream(obj: any): obj is FileStream {
   return obj && isReadable(obj) && obj.path;
 }
 
-export function isFileParamAttributes(obj: any): obj is FileParamAttributes {
-  return obj && obj.data &&
-   (
-     isReadable(obj.data) ||
-     Buffer.isBuffer(obj.data) ||
-     isFileObject(obj.data)
-   );
+export function isFileWithMetadata(obj: any): obj is FileWithMetadata {
+  return obj && obj.data && isFileData(obj.data);
 }
 
-export function isFileParam(obj: any): boolean {
-  return Boolean(
-    obj &&
-    (
-      isReadable(obj) ||
-      Buffer.isBuffer(obj) ||
-      isFileObject(obj) ||
-      isFileParamAttributes(obj)
-    )
-  );
+export function isFileData(obj: any): boolean {
+  return Boolean(obj && (isReadable(obj) || Buffer.isBuffer(obj)));
 }
 
 export function isEmptyObject(obj: any): boolean {
@@ -80,11 +62,11 @@ export function isEmptyObject(obj: any): boolean {
 
 /**
  * This function retrieves the content type of the input.
- * @param {NodeJS.ReadableStream|Buffer|string} inputData - The data to retrieve content type for.
+ * @param {NodeJS.ReadableStream|Buffer} inputData - The data to retrieve content type for.
  * @returns {string} the content type of the input.
  */
 export function getContentType(
-  inputData: NodeJS.ReadableStream | Buffer | string
+  inputData: NodeJS.ReadableStream | Buffer
 ): string {
   let contentType = null;
   if (isFileStream(inputData)) {
@@ -171,71 +153,39 @@ export function getFormat(
 
 /**
  * this function builds a `form-data` object for each file parameter
- * @param {FileParamAttributes} fileParams - the file parameter attributes
- * @param {NodeJS.ReadableStream|Buffer|FileObject} fileParams.data - the data content of the file
- * @param (string) fileParams.filename - the filename of the file
- * @param {string} fileParams.contentType - the content type of the file
+ * @param {FileWithMetadata} fileParam - the file parameter
+ * @param {NodeJS.ReadableStream|Buffer} fileParam.data - the data content of the file
+ * @param (string) fileParam.filename - the filename of the file
+ * @param {string} fileParam.contentType - the content type of the file
  * @returns {FileObject}
  */
 export function buildRequestFileObject(
-  fileParams: FileParamAttributes
+  fileParam: FileWithMetadata
 ): FileObject {
   // build filename
   let filename: string | Buffer;
-  if (fileParams.filename) {
+  if (fileParam.filename) {
     // prioritize user-given filenames
-    filename = fileParams.filename;
-  } else if (
-    isFileObject(fileParams.data) &&
-    fileParams.data.options &&
-    fileParams.data.value
-  ) {
-    // if FileObject with value and options
-    filename = fileParams.data.options.filename;
-  } else if (isFileStream(fileParams.data)) {
+    filename = fileParam.filename;
+  } else if (isFileStream(fileParam.data)) {
     // if readable stream with path property
-    filename = fileParams.data.path;
-  } else if (
-    isFileObject(fileParams.data) &&
-    isFileStream(fileParams.data.value)
-  ) {
-    // if FileObject with stream value
-    filename = fileParams.data.value.path;
+    filename = fileParam.data.path;
   }
   // toString handles the case when path is a buffer
   filename = filename ? basename(filename.toString()) : '_';
 
   // build contentType
   let contentType: string = 'application/octet-stream';
-  if (
-    isFileObject(fileParams.data) &&
-    fileParams.data.options &&
-    fileParams.data.options.contentType
-  ) {
-    // if form-data object
-    contentType = fileParams.data.options.contentType;
-  } else if (fileParams.contentType) {
-    // for multiple producers, this is either null, or the _content_type parameter
-    // for single producers, this is the single content type
-    contentType = fileParams.contentType;
+  if (fileParam.contentType) {
+    // prioritize user-given content_type
+    contentType = fileParam.contentType;
   } else {
     // else utilize file-type package
-    if (isFileObject(fileParams.data)) {
-      contentType = getContentType(fileParams.data.value) || contentType;
-    } else {
-      contentType = getContentType(fileParams.data) || contentType;
-    }
+    contentType = getContentType(fileParam.data) || contentType;
   }
 
-  // build value
-  let value: NodeJS.ReadableStream | Buffer | string = isFileObject(fileParams.data)
-    ? fileParams.data.value
-    : fileParams.data;
-  if (typeof value === 'string') {
-    value = Buffer.from(value);
-  }
   return {
-    value,
+    value: fileParam.data,
     options: {
       filename,
       contentType
