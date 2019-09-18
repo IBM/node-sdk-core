@@ -13,9 +13,12 @@ export function readCredentialsFile() {
   // first look for an env variable called IBM_CREDENTIALS_FILE
   // it should be the path to the file
 
+  // then look at the current working directory
+  // then at the os-dependent home directory
+
   const givenFilepath: string = process.env['IBM_CREDENTIALS_FILE'] || '';
-  const homeDir: string = constructFilepath(os.homedir());
   const workingDir: string = constructFilepath(process.cwd());
+  const homeDir: string = constructFilepath(os.homedir());
 
   let filepathToUse: string;
 
@@ -27,10 +30,10 @@ export function readCredentialsFile() {
       // see if user gave a path to the directory where file is located
       filepathToUse = constructFilepath(givenFilepath);
     }
-  } else if (fileExistsAtPath(homeDir)) {
-    filepathToUse = homeDir;
   } else if (fileExistsAtPath(workingDir)) {
     filepathToUse = workingDir;
+  } else if (fileExistsAtPath(homeDir)) {
+    filepathToUse = homeDir;
   } else {
     // file does not exist anywhere, will not be used
     return {};
