@@ -20,6 +20,21 @@ describe('buildRequestFileObject', () => {
       expect(fileObj.options.filename).toBe(customName);
     });
 
+    it('should handle file object with `value` property', () => {
+      const fileParams = {
+        data: {
+          value: fs.readFileSync(filepath),
+          options: {
+            filename: customName,
+          },
+        },
+      };
+      const fileObj = buildRequestFileObject(fileParams);
+      expect(fileObj.options).toBeDefined();
+      expect(fileObj.options.filename).toBeDefined();
+      expect(fileObj.options.filename).toBe(customName);
+    });
+
     it('should get filename from readable stream', () => {
       const fileParams = {
         data: fs.createReadStream(filepath),
@@ -35,7 +50,9 @@ describe('buildRequestFileObject', () => {
       fileStream.path = '/fake/path/' + customName;
 
       const fileParams = {
-        data: fileStream,
+        data: {
+          value: fileStream,
+        },
       };
       const fileObj = buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
@@ -48,7 +65,9 @@ describe('buildRequestFileObject', () => {
       fileStream.path = Buffer.from('/fake/path/' + customName);
 
       const fileParams = {
-        data: fileStream,
+        data: {
+          value: fileStream,
+        },
       };
       const fileObj = buildRequestFileObject(fileParams);
       expect(Buffer.isBuffer(fileStream.path)).toBe(true);
@@ -70,9 +89,36 @@ describe('buildRequestFileObject', () => {
 
   //      CONTENT TYPE
   describe('content type tests', () => {
+    it('should read contentType from options in file object', () => {
+      const fileParams = {
+        data: {
+          value: {},
+          options: {
+            contentType: 'audio/wave',
+          },
+        },
+      };
+      const fileObj = buildRequestFileObject(fileParams);
+      expect(fileObj.options).toBeDefined();
+      expect(fileObj.options.contentType).toBeDefined();
+      expect(fileObj.options.contentType).toBe('audio/wave');
+    });
+
     it('should read contentType from user parameter', () => {
       const fileParams = {
         contentType: 'audio/wave',
+      };
+      const fileObj = buildRequestFileObject(fileParams);
+      expect(fileObj.options).toBeDefined();
+      expect(fileObj.options.contentType).toBeDefined();
+      expect(fileObj.options.contentType).toBe('audio/wave');
+    });
+
+    it('should use `getContentType` to read mime type from file object', () => {
+      const fileParams = {
+        data: {
+          value: fs.createReadStream(audioFile),
+        },
       };
       const fileObj = buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
@@ -104,6 +150,18 @@ describe('buildRequestFileObject', () => {
 
   //      VALUE
   describe('value tests', () => {
+    it('should read value from data.value for a file object', () => {
+      const data = fs.createReadStream(filepath);
+      const fileParams = {
+        data: {
+          value: data,
+        },
+      };
+      const fileObj = buildRequestFileObject(fileParams);
+      expect(fileObj.value).toBeDefined();
+      expect(fileObj.value).toBe(data);
+    });
+
     it('should read value from data property', () => {
       const data = fs.readFileSync(filepath);
       const fileParams = {
@@ -112,6 +170,17 @@ describe('buildRequestFileObject', () => {
       const fileObj = buildRequestFileObject(fileParams);
       expect(fileObj.value).toBeDefined();
       expect(fileObj.value).toBe(data);
+    });
+
+    it('should convert string data to a buffer', () => {
+      const data = 'just a string';
+      const fileParams = {
+        data,
+      };
+      const fileObj = buildRequestFileObject(fileParams);
+      expect(fileObj.value).toBeDefined();
+      expect(Buffer.isBuffer(fileObj.value)).toBe(true);
+      expect(fileObj.value.toString()).toBe(data);
     });
   });
 });
