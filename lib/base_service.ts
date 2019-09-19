@@ -129,7 +129,7 @@ export class BaseService {
    *
    * @param {Object} parameters - service request options passed in by user.
    * @param {string} parameters.options.method - the http method.
-   * @param {string} parameters.options.url - the URL of the service.
+   * @param {string} parameters.options.url - the path portion of the URL to be appended to the serviceUrl
    * @param {string} parameters.options.path - the path to be appended to the service URL.
    * @param {string} parameters.options.qs - the querystring to be included in the URL.
    * @param {string} parameters.options.body - the data to be sent as the request body.
@@ -140,11 +140,19 @@ export class BaseService {
    * - object: the value is converted to a JSON string before insertion into the form body
    * - NodeJS.ReadableStream|Buffer|FileWithMetadata: sent as a file, with any associated metadata
    * - array: each element of the array is sent as a separate form part using any special processing as described above
-   * @param {HeaderOptions} parameters.options.headers - additional headers to be passed on the request.
+   * @param {Object} parameters.defaultOptions
+   * @param {string} parameters.defaultOptions.serviceUrl - the base URL of the service
+   * @param {HeaderOptions} parameters.defaultOptions.headers - additional headers to be passed on the request.
    * @param {Function} callback - callback function to pass the response back to
    * @returns {ReadableStream|undefined}
    */
   protected createRequest(parameters, callback) {
+    // validate serviceUrl parameter has been set
+    const serviceUrl = parameters.defaultOptions && parameters.defaultOptions.serviceUrl;
+    if (!serviceUrl || typeof serviceUrl !== 'string') {
+      return callback(new Error('The service URL is required'), null);
+    }
+
     this.authenticator.authenticate(parameters.defaultOptions, err => {
       err ? callback(err) : this.requestWrapperInstance.sendRequest(parameters, callback);
     });

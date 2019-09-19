@@ -262,6 +262,33 @@ describe('Base Service', () => {
     expect(testService.requestWrapperInstance.sendRequest).toBe(sendRequestMock); // verify it is calling the instance
   });
 
+  it('should call callback with an error if `serviceUrl` is not set', done => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+    testService.setServiceUrl(undefined);
+
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        headers: {
+          'test-header': 'test-header-value',
+        },
+        responseType: 'buffer',
+      },
+    };
+
+    testService.createRequest(parameters, (err, res) => {
+      // assert results
+      expect(err).toBeInstanceOf(Error);
+      expect(res).toBeNull();
+      done();
+    });
+  });
+
   it('should send error back to user on authenticate() failure', done => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
@@ -272,7 +299,13 @@ describe('Base Service', () => {
     const fakeError = new Error('token request failed');
     authenticateMock.mockImplementation((_, callback) => callback(fakeError));
 
-    testService.createRequest(EMPTY_OBJECT, err => {
+    const parameters = {
+      defaultOptions: {
+        serviceUrl: 'https://foo.bar.baz/api',
+      },
+    };
+
+    testService.createRequest(parameters, err => {
       expect(err).toBe(fakeError);
       expect(authenticateMock).toHaveBeenCalled();
       done();
