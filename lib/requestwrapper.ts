@@ -125,14 +125,6 @@ export class RequestWrapper {
     const { path, body, form, formData, qs, method, serviceUrl } = options;
     let { headers, url } = options;
 
-    // validate service url parameter has been set
-    if (!serviceUrl || typeof serviceUrl !== 'string') {
-      return _callback(new Error('The service URL is required'), null);
-    }
-
-    // use default service url if `url` parameter is not specified in generated method
-    url = url || serviceUrl;
-
     const multipartForm = new FormData();
 
     // Form params
