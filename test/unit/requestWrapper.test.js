@@ -59,7 +59,7 @@ describe('sendRequest', () => {
         formData: '',
         qs: {},
         method: 'POST',
-        serviceUrl:
+        url:
           'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id',
         headers: {
           'test-header': 'test-header-value',
@@ -322,31 +322,6 @@ describe('sendRequest', () => {
       expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
       expect(res).toEqual(expectedResult);
       expect(mockAxiosInstance.mock.calls.length).toBe(1);
-      done();
-    });
-  });
-
-  it('should call callback with an error if `serviceUrl` is not set', done => {
-    const parameters = {
-      defaultOptions: {
-        body: 'post=body',
-        formData: '',
-        qs: {},
-        method: 'POST',
-        headers: {
-          'test-header': 'test-header-value',
-        },
-        responseType: 'buffer',
-      },
-    };
-
-    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
-
-    requestWrapperInstance.sendRequest(parameters, (err, res) => {
-      // assert results
-      expect(err).toBeInstanceOf(Error);
-      expect(res).toBeNull();
-      expect(mockAxiosInstance).not.toHaveBeenCalled();
       done();
     });
   });
