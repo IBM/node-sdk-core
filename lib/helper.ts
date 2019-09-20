@@ -33,8 +33,8 @@ export interface FileOptions {
 
 export interface FileWithMetadata {
   data: NodeJS.ReadableStream | Buffer;
-  contentType: string;
   filename: string;
+  contentType: string;
 }
 
 export interface FileStream extends NodeJS.ReadableStream {
@@ -42,15 +42,19 @@ export interface FileStream extends NodeJS.ReadableStream {
 }
 
 // custom type guards
+function isFileObject(obj: any): obj is FileObject {
+  return Boolean(obj && obj.value);
+}
+
 function isFileStream(obj: any): obj is FileStream {
-  return obj && isReadable(obj) && obj.path;
+  return Boolean(obj && isReadable(obj) && obj.path);
 }
 
 export function isFileWithMetadata(obj: any): obj is FileWithMetadata {
-  return obj && obj.data && isFileData(obj.data);
+  return Boolean(obj && obj.data && isFileData(obj.data));
 }
 
-export function isFileData(obj: any): boolean {
+export function isFileData(obj: any): obj is NodeJS.ReadableStream|Buffer {
   return Boolean(obj && (isReadable(obj) || Buffer.isBuffer(obj)));
 }
 
@@ -162,35 +166,46 @@ export function getFormat(
 export function buildRequestFileObject(
   fileParam: FileWithMetadata
 ): FileObject {
+  let fileObj: FileObject;
+  if (isFileObject(fileParam.data)) {
+    // For backward compatibility, we allow the data to be a FileObject.
+    fileObj = { value: fileParam.data.value, options: {} };
+    if (fileParam.data.options) {
+      fileObj.options = {
+        filename: fileParam.filename || fileParam.data.options.filename,
+        contentType: fileParam.contentType || fileParam.data.options.contentType,
+      }
+    }
+  } else {
+    fileObj = {
+      value: fileParam.data,
+      options: {
+        filename: fileParam.filename,
+        contentType: fileParam.contentType,
+      }
+     };
+  }
+
+  // Also for backward compatibility, we allow data to be a string
+  if (typeof fileObj.value === 'string') {
+    fileObj.value = Buffer.from(fileObj.value);
+  }
+
   // build filename
-  let filename: string | Buffer;
-  if (fileParam.filename) {
-    // prioritize user-given filenames
-    filename = fileParam.filename;
-  } else if (isFileStream(fileParam.data)) {
+  let filename: string | Buffer = fileObj.options.filename;
+  if (!filename && isFileStream(fileObj.value)) {
     // if readable stream with path property
-    filename = fileParam.data.path;
+    filename = fileObj.value.path;
   }
   // toString handles the case when path is a buffer
-  filename = filename ? basename(filename.toString()) : '_';
+  fileObj.options.filename = filename ? basename(filename.toString()) : '_';
 
   // build contentType
-  let contentType: string = 'application/octet-stream';
-  if (fileParam.contentType) {
-    // prioritize user-given content_type
-    contentType = fileParam.contentType;
-  } else {
-    // else utilize file-type package
-    contentType = getContentType(fileParam.data) || contentType;
+  if (!fileObj.options.contentType && isFileData(fileObj.value)) {
+    fileObj.options.contentType = getContentType(fileObj.value) || 'application/octet-stream';
   }
 
-  return {
-    value: fileParam.data,
-    options: {
-      filename,
-      contentType
-    }
-  };
+  return fileObj;
 }
 
 /**
