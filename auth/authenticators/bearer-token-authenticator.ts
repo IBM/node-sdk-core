@@ -15,6 +15,7 @@
  */
 
 import extend = require('extend');
+import { validateInput } from '../utils';
 import { Authenticator } from './authenticator';
 import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
@@ -38,7 +39,7 @@ export class BearerTokenAuthenticator extends Authenticator implements Authentic
   constructor(options: Options) {
     super();
 
-    this.validate(options, this.requiredOptions);
+    validateInput(options, this.requiredOptions);
 
     this.bearerToken = options.bearerToken;
   }
