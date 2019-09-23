@@ -16,6 +16,7 @@
 
 import { OutgoingHttpHeaders } from 'http';
 import { IamTokenManager } from '../token-managers';
+import { validateInput } from '../utils';
 import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 
 export interface Options extends BaseOptions {
@@ -26,6 +27,7 @@ export interface Options extends BaseOptions {
 
 export class IamAuthenticator extends TokenRequestBasedAuthenticator {
   protected requiredOptions = ['apikey'];
+  protected tokenManager: IamTokenManager;
   private apikey: string;
   private clientId: string;
   private clientSecret: string;
@@ -41,7 +43,7 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
   constructor(options: Options) {    
     super(options);
 
-    this.validate(options, this.requiredOptions);
+    validateInput(options, this.requiredOptions);
 
     this.apikey = options.apikey;
     this.clientId = options.clientId;

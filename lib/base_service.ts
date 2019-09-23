@@ -28,7 +28,7 @@ export interface UserOptions {
   version?: string;
   headers?: OutgoingHttpHeaders;
   disableSslVerification?: boolean;
-  authenticator: AuthenticatorInterface;
+  authenticator?: AuthenticatorInterface;
   /** Allow additional request config parameters */
   [propName: string]: any;
 }
@@ -79,7 +79,7 @@ export class BaseService {
     // check serviceUrl for common user errors
     const credentialProblems = checkCredentials(options, ['serviceUrl']);
     if (credentialProblems) {
-      throw new Error(credentialProblems);
+      throw credentialProblems;
     }
 
     // if disableSslVerification is not explicity set to the boolean value `true`,

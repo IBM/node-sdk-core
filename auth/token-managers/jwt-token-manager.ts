@@ -23,8 +23,10 @@ function getCurrentTime(): number {
   return Math.floor(Date.now() / 1000);
 }
 
-export type Options = {
+export type TokenManagerOptions = {
   url?: string;
+  headers?: OutgoingHttpHeaders;
+  disableSslVerification?: boolean;
   /** Allow additional request config parameters */
   [propName: string]: any;
 }
@@ -48,9 +50,9 @@ export class JwtTokenManager {
    * @param {String} [options.accessToken] - user-managed access token
    * @constructor
    */
-  constructor(options: Options) {
+  constructor(options: TokenManagerOptions) {
     // all parameters are optional
-    options = options || {} as Options;
+    options = options || {} as TokenManagerOptions;
 
     this.tokenInfo = {};
     this.tokenName = 'access_token';
@@ -96,6 +98,32 @@ export class JwtTokenManager {
       // 2. use valid, managed token
       return cb(null, this.tokenInfo[this.tokenName]);
     }
+  }
+
+  /**
+   * Setter for the disableSslVerification property.
+   *
+   * @param {boolean} value - the new value for the disableSslVerification property
+   * @returns {void}
+   */
+  public setDisableSslVerification(value: boolean): void {
+    // if they try to pass in a non-boolean value,
+    // use the "truthy-ness" of the value
+    this.disableSslVerification = Boolean(value);
+  }
+
+  /**
+   * Set a completely new set of headers.
+   *
+   * @param {OutgoingHttpHeaders} headers - the new set of headers as an object
+   * @returns {void}
+   */
+  public setHeaders(headers: OutgoingHttpHeaders): void {
+    if (typeof headers !== 'object') {
+      // do nothing, for now
+      return;
+    }
+    this.headers = headers;
   }
 
   /**
