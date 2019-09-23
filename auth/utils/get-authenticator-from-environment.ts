@@ -18,6 +18,7 @@ import camelcase = require('camelcase');
 import extend = require('extend');
 
 import {
+  Authenticator,
   BasicAuthenticator,
   BearerTokenAuthenticator,
   CloudPakForDataAuthenticator,
@@ -27,7 +28,7 @@ import {
 
 import { readExternalSources } from './read-external-sources';
 
-export function getAuthenticatorFromEnvironment(serviceName: string) {
+export function getAuthenticatorFromEnvironment(serviceName: string): Authenticator {
   if (!serviceName) {
     throw new Error('Service name is required.');
   }

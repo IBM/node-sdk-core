@@ -29,7 +29,7 @@ export type BaseOptions = {
 }
 
 export class TokenRequestBasedAuthenticator extends Authenticator implements AuthenticatorInterface {
-  protected tokenManager: any;
+  protected tokenManager: JwtTokenManager;
   protected url: string;
   protected headers: OutgoingHttpHeaders;
   protected disableSslVerification: boolean;
@@ -66,11 +66,11 @@ export class TokenRequestBasedAuthenticator extends Authenticator implements Aut
     // if they try to pass in a non-boolean value,
     // use the "truthy-ness" of the value
     this.disableSslVerification = Boolean(value);
-    this.tokenManager.disableSslVerification = this.disableSslVerification; // could use a setter here
+    this.tokenManager.setDisableSslVerification(this.disableSslVerification);
   }
 
   /**
-   * Set a completely new set of headers. Should we have a method to add/remove a single header?
+   * Set a completely new set of headers.
    *
    * @param {OutgoingHttpHeaders} headers - the new set of headers as an object
    * @returns {void}
@@ -81,7 +81,7 @@ export class TokenRequestBasedAuthenticator extends Authenticator implements Aut
       return;
     }
     this.headers = headers;
-    this.tokenManager.headers = this.headers;
+    this.tokenManager.setHeaders(this.headers);
   }
 
   public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
