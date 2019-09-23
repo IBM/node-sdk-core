@@ -15,7 +15,7 @@
  */
 
 import extend = require('extend');
-import { computeBasicAuthHeader } from '../utils';
+import { computeBasicAuthHeader, validateInput } from '../utils';
 import { Authenticator } from './authenticator';
 import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
@@ -42,7 +42,7 @@ export class BasicAuthenticator extends Authenticator implements AuthenticatorIn
   constructor(options: Options) {
     super();
 
-    this.validate(options, this.requiredOptions);
+    validateInput(options, this.requiredOptions);
 
     this.username = options.username;
     this.password = options.password;

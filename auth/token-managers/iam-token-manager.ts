@@ -17,8 +17,8 @@
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import { getMissingParams } from '../../lib/helper';
-import { computeBasicAuthHeader } from '../utils';
-import { JwtTokenManager } from './jwt-token-manager';
+import { computeBasicAuthHeader, validateInput } from '../utils';
+import { JwtTokenManager, TokenManagerOptions } from './jwt-token-manager';
 
 /**
  * Check for only one of two elements being defined.
@@ -36,13 +36,10 @@ function onlyOne(a: any, b: any): boolean {
 
 const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
 
-export type Options = {
+interface Options extends TokenManagerOptions {
   apikey: string;
-  url?: string;
   clientId?: string;
   clientSecret?: string;
-  disableSslVerification?: boolean;
-  headers?: OutgoingHttpHeaders;
 }
 
 // this interface is a representation of the response
@@ -57,6 +54,7 @@ export interface IamTokenData {
 }
 
 export class IamTokenManager extends JwtTokenManager {
+  protected requiredOptions = ['apikey'];
   private apikey: string;
   private clientId: string;
   private clientSecret: string;
@@ -75,12 +73,7 @@ export class IamTokenManager extends JwtTokenManager {
   constructor(options: Options) {
     super(options);
 
-    // check for required params
-    const requiredOptions = ['apikey'];
-    const missingParamsError = getMissingParams(options, requiredOptions);
-    if (missingParamsError) {
-      throw missingParamsError;
-    }
+    validateInput(options, this.requiredOptions);
     
     this.apikey = options.apikey;
 

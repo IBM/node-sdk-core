@@ -16,16 +16,13 @@
 
 import extend = require('extend');
 import { getMissingParams } from '../../lib/helper';
-import { computeBasicAuthHeader } from '../utils';
-import { JwtTokenManager } from './jwt-token-manager';
+import { computeBasicAuthHeader, validateInput } from '../utils';
+import { JwtTokenManager, TokenManagerOptions } from './jwt-token-manager';
 
-// we should make these options extend the ones from the base class
-export type Options = {
+interface Options extends TokenManagerOptions {
   url: string;
-  username?: string;
-  password?: string;
-  disableSslVerification?: boolean;
-  requestWrapper?: any;
+  username: string;
+  password: string;
 }
 
 // this interface is a representation of the response
@@ -44,6 +41,7 @@ export interface CpdTokenData {
 }
 
 export class Cp4dTokenManager extends JwtTokenManager {
+  protected requiredOptions = ['username', 'password', 'url'];
   private username: string;
   private password: string;
 
@@ -65,12 +63,7 @@ export class Cp4dTokenManager extends JwtTokenManager {
 
     this.tokenName = 'accessToken';
 
-    // check for required params
-    const requiredOptions = ['username', 'password', 'url'];
-    const missingParamsError = getMissingParams(options, requiredOptions);
-    if (missingParamsError) {
-      throw missingParamsError;
-    }
+    validateInput(options, this.requiredOptions);
 
     const tokenApiPath = '/v1/preauth/validateAuth';
 

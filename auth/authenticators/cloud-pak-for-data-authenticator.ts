@@ -16,6 +16,7 @@
 
 import { OutgoingHttpHeaders } from 'http';
 import { Cp4dTokenManager } from '../token-managers';
+import { validateInput } from '../utils';
 import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 
 export interface Options extends BaseOptions {
@@ -26,6 +27,7 @@ export interface Options extends BaseOptions {
 
 export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator {
   protected requiredOptions = ['username', 'password', 'url'];
+  protected tokenManager: Cp4dTokenManager;
   private username: string;
   private password: string;
 
@@ -41,7 +43,7 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
   constructor(options: Options) {
     super(options);
 
-    this.validate(options, this.requiredOptions);
+    validateInput(options, this.requiredOptions);
 
     this.username = options.username;
     this.password = options.password;
