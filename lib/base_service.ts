@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import semver = require('semver');
@@ -23,12 +24,18 @@ import { stripTrailingSlash } from './helper';
 import { RequestWrapper } from './requestwrapper';
 
 export interface UserOptions {
-  url?: string; // deprecated
-  serviceUrl?: string;
-  version?: string;
-  headers?: OutgoingHttpHeaders;
-  disableSslVerification?: boolean;
+  /** The Authenticator object used to authenticate requests to the service */
   authenticator?: AuthenticatorInterface;
+  /** The base url to use when contacting the service. The base url may differ between IBM Cloud regions. */
+  serviceUrl?: string;
+  /** Default headers that shall be included with every request to the service. */
+  headers?: OutgoingHttpHeaders;
+  /** The API version date to use with the service, in "YYYY-MM-DD" format. */
+  version?: string;
+  /** Set to `true` to allow unauthorized requests - not recommended for production use. */
+  disableSslVerification?: boolean;
+  /** Deprecated. Use `serviceUrl` instead. */
+  url?: string;
   /** Allow additional request config parameters */
   [propName: string]: any;
 }
@@ -48,8 +55,7 @@ export class BaseService {
   /**
    * Internal base class that other services inherit from
    * @param {UserOptions} options
-   * @param {HeaderOptions} [options.headers]
-   * @param {boolean} [options.headers.X-Watson-Learning-Opt-Out=false] - opt-out of data collection
+   * @param {OutgoingHttpHeaders} [options.headers]
    * @param {string} [options.url] - override default service base url
    * @private
    * @abstract
@@ -142,7 +148,7 @@ export class BaseService {
    * - array: each element of the array is sent as a separate form part using any special processing as described above
    * @param {Object} parameters.defaultOptions
    * @param {string} parameters.defaultOptions.serviceUrl - the base URL of the service
-   * @param {HeaderOptions} parameters.defaultOptions.headers - additional headers to be passed on the request.
+   * @param {OutgoingHttpHeaders} parameters.defaultOptions.headers - additional headers to be passed on the request.
    * @param {Function} callback - callback function to pass the response back to
    * @returns {ReadableStream|undefined}
    */
