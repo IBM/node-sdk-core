@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-
+import { AxiosRequestConfig } from 'axios';
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import semver = require('semver');
@@ -23,7 +23,7 @@ import { AuthenticatorInterface, checkCredentials, readExternalSources } from '.
 import { stripTrailingSlash } from './helper';
 import { RequestWrapper } from './requestwrapper';
 
-export interface UserOptions {
+export interface UserOptions extends AxiosRequestConfig {
   /** The Authenticator object used to authenticate requests to the service */
   authenticator?: AuthenticatorInterface;
   /** The base url to use when contacting the service. The base url may differ between IBM Cloud regions. */
@@ -36,8 +36,6 @@ export interface UserOptions {
   disableSslVerification?: boolean;
   /** Deprecated. Use `serviceUrl` instead. */
   url?: string;
-  /** Allow additional request config parameters */
-  [propName: string]: any;
 }
 
 export interface BaseServiceOptions extends UserOptions {

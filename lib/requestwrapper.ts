@@ -15,12 +15,13 @@
  */
 
 import axios from 'axios';
+import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import extend = require('extend');
 import FormData = require('form-data');
 import https = require('https');
 import querystring = require('querystring');
 import { PassThrough as readableStream } from 'stream';
-import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileData, isFileWithMetadata } from './helper';
+import { buildRequestFileObject, FileObject, getMissingParams, isEmptyObject, isFileData, isFileWithMetadata } from './helper';
 
 const isBrowser = typeof window === 'object';
 const globalTransactionId = 'x-global-transaction-id';
@@ -28,8 +29,14 @@ const globalTransactionId = 'x-global-transaction-id';
 // Limit the type of axios configs to be customizable
 const allowedAxiosConfig = ['transformRequest', 'transformResponse', 'paramsSerializer', 'paramsSerializer', 'timeout', 'withCredentials', 'adapter', 'responseType', 'responseEncoding', 'xsrfCookieName', 'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'maxContentLength', 'validateStatus', 'maxRedirects', 'socketPath', 'httpAgent', 'httpsAgent', 'proxy', 'cancelToken'];
 
+export interface SdkMethodParameters {
+  // todo: make these types better defined
+  options: any;
+  defaultOptions: any;
+}
+
 export class RequestWrapper {
-  private axiosInstance;
+  private axiosInstance: AxiosInstance;
 
   constructor(axiosOptions?) {
     axiosOptions = axiosOptions || {};
@@ -38,7 +45,7 @@ export class RequestWrapper {
     // axios sets the default Content-Type for `post`, `put`, and `patch` operations
     // to 'application/x-www-form-urlencoded'. This causes problems, so overriding the
     // defaults here
-    const axiosConfig = {
+    const axiosConfig: AxiosRequestConfig = {
       httpsAgent: new https.Agent({
         // disableSslVerification is the parameter we expose to the user,
         // it is the opposite of rejectUnauthorized
@@ -120,7 +127,7 @@ export class RequestWrapper {
    * @returns {ReadableStream|undefined}
    * @throws {Error}
    */
-  public sendRequest(parameters, _callback) {
+  public sendRequest(parameters: SdkMethodParameters, _callback: Function) {
     const options = extend(true, {}, parameters.defaultOptions, parameters.options);
     const { path, body, form, formData, qs, method, serviceUrl } = options;
     let { headers, url } = options;
@@ -140,7 +147,7 @@ export class RequestWrapper {
           }
 
           if (isFileWithMetadata(value)) {
-            const fileObj = buildRequestFileObject(value);
+            const fileObj: FileObject = buildRequestFileObject(value);
             multipartForm.append(key, fileObj.value, fileObj.options);
           } else {
             if (typeof value === 'object' && !isFileData(value)) {
@@ -170,7 +177,7 @@ export class RequestWrapper {
       url = serviceUrl + url;
     }
 
-    let data = body;
+    let data: any = body;
 
     if (form) {
       data = querystring.stringify(form);
@@ -189,7 +196,7 @@ export class RequestWrapper {
     // accept gzip encoded responses if Accept-Encoding is not already set
     // headers['Accept-Encoding'] = headers['Accept-Encoding'] || 'gzip';
 
-    const requestParams = {
+    const requestParams: AxiosRequestConfig = {
       url,
       method,
       headers,
@@ -218,7 +225,8 @@ export class RequestWrapper {
         delete res.request;
 
         // the other sdks use the interface `result` for the body
-        res.result = res.data;
+        // use bracket notation to prevent axios types from complaining
+        res['result'] = res.data;
         delete res.data;
 
         _callback(null, res);
@@ -251,7 +259,7 @@ export class RequestWrapper {
 
       // some services bury the useful error message within 'data'
       // adding it to the error under the key 'body' as a string or object
-      let errorBody;
+      let errorBody: any;
       try {
         // try/catch to handle objects with circular references
         errorBody = JSON.stringify(axiosError.data);
@@ -293,12 +301,12 @@ export class RequestWrapper {
  * @param {Object} params
  * @returns {string}
  */
-function parsePath(path: string, params: Object): string {
+function parsePath(path: string, params: object): string {
   if (!path || !params) {
     return path;
   }
   return Object.keys(params).reduce((parsedPath, param) => {
-    const value = encodeURIComponent(params[param]);
+    const value: string = encodeURIComponent(params[param]);
     return parsedPath.replace(new RegExp(`{${param}}`), value);
   }, path);
 }
@@ -333,7 +341,7 @@ function isAuthenticationError(error: any): boolean {
  * @param {string} property - name of the property to look for
  * @returns {boolean} true if property exists and is string
  */
-function hasStringProperty(obj: any, property: string): boolean {
+function hasStringProperty(obj: object, property: string): boolean {
   return Boolean(obj[property] && typeof obj[property] === 'string');
 }
 
