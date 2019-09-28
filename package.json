@@ -46,15 +46,15 @@
     "semantic-release": "^15.13.24",
     "tslint": "~5.10.0",
     "tslint-config-prettier": "~1.13.0",
-    "tslint-eslint-rules": "~5.3.1",
+    "tslint-eslint-rules": "^5.4.0",
     "typedoc": "^0.15.0",
-    "typescript": "~2.9.2"
+    "typescript": "^3.4.5"
   },
   "dependencies": {
     "@types/extend": "~3.0.0",
     "@types/file-type": "~5.2.1",
     "@types/isstream": "^0.1.0",
-    "@types/node": "~10.3.5",
+    "@types/node": "~10.14.19",
     "axios": "^0.18.0",
     "camelcase": "^5.3.1",
     "dotenv": "^6.2.0",
