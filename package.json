@@ -53,7 +53,7 @@
   "dependencies": {
     "@types/extend": "~3.0.0",
     "@types/file-type": "~5.2.1",
-    "@types/is-stream": "~1.1.0",
+    "@types/isstream": "^0.1.0",
     "@types/node": "~10.14.19",
     "axios": "^0.18.0",
     "camelcase": "^5.3.1",
