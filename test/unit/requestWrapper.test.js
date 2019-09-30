@@ -384,10 +384,9 @@ describe('formatError', () => {
         'x-global-transaction-id': 'fhd7s8hfudj9ksoo0wpnd78a',
       },
     },
-    request: {
-      message: 'request was made but no response was received',
-    },
+    request: 'fake-http-request-object',
     message: 'error in building the request',
+    code: 'SOME_STATUS_KEY',
   };
 
   it('should get the message from errors[0].message', () => {
@@ -486,8 +485,37 @@ describe('formatError', () => {
     delete basicAxiosError.response;
     const error = requestWrapperInstance.formatError(basicAxiosError);
     expect(error instanceof Error).toBe(true);
-    expect(error.message).toBe('Response not received. Body of error is HTTP ClientRequest object');
-    expect(error.body).toEqual(basicAxiosError.request);
+    expect(error.message).toBe('error in building the request');
+    expect(error.statusText).toBe('SOME_STATUS_KEY');
+    expect(error.body).toBe('Response not received - no connection was made to the service.');
+  });
+
+  it('check the SSL error handler - message condition', () => {
+    // save the original message
+    const originalMessage = basicAxiosError.message;
+
+    basicAxiosError.message = 'request has self signed certificate';
+    const error = requestWrapperInstance.formatError(basicAxiosError);
+
+    // put the original message back in, before expectations in case they fail
+    basicAxiosError.message = originalMessage;
+
+    expect(error instanceof Error).toBe(true);
+    expect(error.message).toMatch(/may not have a valid SSL certificate/);
+  });
+
+  it('check the SSL error handler - code condition', () => {
+    // save the original code
+    const originalCode = basicAxiosError.code;
+
+    basicAxiosError.code = 'DEPTH_ZERO_SELF_SIGNED_CERT';
+    const error = requestWrapperInstance.formatError(basicAxiosError);
+
+    // put the original message back in, before expectations in case they fail
+    basicAxiosError.code = originalCode;
+
+    expect(error instanceof Error).toBe(true);
+    expect(error.message).toMatch(/may not have a valid SSL certificate/);
   });
 
   it('check the message flow', () => {

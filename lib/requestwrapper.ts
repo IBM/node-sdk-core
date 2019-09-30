@@ -258,7 +258,7 @@ export class RequestWrapper {
       } catch (e) {
         // ignore the error, use the object, and tack on a warning
         errorBody = axiosError.data;
-        errorBody.warning = 'body contains circular reference';
+        errorBody.warning = 'Body contains circular reference';
       }
 
       error.body = errorBody;
@@ -270,14 +270,20 @@ export class RequestWrapper {
       if (isAuthenticationError(axiosError)) {
         error.message = 'Access is denied due to invalid credentials.';
       }
-
     } else if (axiosError.request) {
       // The request was made but no response was received
       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
       // http.ClientRequest in node.js
-      error.message = 'Response not received. Body of error is HTTP ClientRequest object';
-      error.body = axiosError.request;
+      error.message = axiosError.message;
+      error.statusText = axiosError.code;
+      error.body = 'Response not received - no connection was made to the service.';
 
+      // when a request to a private cloud instance has an ssl problem, it never connects and follows this branch of the error handling
+      if (isSelfSignedCertificateError(axiosError)) {
+        error.message = `If you're trying to call a service on ICP or Cloud Pak for Data, you ` +
+          `may not have a valid SSL certificate. If you need to access the service without setting that up, try using ` +
+          `the disableSslVerification option in your client configuration and your authentication configuration if applicable.`;
+      }
     } else {
       // Something happened in setting up the request that triggered an Error
       error.message = axiosError.message;
@@ -311,11 +317,11 @@ function parsePath(path: string, params: Object): string {
  */
 function isAuthenticationError(error: any): boolean {
   let isAuthErr = false;
-  const code = error.status;
-  const body = error.data;
+  const code: number = error.status || null;
+  const body: any = error.data || {};
 
   // handle specific error from iam service, should be relevant across platforms
-  const isIamServiceError = body.context &&
+  const isIamServiceError: boolean = body.context &&
     body.context.url &&
     body.context.url.indexOf('iam') > -1;
 
@@ -324,6 +330,28 @@ function isAuthenticationError(error: any): boolean {
   }
 
   return isAuthErr;
+}
+
+/**
+ * Determine if the error is due to a bad self signed certificate
+ * @private
+ * @param {Object} error - error object returned from axios
+ * @returns {boolean} true if error is due to an SSL error
+ */
+function isSelfSignedCertificateError(error: any): boolean {
+  let result = false;
+
+  const sslCode = 'DEPTH_ZERO_SELF_SIGNED_CERT';
+  const sslMessage = 'self signed certificate';
+
+  const hasSslCode = error.code === sslCode;
+  const hasSslMessage = hasStringProperty(error, 'message') && error.message.includes(sslMessage);
+
+  if (hasSslCode || hasSslMessage) {
+    result = true;
+  }
+
+  return result;
 }
 
 /**
