@@ -23,9 +23,6 @@ export interface AuthenticateOptions {
   [propName: string]: any;
 }
 
-// callback can send one arg, error or null
-export type AuthenticateCallback = (result: null | Error) => void;
-
 export interface AuthenticatorInterface {
-  authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void
+  authenticate(options: AuthenticateOptions): Promise<void | Error>
 }

@@ -27,7 +27,7 @@ describe('JWT Token Manager', () => {
   });
 
   describe('getToken', () => {
-    it('should request a token if no token is stored', done => {
+    it('should request a token if no token is stored', async done => {
       const instance = new JwtTokenManager();
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
 
@@ -37,23 +37,21 @@ describe('JWT Token Manager', () => {
 
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
-        .mockImplementation(cb => cb(null, { result: { access_token: ACCESS_TOKEN } }));
+        .mockImplementation(() => Promise.resolve({ result: { access_token: ACCESS_TOKEN } }));
 
-      instance.getToken((err, res) => {
-        expect(requestTokenSpy).toHaveBeenCalled();
-        expect(saveTokenInfoSpy).toHaveBeenCalled();
-        expect(decodeSpy).toHaveBeenCalled();
-        expect(err).toBeNull();
-        expect(res).toBe(ACCESS_TOKEN);
+      const token = await instance.getToken();
+      expect(requestTokenSpy).toHaveBeenCalled();
+      expect(saveTokenInfoSpy).toHaveBeenCalled();
+      expect(decodeSpy).toHaveBeenCalled();
+      expect(token).toBe(ACCESS_TOKEN);
 
-        saveTokenInfoSpy.mockRestore();
-        decodeSpy.mockRestore();
-        requestTokenSpy.mockRestore();
-        done();
-      });
+      saveTokenInfoSpy.mockRestore();
+      decodeSpy.mockRestore();
+      requestTokenSpy.mockRestore();
+      done();
     });
 
-    it('should request a token if token is stored but expired', done => {
+    it('should request a token if token is stored but expired', async done => {
       const instance = new JwtTokenManager();
       instance.tokenInfo.access_token = '987zxc';
 
@@ -64,82 +62,96 @@ describe('JWT Token Manager', () => {
 
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
-        .mockImplementation(cb => cb(null, { result: { access_token: ACCESS_TOKEN } }));
+        .mockImplementation(() => Promise.resolve({ result: { access_token: ACCESS_TOKEN } }));
 
-      instance.getToken((err, res) => {
-        expect(requestTokenSpy).toHaveBeenCalled();
-        expect(saveTokenInfoSpy).toHaveBeenCalled();
-        expect(decodeSpy).toHaveBeenCalled();
-        expect(err).toBeNull();
-        expect(res).toBe(ACCESS_TOKEN);
+      const token = await instance.getToken();
+      expect(requestTokenSpy).toHaveBeenCalled();
+      expect(saveTokenInfoSpy).toHaveBeenCalled();
+      expect(decodeSpy).toHaveBeenCalled();
+      expect(token).toBe(ACCESS_TOKEN);
 
-        saveTokenInfoSpy.mockRestore();
-        decodeSpy.mockRestore();
-        requestTokenSpy.mockRestore();
-        done();
-      });
+      saveTokenInfoSpy.mockRestore();
+      decodeSpy.mockRestore();
+      requestTokenSpy.mockRestore();
+      done();
     });
 
-    it('should not save token info if token request returned an error', done => {
+    it('should not save token info if token request returned an error', async done => {
       const instance = new JwtTokenManager();
 
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
-        .mockImplementation(cb => cb(new Error(), null));
+        .mockImplementation(() => Promise.reject(new Error()));
 
-      instance.getToken((err, res) => {
-        expect(requestTokenSpy).toHaveBeenCalled();
-        expect(saveTokenInfoSpy).not.toHaveBeenCalled();
-        expect(err).toBeInstanceOf(Error);
-        expect(res).toBe(null);
+      let token;
+      let err;
+      try {
+        token = await instance.getToken();
+      } catch (e) {
+        err = e;
+      }
+      expect(requestTokenSpy).toHaveBeenCalled();
+      expect(saveTokenInfoSpy).not.toHaveBeenCalled();
+      expect(err).toBeInstanceOf(Error);
+      expect(token).toBeUndefined();
 
-        saveTokenInfoSpy.mockRestore();
-        requestTokenSpy.mockRestore();
-        done();
-      });
+      saveTokenInfoSpy.mockRestore();
+      requestTokenSpy.mockRestore();
+      done();
     });
 
-    it('should catch lower level errors and send through callback', done => {
+    it('should catch and reject lower level errors', async done => {
       const instance = new JwtTokenManager();
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
 
       // because there is no access token, calling `saveTokenInfo` will
-      // throw an error to be caught and returned in the callback
+      // throw an error to be caught and rejected in the Promise
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
-        .mockImplementation(cb => cb(null, { arbitrary_data: '12345' }));
+        .mockImplementation(() => Promise.resolve({ result: { arbitrary_data: '12345' } }));
 
-      instance.getToken((err, res) => {
-        expect(err).toBeInstanceOf(Error);
-        expect(res).toBeNull();
+      let token;
+      let err;
+      try {
+        token = await instance.getToken();
+      } catch (e) {
+        err = e;
+      }
 
-        saveTokenInfoSpy.mockRestore();
-        requestTokenSpy.mockRestore();
-        done();
-      });
+      expect(err).toBeInstanceOf(Error);
+      expect(err.message).toBe('Access token not present in response');
+      expect(token).toBeUndefined();
+
+      saveTokenInfoSpy.mockRestore();
+      requestTokenSpy.mockRestore();
+      done();
     });
 
-    it('should use an sdk-managed token if present and not expired', done => {
+    it('should use an sdk-managed token if present and not expired', async done => {
       const instance = new JwtTokenManager();
       instance.tokenInfo.access_token = ACCESS_TOKEN;
       instance.expireTime = getCurrentTime() + 1000;
-      instance.getToken((err, res) => {
-        expect(err).toBeNull();
-        expect(res).toBe(ACCESS_TOKEN);
-        done();
-      });
+      const token = await instance.getToken();
+      expect(token).toBe(ACCESS_TOKEN);
+      done();
     });
   });
 
-  it('should callback with error if requestToken is not overriden', done => {
+  it('should reject with error if requestToken is not overriden', async done => {
     const instance = new JwtTokenManager();
 
-    instance.requestToken((err, res) => {
-      expect(err).toBeInstanceOf(Error);
-      expect(res).toBeNull();
-      done();
-    });
+    let err;
+    let token;
+    try {
+      token = await instance.requestToken();
+    } catch (e) {
+      err = e;
+    }
+
+    expect(err).toBeInstanceOf(Error);
+    expect(token).toBeUndefined();
+    done();
   });
 
   describe('isTokenExpired', () => {

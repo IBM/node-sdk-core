@@ -34,7 +34,6 @@ NoAuthAuthenticator.mockImplementation(() => {
 const { BaseService } = require('../../lib/base_service');
 
 // constants
-const NO_OP = () => {};
 const DEFAULT_URL = 'https://gateway.watsonplatform.net/test/api';
 const DEFAULT_NAME = 'test';
 const AUTHENTICATOR = new NoAuthAuthenticator();
@@ -47,7 +46,7 @@ describe('Base Service', () => {
   beforeEach(() => {
     // set defualt mocks, these may be overridden in the individual tests
     readExternalSourcesMock.mockImplementation(() => EMPTY_OBJECT);
-    authenticateMock.mockImplementation((_, callback) => callback(null));
+    authenticateMock.mockImplementation(() => Promise.resolve(null));
   });
 
   afterEach(() => {
@@ -216,7 +215,7 @@ describe('Base Service', () => {
         Accept: 'application/json',
       },
       options: {
-        serviceUrl: '/v2/assistants/{assistant_id}/sessions',
+        url: '/v2/assistants/{assistant_id}/sessions',
         method: 'POST',
         path: {
           id: '123',
@@ -224,15 +223,14 @@ describe('Base Service', () => {
       },
     };
 
-    testService.createRequest(parameters, NO_OP);
+    testService.createRequest(parameters);
     const args = authenticateMock.mock.calls[0];
 
     expect(authenticateMock).toHaveBeenCalled();
     expect(args[0]).toEqual(parameters.defaultOptions);
-    expect(args[1]).toBeInstanceOf(Function);
   });
 
-  it('should call sendRequest on authenticate() success', () => {
+  it('should call sendRequest on authenticate() success', async done => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
@@ -243,7 +241,7 @@ describe('Base Service', () => {
         Accept: 'application/json',
       },
       options: {
-        serviceUrl: '/v2/assistants/{assistant_id}/sessions',
+        url: '/v2/assistants/{assistant_id}/sessions',
         method: 'POST',
         path: {
           id: '123',
@@ -251,18 +249,18 @@ describe('Base Service', () => {
       },
     };
 
-    testService.createRequest(parameters, NO_OP);
+    await testService.createRequest(parameters);
 
     expect(authenticateMock).toHaveBeenCalled();
     expect(sendRequestMock).toHaveBeenCalled();
 
     const args = sendRequestMock.mock.calls[0];
     expect(args[0]).toEqual(parameters);
-    expect(args[1]).toBe(NO_OP);
     expect(testService.requestWrapperInstance.sendRequest).toBe(sendRequestMock); // verify it is calling the instance
+    done();
   });
 
-  it('should call callback with an error if `serviceUrl` is not set', done => {
+  it('createRequest should reject with an error if `serviceUrl` is not set', async done => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
@@ -281,23 +279,29 @@ describe('Base Service', () => {
       },
     };
 
-    testService.createRequest(parameters, (err, res) => {
-      // assert results
-      expect(err).toBeInstanceOf(Error);
-      expect(res).toBeNull();
-      done();
-    });
+    let res;
+    let err;
+    try {
+      res = await testService.createRequest(parameters);
+    } catch (e) {
+      err = e;
+    }
+
+    // assert results
+    expect(err).toBeInstanceOf(Error);
+    expect(res).toBeUndefined();
+    done();
   });
 
-  it('should send error back to user on authenticate() failure', done => {
+  it('should send error back to user on authenticate() failure', async done => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
 
-    // note that the NoAuthAuthenticator can't actually call the callback with an error,
+    // note that the NoAuthAuthenticator can't actually reject with an error,
     // but others can
     const fakeError = new Error('token request failed');
-    authenticateMock.mockImplementation((_, callback) => callback(fakeError));
+    authenticateMock.mockImplementation(() => Promise.reject(fakeError));
 
     const parameters = {
       defaultOptions: {
@@ -305,11 +309,16 @@ describe('Base Service', () => {
       },
     };
 
-    testService.createRequest(parameters, err => {
-      expect(err).toBe(fakeError);
-      expect(authenticateMock).toHaveBeenCalled();
-      done();
-    });
+    let err;
+    try {
+      await testService.createRequest(parameters);
+    } catch (e) {
+      err = e;
+    }
+
+    expect(err).toBe(fakeError);
+    expect(authenticateMock).toHaveBeenCalled();
+    done();
   });
 
   it('readOptionsFromExternalConfig should return an empty object if no properties are found', () => {

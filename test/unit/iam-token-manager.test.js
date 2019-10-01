@@ -45,20 +45,18 @@ describe('iam_token_manager_v1', function() {
     expect(() => new IamTokenManager()).toThrow();
   });
 
-  it('should turn an iam apikey into an access token', function(done) {
+  it('should turn an iam apikey into an access token', async done => {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, IAM_RESPONSE);
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function(err, token) {
-      expect(token).toBe(ACCESS_TOKEN);
-      done();
-    });
+    const token = await instance.getToken();
+
+    expect(token).toBe(ACCESS_TOKEN);
+    done();
   });
 
-  it('should refresh an expired access token', function(done) {
+  it('should refresh an expired access token', async done => {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
 
@@ -72,18 +70,15 @@ describe('iam_token_manager_v1', function() {
 
     instance.tokenInfo = currentTokenInfo;
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, IAM_RESPONSE);
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function(err, token) {
-      expect(token).toBe(ACCESS_TOKEN);
-      expect(requestMock).toHaveBeenCalled();
-      done();
-    });
+    const token = await instance.getToken();
+    expect(token).toBe(ACCESS_TOKEN);
+    expect(requestMock).toHaveBeenCalled();
+    done();
   });
 
-  it('should use a valid access token if one is stored', function(done) {
+  it('should use a valid access token if one is stored', async done => {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
 
@@ -99,14 +94,13 @@ describe('iam_token_manager_v1', function() {
     instance.timeToLive = currentTokenInfo.expires_in;
     instance.expireTime = currentTokenInfo.expiration;
 
-    instance.getToken(function(err, token) {
-      expect(token).toBe(ACCESS_TOKEN);
-      expect(requestMock).not.toHaveBeenCalled();
-      done();
-    });
+    const token = await instance.getToken();
+    expect(token).toBe(ACCESS_TOKEN);
+    expect(requestMock).not.toHaveBeenCalled();
+    done();
   });
 
-  it('should refresh an access token without expires_in field', function(done) {
+  it('should refresh an access token without expires_in field', async done => {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
 
@@ -119,18 +113,15 @@ describe('iam_token_manager_v1', function() {
 
     instance.tokenInfo = currentTokenInfo;
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, IAM_RESPONSE);
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function(err, token) {
-      expect(token).toBe(ACCESS_TOKEN);
-      expect(requestMock).toHaveBeenCalled();
-      done();
-    });
+    const token = await instance.getToken();
+    expect(token).toBe(ACCESS_TOKEN);
+    expect(requestMock).toHaveBeenCalled();
+    done();
   });
 
-  it('should request a new token when refresh token does not have expiration field', function(done) {
+  it('should request a new token when refresh token does not have expiration field', async done => {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
 
     const currentTokenInfo = {
@@ -141,51 +132,42 @@ describe('iam_token_manager_v1', function() {
 
     instance.tokenInfo = currentTokenInfo;
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, IAM_RESPONSE);
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function(err, token) {
-      expect(token).toBe(ACCESS_TOKEN);
-      done();
-    });
+    const token = await instance.getToken();
+    expect(token).toBe(ACCESS_TOKEN);
+    done();
   });
 
-  it('should not specify an Authorization header if user provides no clientid, no secret', function(done) {
+  it('should not specify an Authorization header if user provides no clientid, no secret', async done => {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, { access_token: 'abcd' });
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function() {
-      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
-      const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).not.toBeDefined();
-      done();
-    });
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const authHeader = sendRequestArgs.options.headers.Authorization;
+    expect(authHeader).toBeUndefined();
+    done();
   });
 
-  it('should use an Authorization header based on client id and secret via ctor', function(done) {
+  it('should use an Authorization header based on client id and secret via ctor', async done => {
     const instance = new IamTokenManager({
       apikey: 'abcd-1234',
       clientId: 'foo',
       clientSecret: 'bar',
     });
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, { access_token: 'abcd' });
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function() {
-      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
-      const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).toBe('Basic Zm9vOmJhcg==');
-      done();
-    });
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const authHeader = sendRequestArgs.options.headers.Authorization;
+    expect(authHeader).toBe('Basic Zm9vOmJhcg==');
+    done();
   });
 
-  it('should not use an Authorization header - clientid only via ctor', function(done) {
+  it('should not use an Authorization header - clientid only via ctor', async done => {
     jest.spyOn(console, 'log').mockImplementation(() => {});
 
     const instance = new IamTokenManager({
@@ -198,19 +180,16 @@ describe('iam_token_manager_v1', function() {
     expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
     console.log.mockRestore();
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, { access_token: 'abcd' });
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function() {
-      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
-      const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).not.toBeDefined();
-      done();
-    });
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const authHeader = sendRequestArgs.options.headers.Authorization;
+    expect(authHeader).toBeUndefined();
+    done();
   });
 
-  it('should not use an Authorization header - secret only via ctor', function(done) {
+  it('should not use an Authorization header - secret only via ctor', async done => {
     jest.spyOn(console, 'log').mockImplementation(() => {});
     const instance = new IamTokenManager({
       apikey: 'abcd-1234',
@@ -222,38 +201,32 @@ describe('iam_token_manager_v1', function() {
     expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
     console.log.mockRestore();
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, { access_token: 'abcd' });
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function() {
-      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
-      const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).not.toBeDefined();
-      done();
-    });
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const authHeader = sendRequestArgs.options.headers.Authorization;
+    expect(authHeader).toBeUndefined();
+    done();
   });
 
-  it('should use an Authorization header based on client id and secret via setter', function(done) {
+  it('should use an Authorization header based on client id and secret via setter', async done => {
     const instance = new IamTokenManager({
       apikey: 'abcd-1234',
     });
 
     instance.setClientIdAndSecret('foo', 'bar');
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, { access_token: 'abcd' });
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function() {
-      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
-      const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).toBe('Basic Zm9vOmJhcg==');
-      done();
-    });
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const authHeader = sendRequestArgs.options.headers.Authorization;
+    expect(authHeader).toBe('Basic Zm9vOmJhcg==');
+    done();
   });
 
-  it('should not use an Authorization header -- clientid only via setter', function(done) {
+  it('should not use an Authorization header -- clientid only via setter', async done => {
     const instance = new IamTokenManager({
       apikey: 'abcd-1234',
     });
@@ -267,19 +240,16 @@ describe('iam_token_manager_v1', function() {
     expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
     console.log.mockRestore();
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, { access_token: 'abcd' });
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function() {
-      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
-      const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).not.toBeDefined();
-      done();
-    });
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const authHeader = sendRequestArgs.options.headers.Authorization;
+    expect(authHeader).toBeUndefined();
+    done();
   });
 
-  it('should not use an Authorization header - secret only via setter', function(done) {
+  it('should not use an Authorization header - secret only via setter', async done => {
     const instance = new IamTokenManager({
       apikey: 'abcd-1234',
     });
@@ -293,34 +263,28 @@ describe('iam_token_manager_v1', function() {
     expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
     console.log.mockRestore();
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, { access_token: 'abcd' });
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function() {
-      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
-      const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).not.toBeDefined();
-      done();
-    });
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const authHeader = sendRequestArgs.options.headers.Authorization;
+    expect(authHeader).toBeUndefined();
+    done();
   });
 
-  it('should not use an Authorization header - nulls passed to setter', function(done) {
+  it('should not use an Authorization header - nulls passed to setter', async done => {
     const instance = new IamTokenManager({
       apikey: 'abcd-1234',
     });
 
     instance.setClientIdAndSecret(null, null);
 
-    mockSendRequest.mockImplementation((parameters, _callback) => {
-      _callback(null, { access_token: 'abcd' });
-    });
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
-    instance.getToken(function() {
-      const sendRequestArgs = mockSendRequest.mock.calls[0][0];
-      const authHeader = sendRequestArgs.options.headers.Authorization;
-      expect(authHeader).not.toBeDefined();
-      done();
-    });
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const authHeader = sendRequestArgs.options.headers.Authorization;
+    expect(authHeader).toBeUndefined();
+    done();
   });
 });
