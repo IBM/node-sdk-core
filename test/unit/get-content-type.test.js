@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const getContentType = require('../../lib/helper').getContentType;
+const { getContentType } = require('../../lib/helper');
 
 const filepath = __dirname + '/../resources/blank.wav';
 

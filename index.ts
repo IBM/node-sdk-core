@@ -18,7 +18,7 @@
  * @module ibm-cloud-sdk-core
  */
 
-export { BaseService, UserOptions } from './lib/base_service';
+export { BaseService, UserOptions } from './lib/base-service';
 export * from './auth';
 export * from './lib/helper';
 export { default as qs } from './lib/querystring';

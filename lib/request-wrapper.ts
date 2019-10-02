@@ -280,9 +280,8 @@ export class RequestWrapper {
 
       // when a request to a private cloud instance has an ssl problem, it never connects and follows this branch of the error handling
       if (isSelfSignedCertificateError(axiosError)) {
-        error.message = `If you're trying to call a service on ICP or Cloud Pak for Data, you ` +
-          `may not have a valid SSL certificate. If you need to access the service without setting that up, try using ` +
-          `the disableSslVerification option in your client configuration and your authentication configuration if applicable.`;
+        error.message = `The connection failed because the SSL certificate is not valid. ` +
+          `To use a self-signed certificate, set the \`disableSslVerification\` parameter in the constructor options.`;
       }
     } else {
       // Something happened in setting up the request that triggered an Error

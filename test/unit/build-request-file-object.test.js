@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const buildRequestFileObject = require('../../lib/helper').buildRequestFileObject;
+const { buildRequestFileObject } = require('../../lib/helper');
 const filepath = __dirname + '/../resources/other-file.env';
 const audioFile = __dirname + '/../resources/blank.wav';
 
