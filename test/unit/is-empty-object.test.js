@@ -1,6 +1,6 @@
 'use strict';
 
-const isEmptyObject = require('../../lib/helper').isEmptyObject;
+const { isEmptyObject } = require('../../lib/helper');
 
 describe('isEmptyObject', () => {
   it('should return true for an empty object', () => {

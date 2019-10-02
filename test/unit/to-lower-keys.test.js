@@ -1,6 +1,6 @@
 'use strict';
 
-const toLowerKeys = require('../../lib/helper').toLowerKeys;
+const { toLowerKeys } = require('../../lib/helper');
 
 describe('toLowerKeys', () => {
   it('should convert all keys of object to lower case', () => {

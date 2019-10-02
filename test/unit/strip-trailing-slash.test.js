@@ -1,6 +1,6 @@
 'use strict';
 
-const stripTrailingSlash = require('../../lib/helper').stripTrailingSlash;
+const { stripTrailingSlash } = require('../../lib/helper');
 
 describe('stripTrailingSlash', function() {
   test('should strip one slash from the end of url with a single trailing slash', function() {

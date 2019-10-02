@@ -14,7 +14,7 @@ mockAxiosInstance.interceptors = {
 };
 axios.default.create.mockReturnValue(mockAxiosInstance);
 
-const { RequestWrapper } = require('../../lib/requestwrapper');
+const { RequestWrapper } = require('../../lib/request-wrapper');
 const requestWrapperInstance = new RequestWrapper();
 
 describe('axios', () => {
@@ -502,7 +502,7 @@ describe('formatError', () => {
     basicAxiosError.message = originalMessage;
 
     expect(error instanceof Error).toBe(true);
-    expect(error.message).toMatch(/may not have a valid SSL certificate/);
+    expect(error.message).toMatch(/SSL certificate is not valid/);
   });
 
   it('check the SSL error handler - code condition', () => {
@@ -516,7 +516,7 @@ describe('formatError', () => {
     basicAxiosError.code = originalCode;
 
     expect(error instanceof Error).toBe(true);
-    expect(error.message).toMatch(/may not have a valid SSL certificate/);
+    expect(error.message).toMatch(/SSL certificate is not valid/);
   });
 
   it('check the message flow', () => {

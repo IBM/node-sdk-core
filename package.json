@@ -84,7 +84,7 @@
     "lint": "npm run eslint:check && npm run tslint:check",
     "lint:fix": "npm run eslint:fix && npm run tslint:fix",
     "jest": "jest",
-    "test": "jest --verbose test/unit/",
+    "test": "jest test/unit/",
     "test-travis": "jest --runInBand test/unit/",
     "report-coverage": "codecov",
     "build": "tsc",
