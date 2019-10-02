@@ -7,7 +7,7 @@ const readExternalSourcesModule = require('../../auth/utils/read-external-source
 const readExternalSourcesMock = (readExternalSourcesModule.readExternalSources = jest.fn());
 
 // mock the request wrapper
-const requestWrapperLocation = '../../lib/requestwrapper';
+const requestWrapperLocation = '../../lib/request-wrapper';
 jest.mock(requestWrapperLocation);
 const { RequestWrapper } = require(requestWrapperLocation);
 const sendRequestMock = jest.fn();
@@ -31,7 +31,7 @@ NoAuthAuthenticator.mockImplementation(() => {
 });
 
 // mocks need to happen before this is imported
-const { BaseService } = require('../../lib/base_service');
+const { BaseService } = require('../../lib/base-service');
 
 // constants
 const DEFAULT_URL = 'https://gateway.watsonplatform.net/test/api';

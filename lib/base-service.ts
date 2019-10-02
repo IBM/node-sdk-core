@@ -21,7 +21,7 @@ import semver = require('semver');
 import vcapServices = require('vcap_services');
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
-import { RequestWrapper } from './requestwrapper';
+import { RequestWrapper } from './request-wrapper';
 
 export interface UserOptions {
   /** The Authenticator object used to authenticate requests to the service */

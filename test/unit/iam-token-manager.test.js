@@ -1,8 +1,8 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-jest.mock('../../lib/requestwrapper');
-const { RequestWrapper } = require('../../lib/requestwrapper');
+jest.mock('../../lib/request-wrapper');
+const { RequestWrapper } = require('../../lib/request-wrapper');
 
 const jwt = require('jsonwebtoken');
 jwt.decode = jest.fn(() => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const isHTML = require('../../lib/helper').isHTML;
+const { isHTML } = require('../../lib/helper');
 
 describe('isHTML', function() {
   it('should return false on undefined', function() {

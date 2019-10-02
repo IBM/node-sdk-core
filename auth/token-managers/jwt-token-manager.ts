@@ -17,7 +17,7 @@
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import jwt = require('jsonwebtoken');
-import { RequestWrapper } from '../../lib/requestwrapper';
+import { RequestWrapper } from '../../lib/request-wrapper';
 
 function getCurrentTime(): number {
   return Math.floor(Date.now() / 1000);
