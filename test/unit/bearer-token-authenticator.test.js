@@ -19,16 +19,14 @@ describe('Bearer Token Authenticator', () => {
     }).toThrow();
   });
 
-  it('should update the options and send `null` in the callback', done => {
+  it('should update the options and resolve with `null`', async done => {
     const authenticator = new BearerTokenAuthenticator(config);
-
     const options = {};
+    const result = await authenticator.authenticate(options);
 
-    authenticator.authenticate(options, err => {
-      expect(err).toBeNull();
-      expect(options.headers.Authorization).toBe(`Bearer ${config.bearerToken}`);
-      done();
-    });
+    expect(result).toBeUndefined();
+    expect(options.headers.Authorization).toBe(`Bearer ${config.bearerToken}`);
+    done();
   });
 
   it('should re-set the bearer token using the setter', () => {

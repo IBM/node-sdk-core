@@ -3,11 +3,11 @@
 const { NoAuthAuthenticator } = require('../../auth');
 
 describe('NoAuth Authenticator', () => {
-  it('should call callback on authenticate', done => {
+  it('should resolve Promise on authenticate', async done => {
     const authenticator = new NoAuthAuthenticator();
-    authenticator.authenticate({}, err => {
-      expect(err).toBeNull();
-      done();
-    });
+    const result = await authenticator.authenticate({});
+
+    expect(result).toBeUndefined();
+    done();
   });
 });

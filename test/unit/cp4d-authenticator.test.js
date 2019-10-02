@@ -23,9 +23,10 @@ const mockedTokenManager = new Cp4dTokenManager({
   password: PASSWORD,
   url: URL,
 });
-const getTokenSpy = jest.spyOn(mockedTokenManager, 'getToken').mockImplementation(callback => {
-  callback(null, fakeToken);
-});
+
+const getTokenSpy = jest
+  .spyOn(mockedTokenManager, 'getToken')
+  .mockImplementation(() => Promise.resolve(fakeToken));
 
 describe('CP4D Authenticator', () => {
   it('should store all CONFIG options on the class', () => {
@@ -79,23 +80,22 @@ describe('CP4D Authenticator', () => {
     }).toThrow(/Revise these credentials/);
   });
 
-  it('should update the options and send `null` in the callback', done => {
+  it('should update the options and resolve with `null`', async done => {
     const authenticator = new CloudPakForDataAuthenticator(CONFIG);
 
     // override the created token manager with the mocked one
     authenticator.tokenManager = mockedTokenManager;
 
     const options = { headers: { 'X-Some-Header': 'user-supplied header' } };
+    const result = await authenticator.authenticate(options);
 
-    authenticator.authenticate(options, err => {
-      expect(err).toBeNull();
-      expect(options.headers.Authorization).toBe(`Bearer ${fakeToken}`);
-      expect(getTokenSpy).toHaveBeenCalled();
+    expect(result).toBeUndefined();
+    expect(options.headers.Authorization).toBe(`Bearer ${fakeToken}`);
+    expect(getTokenSpy).toHaveBeenCalled();
 
-      // verify that the original options are kept intact
-      expect(options.headers['X-Some-Header']).toBe('user-supplied header');
-      done();
-    });
+    // verify that the original options are kept intact
+    expect(options.headers['X-Some-Header']).toBe('user-supplied header');
+    done();
   });
 
   it('should re-set disableSslVerification using the setter', () => {

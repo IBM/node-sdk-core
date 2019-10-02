@@ -15,7 +15,7 @@
  */
 
 import { OutgoingHttpHeaders } from 'http';
-import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
+import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
 export class Authenticator implements AuthenticatorInterface {
   /**
@@ -31,7 +31,8 @@ export class Authenticator implements AuthenticatorInterface {
     }
   }
 
-  public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
-    throw new Error('Should be implemented by subclass!');
+  public authenticate(options: AuthenticateOptions): Promise<void | Error> {
+    const error = new Error('Should be implemented by subclass!');
+    return Promise.reject(error);
   }
 }

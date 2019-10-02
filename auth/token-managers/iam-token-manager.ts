@@ -112,19 +112,11 @@ export class IamTokenManager extends JwtTokenManager {
   }
 
   /**
-   * Callback for handling response.
-   *
-   * @callback requestTokenCallback
-   * @param {Error} An error if there is one, null otherwise
-   * @param {Object} The response if request is successful, null otherwise
-   */
-  /**
    * Request an IAM token using an API key.
    *
-   * @param {requestTokenCallback} callback - The callback that handles the response.
-   * @returns {void}
+   * @returns {Promise}
    */
-  protected requestToken(callback: Function): void {
+  protected requestToken(): Promise<any> {
     // these cannot be overwritten
     const requiredHeaders = {
       'Content-type': 'application/x-www-form-urlencoded',
@@ -148,6 +140,7 @@ export class IamTokenManager extends JwtTokenManager {
         rejectUnauthorized: !this.disableSslVerification,
       }
     };
-    this.requestWrapperInstance.sendRequest(parameters, callback);
+    
+    return this.requestWrapperInstance.sendRequest(parameters);
   }
 }
