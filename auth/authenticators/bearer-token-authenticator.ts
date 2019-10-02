@@ -17,7 +17,7 @@
 import extend = require('extend');
 import { validateInput } from '../utils';
 import { Authenticator } from './authenticator';
-import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
+import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
 export type Options = {
   bearerToken: string;
@@ -48,9 +48,11 @@ export class BearerTokenAuthenticator extends Authenticator implements Authentic
     this.bearerToken = bearerToken;
   }
 
-  public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
-    const authHeader = { Authorization: `Bearer ${this.bearerToken}` };
-    options.headers = extend(true, {}, options.headers, authHeader);
-    callback(null);
+  public authenticate(options: AuthenticateOptions): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const authHeader = { Authorization: `Bearer ${this.bearerToken}` };
+      options.headers = extend(true, {}, options.headers, authHeader);
+      resolve();
+    });
   }
 }

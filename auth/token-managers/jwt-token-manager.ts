@@ -36,7 +36,7 @@ export class JwtTokenManager {
   protected tokenName: string;
   protected disableSslVerification: boolean;
   protected headers: OutgoingHttpHeaders;
-  protected requestWrapperInstance;
+  protected requestWrapperInstance: RequestWrapper;
   private tokenInfo: any;
   private expireTime: number;
 
@@ -70,33 +70,24 @@ export class JwtTokenManager {
   }
 
   /**
-   * This function sends an access token back through a callback. The source of the token
-   * is determined by the following logic:
+   * This function returns a Promise that resolves with an access token, if successful.
+   * The source of the token is determined by the following logic:
    * 1. If user provides their own managed access token, assume it is valid and send it
    * 2. a) If this class is managing tokens and does not yet have one, make a request for one
    *    b) If this class is managing tokens and the token has expired, request a new one
    * 3. If this class is managing tokens and has a valid token stored, send it
    *
-   * @param {Function} cb - callback function that the token will be passed to
    */
-  public getToken(cb: Function) {
+  public getToken(): Promise<any> {
     if (!this.tokenInfo[this.tokenName] || this.isTokenExpired()) {
       // 1. request a new token
-      this.requestToken((err, tokenResponse) => {
-        if (!err) {
-          try {
-            this.saveTokenInfo(tokenResponse.result);
-          } catch(e) {
-            // send lower level error through callback for user to handle
-            err = e;
-          }
-        }
-        // return null for access_token if there is an error
-        return cb(err, this.tokenInfo[this.tokenName] || null);
+      return this.requestToken().then(tokenResponse => {
+        this.saveTokenInfo(tokenResponse.result);
+        return this.tokenInfo[this.tokenName];
       });
     } else {
       // 2. use valid, managed token
-      return cb(null, this.tokenInfo[this.tokenName]);
+      return Promise.resolve(this.tokenInfo[this.tokenName]);
     }
   }
 
@@ -129,12 +120,11 @@ export class JwtTokenManager {
   /**
    * Request a JWT using an API key.
    *
-   * @param {Function} cb - The callback that handles the response.
-   * @returns {void}
+   * @returns {Promise}
    */
-  protected requestToken(cb: Function): void {
+  protected requestToken(): Promise<any> {
     const err = new Error('`requestToken` MUST be overridden by a subclass of JwtTokenManagerV1.');
-    cb(err, null);
+    return Promise.reject(err);
   }
 
   /**

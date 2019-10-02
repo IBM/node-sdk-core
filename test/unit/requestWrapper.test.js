@@ -52,7 +52,7 @@ describe('sendRequest', () => {
     mockAxiosInstance.mockReset();
   });
 
-  it('should send a request with default parameters', done => {
+  it('should send a request with default parameters', async done => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
@@ -70,27 +70,26 @@ describe('sendRequest', () => {
 
     mockAxiosInstance.mockResolvedValue(axiosResolveValue);
 
-    requestWrapperInstance.sendRequest(parameters, (err, res) => {
-      // assert results
-      expect(mockAxiosInstance.mock.calls[0][0].data).toEqual('post=body');
-      expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
-        'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
-      );
-      expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
-        // 'Accept-Encoding': 'gzip',
-        'test-header': 'test-header-value',
-      });
-      expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.defaultOptions.method);
-      expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual(
-        parameters.defaultOptions.responseType
-      );
-      expect(res).toEqual(expectedResult);
-      expect(mockAxiosInstance.mock.calls.length).toBe(1);
-      done();
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    // assert results
+    expect(mockAxiosInstance.mock.calls[0][0].data).toEqual('post=body');
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
+      'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
+    );
+    expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
+      // 'Accept-Encoding': 'gzip',
+      'test-header': 'test-header-value',
     });
+    expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.defaultOptions.method);
+    expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual(
+      parameters.defaultOptions.responseType
+    );
+    expect(res).toEqual(expectedResult);
+    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    done();
   });
 
-  it('should call formatError if request failed', done => {
+  it('should call formatError if request failed', async done => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
@@ -108,15 +107,20 @@ describe('sendRequest', () => {
 
     mockAxiosInstance.mockRejectedValue('error');
 
-    requestWrapperInstance.sendRequest(parameters, (err, res) => {
-      // assert results
-      expect(err).toEqual(expect.anything());
-      expect(res).toBeUndefined();
-      done();
-    });
+    let res;
+    let err;
+    try {
+      res = await requestWrapperInstance.sendRequest(parameters);
+    } catch (e) {
+      err = e;
+    }
+    // assert results
+    expect(err).toBeInstanceOf(Error);
+    expect(res).toBeUndefined();
+    done();
   });
 
-  it('should send a request where option parameters overrides defaults', done => {
+  it('should send a request where option parameters overrides defaults', async done => {
     const parameters = {
       defaultOptions: {
         formData: '',
@@ -154,30 +158,29 @@ describe('sendRequest', () => {
       return Promise.resolve(axiosResolveValue);
     });
 
-    requestWrapperInstance.sendRequest(parameters, (err, res) => {
-      // assert results
-      expect(serializedParams).toBe('version=2018-10-15&array_style=a%2Cb');
-      expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
-        'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
-      );
-      expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
-        // 'Accept-Encoding': 'gzip',
-        'test-header': 'override-header-value',
-        'add-header': 'add-header-value',
-      });
-      expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.options.method);
-      expect(mockAxiosInstance.mock.calls[0][0].params).toEqual({
-        array_style: 'a,b',
-        version: '2018-10-15',
-      });
-      expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
-      expect(res).toEqual(expectedResult);
-      expect(mockAxiosInstance.mock.calls.length).toBe(1);
-      done();
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    // assert results
+    expect(serializedParams).toBe('version=2018-10-15&array_style=a%2Cb');
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
+      'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
+    );
+    expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
+      // 'Accept-Encoding': 'gzip',
+      'test-header': 'override-header-value',
+      'add-header': 'add-header-value',
     });
+    expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.options.method);
+    expect(mockAxiosInstance.mock.calls[0][0].params).toEqual({
+      array_style: 'a,b',
+      version: '2018-10-15',
+    });
+    expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
+    expect(res).toEqual(expectedResult);
+    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    done();
   });
 
-  it('should send a request with multiform data', done => {
+  it('should send a request with multiform data', async done => {
     const parameters = {
       defaultOptions: {
         formData: '',
@@ -224,52 +227,51 @@ describe('sendRequest', () => {
       return Promise.resolve(axiosResolveValue);
     });
 
-    requestWrapperInstance.sendRequest(parameters, (err, res) => {
-      // assert results
-      expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
-        'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
-      );
-      expect(mockAxiosInstance.mock.calls[0][0].headers).toMatchObject({
-        // 'Accept-Encoding': 'gzip',
-        'test-header': 'override-header-value',
-        'add-header': 'add-header-value',
-      });
-      expect(mockAxiosInstance.mock.calls[0][0].headers['content-type']).toMatch(
-        'multipart/form-data; boundary=--------------------------'
-      );
-      expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.defaultOptions.method);
-      expect(mockAxiosInstance.mock.calls[0][0].params).toEqual(parameters.options.qs);
-      expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
-      expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).toMatch(
-        'Content-Disposition: form-data; name=\\"object_item\\"'
-      );
-      expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).toMatch(
-        'Content-Disposition: form-data; name=\\"array_item\\"'
-      );
-      // There should be two "array_item" parts
-      expect(
-        (
-          JSON.stringify(mockAxiosInstance.mock.calls[0][0].data).match(/name=\\"array_item\\"/g) ||
-          []
-        ).length
-      ).toEqual(2);
-      expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).toMatch(
-        'Content-Disposition: form-data; name=\\"custom_file\\"'
-      );
-      expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).not.toMatch(
-        'Content-Disposition: form-data; name=\\"null_item\\"'
-      );
-      expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).not.toMatch(
-        'Content-Disposition: form-data; name=\\"no_data\\"'
-      );
-
-      expect(res).toEqual(expectedResult);
-      expect(mockAxiosInstance.mock.calls.length).toBe(1);
-      done();
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    // assert results
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
+      'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
+    );
+    expect(mockAxiosInstance.mock.calls[0][0].headers).toMatchObject({
+      // 'Accept-Encoding': 'gzip',
+      'test-header': 'override-header-value',
+      'add-header': 'add-header-value',
     });
+    expect(mockAxiosInstance.mock.calls[0][0].headers['content-type']).toMatch(
+      'multipart/form-data; boundary=--------------------------'
+    );
+    expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.defaultOptions.method);
+    expect(mockAxiosInstance.mock.calls[0][0].params).toEqual(parameters.options.qs);
+    expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
+    expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).toMatch(
+      'Content-Disposition: form-data; name=\\"object_item\\"'
+    );
+    expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).toMatch(
+      'Content-Disposition: form-data; name=\\"array_item\\"'
+    );
+    // There should be two "array_item" parts
+    expect(
+      (
+        JSON.stringify(mockAxiosInstance.mock.calls[0][0].data).match(/name=\\"array_item\\"/g) ||
+        []
+      ).length
+    ).toEqual(2);
+    expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).toMatch(
+      'Content-Disposition: form-data; name=\\"custom_file\\"'
+    );
+    expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).not.toMatch(
+      'Content-Disposition: form-data; name=\\"null_item\\"'
+    );
+    expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).not.toMatch(
+      'Content-Disposition: form-data; name=\\"no_data\\"'
+    );
+
+    expect(res).toEqual(expectedResult);
+    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    done();
   });
 
-  it('should send a request with form data', done => {
+  it('should send a request with form data', async done => {
     const parameters = {
       defaultOptions: {
         form: { a: 'a', b: 'b' },
@@ -305,30 +307,29 @@ describe('sendRequest', () => {
       return Promise.resolve(axiosResolveValue);
     });
 
-    requestWrapperInstance.sendRequest(parameters, (err, res) => {
-      // assert results
-      expect(mockAxiosInstance.mock.calls[0][0].data).toEqual('a=a&b=b');
-      expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
-        'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
-      );
-      expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
-        'Accept-Encoding': 'compress',
-        'test-header': 'override-header-value',
-        'add-header': 'add-header-value',
-        'Content-type': 'application/x-www-form-urlencoded',
-      });
-      expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.options.method);
-      expect(mockAxiosInstance.mock.calls[0][0].params).toEqual(parameters.options.qs);
-      expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
-      expect(res).toEqual(expectedResult);
-      expect(mockAxiosInstance.mock.calls.length).toBe(1);
-      done();
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    // assert results
+    expect(mockAxiosInstance.mock.calls[0][0].data).toEqual('a=a&b=b');
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
+      'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
+    );
+    expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
+      'Accept-Encoding': 'compress',
+      'test-header': 'override-header-value',
+      'add-header': 'add-header-value',
+      'Content-type': 'application/x-www-form-urlencoded',
     });
+    expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.options.method);
+    expect(mockAxiosInstance.mock.calls[0][0].params).toEqual(parameters.options.qs);
+    expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
+    expect(res).toEqual(expectedResult);
+    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    done();
   });
 
   // Need to rewrite this to test instantiation with userOptions
 
-  //   it('should keep parameters in options that are not explicitly set in requestwrapper', done => {
+  //   it('should keep parameters in options that are not explicitly set in requestwrapper', async done => {
   //     const parameters = {
   //       defaultOptions: {
   //         body: 'post=body',

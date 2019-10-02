@@ -15,7 +15,7 @@
  */
 
 import { Authenticator } from './authenticator';
-import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
+import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
 export class NoAuthAuthenticator extends Authenticator implements AuthenticatorInterface {
   /**
@@ -29,8 +29,8 @@ export class NoAuthAuthenticator extends Authenticator implements AuthenticatorI
     super();
   }
 
-  public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
+  public authenticate(options: AuthenticateOptions): Promise<void> {
     // immediately proceed to request. it will probably fail
-    callback(null);
+    return Promise.resolve();
   }
 }

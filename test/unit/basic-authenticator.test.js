@@ -41,15 +41,13 @@ describe('Basic Authenticator', () => {
     }).toThrow(/Revise these credentials/);
   });
 
-  it('should update the options and send `null` in the callback', done => {
+  it('should update the options and resolve the Promise with `null`', async done => {
     const authenticator = new BasicAuthenticator(CONFIG);
-
     const options = {};
+    const result = await authenticator.authenticate(options);
 
-    authenticator.authenticate(options, err => {
-      expect(err).toBeNull();
-      expect(options.headers.Authorization).toBe('Basic ZGF2ZTpncm9obA==');
-      done();
-    });
+    expect(result).toBeUndefined();
+    expect(options.headers.Authorization).toBe('Basic ZGF2ZTpncm9obA==');
+    done();
   });
 });

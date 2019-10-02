@@ -18,7 +18,7 @@ import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import { JwtTokenManager } from '../token-managers';
 import { Authenticator } from './authenticator';
-import { AuthenticateCallback, AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
+import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
 export type BaseOptions = {
   headers?: OutgoingHttpHeaders;
@@ -84,15 +84,11 @@ export class TokenRequestBasedAuthenticator extends Authenticator implements Aut
     this.tokenManager.setHeaders(this.headers);
   }
 
-  public authenticate(options: AuthenticateOptions, callback: AuthenticateCallback): void {
-    this.tokenManager.getToken((err, token) => {
-      if (err) {
-        callback(err);
-      } else {
-        const authHeader = { Authorization: `Bearer ${token}` };
-        options.headers = extend(true, {}, options.headers, authHeader);
-        callback(null);
-      }
+  public authenticate(options: AuthenticateOptions): Promise<void | Error> {
+    return this.tokenManager.getToken().then(token => {
+      const authHeader = { Authorization: `Bearer ${token}` };
+      options.headers = extend(true, {}, options.headers, authHeader);
+      return;
     });
   }
 }

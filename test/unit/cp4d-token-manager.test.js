@@ -89,18 +89,16 @@ describe('CP4D Token Manager', () => {
 
   describe('requestToken', () => {
     it('should call sendRequest with all request options', () => {
-      const noop = () => {};
       const instance = new Cp4dTokenManager({
         url: URL,
         username: USERNAME,
         password: PASSWORD,
       });
 
-      instance.requestToken(noop);
+      instance.requestToken();
 
       // extract arguments sendRequest was called with
       const params = mockSendRequest.mock.calls[0][0];
-      const callback = mockSendRequest.mock.calls[0][1];
 
       expect(mockSendRequest).toHaveBeenCalled();
       expect(params.options).toBeDefined();
@@ -108,9 +106,7 @@ describe('CP4D Token Manager', () => {
       expect(params.options.method).toBe('GET');
       expect(params.options.rejectUnauthorized).toBe(true);
       expect(params.options.headers).toBeDefined();
-
       expect(params.options.headers.Authorization).toBe('Basic c2hlcmxvY2s6aG9sbWVz');
-      expect(callback).toBe(noop);
     });
   });
 });
