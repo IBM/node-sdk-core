@@ -1,5 +1,20 @@
-import dotenv = require('dotenv');
-import fs = require('fs');
+let dotenv;
+let fs;
+// use dynamic imports to pacify webpack tree shaking
+import( /* webpackIgnore: true */ 'dotenv')
+.then(module => {
+  dotenv = module;
+})
+.catch(err => {
+  dotenv = {};
+});
+import( /* webpackIgnore: true */ 'fs')
+.then(module => {
+  fs = module;
+})
+.catch(err => {
+  fs = {};
+});
 import os = require('os');
 import path = require('path');
 
