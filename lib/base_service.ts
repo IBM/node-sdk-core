@@ -149,18 +149,18 @@ export class BaseService {
    * @param {Object} parameters.defaultOptions
    * @param {string} parameters.defaultOptions.serviceUrl - the base URL of the service
    * @param {OutgoingHttpHeaders} parameters.defaultOptions.headers - additional headers to be passed on the request.
-   * @param {Function} callback - callback function to pass the response back to
-   * @returns {ReadableStream|undefined}
+   * @returns {Promise<any>}
    */
-  protected createRequest(parameters, callback) {
+  protected createRequest(parameters): Promise<any> {
     // validate serviceUrl parameter has been set
     const serviceUrl = parameters.defaultOptions && parameters.defaultOptions.serviceUrl;
     if (!serviceUrl || typeof serviceUrl !== 'string') {
-      return callback(new Error('The service URL is required'), null);
+      return Promise.reject(new Error('The service URL is required'));
     }
 
-    this.authenticator.authenticate(parameters.defaultOptions, err => {
-      err ? callback(err) : this.requestWrapperInstance.sendRequest(parameters, callback);
+    return this.authenticator.authenticate(parameters.defaultOptions).then(() => {
+      // resolve() handles rejection as well, so resolving the result of sendRequest should allow for proper handling later
+      return this.requestWrapperInstance.sendRequest(parameters);
     });
   }
 

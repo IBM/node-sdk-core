@@ -6,9 +6,10 @@ const { IamTokenManager } = require('../../auth');
 // mock the `getToken` method in the token manager - dont make any rest calls
 const fakeToken = 'iam-acess-token';
 const mockedTokenManager = new IamTokenManager({ apikey: '123' });
-const getTokenSpy = jest.spyOn(mockedTokenManager, 'getToken').mockImplementation(callback => {
-  callback(null, fakeToken);
-});
+
+const getTokenSpy = jest
+  .spyOn(mockedTokenManager, 'getToken')
+  .mockImplementation(() => Promise.resolve(fakeToken));
 
 describe('IAM Authenticator', () => {
   const config = {
@@ -48,23 +49,22 @@ describe('IAM Authenticator', () => {
     }).toThrow(/Revise these credentials/);
   });
 
-  it('should update the options and send `null` in the callback', done => {
+  it('should update the options and resolve with `null`', async done => {
     const authenticator = new IamAuthenticator({ apikey: 'testjustanapikey' });
 
     // override the created token manager with the mocked one
     authenticator.tokenManager = mockedTokenManager;
 
     const options = { headers: { 'X-Some-Header': 'user-supplied header' } };
+    const result = await authenticator.authenticate(options);
 
-    authenticator.authenticate(options, err => {
-      expect(err).toBeNull();
-      expect(options.headers.Authorization).toBe(`Bearer ${fakeToken}`);
-      expect(getTokenSpy).toHaveBeenCalled();
+    expect(result).toBeUndefined();
+    expect(options.headers.Authorization).toBe(`Bearer ${fakeToken}`);
+    expect(getTokenSpy).toHaveBeenCalled();
 
-      // verify that the original options are kept intact
-      expect(options.headers['X-Some-Header']).toBe('user-supplied header');
-      done();
-    });
+    // verify that the original options are kept intact
+    expect(options.headers['X-Some-Header']).toBe('user-supplied header');
+    done();
   });
 
   it('should re-set the client id and secret using the setter', () => {

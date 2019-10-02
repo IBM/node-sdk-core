@@ -120,7 +120,7 @@ export class RequestWrapper {
    * @returns {ReadableStream|undefined}
    * @throws {Error}
    */
-  public sendRequest(parameters, _callback) {
+  public sendRequest(parameters): Promise<any> {
     const options = extend(true, {}, parameters.defaultOptions, parameters.options);
     const { path, body, form, formData, qs, method, serviceUrl } = options;
     let { headers, url } = options;
@@ -201,14 +201,8 @@ export class RequestWrapper {
       },
     };
 
-    this.axiosInstance(requestParams)
-      // placing `catch` block first because it is for catching request errors
-      // if it is after the `then` block, it will also catch errors if they occur
-      // inside of the `then` block
-      .catch(error => {
-        _callback(this.formatError(error));
-      })
-      .then(res => {
+    return this.axiosInstance(requestParams).then(
+      res => {
         // sometimes error responses will still trigger the `then` block - escape that behavior here
         if (!res) { return };
 
@@ -221,17 +215,23 @@ export class RequestWrapper {
         res.result = res.data;
         delete res.data;
 
-        _callback(null, res);
-      });
+        // return another promise that resolves with 'res' to be handled in generated code
+        return res;
+      },
+      err => {
+        // return another promise that rejects with 'err' to be handled in generated code
+        throw this.formatError(err);
+      }
+    );
   }
 
   /**
    * Format error returned by axios
-   * @param  {Function} cb the request callback
+   * @param  {object} the object returned by axios via rejection
    * @private
-   * @returns {request.RequestCallback}
+   * @returns {Error}
    */
-  public formatError(axiosError: any) {
+  public formatError(axiosError: any): Error {
     // return an actual error object,
     // but make it flexible so we can add properties like 'body'
     const error: any = new Error();
