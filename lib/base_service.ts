@@ -449,7 +449,7 @@ export class BaseService {
       return this.getCredentialsFromEnvironment(envObj, 'visual_recognition');
     }
     // Case handling for assistant - should look for assistant env variables before conversation
-    if (name === 'conversation' && (envObj[`ASSISTANT_USERNAME`] ||  envObj[`ASSISTANT_IAM_APIKEY`])) {
+    if (name === 'conversation' && (envObj[`ASSISTANT_USERNAME`] ||  envObj[`ASSISTANT_IAM_APIKEY`] || envObj[`ASSISTANT_APIKEY`])) {
        return this.getCredentialsFromEnvironment(envObj, 'assistant');
     }
     const _name: string = name.toUpperCase();
@@ -457,10 +457,10 @@ export class BaseService {
     const nameWithUnderscore: string = _name.replace(/-/g, '_');
     const username: string = envObj[`${_name}_USERNAME`] || envObj[`${nameWithUnderscore}_USERNAME`];
     const password: string = envObj[`${_name}_PASSWORD`] || envObj[`${nameWithUnderscore}_PASSWORD`];
-    const apiKey: string = envObj[`${_name}_API_KEY`] || envObj[`${nameWithUnderscore}_API_KEY`];
     const url: string = envObj[`${_name}_URL`] || envObj[`${nameWithUnderscore}_URL`];
     const iamAccessToken: string = envObj[`${_name}_IAM_ACCESS_TOKEN`] || envObj[`${nameWithUnderscore}_IAM_ACCESS_TOKEN`];
     const iamApiKey: string = envObj[`${_name}_IAM_APIKEY`] || envObj[`${nameWithUnderscore}_IAM_APIKEY`];
+    const apiKey: string = envObj[`${_name}_APIKEY`] || envObj[`${nameWithUnderscore}_APIKEY`];
     const iamUrl: string = envObj[`${_name}_IAM_URL`] || envObj[`${nameWithUnderscore}_IAM_URL`];
     const iamClientId: string = envObj[`${_name}_IAM_CLIENT_ID`] || envObj[`${_name}_IAM_CLIENT_ID`];
     const iamClientSecret: string = envObj[`${_name}_IAM_CLIENT_SECRET`] || envObj[`${_name}_IAM_CLIENT_SECRET`];
@@ -473,7 +473,7 @@ export class BaseService {
       password,
       url,
       iam_access_token: iamAccessToken,
-      iam_apikey: iamApiKey,
+      iam_apikey: iamApiKey || apiKey,
       iam_url: iamUrl,
       iam_client_id: iamClientId,
       iam_client_secret: iamClientSecret,

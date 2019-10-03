@@ -411,6 +411,19 @@ describe('BaseService', function() {
     expect(instance.tokenManager).not.toBeNull();
   });
 
+  it('should create a iam token manger instance if env variables specify apikey credential', function() {
+    process.env.TEST_APIKEY = 'test1234';
+    const instance = new TestService();
+    const actual = instance.getServiceCredentials();
+    const expected = {
+      iam_apikey: 'test1234',
+      url: 'https://gateway.watsonplatform.net/test/api',
+    };
+    expect(actual).toEqual(expected);
+    expect(instance.tokenManager).toBeDefined();
+    expect(instance.tokenManager).not.toBeNull();
+  });
+
   it('should create a token manager instance if username is `apikey` and use the password as the API key', function() {
     const apikey = 'abcd-1234';
     const instance = new TestService({
