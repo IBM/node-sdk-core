@@ -70,6 +70,9 @@
     "semver": "^6.2.0",
     "vcap_services": "~0.3.4"
   },
+  "browser": {
+    "./auth/utils/read-credentials-file": "./auth/utils/read-credentials-file.browser"
+  },
   "engines": {
     "node": ">=10"
   },
