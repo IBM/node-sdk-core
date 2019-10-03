@@ -20,8 +20,8 @@ import { Authenticator } from './authenticator';
 import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
 export type Options = {
-  username?: string;
-  password?: string;
+  username: string;
+  password: string;
 }
 
 export class BasicAuthenticator extends Authenticator implements AuthenticatorInterface {

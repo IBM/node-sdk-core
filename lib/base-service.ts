@@ -133,22 +133,22 @@ export class BaseService {
   /**
    * Wrapper around `sendRequest` that enforces the request will be authenticated.
    *
-   * @param {Object} parameters - service request options passed in by user.
-   * @param {string} parameters.options.method - the http method.
-   * @param {string} parameters.options.url - the path portion of the URL to be appended to the serviceUrl
-   * @param {string} parameters.options.path - the path to be appended to the service URL.
-   * @param {string} parameters.options.qs - the querystring to be included in the URL.
-   * @param {string} parameters.options.body - the data to be sent as the request body.
-   * @param {Object} parameters.options.form - an object containing the key/value pairs for a www-form-urlencoded request.
-   * @param {Object} parameters.options.formData - an object containing the contents for a multipart/form-data request.
+   * @param {object} parameters - service request options passed in by user
+   * @param {string} parameters.options.method - the http method
+   * @param {string} parameters.options.url - the path portion of the URL to be appended to the serviceUr
+   * @param {object} [parameters.options.path] - the path parameters to be inserted into the URL
+   * @param {object} [parameters.options.qs] - the querystring to be included in the URL
+   * @param {object} [parameters.options.body] - the data to be sent as the request body
+   * @param {object} [parameters.options.form] - an object containing the key/value pairs for a www-form-urlencoded request
+   * @param {object} [parameters.options.formData] - an object containing the contents for a multipart/form-data request
    * The following processing is performed on formData values:
    * - string: no special processing -- the value is sent as is
    * - object: the value is converted to a JSON string before insertion into the form body
    * - NodeJS.ReadableStream|Buffer|FileWithMetadata: sent as a file, with any associated metadata
    * - array: each element of the array is sent as a separate form part using any special processing as described above
-   * @param {Object} parameters.defaultOptions
+   * @param {object} parameters.defaultOptions
    * @param {string} parameters.defaultOptions.serviceUrl - the base URL of the service
-   * @param {OutgoingHttpHeaders} parameters.defaultOptions.headers - additional headers to be passed on the request.
+   * @param {OutgoingHttpHeaders} parameters.defaultOptions.headers - additional headers to be passed on the request
    * @returns {Promise<any>}
    */
   protected createRequest(parameters): Promise<any> {
