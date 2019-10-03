@@ -1,3 +1,48 @@
+# [1.0.0](https://github.com/IBM/node-sdk-core/compare/v0.3.6...v1.0.0) (2019-10-03)
+
+
+### Bug Fixes
+
+* Move check for serviceUrl to createRequest ([#47](https://github.com/IBM/node-sdk-core/issues/47)) ([6f04739](https://github.com/IBM/node-sdk-core/commit/6f04739))
+* parse result from response in token managers ([6bbe423](https://github.com/IBM/node-sdk-core/commit/6bbe423))
+* provide bundlers alternate file for browser support ([#58](https://github.com/IBM/node-sdk-core/issues/58)) ([88a9d16](https://github.com/IBM/node-sdk-core/commit/88a9d16))
+
+
+### Build System
+
+* drop support for Node versions 6 and 8 ([#33](https://github.com/IBM/node-sdk-core/issues/33)) ([d47c737](https://github.com/IBM/node-sdk-core/commit/d47c737))
+
+
+### Code Refactoring
+
+* look for credentials file in working dir before home dir ([#46](https://github.com/IBM/node-sdk-core/issues/46)) ([c5556de](https://github.com/IBM/node-sdk-core/commit/c5556de))
+* return detailed response as second callback argument ([#34](https://github.com/IBM/node-sdk-core/issues/34)) ([dc24154](https://github.com/IBM/node-sdk-core/commit/dc24154))
+
+
+### Features
+
+* add `setServiceUrl` method as a setter for the `serviceUrl` property ([#41](https://github.com/IBM/node-sdk-core/issues/41)) ([cfb188f](https://github.com/IBM/node-sdk-core/commit/cfb188f))
+* add specific error handling for SSL errors with cloud private instances ([#54](https://github.com/IBM/node-sdk-core/issues/54)) ([056ec9a](https://github.com/IBM/node-sdk-core/commit/056ec9a))
+* export `UserOptions` interface from the BaseService ([#50](https://github.com/IBM/node-sdk-core/issues/50)) ([4f0075a](https://github.com/IBM/node-sdk-core/commit/4f0075a))
+* implement new authenticators to handle sdk authentication ([#37](https://github.com/IBM/node-sdk-core/issues/37)) ([f876b6d](https://github.com/IBM/node-sdk-core/commit/f876b6d))
+* refactor core to use Promises instead of callbacks ([#55](https://github.com/IBM/node-sdk-core/issues/55)) ([9ec8afd](https://github.com/IBM/node-sdk-core/commit/9ec8afd))
+
+
+### BREAKING CHANGES
+
+* None of the authenticators or request methods take callbacks as arguments anymore - they return Promises instead.
+* Users that have credential files in both the working directory and the home directory will see a change in which one is used.
+* The internal property `url` no longer exists on the `baseOptions` object, it has been renamed to `serviceUrl`
+* The old style of passing credentials to the base service will no longer work. An Authenticator instance MUST be passed in to the base service constructor.
+* token managers no longer support user access tokens. use BearerTokenAuthenticator instead
+* The class names of the token managers have changed.
+* `Icp4dTokenManagerV1` renamed to `Cp4dTokenManager`
+* `IamTokenManagerV1` renamed to `IamTokenManager`
+* `JwtTokenManagerV1` renamed to `JwtTokenManager`
+* The public method `setAuthorizationInfo` is renamed to `setClientIdAndSecret`
+* The response body is no longer the 2nd callback argument, the detailed response is. The body is located under the `result` property. The `data` property is removed.
+* This SDK may no longer work with applications running on Node 6 or 8.
+
 ## [0.3.6](https://github.com/IBM/node-sdk-core/compare/v0.3.5...v0.3.6) (2019-09-16)
 
 
