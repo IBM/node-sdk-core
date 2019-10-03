@@ -5,6 +5,9 @@
 ### Node Versions
 Node versions 6 and 8 are no longer supported.
 
+### Promises replaced callbacks
+None of the methods in any modules of the core accept callbacks as arguments anymore. Now, all asynchronous methods (inlcuding all `authenticate` methods) return Promises.
+
 ### Callback arguments
 The old callback argument structure of `(error, body, response)` has been changed to `(error, response)`. The body is available under the `result` property of the response. The `data` property has been removed in favor of `result`.
 
