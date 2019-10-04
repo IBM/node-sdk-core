@@ -18,8 +18,18 @@ const { RequestWrapper } = require('../../lib/request-wrapper');
 const requestWrapperInstance = new RequestWrapper();
 
 describe('axios', () => {
+  let env;
+  beforeEach(function() {
+    jest.resetModules();
+    env = process.env;
+    process.env = {};
+  });
+  afterEach(function() {
+    process.env = env;
+  });
   it('should enable debug', () => {
     // these should have been called when requestWrapperInstance was instantiated
+    process.env.LOG_TO_CONSOLE = 'true';
     expect(mockAxiosInstance.interceptors.request.use).toHaveBeenCalledTimes(1);
     expect(mockAxiosInstance.interceptors.response.use).toHaveBeenCalledTimes(1);
   });
@@ -67,7 +77,7 @@ describe('sendRequest', () => {
         responseType: 'buffer',
       },
     };
-
+    process.env.LOG_TO_CONSOLE = 'true';
     mockAxiosInstance.mockResolvedValue(axiosResolveValue);
 
     const res = await requestWrapperInstance.sendRequest(parameters);

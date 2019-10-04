@@ -19,6 +19,7 @@ import fileType = require('file-type');
 import { isReadable } from 'isstream';
 import { lookup } from 'mime-types';
 import { basename } from 'path';
+import logger from './logger';
 
 export interface FileObject {
   value: NodeJS.ReadableStream | Buffer | string;
@@ -129,6 +130,7 @@ export function getMissingParams(
  * @returns {boolean} true if 'text' has html tags
  */
 export function isHTML(text: string): boolean {
+  logger.debug(`Determining if the text ${text} is HTLML.`);
   return /<[a-z][\s\S]*>/i.test(text);
 }
 
@@ -144,6 +146,7 @@ export function getFormat(
   formats: string[]
 ): string {
   if (!formats || !params) {
+    logger.debug(`No formats to parse in getFormat. Returning null`);
     return null;
   }
   for (const item of formats) {
@@ -151,7 +154,8 @@ export function getFormat(
       return item;
     }
   }
-
+  
+  logger.debug(`No formats to parse in getFormat. Returning null`);
   return null;
 }
 

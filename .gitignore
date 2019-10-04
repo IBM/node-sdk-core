@@ -22,3 +22,4 @@ coverage.lcov
 /.project
 .secrets.baseline
 .pre-commit-config.yaml
+logs

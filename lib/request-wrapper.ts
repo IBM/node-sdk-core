@@ -21,6 +21,7 @@ import https = require('https');
 import querystring = require('querystring');
 import { PassThrough as readableStream } from 'stream';
 import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileData, isFileWithMetadata } from './helper';
+import logger from './logger';
 
 const isBrowser = typeof window === 'object';
 const globalTransactionId = 'x-global-transaction-id';
@@ -67,42 +68,42 @@ export class RequestWrapper {
     this.axiosInstance = axios.create(axiosConfig);
 
     // set debug interceptors
-    if(process.env.NODE_DEBUG === 'axios') {
+    if(process.env.NODE_DEBUG === 'axios' || logger.silent === false) {
       this.axiosInstance.interceptors.request.use(config => {
-        console.debug('Request:');
+        logger.debug('Request:');
         try {
-          console.debug(JSON.stringify(config, null, 2));
+          logger.debug(JSON.stringify(config, null, 2));
         } catch {
-          console.debug(config)
+          logger.error(config)
         }
 
         return config;
       }, error => {
-        console.debug('Error:');
+        logger.error('Error sending request: ');
         try {
-          console.debug(JSON.stringify(error, null, 2));
+          logger.error(JSON.stringify(error, null, 2));
         } catch {
-          console.debug(error);
+          logger.error(error);
         }
 
         return Promise.reject(error);
       });
 
       this.axiosInstance.interceptors.response.use(response => {
-        console.debug('Response:');
+        logger.debug('Response:');
         try {
-          console.debug(JSON.stringify(response, null, 2));
+          logger.debug(JSON.stringify(response, null, 2));
         } catch {
-          console.debug(response)
+          logger.error(response);
         }
 
         return response;
       }, error => {
-        console.debug('Error:');
+        logger.error('Error returning response: ');
         try {
-          console.debug(JSON.stringify(error, null, 2));
+          logger.error(JSON.stringify(error, null, 2));
         } catch {
-          console.debug(error);
+          logger.error(error);
         }
 
         return Promise.reject(error);
@@ -259,6 +260,7 @@ export class RequestWrapper {
         // ignore the error, use the object, and tack on a warning
         errorBody = axiosError.data;
         errorBody.warning = 'Body contains circular reference';
+        logger.error(`Failed to stringify axiosError: ${e}`);
       }
 
       error.body = errorBody;
@@ -385,5 +387,6 @@ function parseServiceErrorMessage(response: any): string | undefined {
     message = response.errorMessage;
   }
 
+  logger.info(`Parsing service error message: ${message}`);
   return message;
 }
