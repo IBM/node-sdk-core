@@ -57,6 +57,7 @@
     "@types/node": "~10.14.19",
     "axios": "^0.18.0",
     "camelcase": "^5.3.1",
+    "debug": "^4.1.1",
     "dotenv": "^6.2.0",
     "extend": "~3.0.2",
     "file-type": "^7.7.1",

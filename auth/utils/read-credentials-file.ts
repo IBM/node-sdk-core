@@ -2,6 +2,7 @@ import dotenv = require('dotenv');
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
+import logger from '../../lib/logger';
 
 const filename: string = 'ibm-credentials.env';
 
@@ -36,6 +37,7 @@ export function readCredentialsFile() {
     filepathToUse = homeDir;
   } else {
     // file does not exist anywhere, will not be used
+    logger.info('Credential file does not exist. Will not be used');
     return {};
   }
 

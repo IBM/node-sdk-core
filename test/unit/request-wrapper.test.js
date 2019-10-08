@@ -18,6 +18,15 @@ const { RequestWrapper } = require('../../lib/request-wrapper');
 const requestWrapperInstance = new RequestWrapper();
 
 describe('axios', () => {
+  let env;
+  beforeEach(function() {
+    jest.resetModules();
+    env = process.env;
+    process.env = {};
+  });
+  afterEach(function() {
+    process.env = env;
+  });
   it('should enable debug', () => {
     // these should have been called when requestWrapperInstance was instantiated
     expect(mockAxiosInstance.interceptors.request.use).toHaveBeenCalledTimes(1);

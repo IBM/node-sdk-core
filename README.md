@@ -59,6 +59,26 @@ import { getAuthenticatorFromEnvironment } from 'ibm-cloud-sdk-core';
 const iamAuthenticator = getAuthenticatorFromEnvironment('my-service');
 ```
 
+## Logging
+This package uses [debug](https://www.npmjs.com/package/debug) for logging.
+
+- Logging is disabled by default.
+- Logging has been configured to use log levels which are assumed to be numerically ascending from most important to least important.
+- In order to see the log output, set the environment variable ``DEBUG`` including the desired log level.
+  - ```DEBUG=ibm-cloud-sdk-core:error``` enables error logs
+  - ```DEBUG=ibm-cloud-sdk-core:warning``` enables warning logs and below
+  - ```DEBUG=ibm-cloud-sdk-core:info``` enables info logs and below
+  - ```DEBUG=ibm-cloud-sdk-core:verbose``` enables verbose logs and below
+  - ```DEBUG=ibm-cloud-sdk-core:debug``` enables debug logs and below
+
+To see the output from all of the debugging levels you can use:
+
+``DEBUG=ibm-cloud-sdk-core*``
+
+The debug logger can be configured to be used for more than one library. In example, you can set a comma-separated string:
+
+``DEBUG=ibm-cloud-sdk-core:debug,other-lib:debug``
+
 ## Issues
 If you encounter an issue with this project, you are welcome to submit a [bug report](https://github.com/IBM/node-sdk-core/issues).
 Before opening a new issue, please search for similar issues. It's possible that someone has already reported it.
