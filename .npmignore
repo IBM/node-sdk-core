@@ -1,4 +1,6 @@
-test
+test/resources
+test/unit
+test/.eslintrc.js
 node_modules
 coverage
 .jshintignore

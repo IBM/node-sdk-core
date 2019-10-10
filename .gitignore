@@ -12,6 +12,7 @@ lib/*.js
 auth/**/*.js
 iam-token-manager/*.js
 index.js
+!test/**/index.js
 .nyc_output
 **/*.d.ts
 !*/blob.d.ts
