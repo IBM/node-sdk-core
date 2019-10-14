@@ -21,6 +21,7 @@ import semver = require('semver');
 import vcapServices = require('vcap_services');
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
+import logger from './logger';
 import { RequestWrapper } from './request-wrapper';
 
 export interface UserOptions {
@@ -65,9 +66,9 @@ export class BaseService {
    */
   constructor(userOptions: UserOptions) {
     if (!(this instanceof BaseService)) {
-      throw new Error(
-        'the "new" keyword is required to create service instances'
-      );
+      const err = 'the "new" keyword is required to create service instances';
+      logger.error(`Error creating an instance of BaseService: ${err}`);
+      throw new Error(err);
     }
 
     const _options = {} as BaseServiceOptions;
@@ -85,6 +86,7 @@ export class BaseService {
     // check serviceUrl for common user errors
     const credentialProblems = checkCredentials(options, ['serviceUrl']);
     if (credentialProblems) {
+      logger.error(credentialProblems.message);
       throw credentialProblems;
     }
 

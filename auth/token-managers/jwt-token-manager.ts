@@ -17,6 +17,7 @@
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import jwt = require('jsonwebtoken');
+import logger from '../../lib/logger';
 import { RequestWrapper } from '../../lib/request-wrapper';
 
 function getCurrentTime(): number {
@@ -123,7 +124,9 @@ export class JwtTokenManager {
    * @returns {Promise}
    */
   protected requestToken(): Promise<any> {
-    const err = new Error('`requestToken` MUST be overridden by a subclass of JwtTokenManagerV1.');
+    const errMsg = '`requestToken` MUST be overridden by a subclass of JwtTokenManagerV1.';
+    const err = new Error(errMsg);
+    logger.error(errMsg);
     return Promise.reject(err);
   }
 
@@ -156,7 +159,9 @@ export class JwtTokenManager {
     const accessToken = tokenResponse[this.tokenName];
 
     if (!accessToken) {
-      throw new Error('Access token not present in response');
+      const err = 'Access token not present in response';
+      logger.error(err);
+      throw new Error(err);
     }
 
     this.expireTime = this.calculateTimeForNewToken(accessToken);
@@ -184,7 +189,9 @@ export class JwtTokenManager {
       const timeToLive = exp - iat;
       timeForNewToken = exp - (timeToLive * (1.0 - fractionOfTtl));
     } else {
-      throw new Error('Access token recieved is not a valid JWT');
+      const err = 'Access token recieved is not a valid JWT'
+      logger.error(err);
+      throw new Error(err);
     }
 
     return timeForNewToken;

@@ -3,6 +3,7 @@
 
 jest.mock('../../lib/request-wrapper');
 const { RequestWrapper } = require('../../lib/request-wrapper');
+const logger = require('../../lib/logger').default;
 
 const jwt = require('jsonwebtoken');
 jwt.decode = jest.fn(() => {
@@ -168,7 +169,7 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should not use an Authorization header - clientid only via ctor', async done => {
-    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(logger, 'warn').mockImplementation(() => {});
 
     const instance = new IamTokenManager({
       apikey: 'abcd-1234',
@@ -176,9 +177,8 @@ describe('iam_token_manager_v1', function() {
     });
 
     // verify warning was triggered
-    expect(console.log).toHaveBeenCalled();
-    expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
-    console.log.mockRestore();
+    expect(logger.warn).toHaveBeenCalled();
+    expect(logger.warn.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
 
     mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
@@ -190,16 +190,15 @@ describe('iam_token_manager_v1', function() {
   });
 
   it('should not use an Authorization header - secret only via ctor', async done => {
-    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(logger, 'warn').mockImplementation(() => {});
     const instance = new IamTokenManager({
       apikey: 'abcd-1234',
       clientSecret: 'bar',
     });
 
     // verify warning was triggered
-    expect(console.log).toHaveBeenCalled();
-    expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
-    console.log.mockRestore();
+    expect(logger.warn).toHaveBeenCalled();
+    expect(logger.warn.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
 
     mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
@@ -231,14 +230,13 @@ describe('iam_token_manager_v1', function() {
       apikey: 'abcd-1234',
     });
 
-    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(logger, 'warn').mockImplementation(() => {});
 
     instance.setClientIdAndSecret('foo', null);
 
     // verify warning was triggered
-    expect(console.log).toHaveBeenCalled();
-    expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
-    console.log.mockRestore();
+    expect(logger.warn).toHaveBeenCalled();
+    expect(logger.warn.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
 
     mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
@@ -254,14 +252,13 @@ describe('iam_token_manager_v1', function() {
       apikey: 'abcd-1234',
     });
 
-    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(logger, 'warn').mockImplementation(() => {});
 
     instance.setClientIdAndSecret(null, 'bar');
 
     // verify warning was triggered
-    expect(console.log).toHaveBeenCalled();
-    expect(console.log.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
-    console.log.mockRestore();
+    expect(logger.warn).toHaveBeenCalled();
+    expect(logger.warn.mock.calls[0][0]).toBe(CLIENT_ID_SECRET_WARNING);
 
     mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 

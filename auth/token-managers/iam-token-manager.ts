@@ -17,6 +17,7 @@
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import { getMissingParams } from '../../lib/helper';
+import logger from '../../lib/logger';
 import { computeBasicAuthHeader, validateInput } from '../utils';
 import { JwtTokenManager, TokenManagerOptions } from './jwt-token-manager';
 
@@ -43,7 +44,7 @@ interface Options extends TokenManagerOptions {
 }
 
 // this interface is a representation of the response
-// object from the IAM service, hence the snake_case 
+// object from the IAM service, hence the snake_case
 // parameter names
 export interface IamTokenData {
   access_token: string;
@@ -74,7 +75,7 @@ export class IamTokenManager extends JwtTokenManager {
     super(options);
 
     validateInput(options, this.requiredOptions);
-    
+
     this.apikey = options.apikey;
 
     this.url = this.url || 'https://iam.cloud.ibm.com/identity/token';
@@ -87,7 +88,7 @@ export class IamTokenManager extends JwtTokenManager {
     }
     if (onlyOne(options.clientId, options.clientSecret)) {
       // tslint:disable-next-line
-      console.log(CLIENT_ID_SECRET_WARNING);
+      logger.warn(CLIENT_ID_SECRET_WARNING);
     }
   }
 
@@ -98,7 +99,7 @@ export class IamTokenManager extends JwtTokenManager {
    * If these values are not set, no Authorization header will be
    * set on the request (it is not required).
    *
-   * @param {string} clientId - The client id 
+   * @param {string} clientId - The client id
    * @param {string} clientSecret - The client secret
    * @returns {void}
    */
@@ -107,7 +108,7 @@ export class IamTokenManager extends JwtTokenManager {
     this.clientSecret = clientSecret;
     if (onlyOne(clientId, clientSecret)) {
       // tslint:disable-next-line
-      console.log(CLIENT_ID_SECRET_WARNING);
+      logger.warn(CLIENT_ID_SECRET_WARNING);
     }
   }
 
@@ -140,7 +141,7 @@ export class IamTokenManager extends JwtTokenManager {
         rejectUnauthorized: !this.disableSslVerification,
       }
     };
-    
+
     return this.requestWrapperInstance.sendRequest(parameters);
   }
 }
