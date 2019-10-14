@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/IBM/node-sdk-core/compare/v1.0.0...v1.1.0) (2019-10-14)
+
+
+### Features
+
+* adding debug logger ([#64](https://github.com/IBM/node-sdk-core/issues/64)) ([6079ca0](https://github.com/IBM/node-sdk-core/commit/6079ca0))
+
 # [1.0.0](https://github.com/IBM/node-sdk-core/compare/v0.3.6...v1.0.0) (2019-10-03)
 
 
