@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/IBM/node-sdk-core/compare/v1.1.0...v1.2.0) (2019-10-15)
+
+
+### Features
+
+* export unit test utility methods to be used in SDKs ([#65](https://github.com/IBM/node-sdk-core/issues/65)) ([0305974](https://github.com/IBM/node-sdk-core/commit/0305974))
+
 # [1.1.0](https://github.com/IBM/node-sdk-core/compare/v1.0.0...v1.1.0) (2019-10-14)
 
 
