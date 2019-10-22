@@ -100,7 +100,6 @@ export class BaseService {
     this.baseOptions = extend(
       { qs: {}, serviceUrl: serviceClass.URL },
       options,
-      this.readOptionsFromExternalConfig(),
       _options
     );
 
@@ -112,6 +111,9 @@ export class BaseService {
     }
 
     this.authenticator = options.authenticator;
+
+    // temp: call the configureService method to ensure compatibility
+    this.configureService(this.name);
   }
 
   /**
@@ -130,6 +132,27 @@ export class BaseService {
    */
   public setServiceUrl(url: string): void {
     this.baseOptions.serviceUrl = url;
+  }
+
+  /**
+   * Configure the service using external configuration
+   *
+   * @param {string} the name of the service. Will be used to read from external
+   * configuration
+   */
+  protected configureService(serviceName: string): void {
+    if (!serviceName) {
+      const err = 'Error configuring service. Service name is required.';
+      logger.error(err);
+      throw new Error(err);
+    }
+
+    extend(
+      this.baseOptions,
+      this.readOptionsFromExternalConfig(serviceName)
+    );
+    // overwrite the requestWrapperInstance with the new base options if applicable
+    this.requestWrapperInstance = new RequestWrapper(this.baseOptions);
   }
 
   /**
@@ -166,9 +189,9 @@ export class BaseService {
     });
   }
 
-  private readOptionsFromExternalConfig() {
+  private readOptionsFromExternalConfig(serviceName: string) {
     const results = {} as any;
-    const properties = readExternalSources(this.name);
+    const properties = readExternalSources(serviceName);
 
     if (properties !== null) {
       // the user can define two client-level variables in the credentials file: url and disableSsl

@@ -174,7 +174,7 @@ describe('Base Service', () => {
       authenticator: AUTHENTICATOR,
     });
 
-    const fromCredsFile = testService.readOptionsFromExternalConfig();
+    const fromCredsFile = testService.readOptionsFromExternalConfig(DEFAULT_NAME);
 
     expect(fromCredsFile.serviceUrl).toBe(serviceUrl);
     expect(fromCredsFile.disableSslVerification).toBe(disableSsl);
@@ -337,6 +337,54 @@ describe('Base Service', () => {
         serviceUrl: 'myapi.com/{instanceId}',
       });
     }).toThrow(/Revise these credentials/);
+  });
+
+  it('should have the default baseOptions values when instantiating', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+    expect(testService.baseOptions.serviceUrl).toEqual(DEFAULT_URL);
+    expect(testService.baseOptions.disableSslVerification).toEqual(false);
+    expect(testService.baseOptions.qs).toBeDefined();
+    expect(testService.baseOptions.qs).toEqual(EMPTY_OBJECT);
+  });
+
+  it('should configure service by calling configureService method after instantiating', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+
+    expect(testService.baseOptions.serviceUrl).toEqual(
+      'https://gateway.watsonplatform.net/test/api'
+    );
+    expect(testService.baseOptions.disableSslVerification).toEqual(false);
+
+    readExternalSourcesMock.mockImplementation(() => ({
+      url: 'abc123.com',
+      disableSsl: true,
+    }));
+
+    testService.configureService(DEFAULT_NAME);
+
+    expect(readExternalSourcesMock).toHaveBeenCalled();
+    expect(testService.baseOptions.serviceUrl).toEqual('abc123.com');
+    expect(testService.baseOptions.disableSslVerification).toEqual(true);
+  });
+
+  it('configureService method should throw error if service name is not provided', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+    const fakeError = new Error('Error configuring service. Service name is required.');
+    let err;
+
+    try {
+      testService.configureService();
+    } catch (e) {
+      err = e;
+    }
+
+    expect(err).toStrictEqual(fakeError);
   });
 });
 
