@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/IBM/node-sdk-core/compare/v1.2.0...v1.3.0) (2019-10-22)
+
+
+### Features
+
+* adding configureService method for external config options ([#66](https://github.com/IBM/node-sdk-core/issues/66)) ([7324919](https://github.com/IBM/node-sdk-core/commit/7324919))
+
 # [1.2.0](https://github.com/IBM/node-sdk-core/compare/v1.1.0...v1.2.0) (2019-10-15)
 
 
