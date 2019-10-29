@@ -12,7 +12,7 @@ const headerContentTypes: { [key: string]: string } = {
   RIFF: 'audio/wav',
   OggS: 'audio/ogg',
   ID3: 'audio/mp3',
-  '\u001aEߣ': 'audio/webm' // String for first four hex's of web: [1A][45][DF][A3] (https://www.matroska.org/technical/specs/index.html#EBML)
+  '\u001aEߣ': 'audio/webm' // String for first four hex's of webm: [1A][45][DF][A3] (https://www.matroska.org/technical/specs/index.html#EBML)
 };
 
 const filenameContentTypes: { [key: string]: string } = {
