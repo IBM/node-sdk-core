@@ -38,7 +38,7 @@ function badCharAtAnEnd(value: string): boolean {
  * Checks credentials for common user mistakes of copying {, }, or " characters from the documentation
  *
  * @param {object} obj - The options object holding credentials
- * @param {string[]} credsToCheck - An array containing the keys of the credentials to check for problems 
+ * @param {string[]} credsToCheck - An array containing the keys of the credentials to check for problems
  * @returns {string | null} - Returns a string with the error message if there were problems, null if not
  */
 export function checkCredentials(obj: any, credsToCheck: string[]) : Error | null {
@@ -57,6 +57,10 @@ export function checkCredentials(obj: any, credsToCheck: string[]) : Error | nul
   }
 }
 
+/**
+ * @param options - A configuration object.
+ * @param requiredOptions - The list of of properties the options must have specified.
+ */
 export function validateInput(options: any, requiredOptions: string[]): void {
   // check for required params
   const missingParamsError = getMissingParams(options, requiredOptions);

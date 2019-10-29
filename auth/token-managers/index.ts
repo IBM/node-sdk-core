@@ -14,6 +14,23 @@
  * limitations under the License.
  */
 
+/**
+ * @module token-managers
+ * The ibm-cloud-sdk-core module supports the following types of token authentication:
+ *
+ * Identity and Access Management (IAM)
+ * Cloud Pak for Data
+ *
+ * The token managers sit inside of an authenticator and do the work to retrieve
+ * tokens where as the authenticators add these tokens to the actual request.
+ *
+ * classes:
+ *   IamTokenManager: Token Manager of CloudPak for data.
+ *   Cp4dTokenManager: Authenticator for passing IAM authentication information to service endpoint.
+ *   JwtTokenManager: A class for shared functionality for parsing, storing, and requesting JWT tokens.
+ */
+
+
  export { IamTokenManager } from './iam-token-manager';
  export { Cp4dTokenManager } from './cp4d-token-manager';
  export { JwtTokenManager } from './jwt-token-manager';

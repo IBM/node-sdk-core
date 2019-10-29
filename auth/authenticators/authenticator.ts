@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-import { OutgoingHttpHeaders } from 'http';
 import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
+/**
+ * Base Authenticator class for other Authenticators to extend. Not intended
+ * to be used as a stand-alone authenticator.
+ */
 export class Authenticator implements AuthenticatorInterface {
+
   /**
-   * Base Authenticator Class
+   * Create a new Authenticator instance.
    *
-   * Provides the Base Authenticator class for others to extend.
+   * @throws {Error} The `new` keyword was not used to create construct the
+   *   authenticator.
    */
   constructor() {
     if (!(this instanceof Authenticator)) {
@@ -31,7 +36,16 @@ export class Authenticator implements AuthenticatorInterface {
     }
   }
 
-  public authenticate(options: AuthenticateOptions): Promise<void | Error> {
+  /**
+   * Augment the request with authentication information.
+   *
+   * @param {object} request - The request to augment with authentication information.
+   * @param {Object.<string, string>} request.headers - The headers the
+   *   authentication information will be added too.
+   * @throws {Error} - The authentication method was not implemented by a
+   *   subclass.
+   */
+  public authenticate(request: AuthenticateOptions): Promise<void | Error> {
     const error = new Error('Should be implemented by subclass!');
     return Promise.reject(error);
   }

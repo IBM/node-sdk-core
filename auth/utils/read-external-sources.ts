@@ -15,20 +15,19 @@
  */
 
 import camelcase = require('camelcase');
-import extend = require('extend');
 import isEmpty = require('lodash.isempty');
 import vcapServices = require('vcap_services');
 import { readCredentialsFile } from './read-credentials-file';
 
-/*
+/**
  * Read properties stored in external sources like Environment Variables,
  * the credentials file, VCAP services, etc. and return them as an
  * object. The keys of this object will have the service name prefix removed
  * and will be converted to lower camel case.
  *
  * Only one source will be used at a time.
+ * @param {string} serviceName The service name prefix.
  */
-
 export function readExternalSources(serviceName: string) {
   if (!serviceName) {
     throw new Error('Service name is required.');
@@ -53,7 +52,7 @@ function getProperties(serviceName: string): any {
   }
 
   if (isEmpty(properties)) {
-    properties = getCredentialsFromCloud(serviceName);    
+    properties = getCredentialsFromCloud(serviceName);
   }
 
   return properties;

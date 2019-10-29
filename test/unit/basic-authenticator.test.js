@@ -12,9 +12,9 @@ const CONFIG = {
 describe('Basic Authenticator', () => {
   it('should store the username and password on the class', () => {
     const authenticator = new BasicAuthenticator(CONFIG);
-
-    expect(authenticator.username).toBe(USERNAME);
-    expect(authenticator.password).toBe(PASSWORD);
+    expect(authenticator.authHeader).toEqual({
+      Authorization: 'Basic ZGF2ZTpncm9obA==',
+    });
   });
 
   it('should throw an error when username is not provided', () => {

@@ -28,6 +28,17 @@ import {
 
 import { readExternalSources } from './read-external-sources';
 
+/**
+ * Look for external configuration of authenticator.
+ *
+ * Try to get authenticator from external sources, with the following priority:
+ * 1. Credentials file(ibm-credentials.env)
+ * 2. Environment variables
+ * 3. VCAP Services(Cloud Foundry)
+ *
+ * @param {string} serviceName The service name prefix.
+ *
+ */
 export function getAuthenticatorFromEnvironment(serviceName: string): Authenticator {
   if (!serviceName) {
     throw new Error('Service name is required.');
@@ -52,7 +63,7 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
 
   if (credentials.authDisableSsl) {
     credentials.disableSslVerification = credentials.authDisableSsl;
-    delete credentials.authDisableSsl; 
+    delete credentials.authDisableSsl;
   }
 
   // default the auth type to `iam` if authType is undefined, or not a string

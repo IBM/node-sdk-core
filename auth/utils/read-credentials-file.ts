@@ -6,6 +6,10 @@ import logger from '../../lib/logger';
 
 const filename: string = 'ibm-credentials.env';
 
+/**
+ * Return a config object based on a credentials file. Credentials files can
+ * be specified filepath via the environment variable: `IBM_CREDENTIALS_FILE`.
+ */
 export function readCredentialsFile() {
   if (!fs.existsSync) {
     return {};

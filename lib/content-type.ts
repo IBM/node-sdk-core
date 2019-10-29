@@ -12,7 +12,7 @@ const headerContentTypes: { [key: string]: string } = {
   RIFF: 'audio/wav',
   OggS: 'audio/ogg',
   ID3: 'audio/mp3',
-  '\u001aEߣ': 'audio/webm' // String for first four hex's of webm: [1A][45][DF][A3] (https://www.matroska.org/technical/specs/index.html#EBML)
+  '\u001aEߣ': 'audio/webm' // String for first four hex's of web: [1A][45][DF][A3] (https://www.matroska.org/technical/specs/index.html#EBML)
 };
 
 const filenameContentTypes: { [key: string]: string } = {
@@ -28,8 +28,8 @@ const filenameContentTypes: { [key: string]: string } = {
 /**
  * Takes the beginning of an audio file and returns the associated content-type / mime type
  *
- * @param {Buffer} buffer with at least the first 4 bytes of the file
- * @return {String|undefined} - the contentType of undefined
+ * @param {Buffer} buffer With at least the first 4 bytes of the file
+ * @return {String|undefined} The contentType of undefined
  */
 const fromHeader = (buffer: Buffer): string => {
   const headerStr = buffer

@@ -14,31 +14,47 @@
  * limitations under the License.
  */
 
-import { OutgoingHttpHeaders } from 'http';
 import { Cp4dTokenManager } from '../token-managers';
 import { validateInput } from '../utils';
-import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
+import { BaseOptions, TokenRequestBasedAuthenticator }
+  from './token-request-based-authenticator';
 
+/**
+ * Configuration values for CloudPakForData Authenticator.
+ */
 export interface Options extends BaseOptions {
+  /** The username used to obtain a bearer token. */
   username: string;
+  /** The password used to obtain a bearer token. */
   password: string;
+  /** The URL representing the Cloud Pak for Data token service endpoint. */
   url: string;
 }
 
-export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator {
+/**
+ * The [[CloudPakForDataAuthenticator]] utilizes a username and password pair to
+ *   obtain a suitable bearer token, via a [[Cp4dTokenManager]], and adds it
+ *   requests.
+ *
+ * The bearer token will be sent as an Authorization header in the form:
+ *
+ *      Authorization: Bearer <bearer-token>
+ */
+export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
+{
   protected requiredOptions = ['username', 'password', 'url'];
   protected tokenManager: Cp4dTokenManager;
   private username: string;
   private password: string;
-
   /**
-   * Cloud Pak for Data Authenticator Class
+   * Create a new [[CloudPakForDataAuthenticator]] instance with an internal [[Cp4dTokenManager]].
    *
-   * Handles the CP4D authentication pattern:
-   * A username and password are provided and used to retrieve a bearer token.
-   *
-   * @param {Object} options
-   * @constructor
+   * @param {object} options Configuration options.
+   * @param {string} options.username The username used to obtain a bearer token.
+   * @param {string} options.password The password used to obtain a bearer token.
+   * @param {string} options.url The URL representing the Cloud Pak for Data token service endpoint.
+   * @throws `Error` The username, password, and/or url are not valid, or unspecified, for Cloud Pak For Data token
+   *   requests.
    */
   constructor(options: Options) {
     super(options);
@@ -48,8 +64,8 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
     this.username = options.username;
     this.password = options.password;
 
-    // the param names are shared between the authenticator and the token manager
-    // so we can just pass along the options object
+    // the param names are shared between the authenticator and the token
+    // manager so we can just pass along the options object
     this.tokenManager = new Cp4dTokenManager(options);
   }
 }

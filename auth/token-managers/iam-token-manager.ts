@@ -16,7 +16,6 @@
 
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
-import { getMissingParams } from '../../lib/helper';
 import logger from '../../lib/logger';
 import { computeBasicAuthHeader, validateInput } from '../utils';
 import { JwtTokenManager, TokenManagerOptions } from './jwt-token-manager';
@@ -43,6 +42,7 @@ interface Options extends TokenManagerOptions {
   clientSecret?: string;
 }
 
+// TODO: Remove this interface.
 // this interface is a representation of the response
 // object from the IAM service, hence the snake_case
 // parameter names
@@ -54,6 +54,11 @@ export interface IamTokenData {
   expiration: number;
 }
 
+/**
+ * The IAMTokenManager takes an api key and performs the necessary interactions with
+ * the IAM token service to obtain and store a suitable bearer token. Additionally, the IAMTokenManager
+ * will retrieve bearer tokens via basic auth using a supplied client_id and client_secret pair.
+ */
 export class IamTokenManager extends JwtTokenManager {
   protected requiredOptions = ['apikey'];
   private apikey: string;
@@ -61,14 +66,16 @@ export class IamTokenManager extends JwtTokenManager {
   private clientSecret: string;
 
   /**
-   * IAM Token Manager Service
    *
-   * Retreives and stores IAM access tokens.
+   * Create a new [[IamTokenManager]] instance.
    *
-   * @param {Object} options
-   * @param {String} options.apikey
-   * @param {String} options.iamAccessToken
-   * @param {String} options.iamUrl - url of the iam api to retrieve tokens from
+   * @param {object} options Configuration options.
+   * @param {string} options.apikey The IAM api key.
+   * @param {string=} options.clientId The client_id and client_secret fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @param {string=} options.clientSecret The client_id and client_secret fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @param {string} [url='https://iam.cloud.ibm.com/identity/token'] The IAM endpoint for token requests.
    * @constructor
    */
   constructor(options: Options) {
@@ -99,8 +106,8 @@ export class IamTokenManager extends JwtTokenManager {
    * If these values are not set, no Authorization header will be
    * set on the request (it is not required).
    *
-   * @param {string} clientId - The client id
-   * @param {string} clientSecret - The client secret
+   * @param {string} clientId - The client id.
+   * @param {string} clientSecret - The client secret.
    * @returns {void}
    */
   public setClientIdAndSecret(clientId: string, clientSecret: string): void {

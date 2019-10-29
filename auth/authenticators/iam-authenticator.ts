@@ -14,17 +14,39 @@
  * limitations under the License.
  */
 
-import { OutgoingHttpHeaders } from 'http';
 import { IamTokenManager } from '../token-managers';
 import { validateInput } from '../utils';
-import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
+import { BaseOptions, TokenRequestBasedAuthenticator }
+  from './token-request-based-authenticator';
 
+/**
+ * Configuration values for [[IamAuthenticator]] behavior. Requires an `apikey`
+ * field, and optionally a mutually inclusive` clientId`, and `clientSecret`pair.
+ */
 export interface Options extends BaseOptions {
+  /** The IAM api key */
   apikey: string;
+  /**
+   * The client_id and client_secret fields are used to form a "basic"
+   * authorization header for IAM token requests.
+   */
   clientId?: string;
+  /**
+   * The client_id and client_secret fields are used to form a "basic"
+   * authorization header for IAM token requests.
+   */
   clientSecret?: string;
 }
 
+/**
+ * The [[IamAuthenticator]] utilizes an `apikey`, or `clientId` and
+ *   `clientSecret` pair to obtain a suitable bearer token, via an
+ *   [[IamTokenManager]], and adds it to requests.
+ *
+ * The bearer token will be sent as an Authorization header in the form:
+ *
+ *      Authorization: Bearer <bearer-token>
+ */
 export class IamAuthenticator extends TokenRequestBasedAuthenticator {
   protected requiredOptions = ['apikey'];
   protected tokenManager: IamTokenManager;
@@ -33,14 +55,18 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
   private clientSecret: string;
 
   /**
-   * IAM Authenticator Class
    *
-   * Handles the IAM authentication pattern.
+   * Create a new [[IamAuthenticator]] instance with an internal [[IamTokenManager]].
    *
-   * @param {Object} options
-   * @constructor
+   * @param {object} options Configuration options.
+   * @param {string} options.apikey The IAM api key.
+   * @param {string=} options.clientId The client_id and client_secret fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @param {string=} options.clientSecret The client_id and client_secret fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @throws {Error} When the configuration options are not valid.
    */
-  constructor(options: Options) {    
+  constructor(options: Options) {
     super(options);
 
     validateInput(options, this.requiredOptions);
@@ -48,18 +74,18 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
     this.apikey = options.apikey;
     this.clientId = options.clientId;
     this.clientSecret = options.clientSecret;
-    
-    // the param names are shared between the authenticator and the token manager
-    // so we can just pass along the options object
+
+    // the param names are shared between the authenticator and the token
+    // manager so we can just pass along the options object
     this.tokenManager = new IamTokenManager(options);
   }
 
   /**
-   * Setter for the Client ID and the Client Secret. Both should be provided.
-   *
-   * @param {string} clientId
-   * @param {string} clientSecret
-   * @returns {void}
+   * Setter for the mutually inclusive `clientId` and the `clientSecret`.
+   * @param {string} clientId The client_id and client_secret fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @param {string} clientSecret The client_id and client_secret fields are used to form a "basic"
+   *   authorization header for IAM token requests.
    */
   public setClientIdAndSecret(clientId: string, clientSecret: string): void {
     this.clientId = clientId;

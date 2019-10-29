@@ -25,13 +25,25 @@ function getCurrentTime(): number {
 }
 
 export type TokenManagerOptions = {
+  /** The endpoint for token requests. */
   url?: string;
+  /** Headers to be sent with every service token request. */
   headers?: OutgoingHttpHeaders;
+  /**
+   * A flag that indicates whether verification of
+   *   the server's SSL certificate should be disabled or not.
+   */
   disableSslVerification?: boolean;
   /** Allow additional request config parameters */
   [propName: string]: any;
 }
 
+/**
+ * A class for shared functionality for parsing, storing, and requesting
+ * JWT tokens. Intended to be used as a parent to be extended for token
+ * request management. Child classes should implement `requestToken()`
+ * to retrieve the bearer token from intended sources.
+ */
 export class JwtTokenManager {
   protected url: string;
   protected tokenName: string;
@@ -42,14 +54,15 @@ export class JwtTokenManager {
   private expireTime: number;
 
   /**
-   * Token Manager Service
-   *
-   * Retreives and stores JSON web tokens.
-   *
-   * @param {Object} options
-   * @param {String} options.url - url of the api to retrieve tokens from
-   * @param {String} [options.accessToken] - user-managed access token
+   * Create a new [[JwtTokenManager]] instance.
    * @constructor
+   * @param {object} options Configuration options.
+   * @param {boolean} options.disableSslVerification A flag that indicates
+   *   whether verification of the token server's SSL certificate should be
+   *   disabled or not
+   * @param {string} options.url for HTTP token requests.
+   * @param {Object<string, string>} options.headers to be sent with every
+   *   outbound HTTP requests to token services.
    */
   constructor(options: TokenManagerOptions) {
     // all parameters are optional
@@ -71,13 +84,9 @@ export class JwtTokenManager {
   }
 
   /**
-   * This function returns a Promise that resolves with an access token, if successful.
-   * The source of the token is determined by the following logic:
-   * 1. If user provides their own managed access token, assume it is valid and send it
-   * 2. a) If this class is managing tokens and does not yet have one, make a request for one
-   *    b) If this class is managing tokens and the token has expired, request a new one
-   * 3. If this class is managing tokens and has a valid token stored, send it
-   *
+   * Retrieve a new token using `requestToken()` in the case there is not a
+   *   currently stored token from a previous call, or the previous token
+   *   has expired.
    */
   public getToken(): Promise<any> {
     if (!this.tokenInfo[this.tokenName] || this.isTokenExpired()) {
@@ -95,7 +104,8 @@ export class JwtTokenManager {
   /**
    * Setter for the disableSslVerification property.
    *
-   * @param {boolean} value - the new value for the disableSslVerification property
+   * @param {boolean} value - the new value for the disableSslVerification
+   *   property
    * @returns {void}
    */
   public setDisableSslVerification(value: boolean): void {
@@ -119,7 +129,7 @@ export class JwtTokenManager {
   }
 
   /**
-   * Request a JWT using an API key.
+   * Fully implemented and will be throw an error when called.
    *
    * @returns {Promise}
    */

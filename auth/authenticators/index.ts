@@ -14,6 +14,29 @@
  * limitations under the License.
  */
 
+/**
+ * @module auth
+ * The ibm-cloud-sdk-core module supports the following types of authentication:
+ *
+ * Basic Authentication
+ * Bearer Token
+ * Identity and Access Management (IAM)
+ * Cloud Pak for Data
+ * No Authentication
+ *
+ * The authentication types that are appropriate for a particular service may vary from service to service.
+ * Each authentication type is implemented as an Authenticator for consumption by a service.
+ *
+ * classes:
+ *   AuthenticatorInterface: Implement this class to provide custom authentication schemes to services.
+ *   Authenticator: Extend this class to provide custom authentication schemes to services.
+ *   BasicAuthenticator: Authenticator for passing supplied basic authentication information to service endpoint.
+ *   BearerTokenAuthenticator: Authenticator for passing supplied bearer token to service endpoint.
+ *   CloudPakForDataAuthenticator: Authenticator for passing CP4D authentication information to service endpoint.
+ *   IAMAuthenticator: Authenticator for passing IAM authentication information to service endpoint.
+ *   NoAuthAuthenticator: Performs no authentication. Useful for testing purposes.
+ */
+
 export { AuthenticatorInterface } from './authenticator-interface';
 export { Authenticator } from './authenticator';
 export { BasicAuthenticator } from './basic-authenticator';

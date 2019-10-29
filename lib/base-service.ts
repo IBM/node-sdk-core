@@ -17,13 +17,14 @@
 
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
-import semver = require('semver');
-import vcapServices = require('vcap_services');
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
 import logger from './logger';
 import { RequestWrapper } from './request-wrapper';
 
+/**
+ * Configuration values for a service.
+ */
 export interface UserOptions {
   /** The Authenticator object used to authenticate requests to the service */
   authenticator?: AuthenticatorInterface;
@@ -41,10 +42,20 @@ export interface UserOptions {
   [propName: string]: any;
 }
 
+/**
+ * Additional service configuration.
+ */
 export interface BaseServiceOptions extends UserOptions {
+  /** Querystring to be sent with every request. If not a string will be stringified. */
   qs: any;
 }
 
+/**
+ * Common functionality shared by generated service classes.
+ *
+ * The base service authenticates requests via its authenticator, stores cookies, and
+ * wraps responses from the service endpoint in DetailedResponse or APIException objects.
+ */
 export class BaseService {
   static URL: string;
   name: string;
@@ -53,17 +64,6 @@ export class BaseService {
   private authenticator: AuthenticatorInterface;
   private requestWrapperInstance;
 
-  /**
-   * Internal base class that other services inherit from
-   * @param {UserOptions} options
-   * @param {OutgoingHttpHeaders} [options.headers]
-   * @param {string} [options.url] - override default service base url
-   * @private
-   * @abstract
-   * @constructor
-   * @throws {Error}
-   * @returns {BaseService}
-   */
   constructor(userOptions: UserOptions) {
     if (!(this instanceof BaseService)) {
       const err = 'the "new" keyword is required to create service instances';
@@ -158,22 +158,22 @@ export class BaseService {
   /**
    * Wrapper around `sendRequest` that enforces the request will be authenticated.
    *
-   * @param {object} parameters - service request options passed in by user
-   * @param {string} parameters.options.method - the http method
-   * @param {string} parameters.options.url - the path portion of the URL to be appended to the serviceUr
-   * @param {object} [parameters.options.path] - the path parameters to be inserted into the URL
-   * @param {object} [parameters.options.qs] - the querystring to be included in the URL
-   * @param {object} [parameters.options.body] - the data to be sent as the request body
-   * @param {object} [parameters.options.form] - an object containing the key/value pairs for a www-form-urlencoded request
-   * @param {object} [parameters.options.formData] - an object containing the contents for a multipart/form-data request
+   * @param {object} parameters Service request options passed in by user.
+   * @param {string} parameters.options.method The http method.
+   * @param {string} parameters.options.url The path portion of the URL to be appended to the serviceUrl.
+   * @param {object} parameters.options.path The path parameters to be inserted into the URL.
+   * @param {object} parameters.options.qs The querystring to be included in the URL.
+   * @param {object} parameters.options.body The data to be sent as the request body.
+   * @param {object} parameters.options.form An object containing the key/value pairs for a www-form-urlencoded request.
+   * @param {object} parameters.options.formData An object containing the contents for a multipart/form-data request
    * The following processing is performed on formData values:
    * - string: no special processing -- the value is sent as is
    * - object: the value is converted to a JSON string before insertion into the form body
    * - NodeJS.ReadableStream|Buffer|FileWithMetadata: sent as a file, with any associated metadata
    * - array: each element of the array is sent as a separate form part using any special processing as described above
-   * @param {object} parameters.defaultOptions
-   * @param {string} parameters.defaultOptions.serviceUrl - the base URL of the service
-   * @param {OutgoingHttpHeaders} parameters.defaultOptions.headers - additional headers to be passed on the request
+   * @param {object} parameters.defaultOptions Options that can obe overridden for individual requests.
+   * @param {string} parameters.defaultOptions.serviceUrl The base URL of the service.
+   * @param {OutgoingHttpHeaders} parameters.defaultOptions.headers Additional headers to be passed on the request.
    * @returns {Promise<any>}
    */
   protected createRequest(parameters): Promise<any> {
