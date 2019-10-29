@@ -53,8 +53,8 @@ export interface BaseServiceOptions extends UserOptions {
 /**
  * Common functionality shared by generated service classes.
  *
- * The base service authenticates requests via its authenticator, stores cookies, and
- * wraps responses from the service endpoint in DetailedResponse or APIException objects.
+ * The base service authenticates requests via its authenticator, and sends
+ * them to the service endpoint.
  */
 export class BaseService {
   static URL: string;

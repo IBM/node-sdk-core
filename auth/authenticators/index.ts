@@ -15,7 +15,7 @@
  */
 
 /**
- * @module auth
+ * @module authenticators
  * The ibm-cloud-sdk-core module supports the following types of authentication:
  *
  * Basic Authentication

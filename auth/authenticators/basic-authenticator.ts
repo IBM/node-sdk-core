@@ -47,7 +47,7 @@ export class BasicAuthenticator extends Authenticator {
   /**
    * Create a new BearerTokenAuthenticator instance.
    *
-   * @param {Object<string, string>} options Configuration options for basic authentication.
+   * @param {object} options Configuration options for basic authentication.
    * @param {string} options.username The username portion of basic authentication.
    * @param {string} options.password The password portion of basic authentication.
    * @throws {Error} The configuration options are not valid.
