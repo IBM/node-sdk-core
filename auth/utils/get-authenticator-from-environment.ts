@@ -32,9 +32,9 @@ import { readExternalSources } from './read-external-sources';
  * Look for external configuration of authenticator.
  *
  * Try to get authenticator from external sources, with the following priority:
- * 1. Credentials file(ibm-credentials.env)
+ * 1. Credentials file (ibm-credentials.env)
  * 2. Environment variables
- * 3. VCAP Services(Cloud Foundry)
+ * 3. VCAP Services (Cloud Foundry)
  *
  * @param {string} serviceName The service name prefix.
  *

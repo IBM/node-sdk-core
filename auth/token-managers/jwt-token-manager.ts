@@ -129,11 +129,6 @@ export class JwtTokenManager {
     this.headers = headers;
   }
 
-  /**
-   * Fully implemented and will be throw an error when called.
-   *
-   * @returns {Promise}
-   */
   protected requestToken(): Promise<any> {
     const errMsg = '`requestToken` MUST be overridden by a subclass of JwtTokenManagerV1.';
     const err = new Error(errMsg);
