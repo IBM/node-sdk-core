@@ -20,7 +20,7 @@ import { OutgoingHttpHeaders } from 'http';
 // but to avoid a circular dependency or a refactor, this will do for now
 
 /**
- * The request object containing the field called headers that
+ * The request object containing the headers property that
  * authentication information will be added too.
  */
 export interface AuthenticateOptions {

@@ -64,9 +64,8 @@ export class BearerTokenAuthenticator extends Authenticator {
   }
 
   /**
-   * Add a bearer token to the request.
-   *
-   * The bearer token will be sent as an Authorization header in the form:
+   * Add a bearer token to the `request`. The bearer token information
+   * will be added to the Authorization property of`request.headers` in the form:
    *
    *      Authorization: Bearer <bearer-token>
    *

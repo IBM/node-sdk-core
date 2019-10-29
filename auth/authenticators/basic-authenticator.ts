@@ -61,9 +61,8 @@ export class BasicAuthenticator extends Authenticator {
   }
 
   /**
-   * Add basic authentication information to request.
-   *
-   * Basic Authorization will be sent as an Authorization header in the form:
+   * Add basic authentication information to `request`. The basic authentication information
+   * will be added to the Authorization property of`request.headers` in the form:
    *
    *     Authorization: Basic <encoded username and password>
    *

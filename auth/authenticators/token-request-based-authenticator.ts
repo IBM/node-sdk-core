@@ -105,9 +105,8 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
   }
 
   /**
-   * Adds bearer token information to the passed in request object. The
-   * bearer token information will be added to the Authorization field of:
-   * `request.headers` in the form:
+   * Adds bearer token information to `request`. The bearer token information
+   * will be added to the Authorization property of`request.headers` in the form:
    *
    *     Authorization: Bearer <bearer-token>
    *
