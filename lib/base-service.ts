@@ -128,7 +128,7 @@ export class BaseService {
   /**
    * Set the service URL to send requests to.
    *
-   * @param {string} the base URL for the service
+   * @param {string} url The base URL for the service.
    */
   public setServiceUrl(url: string): void {
     this.baseOptions.serviceUrl = url;
@@ -137,8 +137,8 @@ export class BaseService {
   /**
    * Configure the service using external configuration
    *
-   * @param {string} the name of the service. Will be used to read from external
-   * configuration
+   * @param {string} serviceName The name of the service. Will be used to read from external
+   * configuration.
    */
   protected configureService(serviceName: string): void {
     if (!serviceName) {

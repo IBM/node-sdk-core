@@ -48,7 +48,7 @@ const fromHeader = (buffer: Buffer): string => {
  * Note: Blob and File objects include a .type property, but we're ignoring it because it's frequently either
  * incorrect (e.g. video/ogg instead of audio/ogg) or else a different format than what's expected (e.g. audio/x-wav)
  *
- * @param {String|ReadableStream|FileObject|Buffer|File} file - string filename or url, or binary File/Blob object
+ * @param {String|ReadableStream|FileObject|Buffer|File} file String filename or url, or binary File/Blob object.
  * @return {String|undefined}
  */
 const fromFilename = (file: String | NodeJS.ReadableStream | FileObject | Buffer | File): string => {
