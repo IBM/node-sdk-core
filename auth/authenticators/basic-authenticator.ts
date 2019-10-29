@@ -61,7 +61,7 @@ export class BasicAuthenticator extends Authenticator {
   }
 
   /**
-   * Add basic authentication information to options.
+   * Add basic authentication information to request.
    *
    * Basic Authorization will be sent as an Authorization header in the form:
    *

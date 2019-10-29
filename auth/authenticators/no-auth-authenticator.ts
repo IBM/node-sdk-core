@@ -23,12 +23,12 @@ import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-int
  * Provides a way to use a service without specifying credentials.
  *
  */
-export class NoAuthAuthenticator extends Authenticator implements AuthenticatorInterface {
+export class NoAuthAuthenticator extends Authenticator {
   constructor() {
     super();
   }
 
-  public authenticate(options: AuthenticateOptions): Promise<void> {
+  public authenticate(request: AuthenticateOptions): Promise<void> {
     // immediately proceed to request. it will probably fail
     return Promise.resolve();
   }
