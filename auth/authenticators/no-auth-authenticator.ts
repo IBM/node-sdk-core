@@ -15,7 +15,7 @@
  */
 
 import { Authenticator } from './authenticator';
-import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
+import { AuthenticateOptions } from './authenticator-interface';
 
 /**
  * NoAuth Authenticator Class
