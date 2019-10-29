@@ -36,22 +36,11 @@ function onlyOne(a: any, b: any): boolean {
 
 const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
 
+/** Configuration options for IAM token retrieval. */
 interface Options extends TokenManagerOptions {
   apikey: string;
   clientId?: string;
   clientSecret?: string;
-}
-
-// TODO: Remove this interface.
-// this interface is a representation of the response
-// object from the IAM service, hence the snake_case
-// parameter names
-export interface IamTokenData {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-  expires_in: number;
-  expiration: number;
 }
 
 /**

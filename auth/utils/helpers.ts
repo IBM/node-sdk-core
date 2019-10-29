@@ -58,8 +58,8 @@ export function checkCredentials(obj: any, credsToCheck: string[]) : Error | nul
 }
 
 /**
- * @param options - A configuration object.
- * @param requiredOptions - The list of of properties the options must have specified.
+ * @param {object} options - A configuration options object.
+ * @param {string[]} requiredOptions - The list of of properties the options must have specified.
  */
 export function validateInput(options: any, requiredOptions: string[]): void {
   // check for required params

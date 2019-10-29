@@ -19,9 +19,7 @@ import { validateInput } from '../utils';
 import { BaseOptions, TokenRequestBasedAuthenticator }
   from './token-request-based-authenticator';
 
-/**
- * Configuration values for CloudPakForData Authenticator.
- */
+/** Configuration options for CloudPakForData authentication. */
 export interface Options extends BaseOptions {
   /** The username used to obtain a bearer token. */
   username: string;
@@ -49,7 +47,7 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
   /**
    * Create a new [[CloudPakForDataAuthenticator]] instance with an internal [[Cp4dTokenManager]].
    *
-   * @param {object} options Configuration options.
+   * @param {object} options Configuration options for CloudPakForData authentication.
    * @param {string} options.username The username used to obtain a bearer token.
    * @param {string} options.password The password used to obtain a bearer token.
    * @param {string} options.url The URL representing the Cloud Pak for Data token service endpoint.

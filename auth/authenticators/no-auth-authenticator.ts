@@ -17,12 +17,12 @@
 import { Authenticator } from './authenticator';
 import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
 
-  /**
-   * NoAuth Authenticator Class
-   *
-   * Provides a way to use a service without specifying credentials.
-   *
-   */
+/**
+ * NoAuth Authenticator Class
+ *
+ * Provides a way to use a service without specifying credentials.
+ *
+ */
 export class NoAuthAuthenticator extends Authenticator implements AuthenticatorInterface {
   constructor() {
     super();

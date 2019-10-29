@@ -20,9 +20,7 @@ import { JwtTokenManager } from '../token-managers';
 import { Authenticator } from './authenticator';
 import { AuthenticateOptions } from './authenticator-interface';
 
-/**
- * Configuration options for TokenRequestBasedAuthenticators.
- */
+/** Configuration options for token-based authentication. */
 export type BaseOptions = {
   /** Headers to be sent with every outbound HTTP requests to token services. */
   headers?: OutgoingHttpHeaders;

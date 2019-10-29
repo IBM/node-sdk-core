@@ -24,6 +24,7 @@ function getCurrentTime(): number {
   return Math.floor(Date.now() / 1000);
 }
 
+/** Configuration options for JWT token retrieval. */
 export type TokenManagerOptions = {
   /** The endpoint for token requests. */
   url?: string;

@@ -19,9 +19,7 @@ import { computeBasicAuthHeader, validateInput } from '../utils';
 import { Authenticator } from './authenticator';
 import { AuthenticateOptions } from './authenticator-interface';
 
-/*
- * Configuration values for basic authentication.
- */
+/** Configuration options for basic authentication. */
 export type Options = {
   /** The username to be used in basic authorization. */
   username: string;
@@ -49,7 +47,7 @@ export class BasicAuthenticator extends Authenticator {
   /**
    * Create a new BearerTokenAuthenticator instance.
    *
-   * @param {Object<string, string>} options Configuration options.
+   * @param {Object<string, string>} options Configuration options for basic authentication.
    * @param {string} options.username The username portion of basic authentication.
    * @param {string} options.password The password portion of basic authentication.
    * @throws {Error} The configuration options are not valid.
@@ -73,7 +71,7 @@ export class BasicAuthenticator extends Authenticator {
    * @param {Object.<string, string>} request.headers - The headers the
    *   authentication information will be added too.
    */
-  public authenticate(request: AuthenticateOptions): Promise<void> {
+  public authenticate(request: AuthenticateOptions): Promise<void | Error>  {
     return new Promise((resolve) => {
       request.headers = extend(true, {}, request.headers, this.authHeader);
       resolve();

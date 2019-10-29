@@ -18,7 +18,7 @@ import extend = require('extend');
 import { computeBasicAuthHeader, validateInput } from '../utils';
 import { JwtTokenManager, TokenManagerOptions } from './jwt-token-manager';
 
-/** Configuration options. */
+/** Configuration options for CP4D token retrieval. */
 interface Options extends TokenManagerOptions {
   /** The endpoint for CP4D token requests. */
   url: string;
@@ -47,7 +47,7 @@ export interface CpdTokenData {
  * Token Manager of CloudPak for data.
  *
  * The Token Manager performs basic auth with a username and password
- *    to acquire CP4D tokens.
+ * to acquire CP4D tokens.
  */
 export class Cp4dTokenManager extends JwtTokenManager {
   protected requiredOptions = ['username', 'password', 'url'];

@@ -19,10 +19,7 @@ import { validateInput } from '../utils';
 import { BaseOptions, TokenRequestBasedAuthenticator }
   from './token-request-based-authenticator';
 
-/**
- * Configuration values for [[IamAuthenticator]] behavior. Requires an `apikey`
- * field, and optionally a mutually inclusive` clientId`, and `clientSecret`pair.
- */
+/** Configuration options for IAM authentication. */
 export interface Options extends BaseOptions {
   /** The IAM api key */
   apikey: string;
@@ -58,7 +55,7 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
    *
    * Create a new [[IamAuthenticator]] instance with an internal [[IamTokenManager]].
    *
-   * @param {object} options Configuration options.
+   * @param {object} options Configuration options for IAM authentication.
    * @param {string} options.apikey The IAM api key.
    * @param {string=} options.clientId The client_id and client_secret fields are used to form a "basic"
    *   authorization header for IAM token requests.
