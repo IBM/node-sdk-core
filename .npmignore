@@ -1,7 +1,6 @@
 test/resources
 test/unit
 test/.eslintrc.js
-node_modules
 coverage
 .jshintignore
 .hshintrc
@@ -9,13 +8,10 @@ examples
 .editorconfig
 .jshintrc
 .travis.yml
-.DS_Store
 # documentation files
-LICENSE
+CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 RELEASE.md
-CONTRIBUTING.md
-CHANGELOG.md
 jsdoc/
 doc/
 dependency-lint.yml
@@ -24,6 +20,7 @@ transform.js
 scripts/
 # this is created in the build on travis ci when it updates the docs in the gh-pages branch
 gh-pages/
+tsconfig.json
 tslint.json
 typings.json
 typings
@@ -34,5 +31,8 @@ typings
 .eslintcache
 .eslintignore
 .gitattributes
+.prettierrc
+.releaserc
+commitlint.config.js
 *.ts
 !*.d.ts
