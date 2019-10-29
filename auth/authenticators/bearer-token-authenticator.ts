@@ -72,7 +72,7 @@ export class BearerTokenAuthenticator extends Authenticator {
    * @param {object} request - The request to augment with authentication
    *   information.
    * @param {Object.<string, string>} request.headers - The headers the
-   *   authentication information will be added too.
+   *   authentication information will be added to.
    */
   public authenticate(request: AuthenticateOptions): Promise<void> {
     return new Promise((resolve) => {

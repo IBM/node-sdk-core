@@ -24,7 +24,7 @@ export interface Options extends BaseOptions {
   /** The IAM api key */
   apikey: string;
   /**
-   * The client_id and client_secret fields are used to form a "basic"
+   * The `clientId` and `clientSecret` fields are used to form a "basic"
    * authorization header for IAM token requests.
    */
   clientId?: string;
