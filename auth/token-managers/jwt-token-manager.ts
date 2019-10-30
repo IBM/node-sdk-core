@@ -58,10 +58,10 @@ export class JwtTokenManager {
    * Create a new [[JwtTokenManager]] instance.
    * @constructor
    * @param {object} options Configuration options.
-   * @param {boolean} options.disableSslVerification A flag that indicates
+   * @param {string} options.url for HTTP token requests.
+   * @param {boolean} [options.disableSslVerification] A flag that indicates
    *   whether verification of the token server's SSL certificate should be
    *   disabled or not.
-   * @param {string} options.url for HTTP token requests.
    * @param {object<string, string>} [options.headers] Headers to be sent with every
    *   outbound HTTP requests to token services.
    */
