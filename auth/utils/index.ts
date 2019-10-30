@@ -18,12 +18,6 @@
  * @module utils
  * Helper functions used by generated SDKs.
  *
- * Identity and Access Management (IAM)
- * Cloud Pak for Data
- *
- * The token managers sit inside of an authenticator and do the work to retrieve
- * tokens where as the authenticators add these tokens to the actual request.
- *
  * functions:
  *   getAuthenticatorFromEnvironment: Get authenticator from external sources.
  *   readExternalSources: Get config object from external sources.
