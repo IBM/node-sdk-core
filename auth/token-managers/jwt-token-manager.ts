@@ -129,6 +129,11 @@ export class JwtTokenManager {
     this.headers = headers;
   }
 
+  /**
+   * Request a JWT using an API key.
+   *
+   * @returns {Promise}
+   */
   protected requestToken(): Promise<any> {
     const errMsg = '`requestToken` MUST be overridden by a subclass of JwtTokenManagerV1.';
     const err = new Error(errMsg);
