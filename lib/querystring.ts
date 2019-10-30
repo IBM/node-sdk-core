@@ -5,7 +5,7 @@
  * Properly url-encoding percent characters causes it to reject the token
  * So, this is a custom qs.stringify function that properly encodes everything except watson-token, passing it along verbatim
  *
- * @param {Object<string, Object>} queryParams
+ * @param {object<string, object>} queryParams
  * @return {String}
  */
 const stringify = (queryParams: Object): string => {
