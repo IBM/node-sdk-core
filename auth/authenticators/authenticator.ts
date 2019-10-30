@@ -39,13 +39,13 @@ export class Authenticator implements AuthenticatorInterface {
   /**
    * Augment the request with authentication information.
    *
-   * @param {object} request - The request to augment with authentication information.
-   * @param {object.<string, string>} request.headers - The headers the
+   * @param {object} requestOptions - The request to augment with authentication information.
+   * @param {object.<string, string>} requestOptions.headers - The headers the
    *   authentication information will be added too.
    * @throws {Error} - The authenticate method was not implemented by a
    *   subclass.
    */
-  public authenticate(request: AuthenticateOptions): Promise<void | Error> {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
     const error = new Error('Should be implemented by subclass!');
     return Promise.reject(error);
   }

@@ -36,9 +36,10 @@ export interface Options extends BaseOptions {
 }
 
 /**
- * The [[IamAuthenticator]] utilizes an `apikey`, or `clientId` and
- *   `clientSecret` pair to obtain a suitable bearer token, via an
- *   [[IamTokenManager]], and adds it to requests.
+ * The [[IamAuthenticator]] utilizes an `apikey` to obtain a suitable bearer
+ * token and adds it to requests. If specified the optional mutually inclusive
+ * `clientId` and`clientSecret` pair can be used to influence rate-limiting for
+ * requests to the IAM token server.
  *
  * The bearer token will be sent as an Authorization header in the form:
  *
@@ -53,7 +54,7 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
 
   /**
    *
-   * Create a new [[IamAuthenticator]] instance with an internal [[IamTokenManager]].
+   * Create a new [[IamAuthenticator]] instance.
    *
    * @param {object} options Configuration options for IAM authentication.
    * @param {boolean} options.disableSslVerification A flag that indicates

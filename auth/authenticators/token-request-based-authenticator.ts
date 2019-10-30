@@ -110,16 +110,16 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
    *
    *     Authorization: Bearer <bearer-token>
    *
-   * @param {object} request - The request to augment with authentication
+   * @param {object} requestOptions - The request to augment with authentication
    *   information.
-   * @param {object.<string, string>} request.headers - The headers the
+   * @param {object.<string, string>} requestOptions.headers - The headers the
    *   authentication information will be added too. Overrides default headers
    *   where there's conflict.
    */
-  public authenticate(request: AuthenticateOptions): Promise<void | Error> {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
     return this.tokenManager.getToken().then(token => {
       const authHeader = { Authorization: `Bearer ${token}` };
-      request.headers = extend(true, {}, request.headers, authHeader);
+      requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
       return;
     });
   }

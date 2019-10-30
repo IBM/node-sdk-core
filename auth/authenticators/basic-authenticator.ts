@@ -66,13 +66,13 @@ export class BasicAuthenticator extends Authenticator {
    *
    *     Authorization: Basic <encoded username and password>
    *
-   * @param {object} request - The request to augment with authentication information.
-   * @param {object.<string, string>} request.headers - The headers the
+   * @param {object} requestOptions - The request to augment with authentication information.
+   * @param {object.<string, string>} requestOptions.headers - The headers the
    *   authentication information will be added too.
    */
-  public authenticate(request: AuthenticateOptions): Promise<void | Error>  {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error>  {
     return new Promise((resolve) => {
-      request.headers = extend(true, {}, request.headers, this.authHeader);
+      requestOptions.headers = extend(true, {}, requestOptions.headers, this.authHeader);
       resolve();
     });
   }

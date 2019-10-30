@@ -31,8 +31,7 @@ export interface Options extends BaseOptions {
 
 /**
  * The [[CloudPakForDataAuthenticator]] utilizes a username and password pair to
- *   obtain a suitable bearer token, via a [[Cp4dTokenManager]], and adds it
- *   requests.
+ *   obtain a suitable bearer token and sets them in requests.
  *
  * The bearer token will be sent as an Authorization header in the form:
  *
@@ -45,7 +44,7 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
   private username: string;
   private password: string;
   /**
-   * Create a new [[CloudPakForDataAuthenticator]] instance with an internal [[Cp4dTokenManager]].
+   * Create a new [[CloudPakForDataAuthenticator]] instance.
    *
    * @param {object} options Configuration options for CloudPakForData authentication.
    * @param {boolean} options.disableSslVerification A flag that indicates

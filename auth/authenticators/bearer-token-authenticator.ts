@@ -26,8 +26,8 @@ export type Options = {
 }
 
 /**
- * The BearerTokenAuthenticator will add a passed-in or set bearer token
- *   to requests.
+ * The BearerTokenAuthenticator will set a user-provided bearer token
+ *   in requests.
  *
  * The bearer token will be sent as an Authorization header in the form:
  *
@@ -54,7 +54,7 @@ export class BearerTokenAuthenticator extends Authenticator {
   }
 
   /**
-   * Set a new bearer token to be sent in subsequent service operations.
+   * Set a new bearer token to be sent in subsequent requests.
    *
    * @param {string} bearerToken The bearer token that will be sent in service
    *   requests.
@@ -69,15 +69,15 @@ export class BearerTokenAuthenticator extends Authenticator {
    *
    *      Authorization: Bearer <bearer-token>
    *
-   * @param {object} request - The request to augment with authentication
+   * @param {object} requestOptions - The request to augment with authentication
    *   information.
-   * @param {object.<string, string>} request.headers - The headers the
+   * @param {object.<string, string>} requestOptions.headers - The headers the
    *   authentication information will be added to.
    */
-  public authenticate(request: AuthenticateOptions): Promise<void> {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     return new Promise((resolve) => {
       const authHeader = { Authorization: `Bearer ${this.bearerToken}` };
-      request.headers = extend(true, {}, request.headers, authHeader);
+      requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
       resolve();
     });
   }
