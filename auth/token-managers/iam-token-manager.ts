@@ -46,7 +46,7 @@ interface Options extends TokenManagerOptions {
 /**
  * The IAMTokenManager takes an api key and performs the necessary interactions with
  * the IAM token service to obtain and store a suitable bearer token. Additionally, the IAMTokenManager
- * will retrieve bearer tokens via basic auth using a supplied client_id and client_secret pair.
+ * will retrieve bearer tokens via basic auth using a supplied `clientId` and `clientSecret` pair.
  */
 export class IamTokenManager extends JwtTokenManager {
   protected requiredOptions = ['apikey'];
@@ -60,9 +60,9 @@ export class IamTokenManager extends JwtTokenManager {
    *
    * @param {object} options Configuration options.
    * @param {string} options.apikey The IAM api key.
-   * @param {string=} options.clientId The client_id and client_secret fields are used to form a "basic"
+   * @param {string=} options.clientId The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
-   * @param {string=} options.clientSecret The client_id and client_secret fields are used to form a "basic"
+   * @param {string=} options.clientSecret The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
    * @param {string} [url='https://iam.cloud.ibm.com/identity/token'] The IAM endpoint for token requests.
    * @constructor

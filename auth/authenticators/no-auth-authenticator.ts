@@ -18,10 +18,9 @@ import { Authenticator } from './authenticator';
 import { AuthenticateOptions } from './authenticator-interface';
 
 /**
- * NoAuth Authenticator Class
- *
- * Provides a way to use a service without specifying credentials.
- *
+ * NoAuthAuthenticator is a placeholder authenticator implementation which
+ * performs no authentication of outgoing REST API requests. It might be
+ * useful during development and testing.
  */
 export class NoAuthAuthenticator extends Authenticator {
   constructor() {

@@ -171,7 +171,7 @@ export class BaseService {
    * - object: the value is converted to a JSON string before insertion into the form body
    * - NodeJS.ReadableStream|Buffer|FileWithMetadata: sent as a file, with any associated metadata
    * - array: each element of the array is sent as a separate form part using any special processing as described above
-   * @param {object} parameters.defaultOptions Options that can obe overridden for individual requests.
+   * @param {object} parameters.defaultOptions
    * @param {string} parameters.defaultOptions.serviceUrl The base URL of the service.
    * @param {OutgoingHttpHeaders} parameters.defaultOptions.headers Additional headers to be passed on the request.
    * @returns {Promise<any>}
