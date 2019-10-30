@@ -65,6 +65,11 @@ export class IamTokenManager extends JwtTokenManager {
    * @param {string=} options.clientSecret The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
    * @param {string} [url='https://iam.cloud.ibm.com/identity/token'] The IAM endpoint for token requests.
+   * @param {boolean} [options.disableSslVerification] A flag that indicates
+   *   whether verification of the token server's SSL certificate should be
+   *   disabled or not.
+   * @param {object<string, string>} [options.headers] Headers to be sent with every
+   *   outbound HTTP requests to token services.
    * @constructor
    */
   constructor(options: Options) {
@@ -89,7 +94,7 @@ export class IamTokenManager extends JwtTokenManager {
   }
 
   /**
-   * Set the IAM 'client_id' and 'client_secret' values.
+   * Set the IAM `clientId` and `clientSecret` values.
    * These values are used to compute the Authorization header used
    * when retrieving the IAM access token.
    * If these values are not set, no Authorization header will be

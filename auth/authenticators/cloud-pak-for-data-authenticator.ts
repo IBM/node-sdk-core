@@ -47,11 +47,11 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
    * Create a new [[CloudPakForDataAuthenticator]] instance.
    *
    * @param {object} options Configuration options for CloudPakForData authentication.
-   * @param {boolean} options.disableSslVerification A flag that indicates
+   * @param {boolean} [options.disableSslVerification] A flag that indicates
    *   whether verification of the token server's SSL certificate should be
    *   disabled or not
    * @param {string} options.url For HTTP token requests.
-   * @param {object<string, string>} options.headers to be sent with every
+   * @param {object<string, string>} [options.headers] to be sent with every
    * @param {string} options.username The username used to obtain a bearer token.
    * @param {string} options.password The password used to obtain a bearer token.
    * @throws `Error` The username, password, and/or url are not valid, or unspecified, for Cloud Pak For Data token

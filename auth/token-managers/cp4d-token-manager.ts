@@ -61,9 +61,11 @@ export class Cp4dTokenManager extends JwtTokenManager {
    * @param {string} options.username The username portion of basic authentication.
    * @param {string} options.password The password portion of basic authentication.
    * @param {string} options.url The endpoint for CP4D token requests.
-   * @param {boolean} options.disableSslVerification A flag that indicates
+   * @param {boolean} [options.disableSslVerification] A flag that indicates
    *   whether verification of the token server's SSL certificate should be
    *   disabled or not.
+   * @param {object<string, string>} [options.headers] Headers to be sent with every
+   *   outbound HTTP requests to token services.
    * @constructor
    */
   constructor(options: Options) {

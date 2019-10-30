@@ -63,7 +63,19 @@ export class BaseService {
   protected baseOptions: BaseServiceOptions;
   private authenticator: AuthenticatorInterface;
   private requestWrapperInstance;
-
+  /**
+   * Configuration values for a service.
+   * @param {Authenticator} userOptions.authenticator Object used to authenticate requests to the service.
+   * @param {string} [userOptions.serviceUrl] The base url to use when contacting the service.
+   *   The base url may differ between IBM Cloud regions.
+   * @param {object<string, string>} [userOptions.headers] Default headers that shall be
+   *   included with every request to the service.
+   * @param {string} [userOptions.version] The API version date to use with the service,
+   *   in "YYYY-MM-DD" format.
+   * @param {boolean} [userOptions.disableSslVerification] A flag that indicates
+   *   whether verification of the token server's SSL certificate should be
+   *   disabled or not.
+   */
   constructor(userOptions: UserOptions) {
     if (!(this instanceof BaseService)) {
       const err = 'the "new" keyword is required to create service instances';
