@@ -21,7 +21,7 @@ import { OutgoingHttpHeaders } from 'http';
 
 /**
  * The request object containing the headers property that
- * authentication information will be added too.
+ * authentication information will be added to.
  */
 export interface AuthenticateOptions {
   /**
