@@ -60,7 +60,7 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
    *   whether verification of the token server's SSL certificate should be
    *   disabled or not
    * @param {string} options.url for HTTP token requests.
-   * @param {Object<string, string>} options.headers to be sent with every
+   * @param {object<string, string>} options.headers to be sent with every
    *   outbound HTTP requests to token services.
    */
   constructor(options: BaseOptions) {
@@ -92,8 +92,8 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
   /**
    * Set headers.
    *
-   * @param {Object<string, string>} headers Default headers to be sent with
-   *   every Cloud Pak For Data token request.
+   * @param {object<string, string>} headers Default headers to be sent with
+   *   every Cloud Pak For Data token request. Overwrites previous default headers.
    */
   public setHeaders(headers: OutgoingHttpHeaders): void {
     if (typeof headers !== 'object') {
@@ -106,14 +106,15 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
 
   /**
    * Adds bearer token information to `request`. The bearer token information
-   * will be added to the Authorization property of`request.headers` in the form:
+   * will be set in the Authorization property of`request.headers` in the form:
    *
    *     Authorization: Bearer <bearer-token>
    *
    * @param {object} request - The request to augment with authentication
    *   information.
-   * @param {Object.<string, string>} request.headers - The headers the
-   *   authentication information will be added too.
+   * @param {object.<string, string>} request.headers - The headers the
+   *   authentication information will be added too. Overrides default headers
+   *   where there's conflict.
    */
   public authenticate(request: AuthenticateOptions): Promise<void | Error> {
     return this.tokenManager.getToken().then(token => {

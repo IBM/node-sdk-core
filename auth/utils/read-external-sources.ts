@@ -66,7 +66,7 @@ function getProperties(serviceName: string): any {
  * For example, if service.name is speech_to_text,
  * env properties are SPEECH_TO_TEXT_USERNAME and SPEECH_TO_TEXT_PASSWORD
  *
- * @param {Object} envObj - the object containing the credentials keyed by environment variables
+ * @param {object} envObj - the object containing the credentials keyed by environment variables
  * @returns {Credentials}
  */
 function filterPropertiesByServiceName(envObj: any, serviceName: string): any {

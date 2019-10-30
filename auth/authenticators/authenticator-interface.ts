@@ -41,7 +41,7 @@ export interface AuthenticatorInterface {
    * Add authentication information to the specified request.
    *
    * @param {object} options The request to augment with authentication information.
-   * @param {Object.<string, string>} options.headers The headers the
+   * @param {object.<string, string>} options.headers The headers the
    *   authentication information will be added too.
    */
   authenticate(request: AuthenticateOptions): Promise<void | Error>

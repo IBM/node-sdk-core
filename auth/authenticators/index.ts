@@ -24,8 +24,8 @@
  * Cloud Pak for Data
  * No Authentication
  *
- * The authentication types that are appropriate for a particular service may vary from service to service.
- * Each authentication type is implemented as an Authenticator for consumption by a service.
+ * The supported authentication types may vary from service to service. Each
+ * authentication type is implemented as an Authenticator for consumption by a service.
  *
  * classes:
  *   AuthenticatorInterface: Implement this class to provide custom authentication schemes to services.

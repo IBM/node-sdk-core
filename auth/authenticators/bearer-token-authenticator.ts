@@ -65,13 +65,13 @@ export class BearerTokenAuthenticator extends Authenticator {
 
   /**
    * Add a bearer token to the `request`. The bearer token information
-   * will be added to the Authorization property of`request.headers` in the form:
+   * will be set in the Authorization property of`request.headers` in the form:
    *
    *      Authorization: Bearer <bearer-token>
    *
    * @param {object} request - The request to augment with authentication
    *   information.
-   * @param {Object.<string, string>} request.headers - The headers the
+   * @param {object.<string, string>} request.headers - The headers the
    *   authentication information will be added to.
    */
   public authenticate(request: AuthenticateOptions): Promise<void> {

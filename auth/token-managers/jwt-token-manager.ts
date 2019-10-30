@@ -62,7 +62,7 @@ export class JwtTokenManager {
    *   whether verification of the token server's SSL certificate should be
    *   disabled or not
    * @param {string} options.url for HTTP token requests.
-   * @param {Object<string, string>} options.headers to be sent with every
+   * @param {object<string, string>} options.headers to be sent with every
    *   outbound HTTP requests to token services.
    */
   constructor(options: TokenManagerOptions) {

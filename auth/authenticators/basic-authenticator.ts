@@ -62,12 +62,12 @@ export class BasicAuthenticator extends Authenticator {
 
   /**
    * Add basic authentication information to `request`. The basic authentication information
-   * will be added to the Authorization property of`request.headers` in the form:
+   * will be set in the Authorization property of`request.headers` in the form:
    *
    *     Authorization: Basic <encoded username and password>
    *
    * @param {object} request - The request to augment with authentication information.
-   * @param {Object.<string, string>} request.headers - The headers the
+   * @param {object.<string, string>} request.headers - The headers the
    *   authentication information will be added too.
    */
   public authenticate(request: AuthenticateOptions): Promise<void | Error>  {

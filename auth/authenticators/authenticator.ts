@@ -40,7 +40,7 @@ export class Authenticator implements AuthenticatorInterface {
    * Augment the request with authentication information.
    *
    * @param {object} request - The request to augment with authentication information.
-   * @param {Object.<string, string>} request.headers - The headers the
+   * @param {object.<string, string>} request.headers - The headers the
    *   authentication information will be added too.
    * @throws {Error} - The authenticate method was not implemented by a
    *   subclass.

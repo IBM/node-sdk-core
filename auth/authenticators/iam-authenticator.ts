@@ -56,6 +56,11 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
    * Create a new [[IamAuthenticator]] instance with an internal [[IamTokenManager]].
    *
    * @param {object} options Configuration options for IAM authentication.
+   * @param {boolean} options.disableSslVerification A flag that indicates
+   *   whether verification of the token server's SSL certificate should be
+   *   disabled or not
+   * @param {string} options.url for HTTP token requests.
+   * @param {object<string, string>} options.headers to be sent with every
    * @param {string} options.apikey The IAM api key.
    * @param {string=} options.clientId The client_id and client_secret fields are used to form a "basic"
    *   authorization header for IAM token requests.
