@@ -64,9 +64,9 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
    * @param {string} options.url for HTTP token requests.
    * @param {object<string, string>} options.headers to be sent with every
    * @param {string} options.apikey The IAM api key.
-   * @param {string=} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
+   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
-   * @param {string=} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
+   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
    * @throws {Error} When the configuration options are not valid.
    */

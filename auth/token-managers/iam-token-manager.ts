@@ -60,9 +60,9 @@ export class IamTokenManager extends JwtTokenManager {
    *
    * @param {object} options Configuration options.
    * @param {string} options.apikey The IAM api key.
-   * @param {string=} options.clientId The `clientId` and `clientSecret` fields are used to form a "basic"
+   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
-   * @param {string=} options.clientSecret The `clientId` and `clientSecret` fields are used to form a "basic"
+   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
    * @param {string} [url='https://iam.cloud.ibm.com/identity/token'] The IAM endpoint for token requests.
    * @param {boolean} [options.disableSslVerification] A flag that indicates
