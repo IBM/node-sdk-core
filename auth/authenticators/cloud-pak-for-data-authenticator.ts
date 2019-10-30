@@ -30,7 +30,8 @@ export interface Options extends BaseOptions {
 }
 
 /**
- * The [[CloudPakForDataAuthenticator]] utilizes a username and password pair to
+ * The [[CloudPakForDataAuthenticator]] will use the user-supplied  url, username and password values to obtain
+ a bearer token from a token server.  When the bearer token expires, a new token is obtained from the token server.
  *   obtain a suitable bearer token, via a [[Cp4dTokenManager]], and adds it
  *   requests.
  *
