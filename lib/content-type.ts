@@ -29,7 +29,7 @@ const filenameContentTypes: { [key: string]: string } = {
  * Takes the beginning of an audio file and returns the associated content-type / mime type
  *
  * @param {Buffer} buffer With at least the first 4 bytes of the file
- * @return {String|undefined} The contentType of undefined
+ * @return {String|undefined} The contentType or undefined
  */
 const fromHeader = (buffer: Buffer): string => {
   const headerStr = buffer
