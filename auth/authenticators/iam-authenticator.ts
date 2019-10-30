@@ -38,8 +38,8 @@ export interface Options extends BaseOptions {
 /**
  * The [[IamAuthenticator]] will use the user-supplied `apikey`
  * values to obtain a bearer token from a token server.  When the bearer token
- * expires, a new token is obtained from the token server. If specified the
- * optional mutually inclusive `clientId` and`clientSecret` pair can be used to
+ * expires, a new token is obtained from the token server. If specified, the
+ * optional, mutually inclusive `clientId` and`clientSecret` pair can be used to
  * influence rate-limiting for requests to the IAM token server.
  *
  * The bearer token will be sent as an Authorization header in the form:

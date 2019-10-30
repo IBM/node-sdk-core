@@ -27,7 +27,7 @@ export class NoAuthAuthenticator extends Authenticator {
     super();
   }
 
-  public authenticate(request: AuthenticateOptions): Promise<void> {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     // immediately proceed to request. it will probably fail
     return Promise.resolve();
   }
