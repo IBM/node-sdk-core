@@ -172,12 +172,12 @@ export class BaseService {
    *
    * @param {object} parameters Service request options passed in by user.
    * @param {string} parameters.options.method The http method.
-   * @param {string} parameters.options.url The path portion of the URL to be appended to the serviceUrl.
-   * @param {object} parameters.options.path The path parameters to be inserted into the URL.
-   * @param {object} parameters.options.qs The querystring to be included in the URL.
-   * @param {object} parameters.options.body The data to be sent as the request body.
-   * @param {object} parameters.options.form An object containing the key/value pairs for a www-form-urlencoded request.
-   * @param {object} parameters.options.formData An object containing the contents for a multipart/form-data request
+   * @param {string} [parameters.options.url] The path portion of the URL to be appended to the serviceUrl.
+   * @param {object} [parameters.options.path] The path parameters to be inserted into the URL.
+   * @param {object} [parameters.options.qs] The querystring to be included in the URL.
+   * @param {object} [parameters.options.body] The data to be sent as the request body.
+   * @param {object} [parameters.options.form] An object containing the key/value pairs for a www-form-urlencoded request.
+   * @param {object} [parameters.options.formData] An object containing the contents for a multipart/form-data request
    * The following processing is performed on formData values:
    * - string: no special processing -- the value is sent as is
    * - object: the value is converted to a JSON string before insertion into the form body
