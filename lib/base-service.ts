@@ -172,7 +172,7 @@ export class BaseService {
    *
    * @param {object} parameters Service request options passed in by user.
    * @param {string} parameters.options.method The http method.
-   * @param {string} [parameters.options.url] The path portion of the URL to be appended to the serviceUrl.
+   * @param {string} parameters.options.url The path portion of the URL to be appended to the serviceUrl.
    * @param {object} [parameters.options.path] The path parameters to be inserted into the URL.
    * @param {object} [parameters.options.qs] The querystring to be included in the URL.
    * @param {object} [parameters.options.body] The data to be sent as the request body.
