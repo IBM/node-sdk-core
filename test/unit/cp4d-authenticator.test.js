@@ -31,7 +31,6 @@ const getTokenSpy = jest
 describe('CP4D Authenticator', () => {
   it('should store all CONFIG options on the class', () => {
     const authenticator = new CloudPakForDataAuthenticator(CONFIG);
-
     expect(authenticator.username).toBe(CONFIG.username);
     expect(authenticator.password).toBe(CONFIG.password);
     expect(authenticator.url).toBe(CONFIG.url);

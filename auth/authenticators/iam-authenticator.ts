@@ -14,17 +14,38 @@
  * limitations under the License.
  */
 
-import { OutgoingHttpHeaders } from 'http';
 import { IamTokenManager } from '../token-managers';
 import { validateInput } from '../utils';
-import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
+import { BaseOptions, TokenRequestBasedAuthenticator }
+  from './token-request-based-authenticator';
 
+/** Configuration options for IAM authentication. */
 export interface Options extends BaseOptions {
+  /** The IAM api key */
   apikey: string;
+  /**
+   * The `clientId` and `clientSecret` fields are used to form a "basic"
+   * authorization header for IAM token requests.
+   */
   clientId?: string;
+  /**
+   * The `clientId` and `clientSecret` fields are used to form a "basic"
+   * authorization header for IAM token requests.
+   */
   clientSecret?: string;
 }
 
+/**
+ * The [[IamAuthenticator]] will use the user-supplied `apikey`
+ * values to obtain a bearer token from a token server.  When the bearer token
+ * expires, a new token is obtained from the token server. If specified, the
+ * optional, mutually inclusive `clientId` and`clientSecret` pair can be used to
+ * influence rate-limiting for requests to the IAM token server.
+ *
+ * The bearer token will be sent as an Authorization header in the form:
+ *
+ *      Authorization: Bearer <bearer-token>
+ */
 export class IamAuthenticator extends TokenRequestBasedAuthenticator {
   protected requiredOptions = ['apikey'];
   protected tokenManager: IamTokenManager;
@@ -33,14 +54,23 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
   private clientSecret: string;
 
   /**
-   * IAM Authenticator Class
    *
-   * Handles the IAM authentication pattern.
+   * Create a new [[IamAuthenticator]] instance.
    *
-   * @param {Object} options
-   * @constructor
+   * @param {object} options Configuration options for IAM authentication.
+   * @param {boolean} options.disableSslVerification A flag that indicates
+   *   whether verification of the token server's SSL certificate should be
+   *   disabled or not
+   * @param {string} options.url for HTTP token requests.
+   * @param {object<string, string>} options.headers to be sent with every
+   * @param {string} options.apikey The IAM api key.
+   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @throws {Error} When the configuration options are not valid.
    */
-  constructor(options: Options) {    
+  constructor(options: Options) {
     super(options);
 
     validateInput(options, this.requiredOptions);
@@ -48,18 +78,18 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
     this.apikey = options.apikey;
     this.clientId = options.clientId;
     this.clientSecret = options.clientSecret;
-    
-    // the param names are shared between the authenticator and the token manager
-    // so we can just pass along the options object
+
+    // the param names are shared between the authenticator and the token
+    // manager so we can just pass along the options object
     this.tokenManager = new IamTokenManager(options);
   }
 
   /**
-   * Setter for the Client ID and the Client Secret. Both should be provided.
-   *
-   * @param {string} clientId
-   * @param {string} clientSecret
-   * @returns {void}
+   * Setter for the mutually inclusive `clientId` and the `clientSecret`.
+   * @param {string} clientId The `clientId` and `clientSecret` fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @param {string} clientSecret The `clientId` and `clientSecret` fields are used to form a "basic"
+   *   authorization header for IAM token requests.
    */
   public setClientIdAndSecret(clientId: string, clientSecret: string): void {
     this.clientId = clientId;

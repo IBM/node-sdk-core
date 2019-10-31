@@ -17,43 +17,62 @@
 import extend = require('extend');
 import { computeBasicAuthHeader, validateInput } from '../utils';
 import { Authenticator } from './authenticator';
-import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
+import { AuthenticateOptions } from './authenticator-interface';
 
+/** Configuration options for basic authentication. */
 export type Options = {
+  /** The username to be used in basic authorization. */
   username: string;
+  /** The password to be used in basic authorization. */
   password: string;
 }
 
-export class BasicAuthenticator extends Authenticator implements AuthenticatorInterface {
+
+/**
+ * The BasicAuthenticator is used to add basic authentication information to
+ *   requests.
+ *
+ * Basic Authorization will be sent as an Authorization header in the form:
+ *
+ *     Authorization: Basic <encoded username and password>
+ *
+ */
+export class BasicAuthenticator extends Authenticator {
   protected requiredOptions = ['username', 'password'];
-  private username: string;
-  private password: string;
+
+  protected authHeader: {
+    Authorization: string;
+  };
 
   /**
-   * Basic Authenticator Class
+   * Create a new BasicAuthenticator instance.
    *
-   * Handles the Basic Authentication pattern.
-   *
-   * @param {Object} options
-   * @param {String} options.username
-   * @param {String} options.password
-   * @constructor
+   * @param {object} options Configuration options for basic authentication.
+   * @param {string} options.username The username portion of basic authentication.
+   * @param {string} options.password The password portion of basic authentication.
+   * @throws {Error} The configuration options are not valid.
    */
   constructor(options: Options) {
     super();
-
     validateInput(options, this.requiredOptions);
-
-    this.username = options.username;
-    this.password = options.password;
+    const { username, password } = options;
+    const authHeaderString = computeBasicAuthHeader(username, password);
+    this.authHeader = { Authorization: authHeaderString }
   }
 
-  public authenticate(options: AuthenticateOptions): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const authHeaderString = computeBasicAuthHeader(this.username, this.password);
-      const authHeader = { Authorization: authHeaderString }
-
-      options.headers = extend(true, {}, options.headers, authHeader);
+  /**
+   * Add basic authentication information to `request`. The basic authentication information
+   * will be set in the Authorization property of`request.headers` in the form:
+   *
+   *     Authorization: Basic <encoded username and password>
+   *
+   * @param {object} requestOptions - The request to augment with authentication information.
+   * @param {object.<string, string>} requestOptions.headers - The headers the
+   *   authentication information will be added too.
+   */
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error>  {
+    return new Promise((resolve) => {
+      requestOptions.headers = extend(true, {}, requestOptions.headers, this.authHeader);
       resolve();
     });
   }

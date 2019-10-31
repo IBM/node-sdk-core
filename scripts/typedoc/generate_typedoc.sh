@@ -3,4 +3,5 @@
     ./lib/base-service.ts ./lib/content-type.ts \
     ./lib/helper.ts ./lib/querystring.ts \
     ./lib/request-wrapper.ts \
-    ./lib/stream-to-promise.ts --target "ES5"
+    ./lib/stream-to-promise.ts \
+    ./auth --target "ES5"

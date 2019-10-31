@@ -160,11 +160,11 @@ export function getFormat(
 }
 
 /**
- * this function builds a `form-data` object for each file parameter
- * @param {FileWithMetadata} fileParam - the file parameter
- * @param {NodeJS.ReadableStream|Buffer} fileParam.data - the data content of the file
- * @param (string) fileParam.filename - the filename of the file
- * @param {string} fileParam.contentType - the content type of the file
+ * This function builds a `form-data` object for each file parameter.
+ * @param {FileWithMetadata} fileParam The file parameter.
+ * @param {NodeJS.ReadableStream|Buffer} fileParam.data The data content of the file.
+ * @param {string} fileParam.filename The filename of the file.
+ * @param {string} fileParam.contentType The content type of the file.
  * @returns {FileObject}
  */
 export function buildRequestFileObject(
@@ -213,9 +213,9 @@ export function buildRequestFileObject(
 }
 
 /**
- * this function converts an object's keys to lower case
+ * This function converts an object's keys to lower case.
  * note: does not convert nested keys
- * @param {Object} obj - the object to convert the keys of
+ * @param {Object} obj The object to convert the keys of.
  * @returns {Object}
  */
 export function toLowerKeys(obj: Object): Object {

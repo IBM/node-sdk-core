@@ -16,7 +16,6 @@
 
 import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
-import { getMissingParams } from '../../lib/helper';
 import logger from '../../lib/logger';
 import { computeBasicAuthHeader, validateInput } from '../utils';
 import { JwtTokenManager, TokenManagerOptions } from './jwt-token-manager';
@@ -37,23 +36,18 @@ function onlyOne(a: any, b: any): boolean {
 
 const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
 
+/** Configuration options for IAM token retrieval. */
 interface Options extends TokenManagerOptions {
   apikey: string;
   clientId?: string;
   clientSecret?: string;
 }
 
-// this interface is a representation of the response
-// object from the IAM service, hence the snake_case
-// parameter names
-export interface IamTokenData {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-  expires_in: number;
-  expiration: number;
-}
-
+/**
+ * The IAMTokenManager takes an api key and performs the necessary interactions with
+ * the IAM token service to obtain and store a suitable bearer token. Additionally, the IAMTokenManager
+ * will retrieve bearer tokens via basic auth using a supplied `clientId` and `clientSecret` pair.
+ */
 export class IamTokenManager extends JwtTokenManager {
   protected requiredOptions = ['apikey'];
   private apikey: string;
@@ -61,14 +55,21 @@ export class IamTokenManager extends JwtTokenManager {
   private clientSecret: string;
 
   /**
-   * IAM Token Manager Service
    *
-   * Retreives and stores IAM access tokens.
+   * Create a new [[IamTokenManager]] instance.
    *
-   * @param {Object} options
-   * @param {String} options.apikey
-   * @param {String} options.iamAccessToken
-   * @param {String} options.iamUrl - url of the iam api to retrieve tokens from
+   * @param {object} options Configuration options.
+   * @param {string} options.apikey The IAM api key.
+   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
+   *   authorization header for IAM token requests.
+   * @param {string} [url='https://iam.cloud.ibm.com/identity/token'] The IAM endpoint for token requests.
+   * @param {boolean} [options.disableSslVerification] A flag that indicates
+   *   whether verification of the token server's SSL certificate should be
+   *   disabled or not.
+   * @param {object<string, string>} [options.headers] Headers to be sent with every
+   *   outbound HTTP requests to token services.
    * @constructor
    */
   constructor(options: Options) {
@@ -93,14 +94,14 @@ export class IamTokenManager extends JwtTokenManager {
   }
 
   /**
-   * Set the IAM 'client_id' and 'client_secret' values.
+   * Set the IAM `clientId` and `clientSecret` values.
    * These values are used to compute the Authorization header used
    * when retrieving the IAM access token.
    * If these values are not set, no Authorization header will be
    * set on the request (it is not required).
    *
-   * @param {string} clientId - The client id
-   * @param {string} clientSecret - The client secret
+   * @param {string} clientId - The client id.
+   * @param {string} clientSecret - The client secret.
    * @returns {void}
    */
   public setClientIdAndSecret(clientId: string, clientSecret: string): void {

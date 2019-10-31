@@ -18,29 +18,50 @@ import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import { JwtTokenManager } from '../token-managers';
 import { Authenticator } from './authenticator';
-import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
+import { AuthenticateOptions } from './authenticator-interface';
 
+/** Configuration options for token-based authentication. */
 export type BaseOptions = {
+  /** Headers to be sent with every outbound HTTP requests to token services. */
   headers?: OutgoingHttpHeaders;
+  /**
+   * A flag that indicates whether verification of the token server's SSL
+   * certificate should be disabled or not.
+   */
   disableSslVerification?: boolean;
+  /** Endpoint for HTTP token requests. */
   url?: string;
   /** Allow additional request config parameters */
   [propName: string]: any;
 }
 
-export class TokenRequestBasedAuthenticator extends Authenticator implements AuthenticatorInterface {
+/**
+ * Class for common functionality shared by token-request authenticators.
+ * [[TokenRequestBasedAuthenticator]]s use token managers to retrieve, store,
+ * and refresh tokens. Not intended to be used as stand-alone authenticator,
+ * but as parent class to authenticators that have their own token manager
+ * implementations.
+ *
+ * The tokens will be added as an Authorization headers in the form:
+ *
+ *      Authorization: Bearer <bearer-token>
+ */
+export class TokenRequestBasedAuthenticator extends Authenticator {
   protected tokenManager: JwtTokenManager;
   protected url: string;
   protected headers: OutgoingHttpHeaders;
   protected disableSslVerification: boolean;
 
   /**
-   * Request Based Authenticator Class
+   * Create a new [[TokenRequestBasedAuthenticator]] instance with an internal [[JwtTokenManager]].
    *
-   * Handles authentication patterns that invoke requests for bearer tokens.
-   *
-   * @param {Object} options
-   * @constructor
+   * @param {object} options Configuration options.
+   * @param {string} options.url for HTTP token requests.
+   * @param {boolean} [options.disableSslVerification] A flag that indicates
+   *   whether verification of the token server's SSL certificate should be
+   *   disabled or not.
+   * @param {object<string, string>} [options.headers] to be sent with every
+   *   outbound HTTP requests to token services.
    */
   constructor(options: BaseOptions) {
     super();
@@ -51,16 +72,15 @@ export class TokenRequestBasedAuthenticator extends Authenticator implements Aut
     // default to empty object
     this.headers = options.headers || {};
 
-    // this class must be extended by a subclass - the JwtTokenManager
-    // will fail upon requesting a token
     this.tokenManager = new JwtTokenManager(options);
   }
 
   /**
-   * Setter for the disableSslVerification property.
+   * Set the flag that indicates whether verification of the server's SSL
+   * certificate should be disabled or not.
    *
-   * @param {boolean} value - the new value for the disableSslVerification property
-   * @returns {void}
+   * @param {boolean} value A flag that indicates whether verification of the
+   *   token server's SSL certificate should be disabled or not.
    */
   public setDisableSslVerification(value: boolean): void {
     // if they try to pass in a non-boolean value,
@@ -70,10 +90,10 @@ export class TokenRequestBasedAuthenticator extends Authenticator implements Aut
   }
 
   /**
-   * Set a completely new set of headers.
+   * Set headers.
    *
-   * @param {OutgoingHttpHeaders} headers - the new set of headers as an object
-   * @returns {void}
+   * @param {object<string, string>} headers Default headers to be sent with
+   *   every Cloud Pak For Data token request. Overwrites previous default headers.
    */
   public setHeaders(headers: OutgoingHttpHeaders): void {
     if (typeof headers !== 'object') {
@@ -84,10 +104,22 @@ export class TokenRequestBasedAuthenticator extends Authenticator implements Aut
     this.tokenManager.setHeaders(this.headers);
   }
 
-  public authenticate(options: AuthenticateOptions): Promise<void | Error> {
+  /**
+   * Adds bearer token information to `request`. The bearer token information
+   * will be set in the Authorization property of`request.headers` in the form:
+   *
+   *     Authorization: Bearer <bearer-token>
+   *
+   * @param {object} requestOptions - The request to augment with authentication
+   *   information.
+   * @param {object.<string, string>} requestOptions.headers - The headers the
+   *   authentication information will be added too. Overrides default headers
+   *   where there's conflict.
+   */
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
     return this.tokenManager.getToken().then(token => {
       const authHeader = { Authorization: `Bearer ${token}` };
-      options.headers = extend(true, {}, options.headers, authHeader);
+      requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
       return;
     });
   }

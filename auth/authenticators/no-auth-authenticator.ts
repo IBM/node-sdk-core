@@ -15,21 +15,19 @@
  */
 
 import { Authenticator } from './authenticator';
-import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-interface';
+import { AuthenticateOptions } from './authenticator-interface';
 
-export class NoAuthAuthenticator extends Authenticator implements AuthenticatorInterface {
-  /**
-   * NoAuth Authenticator Class
-   *
-   * Provides a way to use a service without specifying credentials.
-   *
-   * @constructor
-   */
-  constructor() {    
+/**
+ * NoAuthAuthenticator is a placeholder authenticator implementation which
+ * performs no authentication of outgoing REST API requests. It might be
+ * useful during development and testing.
+ */
+export class NoAuthAuthenticator extends Authenticator {
+  constructor() {
     super();
   }
 
-  public authenticate(options: AuthenticateOptions): Promise<void> {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     // immediately proceed to request. it will probably fail
     return Promise.resolve();
   }

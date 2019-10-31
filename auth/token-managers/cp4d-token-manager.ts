@@ -15,13 +15,16 @@
  */
 
 import extend = require('extend');
-import { getMissingParams } from '../../lib/helper';
 import { computeBasicAuthHeader, validateInput } from '../utils';
 import { JwtTokenManager, TokenManagerOptions } from './jwt-token-manager';
 
+/** Configuration options for CP4D token retrieval. */
 interface Options extends TokenManagerOptions {
+  /** The endpoint for CP4D token requests. */
   url: string;
+  /** The username portion of basic authentication. */
   username: string;
+  /** The password portion of basic authentication. */
   password: string;
 }
 
@@ -40,22 +43,29 @@ export interface CpdTokenData {
   accessToken: string;
 }
 
+/**
+ * Token Manager of CloudPak for data.
+ *
+ * The Token Manager performs basic auth with a username and password
+ * to acquire CP4D tokens.
+ */
 export class Cp4dTokenManager extends JwtTokenManager {
   protected requiredOptions = ['username', 'password', 'url'];
   private username: string;
   private password: string;
 
   /**
-   * ICP Token Manager Service
+   * Create a new [[Cp4dTokenManager]] instance.
    *
-   * Retreives and stores ICP access tokens.
-   *
-   * @param {Object} options
-   * @param {String} options.username
-   * @param {String} options.password
-   * @param {String} options.accessToken - user-managed access token
-   * @param {String} options.url - URL for the CP4D cluster
-   * @param {Boolean} options.disableSslVerification - disable SSL verification for token request
+   * @param {object} options Configuration options.
+   * @param {string} options.username The username portion of basic authentication.
+   * @param {string} options.password The password portion of basic authentication.
+   * @param {string} options.url The endpoint for CP4D token requests.
+   * @param {boolean} [options.disableSslVerification] A flag that indicates
+   *   whether verification of the token server's SSL certificate should be
+   *   disabled or not.
+   * @param {object<string, string>} [options.headers] Headers to be sent with every
+   *   outbound HTTP requests to token services.
    * @constructor
    */
   constructor(options: Options) {
@@ -76,11 +86,6 @@ export class Cp4dTokenManager extends JwtTokenManager {
     this.password = options.password;
   }
 
-  /**
-   * Request an CP4D token using a basic auth header.
-   *
-   * @returns {Promise}
-   */
   protected requestToken(): Promise<any> {
     // these cannot be overwritten
     const requiredHeaders = {

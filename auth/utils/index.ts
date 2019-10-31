@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
+/**
+ * @module utils
+ * Helper functions used by generated SDKs.
+ *
+ * functions:
+ *   getAuthenticatorFromEnvironment: Get authenticator from external sources.
+ *   readExternalSources: Get config object from external sources.
+ */
+
+
+
 export * from './helpers';
 export * from './read-credentials-file';
 export { getAuthenticatorFromEnvironment } from './get-authenticator-from-environment';
