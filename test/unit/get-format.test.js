@@ -1,6 +1,6 @@
 'use strict';
 
-const { getFormat } = require('../../lib/helper');
+const { getFormat } = require('../../dist/lib/helper');
 
 describe('getFormat', function() {
   test('should return null if params is undefined', function() {

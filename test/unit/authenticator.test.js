@@ -1,6 +1,6 @@
 'use strict';
 
-const { Authenticator } = require('../../auth');
+const { Authenticator } = require('../../dist/auth');
 
 describe('Authenticator', () => {
   it('should throw if "new" keyword is not used to create an instance', () => {

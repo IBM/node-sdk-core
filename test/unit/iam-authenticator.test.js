@@ -1,7 +1,7 @@
 'use strict';
 
-const { IamAuthenticator } = require('../../auth');
-const { IamTokenManager } = require('../../auth');
+const { IamAuthenticator } = require('../../dist/auth');
+const { IamTokenManager } = require('../../dist/auth');
 
 // mock the `getToken` method in the token manager - dont make any rest calls
 const fakeToken = 'iam-acess-token';

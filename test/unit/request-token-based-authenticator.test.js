@@ -1,7 +1,7 @@
 'use strict';
 
-const { TokenRequestBasedAuthenticator } = require('../../auth');
-const { JwtTokenManager } = require('../../auth');
+const { TokenRequestBasedAuthenticator } = require('../../dist/auth');
+const { JwtTokenManager } = require('../../dist/auth');
 
 describe('Request Based Token Authenticator', () => {
   const config = {

@@ -7,10 +7,10 @@ const {
   CloudPakForDataAuthenticator,
   IamAuthenticator,
   NoAuthAuthenticator,
-} = require('../../auth');
+} = require('../../dist/auth');
 
 // create a mock for the read-external-sources module
-const readExternalSourcesModule = require('../../auth/utils/read-external-sources');
+const readExternalSourcesModule = require('../../dist/auth/utils/read-external-sources');
 const readExternalSourcesMock = (readExternalSourcesModule.readExternalSources = jest.fn());
 
 const SERVICE_NAME = 'dummy';

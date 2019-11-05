@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const toPromise = require('../../lib/stream-to-promise').streamToPromise;
+const toPromise = require('../../dist/lib/stream-to-promise').streamToPromise;
 
 describe('toPromise()', () => {
   it('should resolve with results buffer as a string', () => {

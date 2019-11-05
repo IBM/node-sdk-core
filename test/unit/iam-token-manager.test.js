@@ -1,16 +1,16 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-jest.mock('../../lib/request-wrapper');
-const { RequestWrapper } = require('../../lib/request-wrapper');
-const logger = require('../../lib/logger').default;
+jest.mock('../../dist/lib/request-wrapper');
+const { RequestWrapper } = require('../../dist/lib/request-wrapper');
+const logger = require('../../dist/lib/logger').default;
 
 const jwt = require('jsonwebtoken');
 jwt.decode = jest.fn(() => {
   return { exp: 100, iat: 100 };
 });
 
-const { IamTokenManager } = require('../../auth');
+const { IamTokenManager } = require('../../dist/auth');
 const mockSendRequest = jest.fn();
 
 RequestWrapper.mockImplementation(() => {

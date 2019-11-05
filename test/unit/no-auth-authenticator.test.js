@@ -1,6 +1,6 @@
 'use strict';
 
-const { NoAuthAuthenticator } = require('../../auth');
+const { NoAuthAuthenticator } = require('../../dist/auth');
 
 describe('NoAuth Authenticator', () => {
   it('should resolve Promise on authenticate', async done => {
