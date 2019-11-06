@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const { constructFilepath, fileExistsAtPath, readCredentialsFile } = require('../../auth');
+const { constructFilepath, fileExistsAtPath, readCredentialsFile } = require('../../dist/auth');
 
 describe('browser scenario', () => {
   const existSync = fs.existsSync;

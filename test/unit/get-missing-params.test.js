@@ -1,6 +1,6 @@
 'use strict';
 
-const { getMissingParams } = require('../../lib/helper');
+const { getMissingParams } = require('../../dist/lib/helper');
 
 describe('getMissingParams', function() {
   it('should return null when both params and requires are null', function() {

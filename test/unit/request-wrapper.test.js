@@ -14,7 +14,7 @@ mockAxiosInstance.interceptors = {
 };
 axios.default.create.mockReturnValue(mockAxiosInstance);
 
-const { RequestWrapper } = require('../../lib/request-wrapper');
+const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 const requestWrapperInstance = new RequestWrapper();
 
 describe('axios', () => {

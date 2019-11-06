@@ -1,6 +1,6 @@
 'use strict';
 
-const { readExternalSources } = require('../../auth');
+const { readExternalSources } = require('../../dist/auth');
 
 // constants
 const SERVICE_NAME = 'test_service';

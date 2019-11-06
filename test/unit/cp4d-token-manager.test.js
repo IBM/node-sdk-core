@@ -1,11 +1,11 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-const { Cp4dTokenManager } = require('../../auth');
+const { Cp4dTokenManager } = require('../../dist/auth');
 
 // mock sendRequest
-jest.mock('../../lib/request-wrapper');
-const { RequestWrapper } = require('../../lib/request-wrapper');
+jest.mock('../../dist/lib/request-wrapper');
+const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 const mockSendRequest = jest.fn();
 RequestWrapper.mockImplementation(() => {
   return {

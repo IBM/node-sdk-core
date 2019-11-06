@@ -3,7 +3,9 @@
   "verifyConditions": ["@semantic-release/changelog", "@semantic-release/npm", "@semantic-release/git"],
   "prepare": ["@semantic-release/changelog", "@semantic-release/npm", "@semantic-release/git"],
   "publish": [
-    "@semantic-release/npm",
+    ["@semantic-release/npm", {
+      "pkgRoot": "dist"
+    }],
     {
       "path": "@semantic-release/github"
     }

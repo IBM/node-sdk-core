@@ -1,6 +1,6 @@
 'use strict';
 
-const { BasicAuthenticator } = require('../../auth');
+const { BasicAuthenticator } = require('../../dist/auth');
 
 const USERNAME = 'dave';
 const PASSWORD = 'grohl';

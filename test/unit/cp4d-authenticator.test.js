@@ -1,7 +1,7 @@
 'use strict';
 
-const { CloudPakForDataAuthenticator } = require('../../auth');
-const { Cp4dTokenManager } = require('../../auth');
+const { CloudPakForDataAuthenticator } = require('../../dist/auth');
+const { Cp4dTokenManager } = require('../../dist/auth');
 
 const USERNAME = 'danmullen';
 const PASSWORD = 'gogators';

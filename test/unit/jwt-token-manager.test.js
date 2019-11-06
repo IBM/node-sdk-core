@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 'use strict';
 
-const { JwtTokenManager } = require('../../auth');
+const { JwtTokenManager } = require('../../dist/auth');
 const jwt = require('jsonwebtoken');
 
 function getCurrentTime() {

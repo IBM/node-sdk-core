@@ -1,6 +1,6 @@
 'use strict';
 
-const contentType = require('../../lib/content-type').default;
+const contentType = require('../../dist/lib/content-type').default;
 const fs = require('fs');
 const path = require('path');
 

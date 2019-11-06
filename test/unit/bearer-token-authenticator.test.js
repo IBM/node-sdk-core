@@ -1,6 +1,6 @@
 'use strict';
 
-const { BearerTokenAuthenticator } = require('../../auth');
+const { BearerTokenAuthenticator } = require('../../dist/auth');
 
 describe('Bearer Token Authenticator', () => {
   const config = {
