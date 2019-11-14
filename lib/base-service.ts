@@ -123,9 +123,6 @@ export class BaseService {
     }
 
     this.authenticator = options.authenticator;
-
-    // temp: call the configureService method to ensure compatibility
-    this.configureService(this.name);
   }
 
   /**

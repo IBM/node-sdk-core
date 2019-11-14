@@ -16,7 +16,6 @@
 
 import camelcase = require('camelcase');
 import isEmpty = require('lodash.isempty');
-import vcapServices = require('vcap_services');
 import { readCredentialsFile } from './read-credentials-file';
 
 /**
@@ -97,8 +96,28 @@ function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
  * Pulls credentials from VCAP_SERVICES env property that IBM Cloud sets
  *
  */
+function getCredentials(name) {
+  if (process.env.VCAP_SERVICES) {
+    let services = JSON.parse(process.env.VCAP_SERVICES);
+    for (let service_name in services) {
+      for (let i = 0; i < services[service_name].length; i++) {
+        let instance = services[service_name][i];
+        if (instance['name'] === name) {
+          return instance.credentials || {};
+        }
+      }
+    }
+    for (let service_name in services) {
+      if (service_name === name) {
+        return services[service_name][0].credentials || {};
+      }
+    }
+  }
+  return {};
+}
+
 function getCredentialsFromCloud(serviceName: string): any {
-  const credentials = vcapServices.getCredentials(serviceName);
+  const credentials = getCredentials(serviceName);
   // infer authentication type from credentials in a simple manner
   // iam is used as the default later
   if (credentials.username || credentials.password) {
