@@ -182,7 +182,7 @@ describe('Base Service', () => {
     expect(readExternalSourcesMock.mock.calls[0][0]).toBe(DEFAULT_NAME);
   });
 
-  it('should build the base options from different sources', () => {
+  it('should build the base options without configuring service from external sources', () => {
     readExternalSourcesMock.mockImplementation(() => ({
       disableSsl: true,
     }));
@@ -195,13 +195,12 @@ describe('Base Service', () => {
 
     expect(testService.baseOptions).toEqual({
       serviceUrl: 'withtrailingslash.com/api',
-      disableSslVerification: true,
+      disableSslVerification: false,
       proxy: false,
       qs: EMPTY_OBJECT,
       authenticator: AUTHENTICATOR,
     });
-    expect(readExternalSourcesMock).toHaveBeenCalled();
-    expect(readExternalSourcesMock.mock.calls[0][0]).toBe(DEFAULT_NAME);
+    expect(readExternalSourcesMock).toHaveBeenCalledTimes(0);
   });
 
   it('should send the default options to the authenticate method', () => {
