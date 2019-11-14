@@ -98,18 +98,17 @@ function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
  */
 function getCredentials(name) {
   if (process.env.VCAP_SERVICES) {
-    let services = JSON.parse(process.env.VCAP_SERVICES);
-    for (let service_name in services) {
-      for (let i = 0; i < services[service_name].length; i++) {
-        let instance = services[service_name][i];
+    const services = JSON.parse(process.env.VCAP_SERVICES);
+    for (const serviceName of Object.keys(services)) {
+      for (const instance of services[serviceName]) {
         if (instance['name'] === name) {
           return instance.credentials || {};
         }
       }
     }
-    for (let service_name in services) {
-      if (service_name === name) {
-        return services[service_name][0].credentials || {};
+    for (const serviceName in services) {
+      if (serviceName === name) {
+        return services[serviceName][0].credentials || {};
       }
     }
   }
