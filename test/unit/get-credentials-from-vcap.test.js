@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const { readExternalSources } = require('../../auth');
+const { readExternalSources } = require('../../dist/auth');
 
 describe('getCredentialsFromVcap', () => {
   beforeAll(() => {
