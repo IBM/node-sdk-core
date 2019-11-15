@@ -51,7 +51,7 @@ function getProperties(serviceName: string): any {
   }
 
   if (isEmpty(properties)) {
-    properties = getCredentialsFromCloud(serviceName);
+    properties = getPropertiesFromVCAP(serviceName);
   }
 
   return properties;
@@ -96,7 +96,7 @@ function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
  * Pulls credentials from VCAP_SERVICES env property that IBM Cloud sets
  *
  */
-function getCredentials(name) {
+function getVCAPCredentialsForService(name) {
   if (process.env.VCAP_SERVICES) {
     const services = JSON.parse(process.env.VCAP_SERVICES);
     for (const serviceName of Object.keys(services)) {
@@ -119,8 +119,8 @@ function getCredentials(name) {
   return {};
 }
 
-function getCredentialsFromCloud(serviceName: string): any {
-  const credentials = getCredentials(serviceName);
+function getPropertiesFromVCAP(serviceName: string): any {
+  const credentials = getVCAPCredentialsForService(serviceName);
   // infer authentication type from credentials in a simple manner
   // iam is used as the default later
   if (credentials.username || credentials.password) {
