@@ -58,8 +58,6 @@ export interface BaseServiceOptions extends UserOptions {
  */
 export class BaseService {
   static URL: string;
-  name: string;
-  serviceVersion: string;
   protected baseOptions: BaseServiceOptions;
   private authenticator: AuthenticatorInterface;
   private requestWrapperInstance;
