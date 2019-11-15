@@ -1,0 +1,65 @@
+{
+  "discovery": [{
+      "name": "discovery1",
+      "label": "discovery",
+      "plan": "experimental",
+      "credentials": {
+        "url": "https://gateway.watsonplatform1.net/discovery-experimental/api",
+        "username": "not-a-username",
+        "password": "not-a-password"
+      }
+    },
+    {
+      "name": "discovery2",
+      "label": "discovery2",
+      "plan": "experimental",
+      "credentials": {
+        "url": "https://gateway.watsonplatform2.net/discovery-experimental/api",
+        "username": "not-a-username",
+        "password": "not-a-password"
+      }
+    }
+  ],
+  "language_translator": [{
+    "name": "language_translator_docs",
+    "label": "language_translator",
+    "plan": "standard",
+    "credentials": {
+      "apikey": "123456789",
+      "iam_apikey_description": "Auto generated apikey...",
+      "iam_apikey_name": "auto-generated-apikey-111-222-333",
+      "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+      "iam_serviceid_crn": "crn:v1:staging:public:iam-identity::a/::serviceid:ServiceID-1234",
+      "url": "https://gateway.watsonplatform.net/language-translator/api",
+      "iam_url": "https://iam.cloud.ibm.com/identity/token"
+    }
+  }],
+  "alchemy_api": [{
+    "name": "alchemy_api_free_docs",
+    "label": "alchemy_api",
+    "plan": "Free",
+    "credentials": {
+      "url": "https://gateway-a.watsonplatform.net/calls",
+      "apikey": "not-a-apikey"
+    }
+  }],
+  "empty_service": [
+
+  ],
+  "no-creds-service": [{
+      "name": "no-creds-service-one",
+      "label": "devops-insights",
+      "plan": "elite",
+      "credentials": {
+        "url": "https://on.the.toolchainplatform.net/no-creds-service-one/api",
+        "username": "not-a-username-2",
+        "password": "not-a-password-2"
+      }
+    },
+    {
+      "name": "no-creds-service-two",
+      "label": "devops-insights",
+      "plan": "elite"
+    }
+  ]
+}

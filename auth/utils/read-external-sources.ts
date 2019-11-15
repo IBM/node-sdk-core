@@ -108,7 +108,11 @@ function getCredentials(name) {
     }
     for (const serviceName in services) {
       if (serviceName === name) {
-        return services[serviceName][0].credentials || {};
+        if (services[serviceName].length > 0) {
+          return services[serviceName][0].credentials || {};
+        } else {
+          return {}
+        }
       }
     }
   }
