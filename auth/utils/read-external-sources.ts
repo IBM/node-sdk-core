@@ -16,6 +16,7 @@
 
 import camelcase = require('camelcase');
 import isEmpty = require('lodash.isempty');
+import logger from '../../lib/logger';
 import { readCredentialsFile } from './read-credentials-file';
 
 /**
@@ -99,8 +100,8 @@ function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
  * the serviceKey value. If found, return its credentials.
  *
  * If no match against the service entry's "name" field is found, then find the
- * service list with a key matching the serviceKey value. If found, return its
- * credentials.
+ * service list with a key matching the serviceKey value. If found, return the
+ * credentials of the first service in the service list.
  */
 function getVCAPCredentialsForService(name) {
   if (process.env.VCAP_SERVICES) {
@@ -108,20 +109,33 @@ function getVCAPCredentialsForService(name) {
     for (const serviceName of Object.keys(services)) {
       for (const instance of services[serviceName]) {
         if (instance['name'] === name) {
-          return instance.credentials || {};
+          if (instance.hasOwnProperty('credentials')) {
+            return instance.credentials
+          } else {
+            logger.debug('no data read from VCAP_SERVICES')
+            return {}
+          }
         }
       }
     }
     for (const serviceName of Object.keys(services)) {
       if (serviceName === name) {
         if (services[serviceName].length > 0) {
+          if (services[serviceName][0].hasOwnProperty('credentials')) {
+            return services[serviceName][0].credentials
+          } else {
+            logger.debug('no data read from VCAP_SERVICES')
+            return {}
+          }
           return services[serviceName][0].credentials || {};
         } else {
+          logger.debug('no data read from VCAP_SERVICES')
           return {}
         }
       }
     }
   }
+  logger.debug('no data read from VCAP_SERVICES')
   return {};
 }
 
