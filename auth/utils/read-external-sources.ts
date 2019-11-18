@@ -95,6 +95,12 @@ function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
 /**
  * Pulls credentials from VCAP_SERVICES env property that IBM Cloud sets
  *
+ * The function will first look for a service entry whose "name" field matches
+ * the serviceKey value. If found, return its credentials.
+ *
+ * If no match against the service entry's "name" field is found, then find the
+ * service list with a key matching the serviceKey value. If found, return its
+ * credentials.
  */
 function getVCAPCredentialsForService(name) {
   if (process.env.VCAP_SERVICES) {
@@ -106,7 +112,7 @@ function getVCAPCredentialsForService(name) {
         }
       }
     }
-    for (const serviceName in services) {
+    for (const serviceName of Object.keys(services)) {
       if (serviceName === name) {
         if (services[serviceName].length > 0) {
           return services[serviceName][0].credentials || {};
