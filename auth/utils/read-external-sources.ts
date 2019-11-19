@@ -16,7 +16,7 @@
 
 import camelcase = require('camelcase');
 import isEmpty = require('lodash.isempty');
-import vcapServices = require('vcap_services');
+import logger from '../../lib/logger';
 import { readCredentialsFile } from './read-credentials-file';
 
 /**
@@ -52,7 +52,7 @@ function getProperties(serviceName: string): any {
   }
 
   if (isEmpty(properties)) {
-    properties = getCredentialsFromCloud(serviceName);
+    properties = getPropertiesFromVCAP(serviceName);
   }
 
   return properties;
@@ -96,9 +96,51 @@ function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
 /**
  * Pulls credentials from VCAP_SERVICES env property that IBM Cloud sets
  *
+ * The function will first look for a service entry whose "name" field matches
+ * the serviceKey value. If found, return its credentials.
+ *
+ * If no match against the service entry's "name" field is found, then find the
+ * service list with a key matching the serviceKey value. If found, return the
+ * credentials of the first service in the service list.
  */
-function getCredentialsFromCloud(serviceName: string): any {
-  const credentials = vcapServices.getCredentials(serviceName);
+function getVCAPCredentialsForService(name) {
+  if (process.env.VCAP_SERVICES) {
+    const services = JSON.parse(process.env.VCAP_SERVICES);
+    for (const serviceName of Object.keys(services)) {
+      for (const instance of services[serviceName]) {
+        if (instance['name'] === name) {
+          if (instance.hasOwnProperty('credentials')) {
+            return instance.credentials
+          } else {
+            logger.debug('no data read from VCAP_SERVICES')
+            return {}
+          }
+        }
+      }
+    }
+    for (const serviceName of Object.keys(services)) {
+      if (serviceName === name) {
+        if (services[serviceName].length > 0) {
+          if (services[serviceName][0].hasOwnProperty('credentials')) {
+            return services[serviceName][0].credentials
+          } else {
+            logger.debug('no data read from VCAP_SERVICES')
+            return {}
+          }
+          return services[serviceName][0].credentials || {};
+        } else {
+          logger.debug('no data read from VCAP_SERVICES')
+          return {}
+        }
+      }
+    }
+  }
+  logger.debug('no data read from VCAP_SERVICES')
+  return {};
+}
+
+function getPropertiesFromVCAP(serviceName: string): any {
+  const credentials = getVCAPCredentialsForService(serviceName);
   // infer authentication type from credentials in a simple manner
   // iam is used as the default later
   if (credentials.username || credentials.password) {
