@@ -1,3 +1,29 @@
+# [2.0.0](https://github.com/IBM/node-sdk-core/compare/v1.3.0...v2.0.0) (2019-11-19)
+
+
+### Features
+
+* changes to node-sdk-core to work with service factory feature ([#72](https://github.com/IBM/node-sdk-core/issues/72)) ([cde4cd6](https://github.com/IBM/node-sdk-core/commit/cde4cd68e5a9910fb4f8abacd90a5a3b44b3f8f5))
+
+
+### BREAKING CHANGES
+
+* The `BaseService` will no longer look for configurations externally by default. A new factory method is provided to create an instance from external configuration.
+
+* feat: changes to node-sdk-core to work with service factory feature
+
+* `BaseService` constructor will no longer call `configureService`. 
+
+* updated test to reflect base service constructor does not call configureService
+
+* added test for getting credentials from vcap
+
+* removed `name` and `serviceVersion` because they are not referenced anymore
+
+* added comment for vcap parsing function. removed vcap_services dependency
+
+* added debug messages for when returning empty credential
+
 # [1.3.0](https://github.com/IBM/node-sdk-core/compare/v1.2.0...v1.3.0) (2019-10-22)
 
 
