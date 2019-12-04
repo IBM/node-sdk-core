@@ -34,7 +34,7 @@
  * @param {String} string - The HTTP method for the request, from the API definition
  * @returns {void}
  */
-module.exports.checkUrlAndMethod = function(options, url, method) {
+export function checkUrlAndMethod(options, url: string, method: any) {
   expect(options.url).toEqual(url);
   expect(options.method).toEqual(method);
 };
@@ -49,7 +49,7 @@ module.exports.checkUrlAndMethod = function(options, url, method) {
  * @param {String} contentType - the expected value for the `Content-Type` header
  * @returns {void}
  */
-module.exports.checkMediaHeaders = function(createRequestMock, accept, contentType) {
+export function checkMediaHeaders(createRequestMock, accept: string, contentType: string) {
   const headers = createRequestMock.mock.calls[0][0].defaultOptions.headers;
   expect(headers.Accept).toEqual(accept);
   expect(headers['Content-Type']).toEqual(contentType);
@@ -65,7 +65,7 @@ module.exports.checkMediaHeaders = function(createRequestMock, accept, contentTy
  * @param {String} userHeaderValue - the expected value for the header passed by the user
  * @returns {void}
  */
-module.exports.checkUserHeader = function(createRequestMock, userHeaderName, userHeaderValue) {
+export function checkUserHeader(createRequestMock, userHeaderName: string, userHeaderValue: string) {
   const headers = createRequestMock.mock.calls[0][0].defaultOptions.headers;
   expect(headers[userHeaderName]).toEqual(userHeaderValue);
 };
@@ -77,7 +77,7 @@ module.exports.checkUserHeader = function(createRequestMock, userHeaderName, use
  * @param {Object} createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
  * @returns {void}
  */
-module.exports.checkForSuccessfulExecution = function(createRequestMock) {
+export function checkForSuccessfulExecution(createRequestMock) {
   const sdkParams = createRequestMock.mock.calls[0][0];
   expect(typeof sdkParams).toEqual('object');
 };
@@ -88,9 +88,9 @@ module.exports.checkForSuccessfulExecution = function(createRequestMock) {
  * This method is just a convenience method for the unit tests to be able to make assertions on the items in the request.
  *
  * @param {Object} createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
- * @returns {void}
+ * @returns {Object}
  */
-module.exports.getOptions = function(createRequestMock) {
+export function getOptions(createRequestMock) {
   return createRequestMock.mock.calls[0][0].options;
 };
 
@@ -101,6 +101,6 @@ module.exports.getOptions = function(createRequestMock) {
  * @param {Promise<any>} sdkPromise - the Promise returned by an SDK method
  * @returns {void}
  */
-module.exports.expectToBePromise = function(sdkPromise) {
+export function expectToBePromise(sdkPromise) {
   expect(typeof sdkPromise.then).toBe('function');
 };

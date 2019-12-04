@@ -21,6 +21,4 @@
   * IBM OpenAPI SDK Gen project rely on these methods.
  */
 
- const unitTestUtils = require('./unit-test-helpers');
-
- module.exports.unitTestUtils = unitTestUtils;
+export * from './unit-test-helpers'
