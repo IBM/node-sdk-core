@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/IBM/node-sdk-core/compare/v2.0.0...v2.0.1) (2019-12-06)
+
+
+### Bug Fixes
+
+* convert test utils to .ts ([#74](https://github.com/IBM/node-sdk-core/issues/74)) ([ceec376](https://github.com/IBM/node-sdk-core/commit/ceec3760d50f8e958d35d4c0ca292f99a58bf795)), closes [#993](https://github.com/IBM/node-sdk-core/issues/993)
+
 # [2.0.0](https://github.com/IBM/node-sdk-core/compare/v1.3.0...v2.0.0) (2019-11-19)
 
 
