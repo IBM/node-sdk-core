@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/IBM/node-sdk-core/compare/v2.0.1...v2.0.2) (2020-01-09)
+
+
+### Bug Fixes
+
+* export unitTestUtils functions as a module ([#76](https://github.com/IBM/node-sdk-core/issues/76)) ([a148da9](https://github.com/IBM/node-sdk-core/commit/a148da9ad882c97c1c4f1c5417c43958db584e3e))
+
 ## [2.0.1](https://github.com/IBM/node-sdk-core/compare/v2.0.0...v2.0.1) (2019-12-06)
 
 
