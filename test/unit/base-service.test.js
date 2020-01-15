@@ -395,5 +395,5 @@ function setupFakeService() {
   util.inherits(TestService, BaseService);
   TestService.prototype.name = DEFAULT_NAME;
   TestService.prototype.version = 'v1';
-  TestService.URL = DEFAULT_URL;
+  TestService.DEFAULT_SERVICE_URL = DEFAULT_URL;
 }
