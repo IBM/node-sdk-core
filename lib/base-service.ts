@@ -57,7 +57,8 @@ export interface BaseServiceOptions extends UserOptions {
  * them to the service endpoint.
  */
 export class BaseService {
-  static URL: string;
+  static DEFAULT_SERVICE_URL: string;
+  static DEFAULT_SERVICE_NAME: string;
   protected baseOptions: BaseServiceOptions;
   private authenticator: AuthenticatorInterface;
   private requestWrapperInstance;
@@ -108,7 +109,7 @@ export class BaseService {
 
     const serviceClass = this.constructor as typeof BaseService;
     this.baseOptions = extend(
-      { qs: {}, serviceUrl: serviceClass.URL },
+      { qs: {}, serviceUrl: serviceClass.DEFAULT_SERVICE_URL },
       options,
       _options
     );
