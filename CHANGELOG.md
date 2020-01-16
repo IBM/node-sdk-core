@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/IBM/node-sdk-core/compare/v2.0.2...v2.0.3) (2020-01-16)
+
+
+### Bug Fixes
+
+* use constant defined by generated sdks for url ([#77](https://github.com/IBM/node-sdk-core/issues/77)) ([cb3cc81](https://github.com/IBM/node-sdk-core/commit/cb3cc810d1a7b40a8471271b239f5158b91b0ce6))
+
 ## [2.0.2](https://github.com/IBM/node-sdk-core/compare/v2.0.1...v2.0.2) (2020-01-09)
 
 
