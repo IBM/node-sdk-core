@@ -246,8 +246,12 @@ export class RequestWrapper {
       delete axiosError.config;
       delete axiosError.request;
 
-      error.name = axiosError.statusText;
-      error.code = axiosError.status;
+      error.statusText = axiosError.statusText;
+      error.name = axiosError.statusText; // ** deprecated **
+
+      error.status = axiosError.status;
+      error.code = axiosError.status;  // ** deprecated **
+
       error.message = parseServiceErrorMessage(axiosError.data) || axiosError.statusText;
 
       // some services bury the useful error message within 'data'
