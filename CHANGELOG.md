@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/IBM/node-sdk-core/compare/v2.0.3...v2.0.4) (2020-01-30)
+
+
+### Bug Fixes
+
+* use consistent fields between success and error response objects ([#78](https://github.com/IBM/node-sdk-core/issues/78)) ([902d712](https://github.com/IBM/node-sdk-core/commit/902d712f3623edbec606a3223fb366971532346d))
+
 ## [2.0.3](https://github.com/IBM/node-sdk-core/compare/v2.0.2...v2.0.3) (2020-01-16)
 
 
