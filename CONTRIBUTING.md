@@ -25,30 +25,24 @@ If you want to contribute to the repository, follow these steps:
 1. Fork the repo.
 2. Install dependencies: `npm install`
 3. Build the code: `npm run build`
-4. Verify the build before beginning your changes: `npm run test-unit`
+4. Verify the build before beginning your changes: `npm test`
 2. Develop and test your code changes.
-3. Travis-CI will run the tests for all services once your changes are merged.
 4. Add a test for your changes. Only refactoring and documentation changes require no new tests.
-5. Make the test pass.
+5. Make sure all the tests pass.
+2. Check code style with `npm run lint` and fix any issues.
 6. Commit your changes. Remember the follow the correct commit message guidelines.
 7. Push to your fork and submit a pull request.
+3. Travis-CI will run the tests once your changes are merged.
 8. Be sure to sign the CLA.
 
 ## Tests
 
-Out of the box, `npm test` runs linting, unit tests, and integration tests (which require credentials).
-To run only the unit tests (sufficient for most cases), use `npm run test-unit`.
-
-To run the integration tests, you need to provide credentials to the integration test framework.
-The integration test framework will skip integration tests for any service that does not have credentials,
-
-To provide credentials for the integration tests, copy `test/resources/auth.example.js` to `test/resources/auth.js`
-and fill in credentials for the service(s) you wish to test.
+`npm test` runs the full suite of unit tests.
 
 To run only specific tests, invoke jest with the `--testNamePattern` or `-t` flag:
 
 ```
-npm run jest -- /test/integration -t "resources key"
+npm run jest -- /test/unit -t "resources key"
 ```
 
 This will only run tests that match the test name pattern you provide.

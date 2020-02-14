@@ -20,6 +20,7 @@ RequestWrapper.mockImplementation(() => {
 });
 
 const ACCESS_TOKEN = '9012';
+const CURRENT_ACCESS_TOKEN = '1234';
 const IAM_RESPONSE = {
   result: {
     access_token: ACCESS_TOKEN,
@@ -62,20 +63,44 @@ describe('iam_token_manager_v1', function() {
     const requestMock = jest.spyOn(instance, 'requestToken');
 
     const currentTokenInfo = {
-      access_token: '1234',
-      refresh_token: '5678',
-      token_type: 'Bearer',
-      expires_in: 3600,
-      expiration: Math.floor(Date.now() / 1000),
+      access_token: CURRENT_ACCESS_TOKEN,
     };
 
     instance.tokenInfo = currentTokenInfo;
+    instance.expireTime = Math.floor(Date.now() / 1000) - 1;
 
     mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
 
     const token = await instance.getToken();
     expect(token).toBe(ACCESS_TOKEN);
     expect(requestMock).toHaveBeenCalled();
+    done();
+  });
+
+  it('should refresh an access token whose refreshTime has passed', async done => {
+    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
+    const requestMock = jest.spyOn(instance, 'requestToken');
+
+    const currentTokenInfo = {
+      access_token: CURRENT_ACCESS_TOKEN,
+    };
+
+    instance.tokenInfo = currentTokenInfo;
+    instance.expireTime = Math.floor(Date.now() / 1000) + 60;
+    instance.refreshTime = Math.floor(Date.now() / 1000) - 1;
+
+    const requestTokenSpy = jest
+      .spyOn(instance, 'requestToken')
+      .mockImplementation(() => Promise.resolve({ result: { access_token: ACCESS_TOKEN } }));
+
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
+
+    const token = await instance.getToken();
+    expect(token).toBe(CURRENT_ACCESS_TOKEN);
+    expect(requestMock).toHaveBeenCalled();
+    expect(requestTokenSpy).toHaveBeenCalled();
+
+    requestTokenSpy.mockRestore();
     done();
   });
 
@@ -85,58 +110,15 @@ describe('iam_token_manager_v1', function() {
 
     const currentTokenInfo = {
       access_token: ACCESS_TOKEN,
-      refresh_token: '5678',
-      token_type: 'Bearer',
-      expires_in: 3600,
-      expiration: Math.floor(Date.now() / 1000) + 3000,
     };
 
     instance.tokenInfo = currentTokenInfo;
-    instance.timeToLive = currentTokenInfo.expires_in;
-    instance.expireTime = currentTokenInfo.expiration;
+    instance.expireTime = Math.floor(Date.now() / 1000) + 60 * 60;
+    instance.refreshTime = Math.floor(Date.now() / 1000) + 48 * 60;
 
     const token = await instance.getToken();
     expect(token).toBe(ACCESS_TOKEN);
     expect(requestMock).not.toHaveBeenCalled();
-    done();
-  });
-
-  it('should refresh an access token without expires_in field', async done => {
-    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
-    const requestMock = jest.spyOn(instance, 'requestToken');
-
-    const currentTokenInfo = {
-      access_token: '1234',
-      refresh_token: '5678',
-      token_type: 'Bearer',
-      expiration: Math.floor(Date.now() / 1000),
-    };
-
-    instance.tokenInfo = currentTokenInfo;
-
-    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
-
-    const token = await instance.getToken();
-    expect(token).toBe(ACCESS_TOKEN);
-    expect(requestMock).toHaveBeenCalled();
-    done();
-  });
-
-  it('should request a new token when refresh token does not have expiration field', async done => {
-    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
-
-    const currentTokenInfo = {
-      access_token: '1234',
-      refresh_token: '5678',
-      token_type: 'Bearer',
-    };
-
-    instance.tokenInfo = currentTokenInfo;
-
-    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
-
-    const token = await instance.getToken();
-    expect(token).toBe(ACCESS_TOKEN);
     done();
   });
 

@@ -9,6 +9,7 @@ function getCurrentTime() {
 }
 
 const ACCESS_TOKEN = 'abc123';
+const CURRENT_ACCESS_TOKEN = 'abc123';
 
 describe('JWT Token Manager', () => {
   it('should initialize base variables', () => {
@@ -33,7 +34,7 @@ describe('JWT Token Manager', () => {
 
       const decodeSpy = jest
         .spyOn(jwt, 'decode')
-        .mockImplementation(token => ({ iat: 0, exp: 100 }));
+        .mockImplementation(token => ({ iat: 10, exp: 100 }));
 
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
@@ -51,14 +52,14 @@ describe('JWT Token Manager', () => {
       done();
     });
 
-    it('should request a token if token is stored but expired', async done => {
+    it('should request a token if token is stored but needs refresh', async done => {
       const instance = new JwtTokenManager();
-      instance.tokenInfo.access_token = '987zxc';
+      instance.tokenInfo.access_token = CURRENT_ACCESS_TOKEN;
 
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
       const decodeSpy = jest
         .spyOn(jwt, 'decode')
-        .mockImplementation(token => ({ iat: 0, exp: 100 }));
+        .mockImplementation(token => ({ iat: 10, exp: 100 }));
 
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
@@ -68,7 +69,7 @@ describe('JWT Token Manager', () => {
       expect(requestTokenSpy).toHaveBeenCalled();
       expect(saveTokenInfoSpy).toHaveBeenCalled();
       expect(decodeSpy).toHaveBeenCalled();
-      expect(token).toBe(ACCESS_TOKEN);
+      expect(token).toBe(CURRENT_ACCESS_TOKEN);
 
       saveTokenInfoSpy.mockRestore();
       decodeSpy.mockRestore();
@@ -132,6 +133,7 @@ describe('JWT Token Manager', () => {
       const instance = new JwtTokenManager();
       instance.tokenInfo.access_token = ACCESS_TOKEN;
       instance.expireTime = getCurrentTime() + 1000;
+      instance.refreshTime = getCurrentTime() + 800;
       const token = await instance.getToken();
       expect(token).toBe(ACCESS_TOKEN);
       done();
@@ -175,19 +177,40 @@ describe('JWT Token Manager', () => {
     });
   });
 
+  describe('tokenNeedsRefresh', () => {
+    it('should return true if current time is past refresh time', () => {
+      const instance = new JwtTokenManager();
+      instance.refreshTime = getCurrentTime() - 1000;
+
+      expect(instance.tokenNeedsRefresh()).toBe(true);
+    });
+
+    it('should return false if current time has not reached refresh time', () => {
+      const instance = new JwtTokenManager();
+      instance.refreshTime = getCurrentTime() + 1000;
+
+      expect(instance.tokenNeedsRefresh()).toBe(false);
+    });
+
+    it('should return true if refresh time has not been set', () => {
+      const instance = new JwtTokenManager();
+      expect(instance.tokenNeedsRefresh()).toBe(true);
+    });
+  });
+
   describe('saveTokenInfo', () => {
     it('should save information to object state', () => {
       const instance = new JwtTokenManager();
-
-      const expireTime = 100;
-      instance.calculateTimeForNewToken = jest.fn(token => expireTime);
+      const decodeSpy = jest
+        .spyOn(jwt, 'decode')
+        .mockImplementation(token => ({ iat: 10, exp: 100 }));
 
       const tokenResponse = { access_token: ACCESS_TOKEN };
 
       instance.saveTokenInfo(tokenResponse);
-      expect(instance.expireTime).toBe(expireTime);
+      expect(instance.expireTime).toBe(100);
       expect(instance.tokenInfo).toEqual(tokenResponse);
-      expect(instance.calculateTimeForNewToken).toHaveBeenCalledWith(ACCESS_TOKEN);
+      decodeSpy.mockRestore();
     });
 
     it('should throw an error when access token is undefined', () => {
@@ -203,15 +226,32 @@ describe('JWT Token Manager', () => {
       const instance = new JwtTokenManager();
       const decodeSpy = jest
         .spyOn(jwt, 'decode')
-        .mockImplementation(token => ({ iat: 0, exp: 100 }));
+        .mockImplementation(token => ({ iat: 100, exp: 200 }));
 
-      expect(instance.calculateTimeForNewToken(ACCESS_TOKEN)).toBe(80);
+      const tokenResponse = { access_token: ACCESS_TOKEN };
+
+      instance.saveTokenInfo(tokenResponse);
+      expect(instance.refreshTime).toBe(180);
       decodeSpy.mockRestore();
     });
 
     it('should throw an error if token is not a valid jwt', () => {
       const instance = new JwtTokenManager();
       expect(() => instance.calculateTimeForNewToken()).toThrow();
+    });
+
+    it('should gracefully handle a jwt without exp or iat claims', () => {
+      const instance = new JwtTokenManager();
+      const decodeSpy = jest
+        .spyOn(jwt, 'decode')
+        .mockImplementation(token => ({ foo: 0, bar: 100 }));
+
+      const tokenResponse = { access_token: ACCESS_TOKEN };
+
+      instance.saveTokenInfo(tokenResponse);
+      expect(instance.expireTime).toBe(0);
+      expect(instance.tokenInfo).toEqual(tokenResponse);
+      decodeSpy.mockRestore();
     });
   });
 });

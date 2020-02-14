@@ -53,6 +53,7 @@ export class JwtTokenManager {
   protected requestWrapperInstance: RequestWrapper;
   private tokenInfo: any;
   private expireTime: number;
+  private refreshTime: number;
 
   /**
    * Create a new [[JwtTokenManager]] instance.
@@ -97,6 +98,12 @@ export class JwtTokenManager {
         return this.tokenInfo[this.tokenName];
       });
     } else {
+      // If refresh needed, kick one off
+      if (this.tokenNeedsRefresh()) {
+        this.requestToken().then(tokenResponse => {
+          this.saveTokenInfo(tokenResponse.result);
+        });
+      }
       // 2. use valid, managed token
       return Promise.resolve(this.tokenInfo[this.tokenName]);
     }
@@ -142,8 +149,7 @@ export class JwtTokenManager {
   }
 
   /**
-   * Check if currently stored token is "expired"
-   * i.e. past the window to request a new token
+   * Check if currently stored token is expired
    *
    * @private
    * @returns {boolean}
@@ -156,7 +162,28 @@ export class JwtTokenManager {
     }
 
     const currentTime = getCurrentTime();
-    return expireTime < currentTime;
+    return expireTime <= currentTime;
+  }
+
+  /**
+   * Check if currently stored token should be refreshed
+   * i.e. past the window to request a new token
+   *
+   * @private
+   * @returns {boolean}
+   */
+  private tokenNeedsRefresh(): boolean {
+    const { refreshTime } = this;
+    const currentTime = getCurrentTime();
+
+    if (refreshTime && refreshTime > currentTime) {
+      return false;
+    }
+
+    // Update refreshTime to 60 seconds from now to avoid redundant refreshes
+    this.refreshTime = currentTime + 60;
+
+    return true;
   }
 
   /**
@@ -175,36 +202,27 @@ export class JwtTokenManager {
       throw new Error(err);
     }
 
-    this.expireTime = this.calculateTimeForNewToken(accessToken);
-    this.tokenInfo = extend({}, tokenResponse);
-  }
-
-  /**
-   * Decode the access token and calculate the time to request a new token.
-   *
-   * A time buffer prevents the edge case of the token expiring before the request could be made.
-   * The buffer will be a fraction of the total time to live - we are using 80%
-   *
-   * @param accessToken - JSON Web Token received from the service
-   * @private
-   * @returns {void}
-   */
-  private calculateTimeForNewToken(accessToken): number {
     // the time of expiration is found by decoding the JWT access token
     // exp is the time of expire and iat is the time of token retrieval
-    let timeForNewToken;
     const decodedResponse = jwt.decode(accessToken);
-    if (decodedResponse) {
-      const { exp, iat } = decodedResponse;
-      const fractionOfTtl = 0.8;
-      const timeToLive = exp - iat;
-      timeForNewToken = exp - (timeToLive * (1.0 - fractionOfTtl));
-    } else {
+    if (!decodedResponse) {
       const err = 'Access token recieved is not a valid JWT'
       logger.error(err);
       throw new Error(err);
     }
 
-    return timeForNewToken;
+    const { exp, iat } = decodedResponse;
+    // There are no required claims in JWT
+    if (!exp || !iat) {
+      this.expireTime = 0;
+      this.refreshTime = 0;
+    } else {
+      const fractionOfTtl = 0.8;
+      const timeToLive = exp - iat;
+      this.expireTime = exp;
+      this.refreshTime = exp - (timeToLive * (1.0 - fractionOfTtl));
+    }
+
+    this.tokenInfo = extend({}, tokenResponse);
   }
 }
