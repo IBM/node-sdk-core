@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/IBM/node-sdk-core/compare/v2.0.4...v2.1.0) (2020-02-14)
+
+
+### Features
+
+* Pace token refresh requests to avoid rate-limiting ([#79](https://github.com/IBM/node-sdk-core/issues/79)) ([d908c0d](https://github.com/IBM/node-sdk-core/commit/d908c0d16ca9d16803b010ee3311c8589983e6c8))
+
 ## [2.0.4](https://github.com/IBM/node-sdk-core/compare/v2.0.3...v2.0.4) (2020-01-30)
 
 
