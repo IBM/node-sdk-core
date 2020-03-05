@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/IBM/node-sdk-core/compare/v2.1.0...v2.2.0) (2020-03-05)
+
+
+### Features
+
+* Pace requests to token server for new auth tokens ([#83](https://github.com/IBM/node-sdk-core/issues/83)) ([b14dc4e](https://github.com/IBM/node-sdk-core/commit/b14dc4eea3a629e66c1aa584a3909b29bf12c7b1))
+
 # [2.1.0](https://github.com/IBM/node-sdk-core/compare/v2.0.4...v2.1.0) (2020-02-14)
 
 
