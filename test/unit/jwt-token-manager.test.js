@@ -52,6 +52,69 @@ describe('JWT Token Manager', () => {
       done();
     });
 
+    it('should pace token requests', async done => {
+      const instance = new JwtTokenManager();
+
+      const decodeSpy = jest
+        .spyOn(jwt, 'decode')
+        .mockImplementation(token => ({ iat: 10, exp: 100 }));
+
+      const requestTokenSpy = jest.spyOn(instance, 'requestToken').mockImplementation(() => {
+        return new Promise(resolve => {
+          setTimeout(resolve, 500, { result: { access_token: ACCESS_TOKEN } });
+        });
+      });
+
+      const tokens = await Promise.all([
+        instance.getToken(),
+        instance.getToken(),
+        instance.getToken(),
+      ]);
+
+      expect(tokens.length).toBe(3);
+      expect(
+        tokens.every(token => {
+          token === tokens[0];
+        })
+      );
+      expect(requestTokenSpy).toHaveBeenCalled();
+      expect(requestTokenSpy.mock.calls.length).toBe(1);
+
+      decodeSpy.mockRestore();
+      requestTokenSpy.mockRestore();
+      done();
+    });
+
+    it('should reject all paced token requests on error from token service', async done => {
+      const instance = new JwtTokenManager();
+
+      const requestTokenSpy = jest.spyOn(instance, 'requestToken').mockImplementation(() => {
+        return new Promise(reject => {
+          setTimeout(reject, 500, new Error('Sumpin bad happened'));
+        });
+      });
+
+      const reqs = [instance.getToken(), instance.getToken(), instance.getToken()];
+
+      let token;
+      let errCount = 0;
+      for (let i = 0; i < reqs.length; i++) {
+        try {
+          token = await reqs[i];
+        } catch (e) {
+          errCount++;
+        }
+      }
+
+      expect(token).toBeUndefined;
+      expect(errCount).toBe(3);
+      expect(requestTokenSpy).toHaveBeenCalled();
+      expect(requestTokenSpy.mock.calls.length).toBe(1);
+
+      requestTokenSpy.mockRestore();
+      done();
+    });
+
     it('should request a token if token is stored but needs refresh', async done => {
       const instance = new JwtTokenManager();
       instance.tokenInfo.access_token = CURRENT_ACCESS_TOKEN;

@@ -54,6 +54,8 @@ export class JwtTokenManager {
   private tokenInfo: any;
   private expireTime: number;
   private refreshTime: number;
+  private requestTime: number;
+  private pendingRequests: any[];
 
   /**
    * Create a new [[JwtTokenManager]] instance.
@@ -83,6 +85,9 @@ export class JwtTokenManager {
 
     // any config options for the internal request library, like `proxy`, will be passed here
     this.requestWrapperInstance = new RequestWrapper(options);
+
+    // Array of requests pending completion of an active token request -- initially empty
+    this.pendingRequests = [];
   }
 
   /**
@@ -93,8 +98,7 @@ export class JwtTokenManager {
   public getToken(): Promise<any> {
     if (!this.tokenInfo[this.tokenName] || this.isTokenExpired()) {
       // 1. request a new token
-      return this.requestToken().then(tokenResponse => {
-        this.saveTokenInfo(tokenResponse.result);
+      return this.pacedRequestToken().then(() => {
         return this.tokenInfo[this.tokenName];
       });
     } else {
@@ -134,6 +138,42 @@ export class JwtTokenManager {
       return;
     }
     this.headers = headers;
+  }
+
+  /**
+   * Paces requests to request_token.
+   *
+   * This method pseudo-serializes requests for an access_token
+   * when the current token is undefined or expired.
+   * The first caller to this method records its `requestTime` and
+   * then issues the token request. Subsequent callers will check the
+   * `requestTime` to see if a request is active (has been issued within
+   * the past 60 seconds), and if so will queue their promise for the
+   * active requestor to resolve when that request completes.
+   */
+  protected pacedRequestToken(): Promise<any> {
+    const currentTime = getCurrentTime();
+    if (this.requestTime > (currentTime - 60)) {
+      // token request is active -- queue the promise for this request
+      return new Promise((resolve, reject) => {
+        this.pendingRequests.push({resolve, reject});
+      });
+    } else {
+      this.requestTime = currentTime;
+      return this.requestToken().then(tokenResponse => {
+        this.saveTokenInfo(tokenResponse.result);
+        this.pendingRequests.forEach(({resolve}) => {
+          resolve();
+        });
+        this.pendingRequests = [];
+        this.requestTime = 0;
+      }).catch(err => {
+        this.pendingRequests.forEach(({reject}) => {
+          reject(err);
+        });
+        throw(err);
+      });
+    }
   }
 
   /**
