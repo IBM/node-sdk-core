@@ -36,6 +36,8 @@ export interface UserOptions {
   version?: string;
   /** Set to `true` to allow unauthorized requests - not recommended for production use. */
   disableSslVerification?: boolean;
+  /** Set your own cookie jar object */
+  jar?: any;
   /** Deprecated. Use `serviceUrl` instead. */
   url?: string;
   /** Allow additional request config parameters */

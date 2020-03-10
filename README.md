@@ -79,6 +79,22 @@ The debug logger can be configured to be used for more than one library. In exam
 
 ``DEBUG=ibm-cloud-sdk-core:debug,other-lib:debug``
 
+## Cookie Jar Support
+By default, cookies are not supported in the sdk core requests.  If your SDK would benefit from this functionality, simply instantiate a cookie jar (or instruct your users to do so) and pass it in the object containing configuration options to the `BaseService` class, as show below.
+
+```typescript
+import tough = require('tough-cookie');
+
+class MyClass extends BaseService {
+  constructor(options: MyOptions) {
+    options.jar = new tough.CookieJar();
+    super(options)
+  }
+}
+```
+
+The example above uses [Tough Cookie](https://www.npmjs.com/package/tough-cookie) to provide these capabilities, but other cookie jar libraries can be used.
+
 ## Issues
 If you encounter an issue with this project, you are welcome to submit a [bug report](https://github.com/IBM/node-sdk-core/issues).
 Before opening a new issue, please search for similar issues. It's possible that someone has already reported it.
