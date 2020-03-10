@@ -15,6 +15,7 @@
  */
 
 import axios from 'axios';
+import axiosCookieJarSupport from 'axios-cookiejar-support';
 import extend = require('extend');
 import FormData = require('form-data');
 import https = require('https');
@@ -27,7 +28,7 @@ const isBrowser = typeof window === 'object';
 const globalTransactionId = 'x-global-transaction-id';
 
 // Limit the type of axios configs to be customizable
-const allowedAxiosConfig = ['transformRequest', 'transformResponse', 'paramsSerializer', 'paramsSerializer', 'timeout', 'withCredentials', 'adapter', 'responseType', 'responseEncoding', 'xsrfCookieName', 'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'maxContentLength', 'validateStatus', 'maxRedirects', 'socketPath', 'httpAgent', 'httpsAgent', 'proxy', 'cancelToken'];
+const allowedAxiosConfig = ['transformRequest', 'transformResponse', 'paramsSerializer', 'paramsSerializer', 'timeout', 'withCredentials', 'adapter', 'responseType', 'responseEncoding', 'xsrfCookieName', 'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'maxContentLength', 'validateStatus', 'maxRedirects', 'socketPath', 'httpAgent', 'httpsAgent', 'proxy', 'cancelToken', 'jar'];
 
 export class RequestWrapper {
   private axiosInstance;
@@ -67,8 +68,16 @@ export class RequestWrapper {
 
     this.axiosInstance = axios.create(axiosConfig);
 
+    // if a cookie jar is provided, wrap the axios instance and update defaults
+    if (axiosOptions.jar) {
+      axiosCookieJarSupport(this.axiosInstance);
+
+      this.axiosInstance.defaults.withCredentials = true;
+      this.axiosInstance.defaults.jar = axiosOptions.jar;
+    }
+
     // set debug interceptors
-    if(process.env.NODE_DEBUG === 'axios' || process.env.DEBUG) {
+    if (process.env.NODE_DEBUG === 'axios' || process.env.DEBUG) {
       this.axiosInstance.interceptors.request.use(config => {
         logger.debug('Request:');
         try {
