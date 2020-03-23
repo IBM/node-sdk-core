@@ -120,6 +120,15 @@ describe('Base Service', () => {
     expect(testService.baseOptions.disableSslVerification).toBe(true);
   });
 
+  it('should store a cookie jar when set', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+      jar: true,
+    });
+
+    expect(testService.baseOptions.jar).toBe(true);
+  });
+
   it('should default disableSslVerification to false', () => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
