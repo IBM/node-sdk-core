@@ -268,11 +268,11 @@ describe('JWT Token Manager', () => {
         .spyOn(jwt, 'decode')
         .mockImplementation(token => ({ iat: 10, exp: 100 }));
 
-      const tokenResponse = { access_token: ACCESS_TOKEN };
+      const tokenResponse = { result: { access_token: ACCESS_TOKEN } };
 
       instance.saveTokenInfo(tokenResponse);
       expect(instance.expireTime).toBe(100);
-      expect(instance.tokenInfo).toEqual(tokenResponse);
+      expect(instance.tokenInfo).toEqual(tokenResponse.result);
       decodeSpy.mockRestore();
     });
 
@@ -291,7 +291,7 @@ describe('JWT Token Manager', () => {
         .spyOn(jwt, 'decode')
         .mockImplementation(token => ({ iat: 100, exp: 200 }));
 
-      const tokenResponse = { access_token: ACCESS_TOKEN };
+      const tokenResponse = { result: { access_token: ACCESS_TOKEN } };
 
       instance.saveTokenInfo(tokenResponse);
       expect(instance.refreshTime).toBe(180);
@@ -309,11 +309,11 @@ describe('JWT Token Manager', () => {
         .spyOn(jwt, 'decode')
         .mockImplementation(token => ({ foo: 0, bar: 100 }));
 
-      const tokenResponse = { access_token: ACCESS_TOKEN };
+      const tokenResponse = { result: { access_token: ACCESS_TOKEN } };
 
       instance.saveTokenInfo(tokenResponse);
       expect(instance.expireTime).toBe(0);
-      expect(instance.tokenInfo).toEqual(tokenResponse);
+      expect(instance.tokenInfo).toEqual(tokenResponse.result);
       decodeSpy.mockRestore();
     });
   });
