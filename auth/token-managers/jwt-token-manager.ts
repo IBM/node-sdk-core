@@ -192,7 +192,7 @@ export class JwtTokenManager {
    * Save the JWT service response and the calculated expiration time to the object's state.
    *
    * @param tokenResponse - Response object from JWT service request
-   * @private
+   * @protected
    * @returns {void}
    */
   protected saveTokenInfo(tokenResponse): void {
