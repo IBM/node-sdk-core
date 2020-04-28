@@ -17,10 +17,7 @@
 import { OutgoingHttpHeaders } from 'http';
 import logger from '../../lib/logger';
 import { RequestWrapper } from '../../lib/request-wrapper';
-
-function getCurrentTime(): number {
-  return Math.floor(Date.now() / 1000);
-}
+import {getCurrentTime} from "../utils";
 
 /** Configuration options for JWT token retrieval. */
 export type TokenManagerOptions = {
