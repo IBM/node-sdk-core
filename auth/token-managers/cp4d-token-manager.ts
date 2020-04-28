@@ -16,10 +16,10 @@
 
 import extend = require('extend');
 import { computeBasicAuthHeader, validateInput } from '../utils';
-import { JwtTokenManager, TokenManagerOptions } from './jwt-token-manager';
+import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
 /** Configuration options for CP4D token retrieval. */
-interface Options extends TokenManagerOptions {
+interface Options extends JwtTokenManagerOptions {
   /** The endpoint for CP4D token requests. */
   url: string;
   /** The username portion of basic authentication. */
