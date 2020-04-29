@@ -19,7 +19,7 @@ import logger from '../../lib/logger';
 import { RequestWrapper } from '../../lib/request-wrapper';
 import {getCurrentTime} from "../utils";
 
-/** Configuration options for JWT token retrieval. */
+/** Configuration options for token retrieval. */
 export type TokenManagerOptions = {
   /** The endpoint for token requests. */
   url?: string;
@@ -35,10 +35,11 @@ export type TokenManagerOptions = {
 }
 
 /**
- * A class for shared functionality for parsing, storing, and requesting
- * JWT tokens. Intended to be used as a parent to be extended for token
- * request management. Child classes should implement `requestToken()`
- * to retrieve the bearer token from intended sources.
+ * A class for shared functionality for storing, and requesting tokens.
+ * Intended to be used as a parent to be extended for token request management.
+ * Child classes should implement `requestToken()` to retrieve the token
+ * from intended sources and `saveTokenInfo(tokenResponse)` to parse and save
+ * token information from the response.
  */
 export class TokenManager {
   protected url: string;
@@ -181,14 +182,17 @@ export class TokenManager {
    * @returns {Promise}
    */
   protected requestToken(): Promise<any> {
-    const errMsg = '`requestToken` MUST be overridden by a subclass of JwtTokenManagerV1.';
+    const errMsg = '`requestToken` MUST be overridden by a subclass of TokenManagerV1.';
     const err = new Error(errMsg);
     logger.error(errMsg);
     return Promise.reject(err);
   }
 
   /**
-   * Save the token from the response and the calculated expiration time to the object's state.
+   * Parse and save token information from the response.
+   * Save all token information into field `tokenInfo`.
+   * Calculate expiration and refresh time from the received info
+   * and store them in object's fields`expireTime` and `refreshTime`.
    *
    * @param tokenResponse - Response object from a token service request
    * @protected
