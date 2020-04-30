@@ -17,7 +17,7 @@
 import extend = require('extend');
 import jwt = require('jsonwebtoken');
 import logger from '../../lib/logger';
-import {TokenManager, TokenManagerOptions} from "./token-manager";
+import { TokenManager, TokenManagerOptions } from "./token-manager";
 
 /** Configuration options for JWT token retrieval. */
 export type JwtTokenManagerOptions = TokenManagerOptions;

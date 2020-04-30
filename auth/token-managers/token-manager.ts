@@ -17,7 +17,7 @@
 import { OutgoingHttpHeaders } from 'http';
 import logger from '../../lib/logger';
 import { RequestWrapper } from '../../lib/request-wrapper';
-import {getCurrentTime} from "../utils";
+import { getCurrentTime } from "../utils";
 
 /** Configuration options for token retrieval. */
 export type TokenManagerOptions = {
