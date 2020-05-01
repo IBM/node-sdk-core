@@ -98,6 +98,30 @@ describe('sendRequest', () => {
     done();
   });
 
+  it('sendRequest should strip trailing slashes', async done => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        url: 'https://example.ibm.com/',
+        headers: {
+          'test-header': 'test-header-value',
+        },
+        responseType: 'buffer',
+      },
+    };
+
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    // assert results
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual('https://example.ibm.com');
+    expect(res).toEqual(expectedResult);
+    done();
+  });
+
   it('should call formatError if request failed', async done => {
     const parameters = {
       defaultOptions: {

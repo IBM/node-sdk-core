@@ -21,7 +21,7 @@ import FormData = require('form-data');
 import https = require('https');
 import querystring = require('querystring');
 import { PassThrough as readableStream } from 'stream';
-import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileData, isFileWithMetadata } from './helper';
+import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileData, isFileWithMetadata, stripTrailingSlash } from './helper';
 import logger from './logger';
 
 const isBrowser = typeof window === 'object';
@@ -179,6 +179,8 @@ export class RequestWrapper {
     if (url && url.charAt(0) === '/') {
       url = serviceUrl + url;
     }
+
+    url = stripTrailingSlash(url);
 
     let data = body;
 
