@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/IBM/node-sdk-core/compare/v2.3.0...v2.3.1) (2020-05-01)
+
+
+### Bug Fixes
+
+* Strip trailing slashes in sendRequest ([#92](https://github.com/IBM/node-sdk-core/issues/92)) ([3d8f568](https://github.com/IBM/node-sdk-core/commit/3d8f568e3911d3d17811e37c5e701db0508a251e))
+
 # [2.3.0](https://github.com/IBM/node-sdk-core/compare/v2.2.0...v2.3.0) (2020-03-23)
 
 
