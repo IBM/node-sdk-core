@@ -195,6 +195,7 @@ describe('JWT Token Manager', () => {
     it('should use an sdk-managed token if present and not expired', async done => {
       const instance = new JwtTokenManager();
       instance.tokenInfo.access_token = ACCESS_TOKEN;
+      instance.accessToken = ACCESS_TOKEN;
       instance.expireTime = getCurrentTime() + 1000;
       instance.refreshTime = getCurrentTime() + 800;
       const token = await instance.getToken();

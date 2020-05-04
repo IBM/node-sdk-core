@@ -43,11 +43,10 @@ export type TokenManagerOptions = {
  */
 export class TokenManager {
   protected url: string;
-  protected tokenName: string;
   protected disableSslVerification: boolean;
   protected headers: OutgoingHttpHeaders;
   protected requestWrapperInstance: RequestWrapper;
-  protected tokenInfo: any;
+  protected accessToken: string;
   protected expireTime: number;
   protected refreshTime: number;
   private requestTime: number;
@@ -67,8 +66,6 @@ export class TokenManager {
   constructor(options: TokenManagerOptions) {
     // all parameters are optional
     options = options || {} as TokenManagerOptions;
-
-    this.tokenInfo = {};
 
     if (options.url) {
       // remove '/' from the end of the url
@@ -96,10 +93,10 @@ export class TokenManager {
    *   has expired.
    */
   public getToken(): Promise<any> {
-    if (!this.tokenInfo[this.tokenName] || this.isTokenExpired()) {
+    if (!this.accessToken || this.isTokenExpired()) {
       // 1. request a new token
       return this.pacedRequestToken().then(() => {
-        return this.tokenInfo[this.tokenName];
+        return this.accessToken;
       });
     } else {
       // If refresh needed, kick one off
@@ -109,7 +106,7 @@ export class TokenManager {
         });
       }
       // 2. use valid, managed token
-      return Promise.resolve(this.tokenInfo[this.tokenName]);
+      return Promise.resolve(this.accessToken);
     }
   }
 
@@ -190,9 +187,9 @@ export class TokenManager {
 
   /**
    * Parse and save token information from the response.
-   * Save all token information into field `tokenInfo`.
+   * Save the requested token into field `accessToken`.
    * Calculate expiration and refresh time from the received info
-   * and store them in object's fields`expireTime` and `refreshTime`.
+   * and store them in fields `expireTime` and `refreshTime`.
    *
    * @param tokenResponse - Response object from a token service request
    * @protected

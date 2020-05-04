@@ -29,6 +29,8 @@ export type JwtTokenManagerOptions = TokenManagerOptions;
  * to retrieve the bearer token from intended sources.
  */
 export class JwtTokenManager extends TokenManager {
+  protected tokenName: string;
+  protected tokenInfo: any;
 
   /**
    * Create a new [[JwtTokenManager]] instance.
@@ -47,6 +49,7 @@ export class JwtTokenManager extends TokenManager {
     super(options);
 
     this.tokenName = 'access_token';
+    this.tokenInfo = {};
   }
 
   /**
@@ -70,9 +73,9 @@ export class JwtTokenManager extends TokenManager {
    */
   protected saveTokenInfo(tokenResponse): void {
     const responseBody = tokenResponse.result || {};
-    const accessToken = responseBody[this.tokenName];
+    this.accessToken = responseBody[this.tokenName];
 
-    if (!accessToken) {
+    if (!this.accessToken) {
       const err = 'Access token not present in response';
       logger.error(err);
       throw new Error(err);
@@ -80,7 +83,7 @@ export class JwtTokenManager extends TokenManager {
 
     // the time of expiration is found by decoding the JWT access token
     // exp is the time of expire and iat is the time of token retrieval
-    const decodedResponse = jwt.decode(accessToken);
+    const decodedResponse = jwt.decode(this.accessToken);
     if (!decodedResponse) {
       const err = 'Access token recieved is not a valid JWT';
       logger.error(err);
