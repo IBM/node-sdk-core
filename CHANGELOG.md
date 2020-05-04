@@ -1,3 +1,10 @@
+## [2.3.2](https://github.com/IBM/node-sdk-core/compare/v2.3.1...v2.3.2) (2020-05-04)
+
+
+### Bug Fixes
+
+* flag required params as missing when explicitly undefined, null, or an empty string ([#90](https://github.com/IBM/node-sdk-core/issues/90)) ([414b674](https://github.com/IBM/node-sdk-core/commit/414b674d607e6dec73a163b0445c1854245f69b2))
+
 ## [2.3.1](https://github.com/IBM/node-sdk-core/compare/v2.3.0...v2.3.1) (2020-05-01)
 
 
