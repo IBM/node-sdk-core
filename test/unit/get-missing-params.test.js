@@ -64,4 +64,8 @@ describe('getMissingParams', function() {
       'Missing required parameters: a, b'
     );
   });
+
+  it('should not throw an error if a required parameter is given and set to false', function() {
+    expect(getMissingParams({ a: 'a', b: false }, ['a', 'b'])).toBeNull();
+  });
 });

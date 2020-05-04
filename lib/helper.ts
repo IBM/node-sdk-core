@@ -113,8 +113,8 @@ export function getMissingParams(
     missing = requires;
   } else {
     missing = [];
-    requires.forEach((require) => {
-      if (!params[require]) {
+    requires.forEach(require => {
+      if (isMissing(params[require])) {
         missing.push(require);
       }
     });
@@ -122,6 +122,17 @@ export function getMissingParams(
   return missing.length > 0
     ? new Error('Missing required parameters: ' + missing.join(', '))
     : null;
+}
+
+/**
+ * Returns true if value is determined to be "missing". Currently defining "missing"
+ * as `undefined`, `null`, or the empty string.
+ *
+ * @param value - the parameter value
+ * @returns boolean
+ */
+function isMissing(value: any): boolean {
+  return value === undefined || value === null || value === '';
 }
 
 /**
