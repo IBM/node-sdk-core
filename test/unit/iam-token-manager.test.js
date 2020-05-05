@@ -86,6 +86,7 @@ describe('iam_token_manager_v1', function() {
     };
 
     instance.tokenInfo = currentTokenInfo;
+    instance.accessToken = CURRENT_ACCESS_TOKEN;
     instance.expireTime = Math.floor(Date.now() / 1000) + 60;
     instance.refreshTime = Math.floor(Date.now() / 1000) - 1;
 
@@ -113,6 +114,7 @@ describe('iam_token_manager_v1', function() {
     };
 
     instance.tokenInfo = currentTokenInfo;
+    instance.accessToken = ACCESS_TOKEN;
     instance.expireTime = Math.floor(Date.now() / 1000) + 60 * 60;
     instance.refreshTime = Math.floor(Date.now() / 1000) + 48 * 60;
 

@@ -76,3 +76,12 @@ export function validateInput(options: any, requiredOptions: string[]): void {
     throw credentialProblems;
   }
 }
+
+/**
+ * Get the current time
+ *
+ * @returns {number} - Returns the current time in seconds.
+ */
+export function getCurrentTime(): number {
+  return Math.floor(Date.now() / 1000);
+}

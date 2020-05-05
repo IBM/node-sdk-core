@@ -33,4 +33,5 @@
 
  export { IamTokenManager } from './iam-token-manager';
  export { Cp4dTokenManager } from './cp4d-token-manager';
- export { JwtTokenManager } from './jwt-token-manager';
+ export { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
+ export { TokenManager, TokenManagerOptions } from './token-manager';

@@ -18,7 +18,7 @@ import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import logger from '../../lib/logger';
 import { computeBasicAuthHeader, validateInput } from '../utils';
-import { JwtTokenManager, TokenManagerOptions } from './jwt-token-manager';
+import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
 /**
  * Check for only one of two elements being defined.
@@ -37,7 +37,7 @@ function onlyOne(a: any, b: any): boolean {
 const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
 
 /** Configuration options for IAM token retrieval. */
-interface Options extends TokenManagerOptions {
+interface Options extends JwtTokenManagerOptions {
   apikey: string;
   clientId?: string;
   clientSecret?: string;
