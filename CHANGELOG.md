@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/IBM/node-sdk-core/compare/v2.3.2...v2.4.0) (2020-05-05)
+
+
+### Features
+
+* **token-manager:** Introduce a token-manager class for token handling ([#89](https://github.com/IBM/node-sdk-core/issues/89)) ([23c5f3f](https://github.com/IBM/node-sdk-core/commit/23c5f3ff26ec2c9ae58c47163c93a9a1532998b0))
+
 ## [2.3.2](https://github.com/IBM/node-sdk-core/compare/v2.3.1...v2.3.2) (2020-05-04)
 
 
