@@ -66,6 +66,15 @@ describe('Read External Sources Module', () => {
     expect(properties.url).toBeDefined();
   });
 
+  it('should parse values containing the "=" character from VCAP_SERVICES', () => {
+    setupIamVcap();
+    const properties = readExternalSources('equals_sign_test');
+    expect(properties).not.toBeNull();
+    expect(properties.apikey).toBe('V4HXmoUtMjohnsnow=KotN');
+    expect(properties.iam_url).toBe('https://iamhost/iam/api=');
+    expect(properties.url).toBe('https://gateway.watsonplatform.net/testService');
+  });
+
   it('should set authentication type for basic auth object from VCAP_SERVICES', () => {
     setupBasicVcap();
     const properties = readExternalSources(SERVICE_NAME);
@@ -106,6 +115,19 @@ describe('Read External Sources Module', () => {
     expect(properties.password).toBe(PASSWORD);
   });
 
+  it('should parse values containing the "=" character', () => {
+    setupEnvVars();
+    const properties = readExternalSources('Service-1');
+    expect(properties).not.toBeNull();
+    // expect the properties in the credentials file
+    expect(properties.authType).toBe('iam');
+    expect(properties.apikey).toBe('V4HXmoUtMjohnsnow=KotN');
+    expect(properties.clientId).toBe('somefake========id');
+    expect(properties.clientSecret).toBe('==my-client-secret==');
+    expect(properties.authUrl).toBe('https://iamhost/iam/api=');
+    expect(properties.url).toBe('service1.com/api');
+  });
+
   it('should convert disableSsl values from string to boolean', () => {
     process.env.TEST_SERVICE_DISABLE_SSL = 'true';
     process.env.TEST_SERVICE_AUTH_DISABLE_SSL = 'true';
@@ -130,6 +152,14 @@ function setupEnvVars() {
   process.env.TEST_SERVICE_PASSWORD = PASSWORD;
   // just for coverage on all potential auth properties
   process.env.TEST_SERVICE_BEARER_TOKEN = BEARER_TOKEN;
+  // Service1 auth properties configured with IAM and a token containing '='
+  process.env.SERVICE_1_AUTH_TYPE = 'iam';
+  process.env.SERVICE_1_APIKEY = 'V4HXmoUtMjohnsnow=KotN';
+  process.env.SERVICE_1_CLIENT_ID = 'somefake========id';
+  process.env.SERVICE_1_CLIENT_SECRET = '==my-client-secret==';
+  process.env.SERVICE_1_AUTH_URL = 'https://iamhost/iam/api=';
+  // Service1 service properties
+  process.env.SERVICE_1_URL = 'service1.com/api';
 }
 
 function setupIamVcap() {
@@ -143,6 +173,19 @@ function setupIamVcap() {
           iam_role_crn: 'crn:v1:cloud:public:iam::::serviceRole:Manager',
           iam_serviceid_crn: 'crn:v1:staging:public:iam-identity::a/::serviceid:ServiceID-1234',
           url: 'https://gateway.watsonplatform.net/test/api',
+        },
+      },
+    ],
+    equals_sign_test: [
+      {
+        credentials: {
+          apikey: 'V4HXmoUtMjohnsnow=KotN',
+          iam_apikey_description: 'Auto generated apikey...',
+          iam_apikey_name: 'auto-generated-apikey-111-222-333',
+          iam_role_crn: 'crn:v1:bluemix:public:iam::::serviceRole:Manager',
+          iam_serviceid_crn: 'crn:v1:staging:public:iam-identity::a/::serviceid:ServiceID-1234',
+          url: 'https://gateway.watsonplatform.net/testService',
+          iam_url: 'https://iamhost/iam/api=',
         },
       },
     ],
