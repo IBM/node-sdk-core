@@ -76,6 +76,10 @@ describe('Base Service', () => {
     });
 
     expect(testService.baseOptions.serviceUrl).toBe('https://example.ibm.com');
+
+    testService.setServiceUrl('https://example.ibm.com/withSlash/');
+
+    expect(testService.baseOptions.serviceUrl).toBe('https://example.ibm.com/withSlash');
   });
 
   it('should accept `url` instead of `serviceUrl` for compaitiblity', () => {

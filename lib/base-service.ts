@@ -141,7 +141,9 @@ export class BaseService {
    * @param {string} url The base URL for the service.
    */
   public setServiceUrl(url: string): void {
-    this.baseOptions.serviceUrl = url;
+    if (url) {
+      this.baseOptions.serviceUrl = stripTrailingSlash(url);
+    }
   }
 
   /**
@@ -208,7 +210,7 @@ export class BaseService {
       const { url, disableSsl } = properties;
 
       if (url) {
-        results.serviceUrl = url;
+        results.serviceUrl = stripTrailingSlash(url);
       }
       if (disableSsl === true) {
         results.disableSslVerification = disableSsl;

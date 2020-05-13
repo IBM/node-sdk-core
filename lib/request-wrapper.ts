@@ -177,7 +177,7 @@ export class RequestWrapper {
 
     // Add service default endpoint if options.url start with /
     if (url && url.charAt(0) === '/') {
-      url = serviceUrl + url;
+      url = stripTrailingSlash(serviceUrl) + url;
     }
 
     url = stripTrailingSlash(url);

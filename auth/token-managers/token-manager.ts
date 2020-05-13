@@ -15,6 +15,7 @@
  */
 
 import { OutgoingHttpHeaders } from 'http';
+import { stripTrailingSlash } from '../../lib/helper';
 import logger from '../../lib/logger';
 import { RequestWrapper } from '../../lib/request-wrapper';
 import { getCurrentTime } from "../utils";
@@ -68,12 +69,7 @@ export class TokenManager {
     options = options || {} as TokenManagerOptions;
 
     if (options.url) {
-      // remove '/' from the end of the url
-      if (options.url.slice(-1) === '/') {
-        this.url = options.url.slice(0,-1);
-      } else {
-        this.url = options.url;
-      }
+      this.url = stripTrailingSlash(options.url);
     }
 
     // request options
