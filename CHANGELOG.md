@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/IBM/node-sdk-core/compare/v2.4.0...v2.4.1) (2020-05-14)
+
+
+### Bug Fixes
+
+* Remove trailing slash from url for extra cases ([#95](https://github.com/IBM/node-sdk-core/issues/95)) ([bcaa168](https://github.com/IBM/node-sdk-core/commit/bcaa168b4717b5921d33f72287f8bfbe7ce812f7))
+
 # [2.4.0](https://github.com/IBM/node-sdk-core/compare/v2.3.2...v2.4.0) (2020-05-05)
 
 
