@@ -105,7 +105,8 @@ describe('sendRequest', () => {
         formData: '',
         qs: {},
         method: 'POST',
-        url: 'https://example.ibm.com/',
+        url: '/trailing/slash/',
+        serviceUrl: 'https://example.ibm.com/',
         headers: {
           'test-header': 'test-header-value',
         },
@@ -117,7 +118,9 @@ describe('sendRequest', () => {
 
     const res = await requestWrapperInstance.sendRequest(parameters);
     // assert results
-    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual('https://example.ibm.com');
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
+      'https://example.ibm.com/trailing/slash'
+    );
     expect(res).toEqual(expectedResult);
     done();
   });
