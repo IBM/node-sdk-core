@@ -57,7 +57,7 @@
     "@types/isstream": "^0.1.0",
     "@types/jest": "^24.0.23",
     "@types/node": "~10.14.19",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "axios-cookiejar-support": "^0.5.1",
     "camelcase": "^5.3.1",
     "debug": "^4.1.1",
