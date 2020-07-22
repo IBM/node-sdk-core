@@ -24,4 +24,6 @@ export * from './lib/helper';
 export { default as qs } from './lib/querystring';
 export { default as contentType } from './lib/content-type';
 export * from './lib/stream-to-promise';
-export { SdkUnitTestUtilities } from './lib/sdk-test-helpers';
+
+import * as unitTestUtils from './lib/sdk-test-helpers';
+export { unitTestUtils };

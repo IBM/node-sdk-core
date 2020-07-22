@@ -1,6 +1,4 @@
-test/resources
-test/unit
-test/.eslintrc.js
+test
 coverage
 .jshintignore
 .hshintrc

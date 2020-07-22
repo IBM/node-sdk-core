@@ -1,31 +1,33 @@
 'use strict';
 
-const { SdkUnitTestUtilities } = require('../../dist');
+const { unitTestUtils } = require('../../dist');
 
 describe('Unit Test Utils', () => {
-  const utils = new SdkUnitTestUtilities({ expect });
+  it('should be defined', () => {
+    expect(unitTestUtils).toBeDefined();
+  });
 
   it('should have function checkUrlAndMethod', () => {
-    expect(utils.checkUrlAndMethod).toBeDefined();
+    expect(unitTestUtils.checkUrlAndMethod).toBeDefined();
   });
 
   it('should have function checkMediaHeaders', () => {
-    expect(utils.checkMediaHeaders).toBeDefined();
+    expect(unitTestUtils.checkMediaHeaders).toBeDefined();
   });
 
   it('should have function checkUserHeader', () => {
-    expect(utils.checkUserHeader).toBeDefined();
+    expect(unitTestUtils.checkUserHeader).toBeDefined();
   });
 
   it('should have function checkForSuccessfulExecution', () => {
-    expect(utils.checkForSuccessfulExecution).toBeDefined();
+    expect(unitTestUtils.checkForSuccessfulExecution).toBeDefined();
   });
 
   it('should have function getOptions', () => {
-    expect(utils.getOptions).toBeDefined();
+    expect(unitTestUtils.getOptions).toBeDefined();
   });
 
   it('should have function expectToBePromise', () => {
-    expect(utils.expectToBePromise).toBeDefined();
+    expect(unitTestUtils.expectToBePromise).toBeDefined();
   });
 });
