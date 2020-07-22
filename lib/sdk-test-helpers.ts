@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 IBM Corp. All Rights Reserved.
+ * Copyright 2019, 2020 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-/* istanbul ignore file */
+import expect = require('expect');
 
 /**
  * This module provides a set of helper methods used to reduce code duplication in the generated unit tests
  * for the SDKs that depend on this core package. Note that these methods are not used by the tests for this
  * package - they are meant to be exported and made available to dependent libraries.
- *
- * They are included in the `test` directory since they rely on `jest` globals (like `expect`) and this
- * requires special linting rules that should not be configured in the rest of the source code.
  */
 
 /**

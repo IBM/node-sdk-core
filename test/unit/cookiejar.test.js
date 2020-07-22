@@ -1,10 +1,6 @@
 'use strict';
 
-// the `toBeInstanceOf` assertion compares for function reference equality
-// importing our own `tough-cookie` dependency would create a different function
-// reference and render the assertion unusable. the solution is to use the
-// dependency within axios-cookiejar-support
-const tough = require('axios-cookiejar-support/node_modules/tough-cookie');
+const tough = require('tough-cookie');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 
 describe('cookie jar support', () => {
