@@ -1,3 +1,10 @@
+## [2.4.2](https://github.com/IBM/node-sdk-core/compare/v2.4.1...v2.4.2) (2020-07-22)
+
+
+### Bug Fixes
+
+* move test utilities to lib/ and rely directly on `expect` ([#101](https://github.com/IBM/node-sdk-core/issues/101)) ([57ca4c2](https://github.com/IBM/node-sdk-core/commit/57ca4c2edba31a39bae479a041b974ffd94f31a3))
+
 ## [2.4.1](https://github.com/IBM/node-sdk-core/compare/v2.4.0...v2.4.1) (2020-05-14)
 
 
