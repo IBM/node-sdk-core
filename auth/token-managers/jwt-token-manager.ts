@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import extend = require('extend');
 import jwt = require('jsonwebtoken');
 import logger from '../../lib/logger';
 import { TokenManager, TokenManagerOptions } from "./token-manager";
@@ -102,7 +101,7 @@ export class JwtTokenManager extends TokenManager {
       this.refreshTime = exp - (timeToLive * (1.0 - fractionOfTtl));
     }
 
-    this.tokenInfo = extend({}, responseBody);
+    this.tokenInfo = Object.assign({}, responseBody);
   }
 
 }

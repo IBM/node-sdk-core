@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import { JwtTokenManager } from '../token-managers';
 import { Authenticator } from './authenticator';
@@ -119,7 +118,7 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
   public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
     return this.tokenManager.getToken().then(token => {
       const authHeader = { Authorization: `Bearer ${token}` };
-      requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
+      requestOptions.headers = Object.assign({}, requestOptions.headers, authHeader);
       return;
     });
   }

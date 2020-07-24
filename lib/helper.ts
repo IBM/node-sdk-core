@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import extend = require('extend');
 import fileType = require('file-type');
 import { isReadable } from 'isstream';
 import { lookup } from 'mime-types';
@@ -232,7 +231,7 @@ export function buildRequestFileObject(
 export function toLowerKeys(obj: Object): Object {
   let _obj = {};
   if (obj) {
-    _obj = extend(
+    _obj = Object.assign(
       {},
       ...Object.keys(obj).map(key => ({
         [key.toLowerCase()]: obj[key]

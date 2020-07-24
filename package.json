@@ -52,7 +52,6 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@types/extend": "~3.0.0",
     "@types/file-type": "~5.2.1",
     "@types/isstream": "^0.1.0",
     "@types/node": "~10.14.19",
@@ -62,7 +61,6 @@
     "debug": "^4.1.1",
     "dotenv": "^6.2.0",
     "expect": "^26.1.0",
-    "extend": "~3.0.2",
     "file-type": "^7.7.1",
     "form-data": "^2.3.3",
     "isstream": "~0.1.2",

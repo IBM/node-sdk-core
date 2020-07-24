@@ -15,7 +15,6 @@
  */
 
 import camelcase = require('camelcase');
-import extend = require('extend');
 
 import {
   Authenticator,
