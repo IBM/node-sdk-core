@@ -15,7 +15,6 @@
  */
 
 
-import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
@@ -85,7 +84,7 @@ export class BaseService {
     }
 
     const _options = {} as BaseServiceOptions;
-    const options = extend({}, userOptions);
+    const options = Object.assign({}, userOptions);
 
     // for compatibility
     if (options.url && !options.serviceUrl) {
@@ -110,7 +109,7 @@ export class BaseService {
     }
 
     const serviceClass = this.constructor as typeof BaseService;
-    this.baseOptions = extend(
+    this.baseOptions = Object.assign(
       { qs: {}, serviceUrl: serviceClass.DEFAULT_SERVICE_URL },
       options,
       _options
@@ -159,7 +158,7 @@ export class BaseService {
       throw new Error(err);
     }
 
-    extend(
+    Object.assign(
       this.baseOptions,
       this.readOptionsFromExternalConfig(serviceName)
     );

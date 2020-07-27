@@ -16,7 +16,6 @@
 
 import axios from 'axios';
 import axiosCookieJarSupport from 'axios-cookiejar-support';
-import extend = require('extend');
 import FormData = require('form-data');
 import https = require('https');
 import querystring = require('querystring');
@@ -61,7 +60,7 @@ export class RequestWrapper {
     };
 
     // merge valid Axios Config into default.
-    extend(true, axiosConfig, allowedAxiosConfig.reduce((reducedConfig, key) => {
+    Object.assign(axiosConfig, allowedAxiosConfig.reduce((reducedConfig, key) => {
       reducedConfig[key]=axiosOptions[key];
       return reducedConfig;
     }, {}));
@@ -131,7 +130,7 @@ export class RequestWrapper {
    * @throws {Error}
    */
   public sendRequest(parameters): Promise<any> {
-    const options = extend(true, {}, parameters.defaultOptions, parameters.options);
+    const options = Object.assign({}, parameters.defaultOptions, parameters.options);
     const { path, body, form, formData, qs, method, serviceUrl } = options;
     let { headers, url } = options;
 
@@ -166,7 +165,7 @@ export class RequestWrapper {
     url = parsePath(url, path);
 
     // Headers
-    options.headers = extend({}, options.headers);
+    options.headers = Object.assign({}, options.headers);
 
     // Convert array-valued query params to strings
     if (qs && Object.keys(qs).length > 0) {
@@ -192,7 +191,7 @@ export class RequestWrapper {
     if (formData) {
       data = multipartForm;
       // form-data generates headers that MUST be included or the request will fail
-      headers = extend(true, {}, headers, multipartForm.getHeaders());
+      headers = Object.assign({}, headers, multipartForm.getHeaders());
     }
 
     // TEMPORARY: Disabling gzipping due to bug in axios until fix is released:
