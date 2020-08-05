@@ -1,5 +1,6 @@
 'use strict';
 const fs = require('fs');
+const https = require('https');
 process.env.NODE_DEBUG = 'axios';
 jest.mock('axios');
 const axios = require('axios');
@@ -31,6 +32,71 @@ describe('axios', () => {
     // these should have been called when requestWrapperInstance was instantiated
     expect(mockAxiosInstance.interceptors.request.use).toHaveBeenCalledTimes(1);
     expect(mockAxiosInstance.interceptors.response.use).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('RequestWrapper constructor', () => {
+  // note: the cookie jar support is tested in cookiejar.test.js,
+  // so ignoring that here.
+  // also, the debug interceptors are tested elsewhere in this file
+
+  // the axios mock needs slightly different behavior here
+  beforeEach(function() {
+    axios.default.create.mockClear();
+  });
+
+  it('should handle scenario that no arguments are provided', () => {
+    const rw = new RequestWrapper();
+    expect(rw).toBeInstanceOf(RequestWrapper);
+  });
+
+  it('should set defaults for certain axios configurations', () => {
+    new RequestWrapper();
+
+    // the constructor puts together a config object and creates the
+    // axios instance with it
+    const createdAxiosConfig = axios.default.create.mock.calls[0][0];
+    expect(createdAxiosConfig.maxContentLength).toBe(Infinity);
+    expect(createdAxiosConfig.headers).toBeDefined();
+    expect(createdAxiosConfig.headers.post).toBeDefined();
+    expect(createdAxiosConfig.headers.put).toBeDefined();
+    expect(createdAxiosConfig.headers.patch).toBeDefined();
+    expect(createdAxiosConfig.headers.post['Content-Type']).toBe('application/json');
+    expect(createdAxiosConfig.headers.put['Content-Type']).toBe('application/json');
+    expect(createdAxiosConfig.headers.patch['Content-Type']).toBe('application/json');
+  });
+
+  it('should override the defaults with user-provided input', () => {
+    new RequestWrapper({
+      maxContentLength: 100,
+    });
+
+    const createdAxiosConfig = axios.default.create.mock.calls[0][0];
+    expect(createdAxiosConfig.maxContentLength).toBe(100);
+  });
+
+  it('creates a custom https agent when disableSslVerification is true', () => {
+    new RequestWrapper({
+      disableSslVerification: true,
+    });
+
+    const createdAxiosConfig = axios.default.create.mock.calls[0][0];
+    expect(createdAxiosConfig.httpsAgent).toBeInstanceOf(https.Agent);
+    expect(createdAxiosConfig.httpsAgent.options).toBeDefined();
+    expect(createdAxiosConfig.httpsAgent.options.rejectUnauthorized).toBe(false);
+  });
+
+  it('updates the https agent if provided by the user', () => {
+    new RequestWrapper({
+      disableSslVerification: true,
+      httpsAgent: new https.Agent({ keepAlive: true }),
+    });
+
+    const createdAxiosConfig = axios.default.create.mock.calls[0][0];
+    expect(createdAxiosConfig.httpsAgent).toBeDefined();
+    expect(createdAxiosConfig.httpsAgent.keepAlive).toBe(true); // this is false by default
+    expect(createdAxiosConfig.httpsAgent.options).toBeDefined();
+    expect(createdAxiosConfig.httpsAgent.options.rejectUnauthorized).toBe(false);
   });
 });
 

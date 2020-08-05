@@ -15,6 +15,7 @@
  */
 
 import axios from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import axiosCookieJarSupport from 'axios-cookiejar-support';
 import FormData = require('form-data');
 import https = require('https');
@@ -26,9 +27,6 @@ import logger from './logger';
 const isBrowser = typeof window === 'object';
 const globalTransactionId = 'x-global-transaction-id';
 
-// Limit the type of axios configs to be customizable
-const allowedAxiosConfig = ['transformRequest', 'transformResponse', 'paramsSerializer', 'paramsSerializer', 'timeout', 'withCredentials', 'adapter', 'responseType', 'responseEncoding', 'xsrfCookieName', 'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'maxContentLength', 'validateStatus', 'maxRedirects', 'socketPath', 'httpAgent', 'httpsAgent', 'proxy', 'cancelToken', 'jar'];
-
 export class RequestWrapper {
   private axiosInstance;
 
@@ -39,12 +37,7 @@ export class RequestWrapper {
     // axios sets the default Content-Type for `post`, `put`, and `patch` operations
     // to 'application/x-www-form-urlencoded'. This causes problems, so overriding the
     // defaults here
-    const axiosConfig = {
-      httpsAgent: new https.Agent({
-        // disableSslVerification is the parameter we expose to the user,
-        // it is the opposite of rejectUnauthorized
-        rejectUnauthorized: !axiosOptions.disableSslVerification
-      }),
+    const axiosConfig: AxiosRequestConfig = {
       maxContentLength: Infinity,
       headers: {
         post: {
@@ -59,11 +52,25 @@ export class RequestWrapper {
       }
     };
 
-    // merge valid Axios Config into default.
-    Object.assign(axiosConfig, allowedAxiosConfig.reduce((reducedConfig, key) => {
-      reducedConfig[key]=axiosOptions[key];
-      return reducedConfig;
-    }, {}));
+    // merge axios config into default
+    Object.assign(axiosConfig, axiosOptions);
+
+    // if the user explicitly sets `disableSslVerification` to true,
+    // `rejectUnauthorized` must be set to false in the https agent
+    if (axiosOptions.disableSslVerification === true) {
+      // the user may have already provided a custom agent. if so, update it
+      if (axiosConfig.httpsAgent) {
+        // check for presence of `options` field for "type safety"
+        if (axiosConfig.httpsAgent.options) {
+          axiosConfig.httpsAgent.options.rejectUnauthorized = false;
+        }
+      } else {
+        // if no agent is present, create a new one
+        axiosConfig.httpsAgent = new https.Agent({
+          rejectUnauthorized: false,
+        });
+      }
+    }
 
     this.axiosInstance = axios.create(axiosConfig);
 
