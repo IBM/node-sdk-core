@@ -1,3 +1,10 @@
+## [2.4.3](https://github.com/IBM/node-sdk-core/compare/v2.4.2...v2.4.3) (2020-08-05)
+
+
+### Bug Fixes
+
+* support `disableSslVerification` when user provides custom httpsAgent ([#104](https://github.com/IBM/node-sdk-core/issues/104)) ([ef39327](https://github.com/IBM/node-sdk-core/commit/ef39327947a42ed357f19fa0db7f5edd063698c4))
+
 ## [2.4.2](https://github.com/IBM/node-sdk-core/compare/v2.4.1...v2.4.2) (2020-07-22)
 
 
