@@ -17,6 +17,7 @@
 import axios from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import axiosCookieJarSupport from 'axios-cookiejar-support';
+import extend = require('extend');
 import FormData = require('form-data');
 import https = require('https');
 import querystring = require('querystring');
@@ -53,7 +54,7 @@ export class RequestWrapper {
     };
 
     // merge axios config into default
-    Object.assign(axiosConfig, axiosOptions);
+    extend(true, axiosConfig, axiosOptions);
 
     // if the user explicitly sets `disableSslVerification` to true,
     // `rejectUnauthorized` must be set to false in the https agent
@@ -137,7 +138,7 @@ export class RequestWrapper {
    * @throws {Error}
    */
   public sendRequest(parameters): Promise<any> {
-    const options = Object.assign({}, parameters.defaultOptions, parameters.options);
+    const options = extend(true, {}, parameters.defaultOptions, parameters.options);
     const { path, body, form, formData, qs, method, serviceUrl } = options;
     let { headers, url } = options;
 
@@ -198,7 +199,7 @@ export class RequestWrapper {
     if (formData) {
       data = multipartForm;
       // form-data generates headers that MUST be included or the request will fail
-      headers = Object.assign({}, headers, multipartForm.getHeaders());
+      headers = extend(true, {}, headers, multipartForm.getHeaders());
     }
 
     // TEMPORARY: Disabling gzipping due to bug in axios until fix is released:

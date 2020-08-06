@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import extend = require('extend');
 import { computeBasicAuthHeader, validateInput } from '../utils';
 import { Authenticator } from './authenticator';
 import { AuthenticateOptions } from './authenticator-interface';
@@ -71,7 +72,7 @@ export class BasicAuthenticator extends Authenticator {
    */
   public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error>  {
     return new Promise((resolve) => {
-      requestOptions.headers = Object.assign({}, requestOptions.headers, this.authHeader);
+      requestOptions.headers = extend(true, {}, requestOptions.headers, this.authHeader);
       resolve();
     });
   }
