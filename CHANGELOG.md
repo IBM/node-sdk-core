@@ -1,3 +1,10 @@
+## [2.4.4](https://github.com/IBM/node-sdk-core/compare/v2.4.3...v2.4.4) (2020-08-06)
+
+
+### Bug Fixes
+
+* use `extend` with deep copy where necessary ([#106](https://github.com/IBM/node-sdk-core/issues/106)) ([566b81f](https://github.com/IBM/node-sdk-core/commit/566b81ffea3e88d148d1a7471b01e436432efb75))
+
 ## [2.4.3](https://github.com/IBM/node-sdk-core/compare/v2.4.2...v2.4.3) (2020-08-05)
 
 
