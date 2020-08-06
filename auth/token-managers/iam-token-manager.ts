@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import extend = require('extend');
 import { OutgoingHttpHeaders } from 'http';
 import logger from '../../lib/logger';
 import { computeBasicAuthHeader, validateInput } from '../utils';
@@ -132,7 +133,7 @@ export class IamTokenManager extends JwtTokenManager {
       options: {
         url: this.url,
         method: 'POST',
-        headers: Object.assign({}, this.headers, requiredHeaders),
+        headers: extend(true, {}, this.headers, requiredHeaders),
         form: {
           grant_type: 'urn:ibm:params:oauth:grant-type:apikey',
           apikey: this.apikey,

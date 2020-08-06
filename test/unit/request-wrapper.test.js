@@ -282,6 +282,58 @@ describe('sendRequest', () => {
     done();
   });
 
+  it('should handle merging of different options objects', async done => {
+    const parameters = {
+      defaultOptions: {
+        qs: {
+          version: '2017-10-15',
+        },
+        serviceUrl: 'https://example.ibm.com',
+        headers: {
+          'test-header': 'test-header-value',
+        },
+      },
+      options: {
+        url: '/v1/environments',
+        method: 'GET',
+        qs: {
+          field: 'value',
+        },
+        headers: {
+          'add-header': 'add-header-value',
+        },
+      },
+    };
+
+    let serializedParams;
+    mockAxiosInstance.mockImplementation(requestParams => {
+      // This runs the paramsSerializer code in the payload we send with axios
+      serializedParams = requestParams.paramsSerializer(requestParams.params);
+      return Promise.resolve(axiosResolveValue);
+    });
+
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    // assert results
+    expect(serializedParams).toBe('version=2017-10-15&field=value');
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
+      'https://example.ibm.com/v1/environments'
+    );
+    expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
+      // 'Accept-Encoding': 'gzip',
+      'test-header': 'test-header-value',
+      'add-header': 'add-header-value',
+    });
+    expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.options.method);
+    expect(mockAxiosInstance.mock.calls[0][0].params).toEqual({
+      field: 'value',
+      version: '2017-10-15',
+    });
+    expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
+    expect(res).toEqual(expectedResult);
+    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    done();
+  });
+
   it('should send a request with multiform data', async done => {
     const parameters = {
       defaultOptions: {

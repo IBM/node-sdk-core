@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import extend = require('extend');
 import { computeBasicAuthHeader, validateInput } from '../utils';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
@@ -95,7 +96,7 @@ export class Cp4dTokenManager extends JwtTokenManager {
       options: {
         url: this.url,
         method: 'GET',
-        headers: Object.assign({}, this.headers, requiredHeaders),
+        headers: extend(true, {}, this.headers, requiredHeaders),
         rejectUnauthorized: !this.disableSslVerification,
       }
     };
