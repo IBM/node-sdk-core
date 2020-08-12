@@ -1,3 +1,10 @@
+## [2.4.5](https://github.com/IBM/node-sdk-core/compare/v2.4.4...v2.4.5) (2020-08-12)
+
+
+### Bug Fixes
+
+* pin typescript dependency to 3.8.3 ([#107](https://github.com/IBM/node-sdk-core/issues/107)) ([ef27bc9](https://github.com/IBM/node-sdk-core/commit/ef27bc94b7626880cb4ab21c5c711bb98b34272d))
+
 ## [2.4.4](https://github.com/IBM/node-sdk-core/compare/v2.4.3...v2.4.4) (2020-08-06)
 
 
