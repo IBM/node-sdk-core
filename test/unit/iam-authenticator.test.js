@@ -21,6 +21,7 @@ describe('IAM Authenticator', () => {
     headers: {
       'X-My-Header': 'some-value',
     },
+    scope: 'A B C D',
   };
 
   it('should store all config options on the class', () => {
@@ -32,6 +33,7 @@ describe('IAM Authenticator', () => {
     expect(authenticator.clientSecret).toBe(config.clientSecret);
     expect(authenticator.disableSslVerification).toBe(config.disableSslVerification);
     expect(authenticator.headers).toEqual(config.headers);
+    expect(authenticator.scope).toEqual(config.scope);
 
     // should also create a token manager
     expect(authenticator.tokenManager).toBeInstanceOf(IamTokenManager);
@@ -64,6 +66,9 @@ describe('IAM Authenticator', () => {
 
     // verify that the original options are kept intact
     expect(options.headers['X-Some-Header']).toBe('user-supplied header');
+    // verify the scope param wasn't set
+    expect(authenticator.scope).toBeUndefined();
+    expect(authenticator.tokenManager.scope).toBeUndefined();
     done();
   });
 
@@ -104,5 +109,17 @@ describe('IAM Authenticator', () => {
 
     // also, verify that the underlying token manager has been updated
     expect(authenticator.tokenManager.headers).toEqual(newHeader);
+  });
+
+  it('should re-set the scope using the setter', () => {
+    const authenticator = new IamAuthenticator(config);
+    expect(authenticator.headers).toEqual(config.headers);
+
+    const newScope = 'john snow';
+    authenticator.setScope(newScope);
+    expect(authenticator.scope).toEqual(newScope);
+
+    // also, verify that the underlying token manager has been updated
+    expect(authenticator.tokenManager.scope).toEqual(newScope);
   });
 });

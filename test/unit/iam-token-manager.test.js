@@ -133,6 +133,8 @@ describe('iam_token_manager_v1', function() {
     const sendRequestArgs = mockSendRequest.mock.calls[0][0];
     const authHeader = sendRequestArgs.options.headers.Authorization;
     expect(authHeader).toBeUndefined();
+    const scope = sendRequestArgs.options.form.scope;
+    expect(scope).toBeUndefined();
     done();
   });
 
@@ -149,6 +151,25 @@ describe('iam_token_manager_v1', function() {
     const sendRequestArgs = mockSendRequest.mock.calls[0][0];
     const authHeader = sendRequestArgs.options.headers.Authorization;
     expect(authHeader).toBe('Basic Zm9vOmJhcg==');
+    const scope = sendRequestArgs.options.form.scope;
+    expect(scope).toBeUndefined();
+    done();
+  });
+
+  it('should include scope form param based on scope via ctor', async done => {
+    const instance = new IamTokenManager({
+      apikey: 'abcd-1234',
+      scope: 'john snow',
+    });
+
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
+
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const form = sendRequestArgs.options.form;
+    expect(form).not.toBeNull();
+    const scope = form.scope;
+    expect(scope).toBe('john snow');
     done();
   });
 
@@ -170,6 +191,8 @@ describe('iam_token_manager_v1', function() {
     const sendRequestArgs = mockSendRequest.mock.calls[0][0];
     const authHeader = sendRequestArgs.options.headers.Authorization;
     expect(authHeader).toBeUndefined();
+    const scope = sendRequestArgs.options.form.scope;
+    expect(scope).toBeUndefined();
     done();
   });
 
@@ -190,6 +213,25 @@ describe('iam_token_manager_v1', function() {
     const sendRequestArgs = mockSendRequest.mock.calls[0][0];
     const authHeader = sendRequestArgs.options.headers.Authorization;
     expect(authHeader).toBeUndefined();
+    const scope = sendRequestArgs.options.form.scope;
+    expect(scope).toBeUndefined();
+    done();
+  });
+
+  it('should not include scope form param based on scope via ctor', async done => {
+    const instance = new IamTokenManager({
+      apikey: 'abcd-1234',
+      scope: null,
+    });
+
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
+
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const form = sendRequestArgs.options.form;
+    expect(form).not.toBeNull();
+    const scope = form.scope;
+    expect(scope).toBeUndefined();
     done();
   });
 
@@ -206,6 +248,44 @@ describe('iam_token_manager_v1', function() {
     const sendRequestArgs = mockSendRequest.mock.calls[0][0];
     const authHeader = sendRequestArgs.options.headers.Authorization;
     expect(authHeader).toBe('Basic Zm9vOmJhcg==');
+    const scope = sendRequestArgs.options.form.scope;
+    expect(scope).toBeUndefined();
+    done();
+  });
+
+  it('should include scope form param based on scope via setter', async done => {
+    const instance = new IamTokenManager({
+      apikey: 'abcd-1234',
+    });
+
+    instance.setScope('john snow');
+
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
+
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const form = sendRequestArgs.options.form;
+    expect(form).not.toBeNull();
+    const scope = form.scope;
+    expect(scope).toBe('john snow');
+    done();
+  });
+
+  it('should not include scope form param based on scope via setter', async done => {
+    const instance = new IamTokenManager({
+      apikey: 'abcd-1234',
+    });
+
+    instance.setScope(null);
+
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
+
+    await instance.getToken();
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    const form = sendRequestArgs.options.form;
+    expect(form).not.toBeNull();
+    const scope = form.scope;
+    expect(scope).toBeUndefined();
     done();
   });
 
@@ -228,6 +308,8 @@ describe('iam_token_manager_v1', function() {
     const sendRequestArgs = mockSendRequest.mock.calls[0][0];
     const authHeader = sendRequestArgs.options.headers.Authorization;
     expect(authHeader).toBeUndefined();
+    const scope = sendRequestArgs.options.form.scope;
+    expect(scope).toBeUndefined();
     done();
   });
 
@@ -250,6 +332,8 @@ describe('iam_token_manager_v1', function() {
     const sendRequestArgs = mockSendRequest.mock.calls[0][0];
     const authHeader = sendRequestArgs.options.headers.Authorization;
     expect(authHeader).toBeUndefined();
+    const scope = sendRequestArgs.options.form.scope;
+    expect(scope).toBeUndefined();
     done();
   });
 
@@ -266,6 +350,8 @@ describe('iam_token_manager_v1', function() {
     const sendRequestArgs = mockSendRequest.mock.calls[0][0];
     const authHeader = sendRequestArgs.options.headers.Authorization;
     expect(authHeader).toBeUndefined();
+    const scope = sendRequestArgs.options.form.scope;
+    expect(scope).toBeUndefined();
     done();
   });
 });

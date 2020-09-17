@@ -8,6 +8,7 @@ const APIKEY = '123456789';
 const USERNAME = 'michael-leaue';
 const PASSWORD = 'snarkypuppy123';
 const BEARER_TOKEN = 'abc123';
+const SCOPE = 'A B C D';
 
 describe('Read External Sources Module', () => {
   // setup
@@ -45,6 +46,7 @@ describe('Read External Sources Module', () => {
     // service props
     expect(properties.disableSsl).toBe(true);
     expect(properties.url).toBe('service.com/api');
+    expect(properties.scope).toBe(SCOPE);
   });
 
   // env
@@ -64,6 +66,7 @@ describe('Read External Sources Module', () => {
     expect(properties).not.toBeNull();
     expect(properties.apikey).toBe(APIKEY);
     expect(properties.url).toBeDefined();
+    expect(properties.scope).toBe(SCOPE);
   });
 
   it('should parse values containing the "=" character from VCAP_SERVICES', () => {
@@ -126,6 +129,7 @@ describe('Read External Sources Module', () => {
     expect(properties.clientSecret).toBe('==my-client-secret==');
     expect(properties.authUrl).toBe('https://iamhost/iam/api=');
     expect(properties.url).toBe('service1.com/api');
+    expect(properties.scope).toBe(SCOPE);
   });
 
   it('should convert disableSsl values from string to boolean', () => {
@@ -160,6 +164,8 @@ function setupEnvVars() {
   process.env.SERVICE_1_AUTH_URL = 'https://iamhost/iam/api=';
   // Service1 service properties
   process.env.SERVICE_1_URL = 'service1.com/api';
+  // set a scope value
+  process.env.SERVICE_1_SCOPE = SCOPE;
 }
 
 function setupIamVcap() {
@@ -173,6 +179,7 @@ function setupIamVcap() {
           iam_role_crn: 'crn:v1:cloud:public:iam::::serviceRole:Manager',
           iam_serviceid_crn: 'crn:v1:staging:public:iam-identity::a/::serviceid:ServiceID-1234',
           url: 'https://gateway.watsonplatform.net/test/api',
+          scope: 'A B C D',
         },
       },
     ],

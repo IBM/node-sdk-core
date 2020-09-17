@@ -35,12 +35,14 @@ function onlyOne(a: any, b: any): boolean {
 }
 
 const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
+const SCOPE = 'scope';
 
 /** Configuration options for IAM token retrieval. */
 interface Options extends JwtTokenManagerOptions {
   apikey: string;
   clientId?: string;
   clientSecret?: string;
+  scope?: string;
 }
 
 /**
@@ -53,6 +55,7 @@ export class IamTokenManager extends JwtTokenManager {
   private apikey: string;
   private clientId: string;
   private clientSecret: string;
+  private scope: string;
 
   /**
    *
@@ -87,10 +90,25 @@ export class IamTokenManager extends JwtTokenManager {
     if (options.clientSecret) {
       this.clientSecret = options.clientSecret;
     }
+    if (options.scope) {
+      this.scope = options.scope;
+    }
     if (onlyOne(options.clientId, options.clientSecret)) {
       // tslint:disable-next-line
       logger.warn(CLIENT_ID_SECRET_WARNING);
     }
+  }
+
+  /**
+   * Set the IAM `scope` value.
+   * This value is the form parameter to use when fetching the bearer token 
+   * from the IAM token server.
+   *
+   * @param {string} scope - A space seperated string that makes up the scope parameter.
+   * @returns {void}
+   */
+  public setScope(scope: string): void {
+    this.scope = scope;
   }
 
   /**
@@ -142,6 +160,10 @@ export class IamTokenManager extends JwtTokenManager {
         rejectUnauthorized: !this.disableSslVerification,
       }
     };
+
+    if (this.scope) {
+      parameters.options.form[SCOPE] = this.scope;
+    }
 
     return this.requestWrapperInstance.sendRequest(parameters);
   }
