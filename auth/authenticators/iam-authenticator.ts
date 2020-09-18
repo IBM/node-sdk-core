@@ -33,6 +33,11 @@ export interface Options extends BaseOptions {
    * authorization header for IAM token requests.
    */
   clientSecret?: string;
+
+  /**
+   * The "scope" parameter to use when fetching the bearer token from the IAM token server.
+   */
+  scope?: string;
 }
 
 /**
@@ -52,6 +57,7 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
   private apikey: string;
   private clientId: string;
   private clientSecret: string;
+  private scope: string;
 
   /**
    *
@@ -68,6 +74,8 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
    *   authorization header for IAM token requests.
    * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
+   * @param {string} [options.scope] The "scope" parameter to use when fetching the bearer token from the
+   *   IAM token server.
    * @throws {Error} When the configuration options are not valid.
    */
   constructor(options: Options) {
@@ -78,6 +86,7 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
     this.apikey = options.apikey;
     this.clientId = options.clientId;
     this.clientSecret = options.clientSecret;
+    this.scope = options.scope;
 
     // the param names are shared between the authenticator and the token
     // manager so we can just pass along the options object
@@ -97,5 +106,16 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
 
     // update properties in token manager
     this.tokenManager.setClientIdAndSecret(clientId, clientSecret);
+  }
+
+  /**
+   * Setter for the "scope" parameter to use when fetching the bearer token from the IAM token server.
+   * @param {string} scope A space seperated string that makes up the scope parameter
+   */
+  public setScope(scope: string): void {
+    this.scope = scope;
+
+    // update properties in token manager
+    this.tokenManager.setScope(scope);
   }
 }

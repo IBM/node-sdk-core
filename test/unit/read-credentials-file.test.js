@@ -83,6 +83,13 @@ describe('read ibm credentials file', () => {
       expect(obj.SERVICE_1_CLIENT_SECRET).toBe('==my-client-secret==');
       expect(obj.SERVICE_1_AUTH_DISABLE_SSL).toBe('');
       expect(obj.SERVICE_1_URL).toBe('service1.com/api');
+
+      expect(obj.SERVICE_2_AUTH_TYPE).toBe('iam');
+      expect(obj.SERVICE_2_APIKEY).toBe('V4HXmoUtMjohnsnow=KotN');
+      expect(obj.SERVICE_2_AUTH_URL).toBe('https://iamhost/iam/api=');
+      expect(obj.SERVICE_2_CLIENT_ID).toBe('somefake========id');
+      expect(obj.SERVICE_2_CLIENT_SECRET).toBe('==my-client-secret==');
+      expect(obj.SERVICE_2_SCOPE).toBe('A B C D');
     });
 
     it('should return credentials as an object for alternate filename', () => {

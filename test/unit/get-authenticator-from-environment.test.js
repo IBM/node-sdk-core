@@ -89,6 +89,13 @@ describe('Get Authenticator From Environment Module', () => {
       getAuthenticatorFromEnvironment(SERVICE_NAME);
     }).toThrow();
   });
+
+  it('should get iam authenticator and set the scope', () => {
+    setUpIamPayloadWithScope();
+    const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
+    expect(authenticator).toBeInstanceOf(IamAuthenticator);
+    expect(authenticator.scope).toBe('jon snow');
+  });
 });
 
 // mock payloads for the read-external-sources module
@@ -117,6 +124,14 @@ function setUpIamPayload() {
   readExternalSourcesMock.mockImplementation(() => ({
     authType: 'iam',
     apikey: APIKEY,
+  }));
+}
+
+function setUpIamPayloadWithScope() {
+  readExternalSourcesMock.mockImplementation(() => ({
+    authType: 'iam',
+    apikey: APIKEY,
+    scope: 'jon snow',
   }));
 }
 
