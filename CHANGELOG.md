@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/IBM/node-sdk-core/compare/v2.4.5...v2.5.0) (2020-09-18)
+
+
+### Features
+
+* **IAM Authenticator:** add support for optional 'scope' property ([#109](https://github.com/IBM/node-sdk-core/issues/109)) ([1c258b7](https://github.com/IBM/node-sdk-core/commit/1c258b71470c0228e021c959984cc887d849887b))
+
 ## [2.4.5](https://github.com/IBM/node-sdk-core/compare/v2.4.4...v2.4.5) (2020-08-12)
 
 
