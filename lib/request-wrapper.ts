@@ -202,11 +202,8 @@ export class RequestWrapper {
       headers = extend(true, {}, headers, multipartForm.getHeaders());
     }
 
-    // TEMPORARY: Disabling gzipping due to bug in axios until fix is released:
-    // https://github.com/axios/axios/pull/1129
-
     // accept gzip encoded responses if Accept-Encoding is not already set
-    // headers['Accept-Encoding'] = headers['Accept-Encoding'] || 'gzip';
+    headers['Accept-Encoding'] = headers['Accept-Encoding'] || 'gzip';
 
     const requestParams = {
       url,
