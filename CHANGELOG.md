@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/IBM/node-sdk-core/compare/v2.5.0...v2.6.0) (2020-09-25)
+
+
+### Features
+
+* upgrade axios and re-enable gzipping responses ([#110](https://github.com/IBM/node-sdk-core/issues/110)) ([9e94251](https://github.com/IBM/node-sdk-core/commit/9e94251fd23cb60517022455017ed34d3a419362))
+
 # [2.5.0](https://github.com/IBM/node-sdk-core/compare/v2.4.5...v2.5.0) (2020-09-18)
 
 
