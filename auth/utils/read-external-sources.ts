@@ -81,13 +81,17 @@ function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
     }
   });
 
-  // all env variables are parsed as strings, convert disable ssl vars to boolean
+  // all env variables are parsed as strings, convert boolean vars as needed
   if (typeof credentials.disableSsl === 'string') {
     credentials.disableSsl = credentials.disableSsl === 'true';
   }
 
   if (typeof credentials.authDisableSsl === 'string') {
     credentials.authDisableSsl = credentials.authDisableSsl === 'true';
+  }
+
+  if (typeof credentials.enableGzip === 'string') {
+    credentials.enableGzip = credentials.enableGzip === 'true';
   }
 
   return credentials;

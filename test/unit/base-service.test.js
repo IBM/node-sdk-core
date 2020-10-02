@@ -103,6 +103,22 @@ describe('Base Service', () => {
     expect(testService.baseOptions.serviceUrl).toBe(newUrl);
   });
 
+  it('should support enabling gzip compression after instantiation', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+
+    expect(testService.baseOptions.enableGzipCompression).toBeFalsy();
+
+    const on = true;
+    testService.setEnableGzipCompression(on);
+    expect(testService.requestWrapperInstance.compressRequestData).toBe(on);
+
+    const off = false;
+    testService.setEnableGzipCompression(off);
+    expect(testService.requestWrapperInstance.compressRequestData).toBe(off);
+  });
+
   it('should throw an error if an authenticator is not passed in', () => {
     expect(() => new TestService()).toThrow();
   });
@@ -374,6 +390,7 @@ describe('Base Service', () => {
     readExternalSourcesMock.mockImplementation(() => ({
       url: 'abc123.com',
       disableSsl: true,
+      enableGzip: true,
     }));
 
     testService.configureService(DEFAULT_NAME);
@@ -381,6 +398,7 @@ describe('Base Service', () => {
     expect(readExternalSourcesMock).toHaveBeenCalled();
     expect(testService.baseOptions.serviceUrl).toEqual('abc123.com');
     expect(testService.baseOptions.disableSslVerification).toEqual(true);
+    expect(testService.baseOptions.enableGzipCompression).toEqual(true);
   });
 
   it('configureService method should throw error if service name is not provided', () => {

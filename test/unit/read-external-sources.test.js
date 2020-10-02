@@ -132,12 +132,14 @@ describe('Read External Sources Module', () => {
     expect(properties.scope).toBe(SCOPE);
   });
 
-  it('should convert disableSsl values from string to boolean', () => {
+  it('should convert certain values from string to boolean', () => {
     process.env.TEST_SERVICE_DISABLE_SSL = 'true';
     process.env.TEST_SERVICE_AUTH_DISABLE_SSL = 'true';
+    process.env.TEST_SERVICE_ENABLE_GZIP = 'true';
     const properties = readExternalSources(SERVICE_NAME);
     expect(typeof properties.disableSsl).toBe('boolean');
     expect(typeof properties.authDisableSsl).toBe('boolean');
+    expect(typeof properties.enableGzip).toBe('boolean');
   });
 });
 

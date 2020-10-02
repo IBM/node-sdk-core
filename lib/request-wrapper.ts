@@ -19,20 +19,25 @@ import { AxiosRequestConfig } from 'axios';
 import axiosCookieJarSupport from 'axios-cookiejar-support';
 import extend = require('extend');
 import FormData = require('form-data');
+import { OutgoingHttpHeaders } from 'http';
 import https = require('https');
+import isStream = require('isstream');
 import querystring = require('querystring');
-import { PassThrough as readableStream } from 'stream';
+import zlib = require('zlib');
 import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileData, isFileWithMetadata, stripTrailingSlash } from './helper';
 import logger from './logger';
+import { streamToPromise } from './stream-to-promise';
 
 const isBrowser = typeof window === 'object';
 const globalTransactionId = 'x-global-transaction-id';
 
 export class RequestWrapper {
   private axiosInstance;
+  private compressRequestData: boolean;
 
   constructor(axiosOptions?) {
     axiosOptions = axiosOptions || {};
+    this.compressRequestData = Boolean(axiosOptions.enableGzipCompression);
 
     // override several axios defaults
     // axios sets the default Content-Type for `post`, `put`, and `patch` operations
@@ -137,7 +142,7 @@ export class RequestWrapper {
    * @returns {ReadableStream|undefined}
    * @throws {Error}
    */
-  public sendRequest(parameters): Promise<any> {
+  public async sendRequest(parameters): Promise<any> {
     const options = extend(true, {}, parameters.defaultOptions, parameters.options);
     const { path, body, form, formData, qs, method, serviceUrl } = options;
     let { headers, url } = options;
@@ -204,6 +209,11 @@ export class RequestWrapper {
 
     // accept gzip encoded responses if Accept-Encoding is not already set
     headers['Accept-Encoding'] = headers['Accept-Encoding'] || 'gzip';
+
+    // compress request body data if enabled
+    if (this.compressRequestData) {
+      data = await this.gzipRequestBody(data, headers);
+    }
 
     const requestParams = {
       url,
@@ -310,6 +320,48 @@ export class RequestWrapper {
     }
 
     return error;
+  }
+
+  private async gzipRequestBody(data: any, headers: OutgoingHttpHeaders): Promise<Buffer|any> {
+    // skip compression if user has set the encoding header to gzip
+    const contentSetToGzip = 
+      headers['Content-Encoding'] &&
+      headers['Content-Encoding'].toString().includes('gzip');
+
+    if (!data || contentSetToGzip) {
+      return data;
+    }
+
+    let reqBuffer: Buffer;
+
+    try {
+      if (isStream(data)) {
+        reqBuffer = Buffer.from(await streamToPromise(data));
+      } else if (data.toString && data.toString() !== '[object Object]' && !Array.isArray(data)) {
+        // this handles pretty much any primitive that isnt a JSON object or array
+        reqBuffer = Buffer.from(data.toString());
+      } else {
+        reqBuffer = Buffer.from(JSON.stringify(data));
+      }
+    } catch (err) {
+      logger.error('Error converting request body to a buffer - data will not be compressed.');
+      logger.debug(err);
+      return data;
+    }
+
+    try {
+      data = zlib.gzipSync(reqBuffer);
+
+      // update the headers by reference - only if the data was actually compressed
+      headers['Content-Encoding'] = 'gzip';
+    } catch (err) {
+      // if an exception is caught, `data` will still be in its original form
+      // we can just proceed with the request uncompressed
+      logger.error('Error compressing request body - data will not be compressed.');
+      logger.debug(err);
+    }
+
+    return data;
   }
 }
 

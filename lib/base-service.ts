@@ -146,6 +146,15 @@ export class BaseService {
   }
 
   /**
+   * Turn request body compression on or off.
+   *
+   * @param {boolean} setting Will turn it on if 'true', off if 'false'. 
+   */
+  public setEnableGzipCompression(setting: boolean): void {
+    this.requestWrapperInstance.compressRequestData = setting;
+  }
+
+  /**
    * Configure the service using external configuration
    *
    * @param {string} serviceName The name of the service. Will be used to read from external
@@ -205,14 +214,21 @@ export class BaseService {
     const properties = readExternalSources(serviceName);
 
     if (properties !== null) {
-      // the user can define two client-level variables in the credentials file: url and disableSsl
-      const { url, disableSsl } = properties;
+      // the user can define the following client-level variables in the credentials file:
+      // - url
+      // - disableSsl
+      // - enableGzip
+
+      const { url, disableSsl, enableGzip } = properties;
 
       if (url) {
         results.serviceUrl = stripTrailingSlash(url);
       }
       if (disableSsl === true) {
         results.disableSslVerification = disableSsl;
+      }
+      if (enableGzip === true) {
+        results.enableGzipCompression = enableGzip;
       }
     }
 
