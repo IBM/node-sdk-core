@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/IBM/node-sdk-core/compare/v2.6.0...v2.7.0) (2020-10-06)
+
+
+### Features
+
+* add support for compressing request bodies ([#111](https://github.com/IBM/node-sdk-core/issues/111)) ([7692d71](https://github.com/IBM/node-sdk-core/commit/7692d710fc2fb4f2c1cdfb3045d943c15d13bf1d))
+
 # [2.6.0](https://github.com/IBM/node-sdk-core/compare/v2.5.0...v2.6.0) (2020-09-25)
 
 
