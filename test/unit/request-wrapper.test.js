@@ -1,6 +1,9 @@
 'use strict';
 const fs = require('fs');
 const https = require('https');
+const { Readable } = require('stream');
+const zlib = require('zlib');
+const logger = require('../../dist/lib/logger').default;
 process.env.NODE_DEBUG = 'axios';
 jest.mock('axios');
 const axios = require('axios');
@@ -48,6 +51,9 @@ describe('RequestWrapper constructor', () => {
   it('should handle scenario that no arguments are provided', () => {
     const rw = new RequestWrapper();
     expect(rw).toBeInstanceOf(RequestWrapper);
+
+    // without any arguments, the constructor should set its member variables accordingly
+    expect(rw.compressRequestData).toBe(false);
   });
 
   it('should set defaults for certain axios configurations', () => {
@@ -97,6 +103,11 @@ describe('RequestWrapper constructor', () => {
     expect(createdAxiosConfig.httpsAgent.keepAlive).toBe(true); // this is false by default
     expect(createdAxiosConfig.httpsAgent.options).toBeDefined();
     expect(createdAxiosConfig.httpsAgent.options.rejectUnauthorized).toBe(false);
+  });
+
+  it('should set `compressRequestData` based on user options', () => {
+    const rw = new RequestWrapper({ enableGzipCompression: true });
+    expect(rw.compressRequestData).toBe(true);
   });
 });
 
@@ -481,6 +492,33 @@ describe('sendRequest', () => {
     done();
   });
 
+  it('should call `gzipRequestBody` if configured to do so', async () => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        url: '/trailing/slash/',
+        serviceUrl: 'https://example.ibm.com/',
+        headers: {
+          'test-header': 'test-header-value',
+        },
+        responseType: 'buffer',
+      },
+    };
+
+    requestWrapperInstance.compressRequestData = true;
+
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+    const gzipSpy = jest.spyOn(requestWrapperInstance, 'gzipRequestBody');
+    await requestWrapperInstance.sendRequest(parameters);
+    expect(gzipSpy).toHaveBeenCalled();
+
+    // reset the alteration of the requestWrapperInstance
+    requestWrapperInstance.compressRequestData = false;
+  });
+
   // Need to rewrite this to test instantiation with userOptions
 
   //   it('should keep parameters in options that are not explicitly set in requestwrapper', async done => {
@@ -678,5 +716,154 @@ describe('formatError', () => {
     const error = requestWrapperInstance.formatError(basicAxiosError);
     expect(error instanceof Error).toBe(true);
     expect(error.message).toBe('error in building the request');
+  });
+});
+
+describe('gzipRequestBody', () => {
+  const gzipSpy = jest.spyOn(zlib, 'gzipSync');
+  const errorLogSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
+  const debugLogSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
+
+  afterEach(() => {
+    gzipSpy.mockClear();
+    errorLogSpy.mockClear();
+    debugLogSpy.mockClear();
+  });
+
+  it('should return unaltered data if encoding header is already set to gzip', async () => {
+    let data = 42;
+    const headers = { 'Content-Encoding': 'gzip' };
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data).toBe(42);
+  });
+
+  it('should return unaltered data if encoding header values include gzip', async () => {
+    let data = 42;
+    const headers = { 'Content-Encoding': ['gzip', 'other-value'] };
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data).toBe(42);
+  });
+
+  it('should return unaltered data if data is null', async () => {
+    let data = null;
+    const headers = {};
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(gzipSpy).not.toHaveBeenCalled();
+    expect(data).toBe(null);
+  });
+
+  it('should compress json data into a buffer', async () => {
+    let data = { key: 'value' };
+    const headers = {};
+
+    const jsonSpy = jest.spyOn(JSON, 'stringify');
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data).toBeInstanceOf(Buffer);
+    expect(gzipSpy).toHaveBeenCalled();
+    expect(jsonSpy).toHaveBeenCalled();
+    expect(headers['Content-Encoding']).toBe('gzip');
+
+    jsonSpy.mockRestore();
+  });
+
+  it('should compress array data into a buffer', async () => {
+    let data = ['request', 'body'];
+    const headers = {};
+
+    const jsonSpy = jest.spyOn(JSON, 'stringify');
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data).toBeInstanceOf(Buffer);
+    expect(gzipSpy).toHaveBeenCalled();
+    expect(jsonSpy).toHaveBeenCalled();
+    expect(headers['Content-Encoding']).toBe('gzip');
+
+    jsonSpy.mockRestore();
+  });
+
+  it('should compress string data into a buffer', async () => {
+    let data = 'body';
+    const headers = {};
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data).toBeInstanceOf(Buffer);
+    expect(gzipSpy).toHaveBeenCalled();
+    expect(headers['Content-Encoding']).toBe('gzip');
+  });
+
+  it('should compress number data into a buffer', async () => {
+    let data = 42;
+    const headers = {};
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data).toBeInstanceOf(Buffer);
+    expect(gzipSpy).toHaveBeenCalled();
+    expect(headers['Content-Encoding']).toBe('gzip');
+  });
+
+  it('should compress stream data into a buffer', async () => {
+    let data = Readable.from(['request body']);
+    const headers = {};
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data).toBeInstanceOf(Buffer);
+    expect(gzipSpy).toHaveBeenCalled();
+    expect(headers['Content-Encoding']).toBe('gzip');
+  });
+
+  it('should log an error and return data unaltered if data cant be stringified', async () => {
+    let data = { key: 'value' };
+    data.circle = data;
+    const headers = {};
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data.key).toBe('value');
+    expect(errorLogSpy).toHaveBeenCalled();
+    expect(errorLogSpy.mock.calls[0][0]).toBe(
+      'Error converting request body to a buffer - data will not be compressed.'
+    );
+    expect(debugLogSpy).toHaveBeenCalled();
+    expect(debugLogSpy.mock.calls[0][0].message).toMatch('Converting circular structure to JSON');
+  });
+
+  it('should log an error and return data unaltered if data cant be gzipped', async () => {
+    let data = 42;
+    const headers = {};
+
+    gzipSpy.mockImplementationOnce(() => {
+      throw new Error('bad zip');
+    });
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data).toBe(42);
+    expect(errorLogSpy).toHaveBeenCalled();
+    expect(errorLogSpy.mock.calls[0][0]).toBe(
+      'Error compressing request body - data will not be compressed.'
+    );
+    expect(debugLogSpy).toHaveBeenCalled();
+    expect(debugLogSpy.mock.calls[0][0].message).toMatch('bad zip');
+  });
+
+  it('should not update header if data cant be gzipped', async () => {
+    let data = 42;
+    const headers = {};
+
+    gzipSpy.mockImplementationOnce(() => {
+      throw new Error('bad zip');
+    });
+
+    data = await requestWrapperInstance.gzipRequestBody(data, headers);
+    expect(data).toBe(42);
+    expect(headers['Content-Encoding']).toBeUndefined();
+    expect(errorLogSpy).toHaveBeenCalled();
+    expect(errorLogSpy.mock.calls[0][0]).toBe(
+      'Error compressing request body - data will not be compressed.'
+    );
+    expect(debugLogSpy).toHaveBeenCalled();
+    expect(debugLogSpy.mock.calls[0][0].message).toMatch('bad zip');
   });
 });
