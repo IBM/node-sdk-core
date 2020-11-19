@@ -43,7 +43,7 @@
     "jest": "^25.5.4",
     "object.assign": "~4.1.0",
     "prettier": "~1.13.5",
-    "semantic-release": "^15.13.24",
+    "semantic-release": "^17.2.3",
     "tsc-publish": "^0.5.2",
     "tslint": "~5.10.0",
     "tslint-config-prettier": "~1.13.0",
