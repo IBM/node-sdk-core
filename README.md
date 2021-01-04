@@ -36,7 +36,7 @@ There are two ways to create an authenticator:
 1. Creating an instance and providing credentials programmatically
 2. Using the `getAuthenticatorFromEnvironment` function to create an authenticator from externally-provided configuration
 
-For more information about the various authentication types and how to use them with your services, click [here](AUTHENTICATION.md).
+For more information about the various authentication types and how to use them with your services, click [here](Authentication.md).
 
 ### Examples
 
