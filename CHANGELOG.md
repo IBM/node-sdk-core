@@ -1,3 +1,11 @@
+## [2.7.1](https://github.com/IBM/node-sdk-core/compare/v2.7.0...v2.7.1) (2021-01-07)
+
+
+### Bug Fixes
+
+* **build:** upgrade semantic-release to latest (17.3.1) ([#120](https://github.com/IBM/node-sdk-core/issues/120)) ([3e3c099](https://github.com/IBM/node-sdk-core/commit/3e3c099ccb2b28d92dfa6d9bc975978aa461f5f7))
+* change description inside package.json ([#119](https://github.com/IBM/node-sdk-core/issues/119)) ([30aeda9](https://github.com/IBM/node-sdk-core/commit/30aeda9a413087c351d43a500c336bff7c2fcec8))
+
 # [2.7.0](https://github.com/IBM/node-sdk-core/compare/v2.6.0...v2.7.0) (2020-10-06)
 
 
