@@ -1,3 +1,10 @@
+## [2.7.2](https://github.com/IBM/node-sdk-core/compare/v2.7.1...v2.7.2) (2021-02-10)
+
+
+### Bug Fixes
+
+* **build:** main migration ([#121](https://github.com/IBM/node-sdk-core/issues/121)) ([1919510](https://github.com/IBM/node-sdk-core/commit/19195104395ef830c020c36a0f36b60dce0c8eff))
+
 ## [2.7.1](https://github.com/IBM/node-sdk-core/compare/v2.7.0...v2.7.1) (2021-01-07)
 
 
