@@ -19,4 +19,4 @@ deploy:
   script: npx semantic-release
   on:
     node: 12
-    repo: IBM/node-sdk-core
+    branch: main
