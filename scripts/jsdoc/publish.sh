@@ -14,7 +14,7 @@ if [ "$TRAVIS_REPO_SLUG" == "IBM/node-sdk-core" ] && [ "$TRAVIS_PULL_REQUEST" ==
 
   pushd gh-pages
     # make a directory named after the branch/tag for the current build, replacing the previous one if present
-    # on tagged builds, $TRAVIS_BRANCH is the tag (e.g. v1.2.3), otherwise it's the branch name (e.g. master)
+    # on tagged builds, $TRAVIS_BRANCH is the tag (e.g. v1.2.3), otherwise it's the branch name (e.g. main)
     rm -rf $TRAVIS_BRANCH
     mkdir $TRAVIS_BRANCH
     cp -Rf ../doc/. ./$TRAVIS_BRANCH
