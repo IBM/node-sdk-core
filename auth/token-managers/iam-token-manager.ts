@@ -52,6 +52,7 @@ interface Options extends JwtTokenManagerOptions {
  */
 export class IamTokenManager extends JwtTokenManager {
   protected requiredOptions = ['apikey'];
+  protected refreshToken: string;
   private apikey: string;
   private clientId: string;
   private clientSecret: string;
@@ -128,6 +129,33 @@ export class IamTokenManager extends JwtTokenManager {
     if (onlyOne(clientId, clientSecret)) {
       // tslint:disable-next-line
       logger.warn(CLIENT_ID_SECRET_WARNING);
+    }
+  }
+
+  /**
+   * Return the most recently stored refresh token.
+   *
+   * @public
+   * @returns {string}
+   */
+  public getRefreshToken(): string {
+    return this.refreshToken;
+  }
+
+  /**
+   * Extend this method from the parent class to extract the refresh token from
+   * the request and save it.
+   *
+   * @param tokenResponse - Response object from JWT service request
+   * @protected
+   * @returns {void}
+   */
+  protected saveTokenInfo(tokenResponse): void {
+    super.saveTokenInfo(tokenResponse);
+
+    const responseBody = tokenResponse.result || {};
+    if (responseBody.refresh_token) {
+      this.refreshToken = responseBody.refresh_token;
     }
   }
 
