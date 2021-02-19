@@ -1,3 +1,10 @@
+# [2.8.0](https://github.com/IBM/node-sdk-core/compare/v2.7.2...v2.8.0) (2021-02-19)
+
+
+### Features
+
+* **iam-authenticator:** expose refresh token with a getter - `getRefreshToken()` ([#122](https://github.com/IBM/node-sdk-core/issues/122)) ([d3c4611](https://github.com/IBM/node-sdk-core/commit/d3c46116e42ae6aff9e4a686e9ae4212635e46f2))
+
 ## [2.7.2](https://github.com/IBM/node-sdk-core/compare/v2.7.1...v2.7.2) (2021-02-10)
 
 
