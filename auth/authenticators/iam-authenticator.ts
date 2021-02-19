@@ -118,4 +118,14 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
     // update properties in token manager
     this.tokenManager.setScope(scope);
   }
+
+  /**
+   * Return the most recently stored refresh token.
+   *
+   * @public
+   * @returns {string}
+   */
+  public getRefreshToken(): string {
+    return this.tokenManager.getRefreshToken();
+  }
 }

@@ -21,10 +21,11 @@ RequestWrapper.mockImplementation(() => {
 
 const ACCESS_TOKEN = '9012';
 const CURRENT_ACCESS_TOKEN = '1234';
+const REFRESH_TOKEN = '3456';
 const IAM_RESPONSE = {
   result: {
     access_token: ACCESS_TOKEN,
-    refresh_token: '3456',
+    refresh_token: REFRESH_TOKEN,
     token_type: 'Bearer',
     expires_in: 3600,
     expiration: Math.floor(Date.now() / 1000) + 3600,
@@ -353,5 +354,18 @@ describe('iam_token_manager_v1', function() {
     const scope = sendRequestArgs.options.form.scope;
     expect(scope).toBeUndefined();
     done();
+  });
+
+  it('should save and expose the refresh token', async () => {
+    const instance = new IamTokenManager({
+      apikey: 'abcd-1234',
+    });
+
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
+
+    await instance.getToken();
+
+    expect(instance.refreshToken).toBe(REFRESH_TOKEN);
+    expect(instance.getRefreshToken()).toBe(REFRESH_TOKEN);
   });
 });
