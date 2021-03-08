@@ -34,8 +34,25 @@ function onlyOne(a: any, b: any): boolean {
   return Boolean((a && !b) || (b && !a));
 }
 
+/**
+ * Remove a given suffix if it exists.
+ *
+ * @param {string} str - The base string to operate on
+ * @param {string} suffix - The suffix to remove, if present
+ * @returns {string}
+ */
+function removeSuffix(str: string, suffix: string): string {
+  if (str.endsWith(suffix)) {
+    str = str.substring(0, str.lastIndexOf(suffix));
+  }
+
+  return str;
+}
+
 const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
 const SCOPE = 'scope';
+const DEFAULT_IAM_URL = 'https://iam.cloud.ibm.com';
+const OPERATION_PATH = '/identity/token';
 
 /** Configuration options for IAM token retrieval. */
 interface Options extends JwtTokenManagerOptions {
@@ -68,7 +85,7 @@ export class IamTokenManager extends JwtTokenManager {
    *   authorization header for IAM token requests.
    * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
-   * @param {string} [url='https://iam.cloud.ibm.com/identity/token'] The IAM endpoint for token requests.
+   * @param {string} [url='https://iam.cloud.ibm.com'] The IAM endpoint for token requests.
    * @param {boolean} [options.disableSslVerification] A flag that indicates
    *   whether verification of the token server's SSL certificate should be
    *   disabled or not.
@@ -83,7 +100,8 @@ export class IamTokenManager extends JwtTokenManager {
 
     this.apikey = options.apikey;
 
-    this.url = this.url || 'https://iam.cloud.ibm.com/identity/token';
+    // Canonicalize the URL by removing the operation path if it was specified by the user.
+    this.url = this.url ? removeSuffix(this.url, OPERATION_PATH) : DEFAULT_IAM_URL;
 
     if (options.clientId) {
       this.clientId = options.clientId;
@@ -177,7 +195,7 @@ export class IamTokenManager extends JwtTokenManager {
 
     const parameters = {
       options: {
-        url: this.url,
+        url: this.url + OPERATION_PATH,
         method: 'POST',
         headers: extend(true, {}, this.headers, requiredHeaders),
         form: {

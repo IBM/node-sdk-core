@@ -368,4 +368,48 @@ describe('iam_token_manager_v1', function() {
     expect(instance.refreshToken).toBe(REFRESH_TOKEN);
     expect(instance.getRefreshToken()).toBe(REFRESH_TOKEN);
   });
+
+  it('should use the default url if none is given', () => {
+    const instance = new IamTokenManager({
+      apikey: 'abcd-1234',
+    });
+
+    expect(instance.url).toBe('https://iam.cloud.ibm.com');
+  });
+
+  it('should accept a URL from the user if given', () => {
+    const url = 'some-url.com';
+    const instance = new IamTokenManager({
+      apikey: 'abcd-1234',
+      url,
+    });
+
+    expect(instance.url).toBe(url);
+  });
+
+  it('should remove the operation path from a user-given URL', () => {
+    const url = 'some-url.com';
+    const instance = new IamTokenManager({
+      apikey: 'abcd-1234',
+      url: url + '/identity/token',
+    });
+
+    expect(instance.url).toBe(url);
+  });
+
+  it('should add the operation path to the stored URL at request time', async () => {
+    const url = 'some-url.com';
+    const instance = new IamTokenManager({
+      apikey: 'abcd-1234',
+      url,
+    });
+
+    expect(instance.url).toBe(url);
+
+    mockSendRequest.mockImplementation(parameters => Promise.resolve(IAM_RESPONSE));
+    await instance.getToken();
+
+    const sendRequestArgs = mockSendRequest.mock.calls[0][0];
+    expect(sendRequestArgs.options.url).toBe(url + '/identity/token');
+  });
 });
