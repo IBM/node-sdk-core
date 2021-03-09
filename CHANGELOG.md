@@ -1,3 +1,10 @@
+## [2.8.1](https://github.com/IBM/node-sdk-core/compare/v2.8.0...v2.8.1) (2021-03-09)
+
+
+### Bug Fixes
+
+* canonicalize iam url ([#125](https://github.com/IBM/node-sdk-core/issues/125)) ([7ce6588](https://github.com/IBM/node-sdk-core/commit/7ce6588c8d0967d13bc3d548a30787360aae6205))
+
 # [2.8.0](https://github.com/IBM/node-sdk-core/compare/v2.7.2...v2.8.0) (2021-02-19)
 
 
