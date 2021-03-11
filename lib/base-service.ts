@@ -152,6 +152,9 @@ export class BaseService {
    */
   public setEnableGzipCompression(setting: boolean): void {
     this.requestWrapperInstance.compressRequestData = setting;
+
+    // persist setting so that baseOptions accurately reflects the state of the flag
+    this.baseOptions.enableGzipCompression = setting;
   }
 
   /**
