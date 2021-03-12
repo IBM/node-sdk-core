@@ -1,3 +1,10 @@
+# [2.9.0](https://github.com/IBM/node-sdk-core/compare/v2.8.2...v2.9.0) (2021-03-12)
+
+
+### Features
+
+* support username/apikey use-case in CloudPakForDataAuthenticator ([#126](https://github.com/IBM/node-sdk-core/issues/126)) ([a7ca3a0](https://github.com/IBM/node-sdk-core/commit/a7ca3a083b3580b1776544a2958c90c1608fcc7c))
+
 ## [2.8.2](https://github.com/IBM/node-sdk-core/compare/v2.8.1...v2.8.2) (2021-03-12)
 
 
