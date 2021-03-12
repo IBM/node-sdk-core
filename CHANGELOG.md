@@ -1,3 +1,10 @@
+## [2.8.2](https://github.com/IBM/node-sdk-core/compare/v2.8.1...v2.8.2) (2021-03-12)
+
+
+### Bug Fixes
+
+* persist `enableGzipCompression` setting on the base service ([#127](https://github.com/IBM/node-sdk-core/issues/127)) ([1398044](https://github.com/IBM/node-sdk-core/commit/13980441fad3e0e71eb5e58ce33d66d63782308e))
+
 ## [2.8.1](https://github.com/IBM/node-sdk-core/compare/v2.8.0...v2.8.1) (2021-03-09)
 
 
