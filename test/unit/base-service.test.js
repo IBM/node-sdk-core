@@ -113,10 +113,12 @@ describe('Base Service', () => {
     const on = true;
     testService.setEnableGzipCompression(on);
     expect(testService.requestWrapperInstance.compressRequestData).toBe(on);
+    expect(testService.baseOptions.enableGzipCompression).toBe(on);
 
     const off = false;
     testService.setEnableGzipCompression(off);
     expect(testService.requestWrapperInstance.compressRequestData).toBe(off);
+    expect(testService.baseOptions.enableGzipCompression).toBe(off);
   });
 
   it('should throw an error if an authenticator is not passed in', () => {
