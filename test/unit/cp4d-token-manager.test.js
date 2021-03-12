@@ -15,22 +15,37 @@ RequestWrapper.mockImplementation(() => {
 
 const USERNAME = 'sherlock';
 const PASSWORD = 'holmes';
+const APIKEY = '221b-b4k3r';
 const URL = 'tokenservice.com';
-const FULL_URL = 'tokenservice.com/v1/preauth/validateAuth';
+const FULL_URL = 'tokenservice.com/v1/authorize';
 
 describe('CP4D Token Manager', () => {
   describe('constructor', () => {
-    it('should initialize base variables', () => {
+    it('should initialize base variables - password edition', () => {
       const instance = new Cp4dTokenManager({
         url: 'tokenservice.com',
         username: USERNAME,
         password: PASSWORD,
       });
 
-      expect(instance.tokenName).toBe('accessToken');
+      expect(instance.tokenName).toBe('token');
       expect(instance.url).toBe(FULL_URL);
       expect(instance.username).toBe(USERNAME);
       expect(instance.password).toBe(PASSWORD);
+      expect(instance.disableSslVerification).toBe(false);
+    });
+
+    it('should initialize base variables - apikey edition', () => {
+      const instance = new Cp4dTokenManager({
+        url: 'tokenservice.com',
+        username: USERNAME,
+        apikey: APIKEY,
+      });
+
+      expect(instance.tokenName).toBe('token');
+      expect(instance.url).toBe(FULL_URL);
+      expect(instance.username).toBe(USERNAME);
+      expect(instance.apikey).toBe(APIKEY);
       expect(instance.disableSslVerification).toBe(false);
     });
 
@@ -63,7 +78,7 @@ describe('CP4D Token Manager', () => {
             username: USERNAME,
             password: PASSWORD,
           })
-      ).toThrow();
+      ).toThrow(/Missing required parameter/);
     });
 
     it('should throw an error if `username` is not given', () => {
@@ -73,22 +88,38 @@ describe('CP4D Token Manager', () => {
             password: PASSWORD,
             url: URL,
           })
-      ).toThrow();
+      ).toThrow(/Missing required parameter/);
     });
 
-    it('should throw an error if `password` is not given', () => {
+    it('should throw an error if neither `password` nor `apikey` are given', () => {
       expect(
         () =>
           new Cp4dTokenManager({
-            username: 'abc',
+            username: USERNAME,
             url: URL,
           })
-      ).toThrow();
+      ).toThrow(/Exactly one of `apikey` or `password` must be specified/);
+    });
+
+    it('should throw an error if both `password` and `apikey` are given', () => {
+      expect(
+        () =>
+          new Cp4dTokenManager({
+            username: USERNAME,
+            url: URL,
+            password: PASSWORD,
+            apikey: APIKEY,
+          })
+      ).toThrow(/Exactly one of `apikey` or `password` must be specified/);
     });
   });
 
   describe('requestToken', () => {
-    it('should call sendRequest with all request options', () => {
+    afterEach(() => {
+      mockSendRequest.mockClear();
+    });
+
+    it('should call sendRequest with all request options - password edition', () => {
       const instance = new Cp4dTokenManager({
         url: URL,
         username: USERNAME,
@@ -103,10 +134,39 @@ describe('CP4D Token Manager', () => {
       expect(mockSendRequest).toHaveBeenCalled();
       expect(params.options).toBeDefined();
       expect(params.options.url).toBe(FULL_URL);
-      expect(params.options.method).toBe('GET');
+      expect(params.options.method).toBe('POST');
       expect(params.options.rejectUnauthorized).toBe(true);
       expect(params.options.headers).toBeDefined();
-      expect(params.options.headers.Authorization).toBe('Basic c2hlcmxvY2s6aG9sbWVz');
+      expect(params.options.headers['Content-Type']).toBe('application/json');
+      expect(params.options.body).toBeDefined();
+      expect(params.options.body.username).toBe(USERNAME);
+      expect(params.options.body.password).toBe(PASSWORD);
+      expect(params.options.body.api_key).toBeUndefined();
+    });
+
+    it('should call sendRequest with all request options - API key edition', () => {
+      const instance = new Cp4dTokenManager({
+        url: URL,
+        username: USERNAME,
+        apikey: APIKEY,
+      });
+
+      instance.requestToken();
+
+      // extract arguments sendRequest was called with
+      const params = mockSendRequest.mock.calls[0][0];
+
+      expect(mockSendRequest).toHaveBeenCalled();
+      expect(params.options).toBeDefined();
+      expect(params.options.url).toBe(FULL_URL);
+      expect(params.options.method).toBe('POST');
+      expect(params.options.rejectUnauthorized).toBe(true);
+      expect(params.options.headers).toBeDefined();
+      expect(params.options.headers['Content-Type']).toBe('application/json');
+      expect(params.options.body).toBeDefined();
+      expect(params.options.body.username).toBe(USERNAME);
+      // expect(params.options.body.api_key).toBe(APIKEY);
+      expect(params.options.body.password).toBeUndefined();
     });
   });
 });

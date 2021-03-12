@@ -6,7 +6,7 @@ coverage
 .idea
 doc/
 .vscode/
-.env
+*.env
 .eslintcache
 lib/*.js
 auth/**/*.js

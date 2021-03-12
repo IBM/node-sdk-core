@@ -5,6 +5,7 @@ const { Cp4dTokenManager } = require('../../dist/auth');
 
 const USERNAME = 'danmullen';
 const PASSWORD = 'gogators';
+const APIKEY = '32611';
 const URL = 'myicp.com:1234';
 const CONFIG = {
   username: USERNAME,
@@ -41,22 +42,43 @@ describe('CP4D Authenticator', () => {
     expect(authenticator.tokenManager).toBeInstanceOf(Cp4dTokenManager);
   });
 
-  it('should throw an error when username is not provided', () => {
-    expect(() => {
-      new CloudPakForDataAuthenticator({ password: PASSWORD });
-    }).toThrow();
+  it('should store apikey on the class if provided', () => {
+    const authenticator = new CloudPakForDataAuthenticator({
+      url: URL,
+      username: USERNAME,
+      apikey: APIKEY,
+    });
+
+    expect(authenticator.apikey).toBe(APIKEY);
   });
 
-  it('should throw an error when password is not provided', () => {
+  it('should throw an error when username is not provided', () => {
     expect(() => {
-      new CloudPakForDataAuthenticator({ username: USERNAME });
-    }).toThrow();
+      new CloudPakForDataAuthenticator({ url: URL, password: PASSWORD });
+    }).toThrow(/Missing required parameter/);
   });
 
   it('should throw an error when url is not provided', () => {
     expect(() => {
       new CloudPakForDataAuthenticator({ password: PASSWORD, username: USERNAME });
-    }).toThrow();
+    }).toThrow(/Missing required parameter/);
+  });
+
+  it('should throw an error when both password and apikey are missing', () => {
+    expect(() => {
+      new CloudPakForDataAuthenticator({ username: USERNAME, url: URL });
+    }).toThrow(/Exactly one of `apikey` or `password` must be specified/);
+  });
+
+  it('should throw an error when both password and apikey are present', () => {
+    expect(() => {
+      new CloudPakForDataAuthenticator({
+        username: USERNAME,
+        url: URL,
+        password: PASSWORD,
+        apikey: APIKEY,
+      });
+    }).toThrow(/Exactly one of `apikey` or `password` must be specified/);
   });
 
   it('should throw an error when username has a bad character', () => {
@@ -74,6 +96,16 @@ describe('CP4D Authenticator', () => {
       new CloudPakForDataAuthenticator({
         username: USERNAME,
         password: '{some-password}',
+        url: URL,
+      });
+    }).toThrow(/Revise these credentials/);
+  });
+
+  it('should throw an error when apikey has a bad character', () => {
+    expect(() => {
+      new CloudPakForDataAuthenticator({
+        username: USERNAME,
+        apikey: '{some-apikey}',
         url: URL,
       });
     }).toThrow(/Revise these credentials/);

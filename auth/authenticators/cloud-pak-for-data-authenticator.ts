@@ -15,7 +15,6 @@
  */
 
 import { Cp4dTokenManager } from '../token-managers';
-import { validateInput } from '../utils';
 import { BaseOptions, TokenRequestBasedAuthenticator }
   from './token-request-based-authenticator';
 
@@ -23,14 +22,16 @@ import { BaseOptions, TokenRequestBasedAuthenticator }
 export interface Options extends BaseOptions {
   /** The username used to obtain a bearer token. */
   username: string;
-  /** The password used to obtain a bearer token. */
-  password: string;
+  /** The password used to obtain a bearer token [required if apikey not specified]. */
+  password?: string;
+  /** The API key used to obtain a bearer token [required if password not specified]. */
+  apikey?: string;
   /** The URL representing the Cloud Pak for Data token service endpoint. */
   url: string;
 }
 
 /**
- * The [[CloudPakForDataAuthenticator]] will use the user-supplied url, username and password values to obtain
+ * The [[CloudPakForDataAuthenticator]] will either use a username/password pair or a username/apikey pair to obtain
  * a bearer token from a token server.  When the bearer token expires, a new token is obtained from the token server.
  *
  * The bearer token will be sent as an Authorization header in the form:
@@ -39,17 +40,20 @@ export interface Options extends BaseOptions {
  */
 export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
 {
-  protected requiredOptions = ['username', 'password', 'url'];
+  protected requiredOptions = ['username', 'url'];
   protected tokenManager: Cp4dTokenManager;
   private username: string;
   private password: string;
+  private apikey: string;
+
   /**
    * Create a new [[CloudPakForDataAuthenticator]] instance.
    *
    * @param {object} options Configuration options for CloudPakForData authentication.
    * @param {string} options.url For HTTP token requests.
    * @param {string} options.username The username used to obtain a bearer token.
-   * @param {string} options.password The password used to obtain a bearer token.
+   * @param {string} [options.password] The password used to obtain a bearer token [required if apikey not specified].
+   * @param {string} [options.apikey] The API key used to obtain a bearer token [required if password not specified].
    * @param {boolean} [options.disableSslVerification] A flag that indicates
    *   whether verification of the token server's SSL certificate should be
    *   disabled or not
@@ -60,13 +64,13 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
   constructor(options: Options) {
     super(options);
 
-    validateInput(options, this.requiredOptions);
-
     this.username = options.username;
     this.password = options.password;
+    this.apikey = options.apikey;
 
     // the param names are shared between the authenticator and the token
-    // manager so we can just pass along the options object
+    // manager so we can just pass along the options object.
+    // also, the token manager will handle input validation
     this.tokenManager = new Cp4dTokenManager(options);
   }
 }

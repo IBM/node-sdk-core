@@ -22,10 +22,12 @@ import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 interface Options extends JwtTokenManagerOptions {
   /** The endpoint for CP4D token requests. */
   url: string;
-  /** The username portion of basic authentication. */
+  /** The username used to obtain a bearer token. */
   username: string;
-  /** The password portion of basic authentication. */
-  password: string;
+  /** The password used to obtain a bearer token [required if apikey not specified]. */
+  password?: string;
+  /** The API key used to obtain a bearer token [required if password not specified]. */
+  apikey?: string;
 }
 
 // this interface is a representation of the response
@@ -50,16 +52,18 @@ export interface CpdTokenData {
  * to acquire CP4D tokens.
  */
 export class Cp4dTokenManager extends JwtTokenManager {
-  protected requiredOptions = ['username', 'password', 'url'];
+  protected requiredOptions = ['username', 'url'];
   private username: string;
   private password: string;
+  private apikey: string;
 
   /**
    * Create a new [[Cp4dTokenManager]] instance.
    *
    * @param {object} options Configuration options.
-   * @param {string} options.username The username portion of basic authentication.
-   * @param {string} options.password The password portion of basic authentication.
+   * @param {string} options.username The username used to obtain a bearer token.
+   * @param {string} options.password The password used to obtain a bearer token [required if apikey not specified].
+   * @param {string} options.apikey The API key used to obtain a bearer token [required if password not specified].
    * @param {string} options.url The endpoint for CP4D token requests.
    * @param {boolean} [options.disableSslVerification] A flag that indicates
    *   whether verification of the token server's SSL certificate should be
@@ -71,11 +75,15 @@ export class Cp4dTokenManager extends JwtTokenManager {
   constructor(options: Options) {
     super(options);
 
-    this.tokenName = 'accessToken';
+    this.tokenName = 'token';
+
+    if ((!options.password && !options.apikey) || (options.password && options.apikey)) {
+      throw new Error('Exactly one of `apikey` or `password` must be specified.');
+    }
 
     validateInput(options, this.requiredOptions);
 
-    const tokenApiPath = '/v1/preauth/validateAuth';
+    const tokenApiPath = '/v1/authorize';
 
     // do not append the path if user already has
     if (this.url && !this.url.endsWith(tokenApiPath)) {
@@ -84,18 +92,24 @@ export class Cp4dTokenManager extends JwtTokenManager {
 
     this.username = options.username;
     this.password = options.password;
+    this.apikey = options.apikey;
   }
 
   protected requestToken(): Promise<any> {
     // these cannot be overwritten
     const requiredHeaders = {
-      Authorization: computeBasicAuthHeader(this.username, this.password),
+      'Content-Type': 'application/json',
     };
 
     const parameters = {
       options: {
         url: this.url,
-        method: 'GET',
+        body: {
+          username: this.username,
+          password: this.password,
+          api_key: this.apikey,
+        },
+        method: 'POST',
         headers: extend(true, {}, this.headers, requiredHeaders),
         rejectUnauthorized: !this.disableSslVerification,
       }
