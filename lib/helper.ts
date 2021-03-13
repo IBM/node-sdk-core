@@ -96,6 +96,21 @@ export function stripTrailingSlash(url: string): string {
 }
 
 /**
+ * Return a query parameter value from a URL
+ *
+ * @param {string} urlStr - the url string.
+ * @param {string} param - the name of the query parameter
+ *                     whose value should be returned
+ * @returns {string} the value of the `param` query parameter
+ * @throws if urlStr is an invalid URL
+ */
+export function getQueryParam(urlStr: string, param: string): string {
+  // The base URL is a dummy value just so we can process relative URLs
+  const url = new URL(urlStr, 'https://foo.bar');
+  return url.searchParams.get(param);
+}
+
+/**
  * Validates that all required params are provided
  * @param params - the method parameters.
  * @param requires - the required parameter names.
