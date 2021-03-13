@@ -1,3 +1,10 @@
+# [2.10.0](https://github.com/IBM/node-sdk-core/compare/v2.9.0...v2.10.0) (2021-03-13)
+
+
+### Features
+
+* add getQueryParam utility method to support pagination ([#128](https://github.com/IBM/node-sdk-core/issues/128)) ([d4f067a](https://github.com/IBM/node-sdk-core/commit/d4f067a8607fd10e0ea064e939b9c7f4e49108ce))
+
 # [2.9.0](https://github.com/IBM/node-sdk-core/compare/v2.8.2...v2.9.0) (2021-03-12)
 
 
