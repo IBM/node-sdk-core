@@ -51,7 +51,12 @@ export function readCredentialsFile() {
 }
 
 export function fileExistsAtPath(filepath): boolean {
-  return fs.existsSync(filepath) && fs.lstatSync(filepath).isFile();
+  if (fs.existsSync(filepath)) {
+    const stats = fs.lstatSync(filepath);
+    return stats.isFile() || stats.isSymbolicLink();
+  }
+
+  return false;
 }
 
 export function constructFilepath(filepath): string {
