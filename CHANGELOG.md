@@ -1,3 +1,10 @@
+## [2.10.1](https://github.com/IBM/node-sdk-core/compare/v2.10.0...v2.10.1) (2021-03-16)
+
+
+### Bug Fixes
+
+* enable symbolic-link credentials files ([#129](https://github.com/IBM/node-sdk-core/issues/129)) ([4b87d42](https://github.com/IBM/node-sdk-core/commit/4b87d423e320163bf34c9126ca06f848355f2ad4))
+
 # [2.10.0](https://github.com/IBM/node-sdk-core/compare/v2.9.0...v2.10.0) (2021-03-13)
 
 
