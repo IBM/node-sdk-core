@@ -62,6 +62,11 @@ describe('read ibm credentials file', () => {
       const path = '/path/to/file/wrong-file.env';
       expect(fileExistsAtPath(path)).toBe(false);
     });
+
+    it('should return true for a symbolic link', () => {
+      const path = __dirname + '/../resources/symlink-creds.txt';
+      expect(fileExistsAtPath(path)).toBe(true);
+    });
   });
 
   describe('read credentials file', () => {
