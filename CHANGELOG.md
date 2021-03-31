@@ -1,3 +1,10 @@
+## [2.10.2](https://github.com/IBM/node-sdk-core/compare/v2.10.1...v2.10.2) (2021-03-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies to avoid vulnerabilities ([#131](https://github.com/IBM/node-sdk-core/issues/131)) ([b931472](https://github.com/IBM/node-sdk-core/commit/b931472d458b370af2132d387b70aedb067b3fb2))
+
 ## [2.10.1](https://github.com/IBM/node-sdk-core/compare/v2.10.0...v2.10.1) (2021-03-16)
 
 
