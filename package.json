@@ -75,7 +75,8 @@
     "tough-cookie": "^4.0.0"
   },
   "browser": {
-    "./auth/utils/read-credentials-file": "./auth/utils/read-credentials-file.browser"
+    "./auth/utils/read-credentials-file": "./auth/utils/read-credentials-file.browser",
+    "./lib/sdk-test-helpers": "./lib/sdk-test-helpers.browser"
   },
   "engines": {
     "node": ">=10"
