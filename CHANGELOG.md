@@ -1,3 +1,10 @@
+## [2.10.3](https://github.com/IBM/node-sdk-core/compare/v2.10.2...v2.10.3) (2021-04-01)
+
+
+### Bug Fixes
+
+* stub sdk-test-helpers in browser environments ([#132](https://github.com/IBM/node-sdk-core/issues/132)) ([006991b](https://github.com/IBM/node-sdk-core/commit/006991bfe89c0671f9c053457cebe52cec924fed))
+
 ## [2.10.2](https://github.com/IBM/node-sdk-core/compare/v2.10.1...v2.10.2) (2021-03-31)
 
 
