@@ -22,6 +22,10 @@
     {
       "name": "Dustin Popp",
       "email": "dustinpopp@ibm.com"
+    },
+    {
+      "name": "Phil Adams",
+      "email": "phil_adams@us.ibm.com"
     }
   ],
   "license": "Apache-2.0",
@@ -43,7 +47,7 @@
     "jest": "^25.5.4",
     "object.assign": "~4.1.0",
     "prettier": "~1.13.5",
-    "semantic-release": "17.3.1",
+    "semantic-release": "17.4.2",
     "tsc-publish": "^0.5.2",
     "tslint": "~5.10.0",
     "tslint-config-prettier": "~1.13.0",
