@@ -1,3 +1,10 @@
+## [2.10.4](https://github.com/IBM/node-sdk-core/compare/v2.10.3...v2.10.4) (2021-05-10)
+
+
+### Bug Fixes
+
+* upgrade package-lock.json ([#136](https://github.com/IBM/node-sdk-core/issues/136)) ([1780894](https://github.com/IBM/node-sdk-core/commit/1780894d05cd8ba9dca9dd6040ee54ceb91275b5))
+
 ## [2.10.3](https://github.com/IBM/node-sdk-core/compare/v2.10.2...v2.10.3) (2021-04-01)
 
 
