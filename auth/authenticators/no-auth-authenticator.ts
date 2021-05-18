@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
+
 /**
  * Copyright 2019 IBM Corp. All Rights Reserved.
  *
@@ -23,10 +25,6 @@ import { AuthenticateOptions } from './authenticator-interface';
  * useful during development and testing.
  */
 export class NoAuthAuthenticator extends Authenticator {
-  constructor() {
-    super();
-  }
-
   public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     // immediately proceed to request. it will probably fail
     return Promise.resolve();

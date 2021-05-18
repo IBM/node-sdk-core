@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
+
 /**
  * Copyright 2020 IBM Corp. All Rights Reserved.
  *
@@ -18,7 +20,7 @@ import { OutgoingHttpHeaders } from 'http';
 import { stripTrailingSlash } from '../../lib/helper';
 import logger from '../../lib/logger';
 import { RequestWrapper } from '../../lib/request-wrapper';
-import { getCurrentTime } from "../utils";
+import { getCurrentTime } from '../utils';
 
 /** Configuration options for token retrieval. */
 export type TokenManagerOptions = {
@@ -33,7 +35,7 @@ export type TokenManagerOptions = {
   disableSslVerification?: boolean;
   /** Allow additional request config parameters */
   [propName: string]: any;
-}
+};
 
 /**
  * A class for shared functionality for storing, and requesting tokens.
@@ -44,13 +46,21 @@ export type TokenManagerOptions = {
  */
 export class TokenManager {
   protected url: string;
+
   protected disableSslVerification: boolean;
+
   protected headers: OutgoingHttpHeaders;
+
   protected requestWrapperInstance: RequestWrapper;
+
   protected accessToken: string;
+
   protected expireTime: number;
+
   protected refreshTime: number;
+
   private requestTime: number;
+
   private pendingRequests: any[];
 
   /**
@@ -66,7 +76,7 @@ export class TokenManager {
    */
   constructor(options: TokenManagerOptions) {
     // all parameters are optional
-    options = options || {} as TokenManagerOptions;
+    options = options || ({} as TokenManagerOptions);
 
     if (options.url) {
       this.url = stripTrailingSlash(options.url);
@@ -91,19 +101,16 @@ export class TokenManager {
   public getToken(): Promise<any> {
     if (!this.accessToken || this.isTokenExpired()) {
       // 1. request a new token
-      return this.pacedRequestToken().then(() => {
-        return this.accessToken;
-      });
-    } else {
-      // If refresh needed, kick one off
-      if (this.tokenNeedsRefresh()) {
-        this.requestToken().then(tokenResponse => {
-          this.saveTokenInfo(tokenResponse);
-        });
-      }
-      // 2. use valid, managed token
-      return Promise.resolve(this.accessToken);
+      return this.pacedRequestToken().then(() => this.accessToken);
     }
+    // If refresh needed, kick one off
+    if (this.tokenNeedsRefresh()) {
+      this.requestToken().then((tokenResponse) => {
+        this.saveTokenInfo(tokenResponse);
+      });
+    }
+    // 2. use valid, managed token
+    return Promise.resolve(this.accessToken);
   }
 
   /**
@@ -146,27 +153,28 @@ export class TokenManager {
    */
   protected pacedRequestToken(): Promise<any> {
     const currentTime = getCurrentTime();
-    if (this.requestTime > (currentTime - 60)) {
+    if (this.requestTime > currentTime - 60) {
       // token request is active -- queue the promise for this request
       return new Promise((resolve, reject) => {
-        this.pendingRequests.push({resolve, reject});
+        this.pendingRequests.push({ resolve, reject });
       });
-    } else {
-      this.requestTime = currentTime;
-      return this.requestToken().then(tokenResponse => {
+    }
+    this.requestTime = currentTime;
+    return this.requestToken()
+      .then((tokenResponse) => {
         this.saveTokenInfo(tokenResponse);
-        this.pendingRequests.forEach(({resolve}) => {
+        this.pendingRequests.forEach(({ resolve }) => {
           resolve();
         });
         this.pendingRequests = [];
         this.requestTime = 0;
-      }).catch(err => {
-        this.pendingRequests.forEach(({reject}) => {
+      })
+      .catch((err) => {
+        this.pendingRequests.forEach(({ reject }) => {
           reject(err);
         });
-        throw(err);
+        throw err;
       });
-    }
   }
 
   /**
@@ -193,7 +201,6 @@ export class TokenManager {
    */
   protected saveTokenInfo(tokenResponse): void {
     const errMsg = '`saveTokenInfo` MUST be overridden by a subclass of TokenManager.';
-    const err = new Error(errMsg);
     logger.error(errMsg);
   }
 

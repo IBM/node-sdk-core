@@ -23,7 +23,7 @@ import { AuthenticateOptions } from './authenticator-interface';
 export type Options = {
   /** The bearer token to be added to requests. */
   bearerToken: string;
-}
+};
 
 /**
  * The BearerTokenAuthenticator will set a user-provided bearer token
@@ -35,16 +35,17 @@ export type Options = {
  */
 export class BearerTokenAuthenticator extends Authenticator {
   protected requiredOptions = ['bearerToken'];
+
   private bearerToken: string;
 
- /**
-  * Create a new BearerTokenAuthenticator instance.
-  *
-  * @param {object} options Configuration options for bearer authentication.
-  * @param {string} options.bearerToken The bearer token to be added
-  *   to requests.
-  * @throws {Error} The configuration bearerToken is not valid, or unspecified.
-  */
+  /**
+   * Create a new BearerTokenAuthenticator instance.
+   *
+   * @param {object} options Configuration options for bearer authentication.
+   * @param {string} options.bearerToken The bearer token to be added
+   *   to requests.
+   * @throws {Error} The configuration bearerToken is not valid, or unspecified.
+   */
   constructor(options: Options) {
     super();
 

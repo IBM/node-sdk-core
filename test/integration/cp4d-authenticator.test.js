@@ -8,7 +8,7 @@ const { getAuthenticatorFromEnvironment } = require('../../dist');
 // npm run jest -- test/integration/cp4d-authenticator.test.js
 
 describe('CP4D Authenticator - Integration Test', () => {
-  process.env.IBM_CREDENTIALS_FILE = __dirname + '/../resources/cp4dtest.env';
+  process.env.IBM_CREDENTIALS_FILE = `${__dirname}/../resources/cp4dtest.env`;
 
   it('should retrieve a live access token with username/password', async () => {
     // set up environment

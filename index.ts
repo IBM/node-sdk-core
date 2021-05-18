@@ -18,12 +18,12 @@
  * @module ibm-cloud-sdk-core
  */
 
+import * as unitTestUtils from './lib/sdk-test-helpers';
+
 export { BaseService, UserOptions } from './lib/base-service';
 export * from './auth';
 export * from './lib/helper';
 export { default as qs } from './lib/querystring';
 export { default as contentType } from './lib/content-type';
 export * from './lib/stream-to-promise';
-
-import * as unitTestUtils from './lib/sdk-test-helpers';
 export { unitTestUtils };

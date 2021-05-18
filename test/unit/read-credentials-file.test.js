@@ -1,5 +1,3 @@
-'use strict';
-
 const fs = require('fs');
 const { constructFilepath, fileExistsAtPath, readCredentialsFile } = require('../../dist/auth');
 
@@ -20,7 +18,7 @@ describe('browser scenario', () => {
 });
 
 describe('read ibm credentials file', () => {
-  const locationOfActualFile = __dirname + '/../resources';
+  const locationOfActualFile = `${__dirname}/../resources`;
   process.env.IBM_CREDENTIALS_FILE = locationOfActualFile;
 
   describe('construct filepath', () => {
@@ -64,7 +62,7 @@ describe('read ibm credentials file', () => {
     });
 
     it('should return true for a symbolic link', () => {
-      const path = __dirname + '/../resources/symlink-creds.txt';
+      const path = `${__dirname}/../resources/symlink-creds.txt`;
       expect(fileExistsAtPath(path)).toBe(true);
     });
   });
@@ -98,14 +96,14 @@ describe('read ibm credentials file', () => {
     });
 
     it('should return credentials as an object for alternate filename', () => {
-      process.env['IBM_CREDENTIALS_FILE'] = __dirname + '/../resources/other-file.env';
+      process.env.IBM_CREDENTIALS_FILE = `${__dirname}/../resources/other-file.env`;
       const obj = readCredentialsFile();
       expect(obj.NATURAL_LANGUAGE_UNDERSTANDING_USERNAME).toBe('username');
       expect(obj.NATURAL_LANGUAGE_UNDERSTANDING_PASSWORD).toBe('password');
     });
 
     it('should return empty object if file is not found', () => {
-      delete process.env['IBM_CREDENTIALS_FILE'];
+      delete process.env.IBM_CREDENTIALS_FILE;
       const obj = readCredentialsFile();
       expect(obj).toEqual({});
     });

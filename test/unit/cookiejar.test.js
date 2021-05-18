@@ -1,5 +1,3 @@
-'use strict';
-
 const tough = require('tough-cookie');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 
@@ -7,19 +5,19 @@ describe('cookie jar support', () => {
   it('should not wrap the axios instance by default', () => {
     const wrapper = new RequestWrapper();
     expect(wrapper.axiosInstance.defaults.withCredentials).not.toBeDefined();
-    expect(wrapper.axiosInstance.interceptors.request.handlers.length).toBe(0);
+    expect(wrapper.axiosInstance.interceptors.request.handlers).toHaveLength(0);
   });
 
   it('passing a value for `jar` should produce interceptors and set flags', () => {
     const wrapper = new RequestWrapper({ jar: true });
     expect(wrapper.axiosInstance.defaults.withCredentials).toBe(true);
-    expect(wrapper.axiosInstance.interceptors.request.handlers.length).toBe(1);
+    expect(wrapper.axiosInstance.interceptors.request.handlers).toHaveLength(1);
   });
 
   it('given `true` for `jar`, the interceptors should create an instance of tough-cookie', () => {
     const wrapper = new RequestWrapper({ jar: true });
 
-    expect(wrapper.axiosInstance.interceptors.request.handlers.length).toBe(1);
+    expect(wrapper.axiosInstance.interceptors.request.handlers).toHaveLength(1);
     expect(wrapper.axiosInstance.interceptors.request.handlers[0].fulfilled).toBeInstanceOf(
       Function
     );
@@ -44,7 +42,7 @@ describe('cookie jar support', () => {
     const wrapper = new RequestWrapper({ jar: mockCookieJar });
 
     // should still set interceptors and withCredentials flag
-    expect(wrapper.axiosInstance.interceptors.request.handlers.length).toBe(1);
+    expect(wrapper.axiosInstance.interceptors.request.handlers).toHaveLength(1);
     expect(wrapper.axiosInstance.defaults.withCredentials).toBe(true);
     expect(wrapper.axiosInstance.defaults.jar).toEqual(mockCookieJar);
 

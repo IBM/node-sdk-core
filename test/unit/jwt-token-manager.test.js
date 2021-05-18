@@ -1,8 +1,7 @@
 /* eslint-disable no-alert, no-console */
-'use strict';
 
-const { JwtTokenManager } = require('../../dist/auth');
 const jwt = require('jsonwebtoken');
+const { JwtTokenManager } = require('../../dist/auth');
 
 function getCurrentTime() {
   return Math.floor(Date.now() / 1000);
@@ -28,13 +27,13 @@ describe('JWT Token Manager', () => {
   });
 
   describe('getToken', () => {
-    it('should request a token if no token is stored', async done => {
+    it('should request a token if no token is stored', async (done) => {
       const instance = new JwtTokenManager();
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
 
       const decodeSpy = jest
         .spyOn(jwt, 'decode')
-        .mockImplementation(token => ({ iat: 10, exp: 100 }));
+        .mockImplementation((token) => ({ iat: 10, exp: 100 }));
 
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
@@ -52,18 +51,19 @@ describe('JWT Token Manager', () => {
       done();
     });
 
-    it('should pace token requests', async done => {
+    it('should pace token requests', async (done) => {
       const instance = new JwtTokenManager();
 
       const decodeSpy = jest
         .spyOn(jwt, 'decode')
-        .mockImplementation(token => ({ iat: 10, exp: 100 }));
+        .mockImplementation((token) => ({ iat: 10, exp: 100 }));
 
-      const requestTokenSpy = jest.spyOn(instance, 'requestToken').mockImplementation(() => {
-        return new Promise(resolve => {
-          setTimeout(resolve, 500, { result: { access_token: ACCESS_TOKEN } });
-        });
-      });
+      const requestTokenSpy = jest.spyOn(instance, 'requestToken').mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            setTimeout(resolve, 500, { result: { access_token: ACCESS_TOKEN } });
+          })
+      );
 
       const tokens = await Promise.all([
         instance.getToken(),
@@ -71,28 +71,25 @@ describe('JWT Token Manager', () => {
         instance.getToken(),
       ]);
 
-      expect(tokens.length).toBe(3);
-      expect(
-        tokens.every(token => {
-          token === tokens[0];
-        })
-      );
+      expect(tokens).toHaveLength(3);
+      expect(tokens.every((token) => token === tokens[0])).toBe(true);
       expect(requestTokenSpy).toHaveBeenCalled();
-      expect(requestTokenSpy.mock.calls.length).toBe(1);
+      expect(requestTokenSpy.mock.calls).toHaveLength(1);
 
       decodeSpy.mockRestore();
       requestTokenSpy.mockRestore();
       done();
     });
 
-    it('should reject all paced token requests on error from token service', async done => {
+    it('should reject all paced token requests on error from token service', async (done) => {
       const instance = new JwtTokenManager();
 
-      const requestTokenSpy = jest.spyOn(instance, 'requestToken').mockImplementation(() => {
-        return new Promise(reject => {
-          setTimeout(reject, 500, new Error('Sumpin bad happened'));
-        });
-      });
+      const requestTokenSpy = jest.spyOn(instance, 'requestToken').mockImplementation(
+        () =>
+          new Promise((reject) => {
+            setTimeout(reject, 500, new Error('Sumpin bad happened'));
+          })
+      );
 
       const reqs = [instance.getToken(), instance.getToken(), instance.getToken()];
 
@@ -100,29 +97,30 @@ describe('JWT Token Manager', () => {
       let errCount = 0;
       for (let i = 0; i < reqs.length; i++) {
         try {
+          /* eslint-disable-next-line no-await-in-loop */
           token = await reqs[i];
         } catch (e) {
           errCount++;
         }
       }
 
-      expect(token).toBeUndefined;
+      expect(token).toBeUndefined();
       expect(errCount).toBe(3);
       expect(requestTokenSpy).toHaveBeenCalled();
-      expect(requestTokenSpy.mock.calls.length).toBe(1);
+      expect(requestTokenSpy.mock.calls).toHaveLength(1);
 
       requestTokenSpy.mockRestore();
       done();
     });
 
-    it('should request a token if token is stored but needs refresh', async done => {
+    it('should request a token if token is stored but needs refresh', async (done) => {
       const instance = new JwtTokenManager();
       instance.tokenInfo.access_token = CURRENT_ACCESS_TOKEN;
 
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
       const decodeSpy = jest
         .spyOn(jwt, 'decode')
-        .mockImplementation(token => ({ iat: 10, exp: 100 }));
+        .mockImplementation((token) => ({ iat: 10, exp: 100 }));
 
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
@@ -140,7 +138,7 @@ describe('JWT Token Manager', () => {
       done();
     });
 
-    it('should not save token info if token request returned an error', async done => {
+    it('should not save token info if token request returned an error', async (done) => {
       const instance = new JwtTokenManager();
 
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
@@ -165,7 +163,7 @@ describe('JWT Token Manager', () => {
       done();
     });
 
-    it('should catch and reject lower level errors', async done => {
+    it('should catch and reject lower level errors', async (done) => {
       const instance = new JwtTokenManager();
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
 
@@ -192,7 +190,7 @@ describe('JWT Token Manager', () => {
       done();
     });
 
-    it('should use an sdk-managed token if present and not expired', async done => {
+    it('should use an sdk-managed token if present and not expired', async (done) => {
       const instance = new JwtTokenManager();
       instance.tokenInfo.access_token = ACCESS_TOKEN;
       instance.accessToken = ACCESS_TOKEN;
@@ -204,7 +202,7 @@ describe('JWT Token Manager', () => {
     });
   });
 
-  it('should reject with error if requestToken is not overriden', async done => {
+  it('should reject with error if requestToken is not overriden', async (done) => {
     const instance = new JwtTokenManager();
 
     let err;
@@ -267,7 +265,7 @@ describe('JWT Token Manager', () => {
       const instance = new JwtTokenManager();
       const decodeSpy = jest
         .spyOn(jwt, 'decode')
-        .mockImplementation(token => ({ iat: 10, exp: 100 }));
+        .mockImplementation((token) => ({ iat: 10, exp: 100 }));
 
       const tokenResponse = { result: { access_token: ACCESS_TOKEN } };
 
@@ -290,7 +288,7 @@ describe('JWT Token Manager', () => {
       const instance = new JwtTokenManager();
       const decodeSpy = jest
         .spyOn(jwt, 'decode')
-        .mockImplementation(token => ({ iat: 100, exp: 200 }));
+        .mockImplementation((token) => ({ iat: 100, exp: 200 }));
 
       const tokenResponse = { result: { access_token: ACCESS_TOKEN } };
 
@@ -308,7 +306,7 @@ describe('JWT Token Manager', () => {
       const instance = new JwtTokenManager();
       const decodeSpy = jest
         .spyOn(jwt, 'decode')
-        .mockImplementation(token => ({ foo: 0, bar: 100 }));
+        .mockImplementation((token) => ({ foo: 0, bar: 100 }));
 
       const tokenResponse = { result: { access_token: ACCESS_TOKEN } };
 

@@ -33,7 +33,7 @@ export type BaseOptions = {
   url?: string;
   /** Allow additional request config parameters */
   [propName: string]: any;
-}
+};
 
 /**
  * Class for common functionality shared by token-request authenticators.
@@ -48,8 +48,11 @@ export type BaseOptions = {
  */
 export class TokenRequestBasedAuthenticator extends Authenticator {
   protected tokenManager: JwtTokenManager;
+
   protected url: string;
+
   protected headers: OutgoingHttpHeaders;
+
   protected disableSslVerification: boolean;
 
   /**
@@ -117,10 +120,9 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
    *   where there's conflict.
    */
   public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
-    return this.tokenManager.getToken().then(token => {
+    return this.tokenManager.getToken().then((token) => {
       const authHeader = { Authorization: `Bearer ${token}` };
       requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
-      return;
     });
   }
 }

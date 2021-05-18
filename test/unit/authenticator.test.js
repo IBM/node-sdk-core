@@ -1,5 +1,3 @@
-'use strict';
-
 const { Authenticator } = require('../../dist/auth');
 
 describe('Authenticator', () => {

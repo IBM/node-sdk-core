@@ -1,8 +1,7 @@
-'use strict';
-
-const contentType = require('../../dist/lib/content-type').default;
 const fs = require('fs');
 const path = require('path');
+
+const contentType = require('../../dist/lib/content-type').default;
 
 describe('contentType', () => {
   const mp3 = 'audio/mp3';

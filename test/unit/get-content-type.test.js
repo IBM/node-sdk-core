@@ -1,9 +1,7 @@
-'use strict';
-
 const fs = require('fs');
 const { getContentType } = require('../../dist/lib/helper');
 
-const filepath = __dirname + '/../resources/blank.wav';
+const filepath = `${__dirname}/../resources/blank.wav`;
 
 describe('getContentType', () => {
   it('should read content type from read stream', () => {

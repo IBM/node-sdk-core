@@ -31,7 +31,9 @@ export function computeBasicAuthHeader(username: string, password: string): stri
 // returns true if the string has a curly bracket or quote as the first or last character
 // these are common user-issues that we should handle before they get a network error
 function badCharAtAnEnd(value: string): boolean {
-  return value.startsWith('{') || value.startsWith('"') || value.endsWith('}') || value.endsWith('"');
+  return (
+    value.startsWith('{') || value.startsWith('"') || value.endsWith('}') || value.endsWith('"')
+  );
 }
 
 /**
@@ -41,20 +43,20 @@ function badCharAtAnEnd(value: string): boolean {
  * @param {string[]} credsToCheck - An array containing the keys of the credentials to check for problems
  * @returns {string | null} - Returns a string with the error message if there were problems, null if not
  */
-export function checkCredentials(obj: any, credsToCheck: string[]) : Error | null {
+export function checkCredentials(obj: any, credsToCheck: string[]): Error | null {
   let errorMessage = '';
-  credsToCheck.forEach(cred => {
+  credsToCheck.forEach((cred) => {
     if (obj[cred] && badCharAtAnEnd(obj[cred])) {
       errorMessage += `The ${cred} shouldn't start or end with curly brackets or quotes. Be sure to remove any {, }, or "`;
     }
   });
 
   if (errorMessage.length) {
-    errorMessage += 'Revise these credentials - they should not start or end with curly brackets or quotes.';
+    errorMessage +=
+      'Revise these credentials - they should not start or end with curly brackets or quotes.';
     return new Error(errorMessage);
-  } else {
-    return null;
   }
+  return null;
 }
 
 /**
@@ -70,7 +72,7 @@ export function validateInput(options: any, requiredOptions: string[]): void {
 
   // check certain credentials for common user errors: username, password, and apikey
   // note: will only apply to certain authenticators
-  const credsToCheck = ['username', 'password', 'apikey']
+  const credsToCheck = ['username', 'password', 'apikey'];
   const credentialProblems = checkCredentials(options, credsToCheck);
   if (credentialProblems) {
     throw credentialProblems;

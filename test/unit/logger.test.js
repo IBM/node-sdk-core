@@ -1,14 +1,12 @@
-'use strict';
-
 describe('Logger', () => {
   let env;
 
-  beforeEach(function() {
+  beforeEach(() => {
     jest.resetModules();
     env = process.env;
     process.env = {};
   });
-  afterEach(function() {
+  afterEach(() => {
     process.env = env;
   });
 

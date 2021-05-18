@@ -23,8 +23,6 @@
  *   readExternalSources: Get config object from external sources.
  */
 
-
-
 export * from './helpers';
 export * from './read-credentials-file';
 export { getAuthenticatorFromEnvironment } from './get-authenticator-from-environment';

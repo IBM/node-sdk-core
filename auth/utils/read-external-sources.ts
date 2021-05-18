@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+
 /**
  * Copyright 2019 IBM Corp. All Rights Reserved.
  *
@@ -71,10 +73,10 @@ function getProperties(serviceName: string): any {
  */
 function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
   const credentials = {} as any;
-  const name: string = serviceName.toUpperCase().replace(/-/g, '_') + '_'; // append the underscore that must follow the service name
+  const name: string = `${serviceName.toUpperCase().replace(/-/g, '_')}_`; // append the underscore that must follow the service name
 
   // filter out properties that don't begin with the service name
-  Object.keys(envObj).forEach(key => {
+  Object.keys(envObj).forEach((key) => {
     if (key.startsWith(name)) {
       const propName = camelcase(key.substring(name.length)); // remove the name from the front of the string and make camelcase
       credentials[propName] = envObj[key];
@@ -112,34 +114,30 @@ function getVCAPCredentialsForService(name) {
     const services = JSON.parse(process.env.VCAP_SERVICES);
     for (const serviceName of Object.keys(services)) {
       for (const instance of services[serviceName]) {
-        if (instance['name'] === name) {
-          if (instance.hasOwnProperty('credentials')) {
-            return instance.credentials
-          } else {
-            logger.debug('no data read from VCAP_SERVICES')
-            return {}
+        if (instance.name === name) {
+          if (Object.prototype.hasOwnProperty.call(instance, 'credentials')) {
+            return instance.credentials;
           }
+          logger.debug('no data read from VCAP_SERVICES');
+          return {};
         }
       }
     }
     for (const serviceName of Object.keys(services)) {
       if (serviceName === name) {
         if (services[serviceName].length > 0) {
-          if (services[serviceName][0].hasOwnProperty('credentials')) {
-            return services[serviceName][0].credentials
-          } else {
-            logger.debug('no data read from VCAP_SERVICES')
-            return {}
+          if (Object.prototype.hasOwnProperty.call(services[serviceName][0], 'credentials')) {
+            return services[serviceName][0].credentials;
           }
-          return services[serviceName][0].credentials || {};
-        } else {
-          logger.debug('no data read from VCAP_SERVICES')
-          return {}
+          logger.debug('no data read from VCAP_SERVICES');
+          return {};
         }
+        logger.debug('no data read from VCAP_SERVICES');
+        return {};
       }
     }
   }
-  logger.debug('no data read from VCAP_SERVICES')
+  logger.debug('no data read from VCAP_SERVICES');
   return {};
 }
 

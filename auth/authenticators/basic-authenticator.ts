@@ -25,8 +25,7 @@ export type Options = {
   username: string;
   /** The password to be used in basic authorization. */
   password: string;
-}
-
+};
 
 /**
  * The BasicAuthenticator is used to add basic authentication information to
@@ -57,7 +56,7 @@ export class BasicAuthenticator extends Authenticator {
     validateInput(options, this.requiredOptions);
     const { username, password } = options;
     const authHeaderString = computeBasicAuthHeader(username, password);
-    this.authHeader = { Authorization: authHeaderString }
+    this.authHeader = { Authorization: authHeaderString };
   }
 
   /**
@@ -70,7 +69,7 @@ export class BasicAuthenticator extends Authenticator {
    * @param {object.<string, string>} requestOptions.headers - The headers the
    *   authentication information will be added too.
    */
-  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error>  {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
     return new Promise((resolve) => {
       requestOptions.headers = extend(true, {}, requestOptions.headers, this.authHeader);
       resolve();

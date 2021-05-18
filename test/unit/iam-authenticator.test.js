@@ -1,5 +1,3 @@
-'use strict';
-
 const { IamAuthenticator } = require('../../dist/auth');
 const { IamTokenManager } = require('../../dist/auth');
 
@@ -41,17 +39,17 @@ describe('IAM Authenticator', () => {
 
   it('should throw an error when apikey is not provided', () => {
     expect(() => {
-      new IamAuthenticator();
+      const unused = new IamAuthenticator();
     }).toThrow();
   });
 
   it('should throw an error when username has a bad character', () => {
     expect(() => {
-      new IamAuthenticator({ apikey: '"<your-apikey>"' });
+      const unused = new IamAuthenticator({ apikey: '"<your-apikey>"' });
     }).toThrow(/Revise these credentials/);
   });
 
-  it('should update the options and resolve with `null`', async done => {
+  it('should update the options and resolve with `null`', async (done) => {
     const authenticator = new IamAuthenticator({ apikey: 'testjustanapikey' });
 
     // override the created token manager with the mocked one

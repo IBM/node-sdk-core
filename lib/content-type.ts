@@ -1,5 +1,7 @@
+/* eslint-disable prettier/prettier */
+
 import { extname } from 'path';
-import { FileObject } from '../lib/helper';
+import { FileObject } from "./helper";
 
 // This module attempts to identify common content-types based on the filename or header
 // It is not exhaustive, and for best results, you should always manually specify the content-type option.
@@ -53,6 +55,7 @@ const fromHeader = (buffer: Buffer): string => {
  */
 const fromFilename = (file: String | NodeJS.ReadableStream | FileObject | Buffer | File): string => {
   const ext: string = extname(
+    // eslint-disable-next-line @typescript-eslint/dot-notation
     (typeof file === 'string' && file) || file['name'] || ''
   );
   return filenameContentTypes[ext];

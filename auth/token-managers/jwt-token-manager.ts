@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+
 /**
  * Copyright 2019 IBM Corp. All Rights Reserved.
  *
@@ -16,7 +18,7 @@
 
 import jwt = require('jsonwebtoken');
 import logger from '../../lib/logger';
-import { TokenManager, TokenManagerOptions } from "./token-manager";
+import { TokenManager, TokenManagerOptions } from './token-manager';
 
 /** Configuration options for JWT token retrieval. */
 export type JwtTokenManagerOptions = TokenManagerOptions;
@@ -29,6 +31,7 @@ export type JwtTokenManagerOptions = TokenManagerOptions;
  */
 export class JwtTokenManager extends TokenManager {
   protected tokenName: string;
+
   protected tokenInfo: any;
 
   /**
@@ -44,7 +47,7 @@ export class JwtTokenManager extends TokenManager {
    */
   constructor(options: JwtTokenManagerOptions) {
     // all parameters are optional
-    options = options || {} as JwtTokenManagerOptions;
+    options = options || ({} as JwtTokenManagerOptions);
     super(options);
 
     this.tokenName = 'access_token';
@@ -98,10 +101,9 @@ export class JwtTokenManager extends TokenManager {
       const fractionOfTtl = 0.8;
       const timeToLive = exp - iat;
       this.expireTime = exp;
-      this.refreshTime = exp - (timeToLive * (1.0 - fractionOfTtl));
+      this.refreshTime = exp - timeToLive * (1.0 - fractionOfTtl);
     }
 
-    this.tokenInfo = Object.assign({}, responseBody);
+    this.tokenInfo = { ...responseBody };
   }
-
 }

@@ -49,7 +49,8 @@ function removeSuffix(str: string, suffix: string): string {
   return str;
 }
 
-const CLIENT_ID_SECRET_WARNING = 'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
+const CLIENT_ID_SECRET_WARNING =
+  'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
 const SCOPE = 'scope';
 const DEFAULT_IAM_URL = 'https://iam.cloud.ibm.com';
 const OPERATION_PATH = '/identity/token';
@@ -69,10 +70,15 @@ interface Options extends JwtTokenManagerOptions {
  */
 export class IamTokenManager extends JwtTokenManager {
   protected requiredOptions = ['apikey'];
+
   protected refreshToken: string;
+
   private apikey: string;
+
   private clientId: string;
+
   private clientSecret: string;
+
   private scope: string;
 
   /**
@@ -120,7 +126,7 @@ export class IamTokenManager extends JwtTokenManager {
 
   /**
    * Set the IAM `scope` value.
-   * This value is the form parameter to use when fetching the bearer token 
+   * This value is the form parameter to use when fetching the bearer token
    * from the IAM token server.
    *
    * @param {string} scope - A space seperated string that makes up the scope parameter.
@@ -201,10 +207,10 @@ export class IamTokenManager extends JwtTokenManager {
         form: {
           grant_type: 'urn:ibm:params:oauth:grant-type:apikey',
           apikey: this.apikey,
-          response_type: 'cloud_iam'
+          response_type: 'cloud_iam',
         },
         rejectUnauthorized: !this.disableSslVerification,
-      }
+      },
     };
 
     if (this.scope) {

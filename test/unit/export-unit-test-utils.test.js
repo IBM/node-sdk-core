@@ -1,5 +1,3 @@
-'use strict';
-
 const { unitTestUtils } = require('../../dist');
 
 describe('Unit Test Utils', () => {

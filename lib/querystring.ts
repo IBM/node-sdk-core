@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier, arrow-body-style */
+
 /**
  * Stringify query params, Watson-style
  *
@@ -12,11 +14,11 @@ const stringify = (queryParams: Object): string => {
   return Object.keys(queryParams)
     .map((key) => {
       return (
-        key +
-        '=' +
-        (key === 'watson-token'
+        `${key 
+        }=${ 
+        key === 'watson-token'
           ? queryParams[key]
-          : encodeURIComponent(queryParams[key]))
+          : encodeURIComponent(queryParams[key])}`
       ); // the server chokes if the token is correctly url-encoded
     })
     .join('&');

@@ -1,5 +1,3 @@
-'use strict';
-
 const { readExternalSources } = require('../../dist/auth');
 
 // constants
@@ -147,7 +145,7 @@ describe('Read External Sources Module', () => {
 
 function setupCredsFile() {
   // this file contains all possible iam creds
-  process.env.IBM_CREDENTIALS_FILE = __dirname + '/../resources/ibm-credentials.env';
+  process.env.IBM_CREDENTIALS_FILE = `${__dirname}/../resources/ibm-credentials.env`;
 }
 
 function setupEnvVars() {
