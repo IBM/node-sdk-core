@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import camelcase = require('camelcase');
-
 import {
   Authenticator,
   BasicAuthenticator,
@@ -92,7 +90,7 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
       authenticator = new IamAuthenticator(credentials);
       break;
     default:
-      throw new Error('Invalid value for AUTH_TYPE: ' + authType);
+      throw new Error(`Invalid value for AUTH_TYPE: ${authType}`);
   }
 
   return authenticator;

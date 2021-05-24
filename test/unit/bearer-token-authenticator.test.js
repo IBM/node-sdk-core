@@ -1,5 +1,3 @@
-'use strict';
-
 const { BearerTokenAuthenticator } = require('../../dist/auth');
 
 describe('Bearer Token Authenticator', () => {
@@ -15,11 +13,11 @@ describe('Bearer Token Authenticator', () => {
 
   it('should throw an error when bearer token is not provided', () => {
     expect(() => {
-      new BearerTokenAuthenticator();
+      const unused = new BearerTokenAuthenticator();
     }).toThrow();
   });
 
-  it('should update the options and resolve with `null`', async done => {
+  it('should update the options and resolve with `null`', async (done) => {
     const authenticator = new BearerTokenAuthenticator(config);
     const options = {};
     const result = await authenticator.authenticate(options);

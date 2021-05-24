@@ -16,11 +16,7 @@ export function streamToPromise(stream: Stream): Promise<any> {
         results.push(result);
       })
       .on('end', () => {
-        resolve(
-          Buffer.isBuffer(results[0])
-            ? Buffer.concat(results).toString()
-            : results
-        );
+        resolve(Buffer.isBuffer(results[0]) ? Buffer.concat(results).toString() : results);
       })
       .on('error', reject);
   });

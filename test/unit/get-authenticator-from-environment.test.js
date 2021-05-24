@@ -1,5 +1,3 @@
-'use strict';
-
 const {
   getAuthenticatorFromEnvironment,
   BasicAuthenticator,
@@ -11,7 +9,9 @@ const {
 
 // create a mock for the read-external-sources module
 const readExternalSourcesModule = require('../../dist/auth/utils/read-external-sources');
-const readExternalSourcesMock = (readExternalSourcesModule.readExternalSources = jest.fn());
+
+readExternalSourcesModule.readExternalSources = jest.fn();
+const readExternalSourcesMock = readExternalSourcesModule.readExternalSources;
 
 const SERVICE_NAME = 'dummy';
 const APIKEY = '123456789';

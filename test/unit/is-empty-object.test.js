@@ -1,5 +1,3 @@
-'use strict';
-
 const { isEmptyObject } = require('../../dist/lib/helper');
 
 describe('isEmptyObject', () => {

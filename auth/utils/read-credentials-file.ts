@@ -21,7 +21,7 @@ export function readCredentialsFile() {
   // then look at the current working directory
   // then at the os-dependent home directory
 
-  const givenFilepath: string = process.env['IBM_CREDENTIALS_FILE'] || '';
+  const givenFilepath: string = process.env.IBM_CREDENTIALS_FILE || '';
   const workingDir: string = constructFilepath(process.cwd());
   const homeDir: string = constructFilepath(os.homedir());
 

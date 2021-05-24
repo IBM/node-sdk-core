@@ -30,8 +30,7 @@
  *   JwtTokenManager: A class for shared functionality for parsing, storing, and requesting JWT tokens.
  */
 
-
- export { IamTokenManager } from './iam-token-manager';
- export { Cp4dTokenManager } from './cp4d-token-manager';
- export { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
- export { TokenManager, TokenManagerOptions } from './token-manager';
+export { IamTokenManager } from './iam-token-manager';
+export { Cp4dTokenManager } from './cp4d-token-manager';
+export { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
+export { TokenManager, TokenManagerOptions } from './token-manager';

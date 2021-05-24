@@ -1,4 +1,5 @@
 import logger = require('debug');
+
 const debug = logger('ibm-cloud-sdk-core:debug');
 const error = logger('ibm-cloud-sdk-core:error');
 const info = logger('ibm-cloud-sdk-core:info');
@@ -27,5 +28,5 @@ export default {
   error,
   info,
   verbose,
-  warn
-}
+  warn,
+};

@@ -16,8 +16,7 @@
 
 import { IamTokenManager } from '../token-managers';
 import { validateInput } from '../utils';
-import { BaseOptions, TokenRequestBasedAuthenticator }
-  from './token-request-based-authenticator';
+import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 
 /** Configuration options for IAM authentication. */
 export interface Options extends BaseOptions {
@@ -53,10 +52,15 @@ export interface Options extends BaseOptions {
  */
 export class IamAuthenticator extends TokenRequestBasedAuthenticator {
   protected requiredOptions = ['apikey'];
+
   protected tokenManager: IamTokenManager;
+
   private apikey: string;
+
   private clientId: string;
+
   private clientSecret: string;
+
   private scope: string;
 
   /**

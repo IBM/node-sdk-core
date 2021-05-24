@@ -1,12 +1,14 @@
-'use strict';
 const fs = require('fs');
 const https = require('https');
 const { Readable } = require('stream');
 const zlib = require('zlib');
 const logger = require('../../dist/lib/logger').default;
+
 process.env.NODE_DEBUG = 'axios';
 jest.mock('axios');
+// eslint-disable-next-line import/order
 const axios = require('axios');
+
 const mockAxiosInstance = jest.fn();
 mockAxiosInstance.interceptors = {
   request: {
@@ -19,16 +21,17 @@ mockAxiosInstance.interceptors = {
 axios.default.create.mockReturnValue(mockAxiosInstance);
 
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
+
 const requestWrapperInstance = new RequestWrapper();
 
 describe('axios', () => {
   let env;
-  beforeEach(function() {
+  beforeEach(() => {
     jest.resetModules();
     env = process.env;
     process.env = {};
   });
-  afterEach(function() {
+  afterEach(() => {
     process.env = env;
   });
   it('should enable debug', () => {
@@ -44,7 +47,7 @@ describe('RequestWrapper constructor', () => {
   // also, the debug interceptors are tested elsewhere in this file
 
   // the axios mock needs slightly different behavior here
-  beforeEach(function() {
+  beforeEach(() => {
     axios.default.create.mockClear();
   });
 
@@ -57,7 +60,7 @@ describe('RequestWrapper constructor', () => {
   });
 
   it('should set defaults for certain axios configurations', () => {
-    new RequestWrapper();
+    const unused = new RequestWrapper();
 
     // the constructor puts together a config object and creates the
     // axios instance with it
@@ -73,7 +76,7 @@ describe('RequestWrapper constructor', () => {
   });
 
   it('should override the defaults with user-provided input', () => {
-    new RequestWrapper({
+    const unused = new RequestWrapper({
       maxContentLength: 100,
     });
 
@@ -82,7 +85,7 @@ describe('RequestWrapper constructor', () => {
   });
 
   it('creates a custom https agent when disableSslVerification is true', () => {
-    new RequestWrapper({
+    const unused = new RequestWrapper({
       disableSslVerification: true,
     });
 
@@ -93,7 +96,7 @@ describe('RequestWrapper constructor', () => {
   });
 
   it('updates the https agent if provided by the user', () => {
-    new RequestWrapper({
+    const unused = new RequestWrapper({
       disableSslVerification: true,
       httpsAgent: new https.Agent({ keepAlive: true }),
     });
@@ -138,15 +141,14 @@ describe('sendRequest', () => {
     mockAxiosInstance.mockReset();
   });
 
-  it('should send a request with default parameters', async done => {
+  it('should send a request with default parameters', async (done) => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
         formData: '',
         qs: {},
         method: 'POST',
-        url:
-          'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id',
+        url: 'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id',
         headers: {
           'test-header': 'test-header-value',
         },
@@ -171,11 +173,11 @@ describe('sendRequest', () => {
       parameters.defaultOptions.responseType
     );
     expect(res).toEqual(expectedResult);
-    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    expect(mockAxiosInstance.mock.calls).toHaveLength(1);
     done();
   });
 
-  it('sendRequest should strip trailing slashes', async done => {
+  it('sendRequest should strip trailing slashes', async (done) => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
@@ -202,7 +204,7 @@ describe('sendRequest', () => {
     done();
   });
 
-  it('should call formatError if request failed', async done => {
+  it('should call formatError if request failed', async (done) => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
@@ -233,7 +235,7 @@ describe('sendRequest', () => {
     done();
   });
 
-  it('should send a request where option parameters overrides defaults', async done => {
+  it('should send a request where option parameters overrides defaults', async (done) => {
     const parameters = {
       defaultOptions: {
         formData: '',
@@ -265,7 +267,7 @@ describe('sendRequest', () => {
     };
 
     let serializedParams;
-    mockAxiosInstance.mockImplementation(requestParams => {
+    mockAxiosInstance.mockImplementation((requestParams) => {
       // This runs the paramsSerializer code in the payload we send with axios
       serializedParams = requestParams.paramsSerializer(requestParams.params);
       return Promise.resolve(axiosResolveValue);
@@ -289,11 +291,11 @@ describe('sendRequest', () => {
     });
     expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
     expect(res).toEqual(expectedResult);
-    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    expect(mockAxiosInstance.mock.calls).toHaveLength(1);
     done();
   });
 
-  it('should handle merging of different options objects', async done => {
+  it('should handle merging of different options objects', async (done) => {
     const parameters = {
       defaultOptions: {
         qs: {
@@ -317,7 +319,7 @@ describe('sendRequest', () => {
     };
 
     let serializedParams;
-    mockAxiosInstance.mockImplementation(requestParams => {
+    mockAxiosInstance.mockImplementation((requestParams) => {
       // This runs the paramsSerializer code in the payload we send with axios
       serializedParams = requestParams.paramsSerializer(requestParams.params);
       return Promise.resolve(axiosResolveValue);
@@ -341,11 +343,11 @@ describe('sendRequest', () => {
     });
     expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
     expect(res).toEqual(expectedResult);
-    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    expect(mockAxiosInstance.mock.calls).toHaveLength(1);
     done();
   });
 
-  it('should send a request with multiform data', async done => {
+  it('should send a request with multiform data', async (done) => {
     const parameters = {
       defaultOptions: {
         formData: '',
@@ -372,11 +374,11 @@ describe('sendRequest', () => {
           'add-header': 'add-header-value',
         },
         formData: {
-          file: fs.createReadStream(__dirname + '/../resources/blank.wav'),
+          file: fs.createReadStream(`${__dirname}/../resources/blank.wav`),
           null_item: null,
           custom_file: {
             filename: 'custom.wav',
-            data: fs.createReadStream(__dirname + '/../resources/blank.wav'),
+            data: fs.createReadStream(`${__dirname}/../resources/blank.wav`),
           },
           array_item: ['a', 'b'],
           object_item: { a: 'a', b: 'b' },
@@ -387,7 +389,7 @@ describe('sendRequest', () => {
       },
     };
 
-    mockAxiosInstance.mockImplementation(requestParams => {
+    mockAxiosInstance.mockImplementation((requestParams) => {
       requestParams.paramsSerializer(requestParams.params);
       return Promise.resolve(axiosResolveValue);
     });
@@ -416,11 +418,8 @@ describe('sendRequest', () => {
     );
     // There should be two "array_item" parts
     expect(
-      (
-        JSON.stringify(mockAxiosInstance.mock.calls[0][0].data).match(/name=\\"array_item\\"/g) ||
-        []
-      ).length
-    ).toEqual(2);
+      JSON.stringify(mockAxiosInstance.mock.calls[0][0].data).match(/name=\\"array_item\\"/g) || []
+    ).toHaveLength(2);
     expect(JSON.stringify(mockAxiosInstance.mock.calls[0][0])).toMatch(
       'Content-Disposition: form-data; name=\\"custom_file\\"'
     );
@@ -432,11 +431,11 @@ describe('sendRequest', () => {
     );
 
     expect(res).toEqual(expectedResult);
-    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    expect(mockAxiosInstance.mock.calls).toHaveLength(1);
     done();
   });
 
-  it('should send a request with form data', async done => {
+  it('should send a request with form data', async (done) => {
     const parameters = {
       defaultOptions: {
         form: { a: 'a', b: 'b' },
@@ -467,7 +466,7 @@ describe('sendRequest', () => {
       },
     };
 
-    mockAxiosInstance.mockImplementation(requestParams => {
+    mockAxiosInstance.mockImplementation((requestParams) => {
       requestParams.paramsSerializer(requestParams.params);
       return Promise.resolve(axiosResolveValue);
     });
@@ -488,7 +487,7 @@ describe('sendRequest', () => {
     expect(mockAxiosInstance.mock.calls[0][0].params).toEqual(parameters.options.qs);
     expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
     expect(res).toEqual(expectedResult);
-    expect(mockAxiosInstance.mock.calls.length).toBe(1);
+    expect(mockAxiosInstance.mock.calls).toHaveLength(1);
     done();
   });
 
@@ -752,7 +751,7 @@ describe('gzipRequestBody', () => {
 
     data = await requestWrapperInstance.gzipRequestBody(data, headers);
     expect(gzipSpy).not.toHaveBeenCalled();
-    expect(data).toBe(null);
+    expect(data).toBeNull();
   });
 
   it('should compress json data into a buffer', async () => {

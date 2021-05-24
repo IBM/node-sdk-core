@@ -1,17 +1,15 @@
 /* eslint-disable no-alert, no-console */
-'use strict';
 
 const { Cp4dTokenManager } = require('../../dist/auth');
 
 // mock sendRequest
 jest.mock('../../dist/lib/request-wrapper');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
+
 const mockSendRequest = jest.fn();
-RequestWrapper.mockImplementation(() => {
-  return {
-    sendRequest: mockSendRequest,
-  };
-});
+RequestWrapper.mockImplementation(() => ({
+  sendRequest: mockSendRequest,
+}));
 
 const USERNAME = 'sherlock';
 const PASSWORD = 'holmes';

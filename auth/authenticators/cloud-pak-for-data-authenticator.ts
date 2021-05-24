@@ -15,8 +15,7 @@
  */
 
 import { Cp4dTokenManager } from '../token-managers';
-import { BaseOptions, TokenRequestBasedAuthenticator }
-  from './token-request-based-authenticator';
+import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 
 /** Configuration options for CloudPakForData authentication. */
 export interface Options extends BaseOptions {
@@ -38,12 +37,15 @@ export interface Options extends BaseOptions {
  *
  *      Authorization: Bearer <bearer-token>
  */
-export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
-{
+export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator {
   protected requiredOptions = ['username', 'url'];
+
   protected tokenManager: Cp4dTokenManager;
+
   private username: string;
+
   private password: string;
+
   private apikey: string;
 
   /**

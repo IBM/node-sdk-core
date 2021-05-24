@@ -1,9 +1,8 @@
-'use strict';
-
 const fs = require('fs');
 const { buildRequestFileObject } = require('../../dist/lib/helper');
-const filepath = __dirname + '/../resources/other-file.env';
-const audioFile = __dirname + '/../resources/blank.wav';
+
+const filepath = `${__dirname}/../resources/other-file.env`;
+const audioFile = `${__dirname}/../resources/blank.wav`;
 
 describe('buildRequestFileObject', () => {
   const customName = 'custom-name.env';
@@ -47,7 +46,7 @@ describe('buildRequestFileObject', () => {
 
     it('should handle file object with a readable stream as its `value`', () => {
       const fileStream = fs.createReadStream(filepath);
-      fileStream.path = '/fake/path/' + customName;
+      fileStream.path = `/fake/path/${customName}`;
 
       const fileParams = {
         data: {
@@ -62,7 +61,7 @@ describe('buildRequestFileObject', () => {
 
     it('should handle path property being a buffer', () => {
       const fileStream = fs.createReadStream(filepath);
-      fileStream.path = Buffer.from('/fake/path/' + customName);
+      fileStream.path = Buffer.from(`/fake/path/${customName}`);
 
       const fileParams = {
         data: {

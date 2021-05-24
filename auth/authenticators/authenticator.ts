@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
+
 /**
  * Copyright 2019 IBM Corp. All Rights Reserved.
  *
@@ -21,7 +23,6 @@ import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-int
  * to be used as a stand-alone authenticator.
  */
 export class Authenticator implements AuthenticatorInterface {
-
   /**
    * Create a new Authenticator instance.
    *
@@ -30,9 +31,7 @@ export class Authenticator implements AuthenticatorInterface {
    */
   constructor() {
     if (!(this instanceof Authenticator)) {
-      throw new Error(
-        'the "new" keyword is required to create authenticator instances'
-      );
+      throw new Error('the "new" keyword is required to create authenticator instances');
     }
   }
 

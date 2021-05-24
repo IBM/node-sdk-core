@@ -15,7 +15,7 @@
  */
 
 import extend = require('extend');
-import { computeBasicAuthHeader, validateInput } from '../utils';
+import { validateInput } from '../utils';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
 /** Configuration options for CP4D token retrieval. */
@@ -53,8 +53,11 @@ export interface CpdTokenData {
  */
 export class Cp4dTokenManager extends JwtTokenManager {
   protected requiredOptions = ['username', 'url'];
+
   private username: string;
+
   private password: string;
+
   private apikey: string;
 
   /**
@@ -87,7 +90,7 @@ export class Cp4dTokenManager extends JwtTokenManager {
 
     // do not append the path if user already has
     if (this.url && !this.url.endsWith(tokenApiPath)) {
-      this.url = this.url + tokenApiPath;
+      this.url += tokenApiPath;
     }
 
     this.username = options.username;
@@ -112,7 +115,7 @@ export class Cp4dTokenManager extends JwtTokenManager {
         method: 'POST',
         headers: extend(true, {}, this.headers, requiredHeaders),
         rejectUnauthorized: !this.disableSslVerification,
-      }
+      },
     };
     return this.requestWrapperInstance.sendRequest(parameters);
   }

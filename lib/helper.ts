@@ -54,14 +54,12 @@ export function isFileWithMetadata(obj: any): obj is FileWithMetadata {
   return Boolean(obj && obj.data && isFileData(obj.data));
 }
 
-export function isFileData(obj: any): obj is NodeJS.ReadableStream|Buffer {
+export function isFileData(obj: any): obj is NodeJS.ReadableStream | Buffer {
   return Boolean(obj && (isReadable(obj) || Buffer.isBuffer(obj)));
 }
 
 export function isEmptyObject(obj: any): boolean {
-  return Boolean(
-    obj && Object.keys(obj).length === 0 && obj.constructor === Object
-  );
+  return Boolean(obj && Object.keys(obj).length === 0 && obj.constructor === Object);
 }
 
 /**
@@ -69,9 +67,7 @@ export function isEmptyObject(obj: any): boolean {
  * @param {NodeJS.ReadableStream|Buffer} inputData - The data to retrieve content type for.
  * @returns {string} the content type of the input.
  */
-export function getContentType(
-  inputData: NodeJS.ReadableStream | Buffer
-): string {
+export function getContentType(inputData: NodeJS.ReadableStream | Buffer): string {
   let contentType = null;
   if (isFileStream(inputData)) {
     // if the inputData is a NodeJS.ReadableStream
@@ -116,10 +112,7 @@ export function getQueryParam(urlStr: string, param: string): string {
  * @param requires - the required parameter names.
  * @returns {Error|null}
  */
-export function getMissingParams(
-  params: { [key: string]: any },
-  requires: string[]
-): null | Error {
+export function getMissingParams(params: { [key: string]: any }, requires: string[]): null | Error {
   let missing;
   if (!requires) {
     return null;
@@ -127,14 +120,14 @@ export function getMissingParams(
     missing = requires;
   } else {
     missing = [];
-    requires.forEach(require => {
+    requires.forEach((require) => {
       if (isMissing(params[require])) {
         missing.push(require);
       }
     });
   }
   return missing.length > 0
-    ? new Error('Missing required parameters: ' + missing.join(', '))
+    ? new Error(`Missing required parameters: ${missing.join(', ')}`)
     : null;
 }
 
@@ -166,19 +159,13 @@ export function isHTML(text: string): boolean {
  * @param  {string[]} requires - The keys we want to check
  * @returns {string|null}
  */
-export function getFormat(
-  params: { [key: string]: any },
-  formats: string[]
-): string {
+export function getFormat(params: { [key: string]: any }, formats: string[]): string {
   if (!formats || !params) {
     logger.debug(`No formats to parse in getFormat. Returning null`);
     return null;
   }
-  for (const item of formats) {
-    if (item in params) {
-      return item;
-    }
-  }
+  const validFormats = formats.filter((item) => item in params);
+  if (validFormats.length) return validFormats[0];
 
   logger.debug(`No formats to parse in getFormat. Returning null`);
   return null;
@@ -192,9 +179,7 @@ export function getFormat(
  * @param {string} fileParam.contentType The content type of the file.
  * @returns {FileObject}
  */
-export function buildRequestFileObject(
-  fileParam: FileWithMetadata
-): FileObject {
+export function buildRequestFileObject(fileParam: FileWithMetadata): FileObject {
   let fileObj: FileObject;
   if (isFileObject(fileParam.data)) {
     // For backward compatibility, we allow the data to be a FileObject.
@@ -203,7 +188,7 @@ export function buildRequestFileObject(
       fileObj.options = {
         filename: fileParam.filename || fileParam.data.options.filename,
         contentType: fileParam.contentType || fileParam.data.options.contentType,
-      }
+      };
     }
   } else {
     fileObj = {
@@ -211,8 +196,8 @@ export function buildRequestFileObject(
       options: {
         filename: fileParam.filename,
         contentType: fileParam.contentType,
-      }
-     };
+      },
+    };
   }
 
   // Also for backward compatibility, we allow data to be a string
@@ -221,6 +206,7 @@ export function buildRequestFileObject(
   }
 
   // build filename
+  // eslint-disable-next-line prefer-destructuring
   let filename: string | Buffer = fileObj.options.filename;
   if (!filename && isFileStream(fileObj.value)) {
     // if readable stream with path property
@@ -244,14 +230,14 @@ export function buildRequestFileObject(
  * @returns {Object}
  */
 export function toLowerKeys(obj: Object): Object {
-  let _obj = {};
+  let lowerCaseObj = {};
   if (obj) {
-    _obj = Object.assign(
+    lowerCaseObj = Object.assign(
       {},
-      ...Object.keys(obj).map(key => ({
-        [key.toLowerCase()]: obj[key]
+      ...Object.keys(obj).map((key) => ({
+        [key.toLowerCase()]: obj[key],
       }))
     );
   }
-  return _obj;
+  return lowerCaseObj;
 }

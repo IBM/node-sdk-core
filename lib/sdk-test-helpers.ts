@@ -34,7 +34,7 @@ import expect = require('expect');
 export function checkUrlAndMethod(options, url: string, method: any) {
   expect(options.url).toEqual(url);
   expect(options.method).toEqual(method);
-};
+}
 
 /**
  * Takes the mock object for the `createRequest` method, extracts the headers that were sent with the call,
@@ -47,10 +47,10 @@ export function checkUrlAndMethod(options, url: string, method: any) {
  * @returns {void}
  */
 export function checkMediaHeaders(createRequestMock, accept: string, contentType: string) {
-  const headers = createRequestMock.mock.calls[0][0].defaultOptions.headers;
+  const { headers } = createRequestMock.mock.calls[0][0].defaultOptions;
   expect(headers.Accept).toEqual(accept);
   expect(headers['Content-Type']).toEqual(contentType);
-};
+}
 
 /**
  * Takes the mock object for the `createRequest` method, extracts the headers that were sent with the call,
@@ -62,10 +62,14 @@ export function checkMediaHeaders(createRequestMock, accept: string, contentType
  * @param {String} userHeaderValue - the expected value for the header passed by the user
  * @returns {void}
  */
-export function checkUserHeader(createRequestMock, userHeaderName: string, userHeaderValue: string) {
-  const headers = createRequestMock.mock.calls[0][0].defaultOptions.headers;
+export function checkUserHeader(
+  createRequestMock,
+  userHeaderName: string,
+  userHeaderValue: string
+) {
+  const { headers } = createRequestMock.mock.calls[0][0].defaultOptions;
   expect(headers[userHeaderName]).toEqual(userHeaderValue);
-};
+}
 
 /**
  * This method simply ensures that the method executed without any issues by extracting
@@ -77,7 +81,7 @@ export function checkUserHeader(createRequestMock, userHeaderName: string, userH
 export function checkForSuccessfulExecution(createRequestMock) {
   const sdkParams = createRequestMock.mock.calls[0][0];
   expect(typeof sdkParams).toEqual('object');
-};
+}
 
 /**
  * This method extracts the `options` property from the object passed into `createRequest`. This property is
@@ -89,7 +93,7 @@ export function checkForSuccessfulExecution(createRequestMock) {
  */
 export function getOptions(createRequestMock) {
   return createRequestMock.mock.calls[0][0].options;
-};
+}
 
 /**
  * This method simply ensures that the SDK methods return Promises by checking for
@@ -100,4 +104,4 @@ export function getOptions(createRequestMock) {
  */
 export function expectToBePromise(sdkPromise) {
   expect(typeof sdkPromise.then).toBe('function');
-};
+}

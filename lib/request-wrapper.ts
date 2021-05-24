@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+
 /**
  * Copyright 2014 IBM Corp. All Rights Reserved.
  *
@@ -14,8 +16,8 @@
  * limitations under the License.
  */
 
-import axios from 'axios';
-import { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
+
 import axiosCookieJarSupport from 'axios-cookiejar-support';
 import extend = require('extend');
 import FormData = require('form-data');
@@ -24,15 +26,19 @@ import https = require('https');
 import isStream = require('isstream');
 import querystring = require('querystring');
 import zlib = require('zlib');
-import { buildRequestFileObject, getMissingParams, isEmptyObject, isFileData, isFileWithMetadata, stripTrailingSlash } from './helper';
+import {
+  buildRequestFileObject,
+  isEmptyObject,
+  isFileData,
+  isFileWithMetadata,
+  stripTrailingSlash,
+} from './helper';
 import logger from './logger';
 import { streamToPromise } from './stream-to-promise';
 
-const isBrowser = typeof window === 'object';
-const globalTransactionId = 'x-global-transaction-id';
-
 export class RequestWrapper {
   private axiosInstance;
+
   private compressRequestData: boolean;
 
   constructor(axiosOptions?) {
@@ -47,15 +53,15 @@ export class RequestWrapper {
       maxContentLength: Infinity,
       headers: {
         post: {
-          'Content-Type':'application/json'
+          'Content-Type': 'application/json',
         },
         put: {
-          'Content-Type':'application/json'
+          'Content-Type': 'application/json',
         },
         patch: {
-          'Content-Type':'application/json'
+          'Content-Type': 'application/json',
         },
-      }
+      },
     };
 
     // merge axios config into default
@@ -90,45 +96,51 @@ export class RequestWrapper {
 
     // set debug interceptors
     if (process.env.NODE_DEBUG === 'axios' || process.env.DEBUG) {
-      this.axiosInstance.interceptors.request.use(config => {
-        logger.debug('Request:');
-        try {
-          logger.debug(JSON.stringify(config, null, 2));
-        } catch {
-          logger.error(config)
+      this.axiosInstance.interceptors.request.use(
+        (config) => {
+          logger.debug('Request:');
+          try {
+            logger.debug(JSON.stringify(config, null, 2));
+          } catch {
+            logger.error(config);
+          }
+
+          return config;
+        },
+        (error) => {
+          logger.error('Error: ');
+          try {
+            logger.error(JSON.stringify(error, null, 2));
+          } catch {
+            logger.error(error);
+          }
+
+          return Promise.reject(error);
         }
+      );
 
-        return config;
-      }, error => {
-        logger.error('Error: ');
-        try {
-          logger.error(JSON.stringify(error, null, 2));
-        } catch {
-          logger.error(error);
+      this.axiosInstance.interceptors.response.use(
+        (response) => {
+          logger.debug('Response:');
+          try {
+            logger.debug(JSON.stringify(response, null, 2));
+          } catch {
+            logger.error(response);
+          }
+
+          return response;
+        },
+        (error) => {
+          logger.error('Error: ');
+          try {
+            logger.error(JSON.stringify(error, null, 2));
+          } catch {
+            logger.error(error);
+          }
+
+          return Promise.reject(error);
         }
-
-        return Promise.reject(error);
-      });
-
-      this.axiosInstance.interceptors.response.use(response => {
-        logger.debug('Response:');
-        try {
-          logger.debug(JSON.stringify(response, null, 2));
-        } catch {
-          logger.error(response);
-        }
-
-        return response;
-      }, error => {
-        logger.error('Error: ');
-        try {
-          logger.error(JSON.stringify(error, null, 2));
-        } catch {
-          logger.error(error);
-        }
-
-        return Promise.reject(error);
-      });
+      );
     }
   }
 
@@ -151,26 +163,30 @@ export class RequestWrapper {
 
     // Form params
     if (formData) {
-      Object.keys(formData).forEach(key => {
+      Object.keys(formData).forEach((key) => {
         const values = Array.isArray(formData[key]) ? formData[key] : [formData[key]];
         // Skip keys with undefined/null values or empty object value
-        values.filter(v => v != null && !isEmptyObject(v)).forEach(value => {
-
-          // Special case of empty file object
-          if (value.hasOwnProperty('contentType') && !value.hasOwnProperty('data')) {
-            return;
-          }
-
-          if (isFileWithMetadata(value)) {
-            const fileObj = buildRequestFileObject(value);
-            multipartForm.append(key, fileObj.value, fileObj.options);
-          } else {
-            if (typeof value === 'object' && !isFileData(value)) {
-              value = JSON.stringify(value);
+        values
+          .filter((v) => v != null && !isEmptyObject(v))
+          .forEach((value) => {
+            // Special case of empty file object
+            if (
+              Object.prototype.hasOwnProperty.call(value, 'contentType') &&
+              !Object.prototype.hasOwnProperty.call(value, 'data')
+            ) {
+              return;
             }
-            multipartForm.append(key, value);
-          }
-        });
+
+            if (isFileWithMetadata(value)) {
+              const fileObj = buildRequestFileObject(value);
+              multipartForm.append(key, fileObj.value, fileObj.options);
+            } else {
+              if (typeof value === 'object' && !isFileData(value)) {
+                value = JSON.stringify(value);
+              }
+              multipartForm.append(key, value);
+            }
+          });
       });
     }
 
@@ -178,13 +194,15 @@ export class RequestWrapper {
     url = parsePath(url, path);
 
     // Headers
-    options.headers = Object.assign({}, options.headers);
+    options.headers = { ...options.headers };
 
     // Convert array-valued query params to strings
     if (qs && Object.keys(qs).length > 0) {
-      Object.keys(qs).forEach(
-        key => Array.isArray(qs[key]) && (qs[key] = qs[key].join(','))
-      );
+      Object.keys(qs).forEach((key) => {
+        if (Array.isArray(qs[key])) {
+          qs[key] = qs[key].join(',');
+        }
+      });
     }
 
     // Add service default endpoint if options.url start with /
@@ -222,15 +240,15 @@ export class RequestWrapper {
       params: qs,
       data,
       responseType: options.responseType || 'json',
-      paramsSerializer: params => {
-        return querystring.stringify(params);
-      },
+      paramsSerializer: (params) => querystring.stringify(params),
     };
 
     return this.axiosInstance(requestParams).then(
-      res => {
+      (res) => {
         // sometimes error responses will still trigger the `then` block - escape that behavior here
-        if (!res) { return };
+        if (!res) {
+          return undefined;
+        }
 
         // these objects contain circular json structures and are not always relevant to the user
         // if the user wants them, they can be accessed through the debug properties
@@ -244,7 +262,7 @@ export class RequestWrapper {
         // return another promise that resolves with 'res' to be handled in generated code
         return res;
       },
-      err => {
+      (err) => {
         // return another promise that rejects with 'err' to be handled in generated code
         throw this.formatError(err);
       }
@@ -275,7 +293,7 @@ export class RequestWrapper {
       error.name = axiosError.statusText; // ** deprecated **
 
       error.status = axiosError.status;
-      error.code = axiosError.status;  // ** deprecated **
+      error.code = axiosError.status; // ** deprecated **
 
       error.message = parseServiceErrorMessage(axiosError.data) || axiosError.statusText;
 
@@ -311,7 +329,8 @@ export class RequestWrapper {
 
       // when a request to a private cloud instance has an ssl problem, it never connects and follows this branch of the error handling
       if (isSelfSignedCertificateError(axiosError)) {
-        error.message = `The connection failed because the SSL certificate is not valid. ` +
+        error.message =
+          `The connection failed because the SSL certificate is not valid. ` +
           `To use a self-signed certificate, set the \`disableSslVerification\` parameter in the constructor options.`;
       }
     } else {
@@ -322,11 +341,10 @@ export class RequestWrapper {
     return error;
   }
 
-  private async gzipRequestBody(data: any, headers: OutgoingHttpHeaders): Promise<Buffer|any> {
+  private async gzipRequestBody(data: any, headers: OutgoingHttpHeaders): Promise<Buffer | any> {
     // skip compression if user has set the encoding header to gzip
-    const contentSetToGzip = 
-      headers['Content-Encoding'] &&
-      headers['Content-Encoding'].toString().includes('gzip');
+    const contentSetToGzip =
+      headers['Content-Encoding'] && headers['Content-Encoding'].toString().includes('gzip');
 
     if (!data || contentSetToGzip) {
       return data;
@@ -393,9 +411,8 @@ function isAuthenticationError(error: any): boolean {
   const body: any = error.data || {};
 
   // handle specific error from iam service, should be relevant across platforms
-  const isIamServiceError: boolean = body.context &&
-    body.context.url &&
-    body.context.url.indexOf('iam') > -1;
+  const isIamServiceError: boolean =
+    body.context && body.context.url && body.context.url.indexOf('iam') > -1;
 
   if (code === 401 || code === 403 || isIamServiceError) {
     isAuthErr = true;
@@ -448,7 +465,11 @@ function hasStringProperty(obj: any, property: string): boolean {
 function parseServiceErrorMessage(response: any): string | undefined {
   let message;
 
-  if (Array.isArray(response.errors) && response.errors.length > 0 && hasStringProperty(response.errors[0], 'message')) {
+  if (
+    Array.isArray(response.errors) &&
+    response.errors.length > 0 &&
+    hasStringProperty(response.errors[0], 'message')
+  ) {
     message = response.errors[0].message;
   } else if (hasStringProperty(response, 'error')) {
     message = response.error;

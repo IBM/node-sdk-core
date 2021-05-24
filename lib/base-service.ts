@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { OutgoingHttpHeaders } from 'http';
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
@@ -59,10 +58,15 @@ export interface BaseServiceOptions extends UserOptions {
  */
 export class BaseService {
   static DEFAULT_SERVICE_URL: string;
+
   static DEFAULT_SERVICE_NAME: string;
+
   protected baseOptions: BaseServiceOptions;
+
   private authenticator: AuthenticatorInterface;
+
   private requestWrapperInstance;
+
   /**
    * Configuration values for a service.
    * @param {Authenticator} userOptions.authenticator Object used to authenticate requests to the service.
@@ -83,8 +87,8 @@ export class BaseService {
       throw new Error(err);
     }
 
-    const _options = {} as BaseServiceOptions;
-    const options = Object.assign({}, userOptions);
+    const baseServiceOptions = {} as BaseServiceOptions;
+    const options = { ...userOptions };
 
     // for compatibility
     if (options.url && !options.serviceUrl) {
@@ -92,7 +96,7 @@ export class BaseService {
     }
 
     if (options.serviceUrl) {
-      _options.serviceUrl = stripTrailingSlash(options.serviceUrl);
+      baseServiceOptions.serviceUrl = stripTrailingSlash(options.serviceUrl);
     }
 
     // check serviceUrl for common user errors
@@ -109,11 +113,12 @@ export class BaseService {
     }
 
     const serviceClass = this.constructor as typeof BaseService;
-    this.baseOptions = Object.assign(
-      { qs: {}, serviceUrl: serviceClass.DEFAULT_SERVICE_URL },
-      options,
-      _options
-    );
+    this.baseOptions = {
+      qs: {},
+      serviceUrl: serviceClass.DEFAULT_SERVICE_URL,
+      ...options,
+      ...baseServiceOptions,
+    };
 
     this.requestWrapperInstance = new RequestWrapper(this.baseOptions);
 
@@ -148,7 +153,7 @@ export class BaseService {
   /**
    * Turn request body compression on or off.
    *
-   * @param {boolean} setting Will turn it on if 'true', off if 'false'. 
+   * @param {boolean} setting Will turn it on if 'true', off if 'false'.
    */
   public setEnableGzipCompression(setting: boolean): void {
     this.requestWrapperInstance.compressRequestData = setting;
@@ -170,10 +175,7 @@ export class BaseService {
       throw new Error(err);
     }
 
-    Object.assign(
-      this.baseOptions,
-      this.readOptionsFromExternalConfig(serviceName)
-    );
+    Object.assign(this.baseOptions, this.readOptionsFromExternalConfig(serviceName));
     // overwrite the requestWrapperInstance with the new base options if applicable
     this.requestWrapperInstance = new RequestWrapper(this.baseOptions);
   }
@@ -206,12 +208,13 @@ export class BaseService {
       return Promise.reject(new Error('The service URL is required'));
     }
 
-    return this.authenticator.authenticate(parameters.defaultOptions).then(() => {
+    return this.authenticator.authenticate(parameters.defaultOptions).then(() =>
       // resolve() handles rejection as well, so resolving the result of sendRequest should allow for proper handling later
-      return this.requestWrapperInstance.sendRequest(parameters);
-    });
+      this.requestWrapperInstance.sendRequest(parameters)
+    );
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private readOptionsFromExternalConfig(serviceName: string) {
     const results = {} as any;
     const properties = readExternalSources(serviceName);

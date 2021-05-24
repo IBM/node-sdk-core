@@ -1,10 +1,10 @@
-'use strict';
-
 const util = require('util');
 
 // create a mock for the read-external-sources module
 const readExternalSourcesModule = require('../../dist/auth/utils/read-external-sources');
-const readExternalSourcesMock = (readExternalSourcesModule.readExternalSources = jest.fn());
+
+readExternalSourcesModule.readExternalSources = jest.fn();
+const readExternalSourcesMock = readExternalSourcesModule.readExternalSources;
 
 // mock the request wrapper
 const requestWrapperLocation = '../../dist/lib/request-wrapper';
@@ -12,11 +12,9 @@ jest.mock(requestWrapperLocation);
 const { RequestWrapper } = require(requestWrapperLocation);
 const sendRequestMock = jest.fn();
 
-RequestWrapper.mockImplementation(() => {
-  return {
-    sendRequest: sendRequestMock,
-  };
-});
+RequestWrapper.mockImplementation(() => ({
+  sendRequest: sendRequestMock,
+}));
 
 // mock the authenticator
 const noAuthLocation = '../../dist/auth/authenticators/no-auth-authenticator';
@@ -24,11 +22,9 @@ jest.mock(noAuthLocation);
 const { NoAuthAuthenticator } = require(noAuthLocation);
 const authenticateMock = jest.fn();
 
-NoAuthAuthenticator.mockImplementation(() => {
-  return {
-    authenticate: authenticateMock,
-  };
-});
+NoAuthAuthenticator.mockImplementation(() => ({
+  authenticate: authenticateMock,
+}));
 
 // mocks need to happen before this is imported
 const { BaseService } = require('../../dist/lib/base-service');
@@ -161,7 +157,7 @@ describe('Base Service', () => {
   });
 
   it('should pass user given options to the request wrapper', () => {
-    new TestService({
+    const unused = new TestService({
       authenticator: AUTHENTICATOR,
       proxy: false,
     });
@@ -260,7 +256,7 @@ describe('Base Service', () => {
     expect(args[0]).toEqual(parameters.defaultOptions);
   });
 
-  it('should call sendRequest on authenticate() success', async done => {
+  it('should call sendRequest on authenticate() success', async (done) => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
@@ -290,7 +286,7 @@ describe('Base Service', () => {
     done();
   });
 
-  it('createRequest should reject with an error if `serviceUrl` is not set', async done => {
+  it('createRequest should reject with an error if `serviceUrl` is not set', async (done) => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
@@ -323,7 +319,7 @@ describe('Base Service', () => {
     done();
   });
 
-  it('should send error back to user on authenticate() failure', async done => {
+  it('should send error back to user on authenticate() failure', async (done) => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
@@ -362,7 +358,7 @@ describe('Base Service', () => {
 
   it('should check serviceUrl for common problems', () => {
     expect(() => {
-      new TestService({
+      const unused = new TestService({
         authenticator: AUTHENTICATOR,
         serviceUrl: 'myapi.com/{instanceId}',
       });
