@@ -61,6 +61,50 @@ export class BaseService {
 
   static DEFAULT_SERVICE_NAME: string;
 
+  /**
+   * Constructs a service URL by formatting a parameterized URL.
+   *
+   * @param {string} parameterizedUrl URL that contains variable placeholders, e.g. '{scheme}://ibm.com'.
+   * @param {Map<string, string>} defaultUrlVariables Map from variable names to default values.
+   *  Each variable in the parameterized URL must have a default value specified in this map.
+   * @param {Map<string, string>} providedUrlVariables Map from variable names to desired values.
+   *  If a variable is not provided in this map,
+   *  the default variable value will be used instead.
+   * @returns {string} The formatted URL with all variable placeholders replaced by values.
+   */
+  static constructServiceURL(
+    parameterizedUrl: string,
+    defaultUrlVariables: Map<string, string>,
+    providedUrlVariables: Map<string, string> | null
+  ): string {
+    // If null was passed, we set the variables to an empty map.
+    // This results in all default variable values being used.
+    if (providedUrlVariables === null) {
+      providedUrlVariables = new Map<string, string>();
+    }
+
+    // Verify the provided variable names.
+    providedUrlVariables.forEach((_, name) => {
+      if (!defaultUrlVariables.has(name)) {
+        throw new Error(`'${name}' is an invalid variable name.
+        Valid variable names: [${Array.from(defaultUrlVariables.keys()).sort()}].`);
+      }
+    });
+
+    // Format the URL with provided or default variable values.
+    let formattedUrl = parameterizedUrl;
+
+    defaultUrlVariables.forEach((defaultValue, name) => {
+      // Use the default variable value if none was provided.
+      const providedValue = providedUrlVariables.get(name);
+      const formatValue = providedValue !== undefined ? providedValue : defaultValue;
+
+      formattedUrl = formattedUrl.replace(`{${name}}`, formatValue);
+    });
+
+    return formattedUrl;
+  }
+
   protected baseOptions: BaseServiceOptions;
 
   private authenticator: AuthenticatorInterface;
