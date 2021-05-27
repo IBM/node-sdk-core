@@ -1,3 +1,10 @@
+# [2.11.0](https://github.com/IBM/node-sdk-core/compare/v2.10.4...v2.11.0) (2021-05-27)
+
+
+### Features
+
+* add `BaseService.constructServiceURL` method ([#138](https://github.com/IBM/node-sdk-core/issues/138)) ([0e73bde](https://github.com/IBM/node-sdk-core/commit/0e73bde12df3cfab0b9243d0064ef40d93c1072a))
+
 ## [2.10.4](https://github.com/IBM/node-sdk-core/compare/v2.10.3...v2.10.4) (2021-05-10)
 
 
