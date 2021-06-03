@@ -295,6 +295,71 @@ describe('sendRequest', () => {
     done();
   });
 
+  it('should send a request with Host header set in default options', async (done) => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        url: 'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id',
+        headers: {
+          Host: 'alternatehost.ibm.com:443',
+        },
+        responseType: 'buffer',
+      },
+    };
+
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    // assert results
+    expect(mockAxiosInstance.mock.calls[0][0].data).toEqual('post=body');
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
+      'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
+    );
+    expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
+      'Accept-Encoding': 'gzip',
+      Host: 'alternatehost.ibm.com:443',
+    });
+    done();
+  });
+
+  it('should send a request with Host header set in overridden options', async (done) => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        url: 'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id',
+        headers: {
+          Host: 'wronghost.ibm.com:443',
+        },
+        responseType: 'buffer',
+      },
+      options: {
+        headers: {
+          Host: 'correcthost.ibm.com:443',
+        },
+      },
+    };
+
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    // assert results
+    expect(mockAxiosInstance.mock.calls[0][0].data).toEqual('post=body');
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual(
+      'https://example.ibm.com/v1/environments/environment-id/configurations/configuration-id'
+    );
+    expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
+      'Accept-Encoding': 'gzip',
+      Host: 'correcthost.ibm.com:443',
+    });
+    done();
+  });
+
   it('should handle merging of different options objects', async (done) => {
     const parameters = {
       defaultOptions: {
