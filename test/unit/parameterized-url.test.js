@@ -1,4 +1,4 @@
-const { BaseService } = require('../../dist/lib/base-service');
+const { constructServiceUrl } = require('../../dist/lib/helper');
 
 const parameterizedUrl = '{scheme}://{domain}:{port}';
 const defaultUrlVariables = new Map([
@@ -7,9 +7,9 @@ const defaultUrlVariables = new Map([
   ['port', '9300'],
 ]);
 
-describe('constructServiceURL', () => {
+describe('constructServiceUrl', () => {
   it('should use default variable values when null is passed', () => {
-    expect(BaseService.constructServiceURL(parameterizedUrl, defaultUrlVariables, null)).toBe(
+    expect(constructServiceUrl(parameterizedUrl, defaultUrlVariables, null)).toBe(
       'http://ibm.com:9300'
     );
   });
@@ -20,9 +20,9 @@ describe('constructServiceURL', () => {
       ['port', '22'],
     ]);
 
-    expect(
-      BaseService.constructServiceURL(parameterizedUrl, defaultUrlVariables, providedUrlVariables)
-    ).toBe('https://ibm.com:22');
+    expect(constructServiceUrl(parameterizedUrl, defaultUrlVariables, providedUrlVariables)).toBe(
+      'https://ibm.com:22'
+    );
   });
 
   it('should use all provided values', () => {
@@ -32,16 +32,16 @@ describe('constructServiceURL', () => {
       ['port', '22'],
     ]);
 
-    expect(
-      BaseService.constructServiceURL(parameterizedUrl, defaultUrlVariables, providedUrlVariables)
-    ).toBe('https://google.com:22');
+    expect(constructServiceUrl(parameterizedUrl, defaultUrlVariables, providedUrlVariables)).toBe(
+      'https://google.com:22'
+    );
   });
 
   it('should throw an error if a provided variable name is wrong', () => {
     const providedUrlVariables = new Map([['server', 'value']]);
 
     expect(() =>
-      BaseService.constructServiceURL(parameterizedUrl, defaultUrlVariables, providedUrlVariables)
+      constructServiceUrl(parameterizedUrl, defaultUrlVariables, providedUrlVariables)
     ).toThrow(
       /'server' is an invalid variable name\.\n\s*Valid variable names: \[domain,port,scheme\]\./
     );
