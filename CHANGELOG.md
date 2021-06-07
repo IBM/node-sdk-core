@@ -1,3 +1,10 @@
+## [2.11.1](https://github.com/IBM/node-sdk-core/compare/v2.11.0...v2.11.1) (2021-06-07)
+
+
+### Bug Fixes
+
+* change constructServiceURL from method to function ([#141](https://github.com/IBM/node-sdk-core/issues/141)) ([cd2d28c](https://github.com/IBM/node-sdk-core/commit/cd2d28ce12b5189ab9de240d6b6d86aa77d33a73))
+
 # [2.11.0](https://github.com/IBM/node-sdk-core/compare/v2.10.4...v2.11.0) (2021-05-27)
 
 
