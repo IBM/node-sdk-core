@@ -253,7 +253,7 @@ export function toLowerKeys(obj: Object): Object {
  *  the default variable value will be used instead.
  * @returns {string} The formatted URL with all variable placeholders replaced by values.
  */
-export function constructServiceURL(
+export function constructServiceUrl(
   parameterizedUrl: string,
   defaultUrlVariables: Map<string, string>,
   providedUrlVariables: Map<string, string> | null
