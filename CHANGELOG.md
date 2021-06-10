@@ -1,3 +1,10 @@
+## [2.11.2](https://github.com/IBM/node-sdk-core/compare/v2.11.1...v2.11.2) (2021-06-10)
+
+
+### Bug Fixes
+
+* remove default limit on request body length ([#145](https://github.com/IBM/node-sdk-core/issues/145)) ([abf604a](https://github.com/IBM/node-sdk-core/commit/abf604a10483194d0e46e3a1d2e4c27c20331867))
+
 ## [2.11.1](https://github.com/IBM/node-sdk-core/compare/v2.11.0...v2.11.1) (2021-06-07)
 
 
