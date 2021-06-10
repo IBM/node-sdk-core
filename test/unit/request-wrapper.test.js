@@ -66,6 +66,7 @@ describe('RequestWrapper constructor', () => {
     // axios instance with it
     const createdAxiosConfig = axios.default.create.mock.calls[0][0];
     expect(createdAxiosConfig.maxContentLength).toBe(Infinity);
+    expect(createdAxiosConfig.maxBodyLength).toBe(Infinity);
     expect(createdAxiosConfig.headers).toBeDefined();
     expect(createdAxiosConfig.headers.post).toBeDefined();
     expect(createdAxiosConfig.headers.put).toBeDefined();
@@ -78,10 +79,12 @@ describe('RequestWrapper constructor', () => {
   it('should override the defaults with user-provided input', () => {
     const unused = new RequestWrapper({
       maxContentLength: 100,
+      maxBodyLength: 200,
     });
 
     const createdAxiosConfig = axios.default.create.mock.calls[0][0];
     expect(createdAxiosConfig.maxContentLength).toBe(100);
+    expect(createdAxiosConfig.maxBodyLength).toBe(200);
   });
 
   it('creates a custom https agent when disableSslVerification is true', () => {

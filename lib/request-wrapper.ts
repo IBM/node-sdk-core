@@ -51,6 +51,7 @@ export class RequestWrapper {
     // defaults here
     const axiosConfig: AxiosRequestConfig = {
       maxContentLength: Infinity,
+      maxBodyLength: Infinity,
       headers: {
         post: {
           'Content-Type': 'application/json',
