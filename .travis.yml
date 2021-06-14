@@ -9,10 +9,10 @@ script:
 - npm run build
 - npm run lint
 - npm run test-travis
-- sh scripts/typedoc/generate_typedoc.sh
+
 after_success:
 - npm run report-coverage
-- scripts/jsdoc/publish.sh
+
 deploy:
 - provider: script
   skip_cleanup: true
