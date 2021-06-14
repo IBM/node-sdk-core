@@ -1,3 +1,10 @@
+## [2.11.3](https://github.com/IBM/node-sdk-core/compare/v2.11.2...v2.11.3) (2021-06-14)
+
+
+### Bug Fixes
+
+* **build:** revert inadvertently-committed directories ([#147](https://github.com/IBM/node-sdk-core/issues/147)) ([1fb6295](https://github.com/IBM/node-sdk-core/commit/1fb62955e74e73c805b6221ca85e22517335f273))
+
 ## [2.11.2](https://github.com/IBM/node-sdk-core/compare/v2.11.1...v2.11.2) (2021-06-10)
 
 
