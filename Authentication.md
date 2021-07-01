@@ -1,7 +1,7 @@
 # Authentication
 The node-sdk-core project supports the following types of authentication:
 - Basic Authentication
-- Bearer Token 
+- Bearer Token
 - Identity and Access Management (IAM)
 - Cloud Pak for Data
 - No Authentication
@@ -131,18 +131,29 @@ The `CloudPakForDataAuthenticator` will accept user-supplied username and passwo
 
 ### Properties
 - username: (required) the username used to obtain a bearer token.
-- password: (required) the password used to obtain a bearer token.
+- password: (password or apikey required) the password used to obtain a bearer token.
+- apikey: (password or apikey required) the API key used to obtain a bearer token.
 - url: (required) The URL representing the Cloud Pak for Data token service endpoint.
 - disableSslVerification: (optional) A flag that indicates whether verificaton of the server's SSL certificate should be disabled or not. The default value is `false`.
 - headers: (optional) A set of key/value pairs that will be sent as HTTP headers in requests made to the IAM token service.
 
-### Programming example
+### Programming examples
 ```js
 import { CloudPakForDataAuthenticator } from 'ibm-cloud-sdk-core';
 
 const authenticator = new CloudPakForDataAuthenticator({
   username: '{username}',
   password: '{password}',
+  url: '{url}',
+});
+```
+
+```js
+import { CloudPakForDataAuthenticator } from 'ibm-cloud-sdk-core';
+
+const authenticator = new CloudPakForDataAuthenticator({
+  username: '{username}',
+  apikey: '{apikey}',
   url: '{url}',
 });
 ```
@@ -156,6 +167,7 @@ import { getAuthenticatorFromEnvironment } from 'ibm-cloud-sdk-core';
 // MY_SERVICE_AUTH_URL=<url>
 // MY_SERVICE_USERNAME=<username>
 // MY_SERVICE_PASSWORD=<password>
+// MY_SERVICE_APIKEY=<apikey>
 const cp4dAuthenticator = getAuthenticatorFromEnvironment('my-service');
 ```
 
