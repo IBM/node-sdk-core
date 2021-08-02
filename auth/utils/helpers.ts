@@ -87,3 +87,32 @@ export function validateInput(options: any, requiredOptions: string[]): void {
 export function getCurrentTime(): number {
   return Math.floor(Date.now() / 1000);
 }
+
+/**
+ * Check for only one of two elements being defined.
+ * Returns true if a is defined and b is undefined,
+ * or vice versa. Returns false if both are defined
+ * or both are undefined.
+ *
+ * @param {any} a - The first object
+ * @param {any} b - The second object
+ * @returns {boolean}
+ */
+export function onlyOne(a: any, b: any): boolean {
+  return Boolean((a && !b) || (b && !a));
+}
+
+/**
+ * Remove a given suffix if it exists.
+ *
+ * @param {string} str - The base string to operate on
+ * @param {string} suffix - The suffix to remove, if present
+ * @returns {string}
+ */
+export function removeSuffix(str: string, suffix: string): string {
+  if (str.endsWith(suffix)) {
+    str = str.substring(0, str.lastIndexOf(suffix));
+  }
+
+  return str;
+}

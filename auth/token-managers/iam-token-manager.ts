@@ -14,53 +14,12 @@
  * limitations under the License.
  */
 
-import extend = require('extend');
-import { OutgoingHttpHeaders } from 'http';
-import logger from '../../lib/logger';
-import { computeBasicAuthHeader, validateInput } from '../utils';
-import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
-
-/**
- * Check for only one of two elements being defined.
- * Returns true if a is defined and b is undefined,
- * or vice versa. Returns false if both are defined
- * or both are undefined.
- *
- * @param {any} a - The first object
- * @param {any} b - The second object
- * @returns {boolean}
- */
-function onlyOne(a: any, b: any): boolean {
-  return Boolean((a && !b) || (b && !a));
-}
-
-/**
- * Remove a given suffix if it exists.
- *
- * @param {string} str - The base string to operate on
- * @param {string} suffix - The suffix to remove, if present
- * @returns {string}
- */
-function removeSuffix(str: string, suffix: string): string {
-  if (str.endsWith(suffix)) {
-    str = str.substring(0, str.lastIndexOf(suffix));
-  }
-
-  return str;
-}
-
-const CLIENT_ID_SECRET_WARNING =
-  'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
-const SCOPE = 'scope';
-const DEFAULT_IAM_URL = 'https://iam.cloud.ibm.com';
-const OPERATION_PATH = '/identity/token';
+import { validateInput } from '../utils';
+import { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-based-token-manager';
 
 /** Configuration options for IAM token retrieval. */
-interface Options extends JwtTokenManagerOptions {
+interface Options extends IamRequestOptions {
   apikey: string;
-  clientId?: string;
-  clientSecret?: string;
-  scope?: string;
 }
 
 /**
@@ -68,18 +27,12 @@ interface Options extends JwtTokenManagerOptions {
  * the IAM token service to obtain and store a suitable bearer token. Additionally, the IAMTokenManager
  * will retrieve bearer tokens via basic auth using a supplied `clientId` and `clientSecret` pair.
  */
-export class IamTokenManager extends JwtTokenManager {
+export class IamTokenManager extends IamRequestBasedTokenManager {
   protected requiredOptions = ['apikey'];
 
   protected refreshToken: string;
 
   private apikey: string;
-
-  private clientId: string;
-
-  private clientSecret: string;
-
-  private scope: string;
 
   /**
    *
@@ -106,54 +59,10 @@ export class IamTokenManager extends JwtTokenManager {
 
     this.apikey = options.apikey;
 
-    // Canonicalize the URL by removing the operation path if it was specified by the user.
-    this.url = this.url ? removeSuffix(this.url, OPERATION_PATH) : DEFAULT_IAM_URL;
-
-    if (options.clientId) {
-      this.clientId = options.clientId;
-    }
-    if (options.clientSecret) {
-      this.clientSecret = options.clientSecret;
-    }
-    if (options.scope) {
-      this.scope = options.scope;
-    }
-    if (onlyOne(options.clientId, options.clientSecret)) {
-      // tslint:disable-next-line
-      logger.warn(CLIENT_ID_SECRET_WARNING);
-    }
-  }
-
-  /**
-   * Set the IAM `scope` value.
-   * This value is the form parameter to use when fetching the bearer token
-   * from the IAM token server.
-   *
-   * @param {string} scope - A space seperated string that makes up the scope parameter.
-   * @returns {void}
-   */
-  public setScope(scope: string): void {
-    this.scope = scope;
-  }
-
-  /**
-   * Set the IAM `clientId` and `clientSecret` values.
-   * These values are used to compute the Authorization header used
-   * when retrieving the IAM access token.
-   * If these values are not set, no Authorization header will be
-   * set on the request (it is not required).
-   *
-   * @param {string} clientId - The client id.
-   * @param {string} clientSecret - The client secret.
-   * @returns {void}
-   */
-  public setClientIdAndSecret(clientId: string, clientSecret: string): void {
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
-    if (onlyOne(clientId, clientSecret)) {
-      // tslint:disable-next-line
-      logger.warn(CLIENT_ID_SECRET_WARNING);
-    }
+    // construct form data for the apikey use case of iam token management
+    this.formData.apikey = this.apikey;
+    this.formData.grant_type = 'urn:ibm:params:oauth:grant-type:apikey';
+    this.formData.response_type = 'cloud_iam';
   }
 
   /**
@@ -181,42 +90,5 @@ export class IamTokenManager extends JwtTokenManager {
     if (responseBody.refresh_token) {
       this.refreshToken = responseBody.refresh_token;
     }
-  }
-
-  /**
-   * Request an IAM token using an API key.
-   *
-   * @returns {Promise}
-   */
-  protected requestToken(): Promise<any> {
-    // these cannot be overwritten
-    const requiredHeaders = {
-      'Content-type': 'application/x-www-form-urlencoded',
-    } as OutgoingHttpHeaders;
-
-    // If both the clientId and secret were specified by the user, then use them.
-    if (this.clientId && this.clientSecret) {
-      requiredHeaders.Authorization = computeBasicAuthHeader(this.clientId, this.clientSecret);
-    }
-
-    const parameters = {
-      options: {
-        url: this.url + OPERATION_PATH,
-        method: 'POST',
-        headers: extend(true, {}, this.headers, requiredHeaders),
-        form: {
-          grant_type: 'urn:ibm:params:oauth:grant-type:apikey',
-          apikey: this.apikey,
-          response_type: 'cloud_iam',
-        },
-        rejectUnauthorized: !this.disableSslVerification,
-      },
-    };
-
-    if (this.scope) {
-      parameters.options.form[SCOPE] = this.scope;
-    }
-
-    return this.requestWrapperInstance.sendRequest(parameters);
   }
 }
