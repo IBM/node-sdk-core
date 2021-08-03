@@ -33,9 +33,11 @@ export interface IamRequestOptions extends JwtTokenManagerOptions {
 }
 
 /**
- * The IAMTokenManager takes an api key and performs the necessary interactions with
- * the IAM token service to obtain and store a suitable bearer token. Additionally, the IAMTokenManager
- * will retrieve bearer tokens via basic auth using a supplied `clientId` and `clientSecret` pair.
+ * The IamRequestBasedTokenManager class contains code relevant to any token manager that
+ * interacts with the IAM service to manage a token. It stores information relevant to all
+ * IAM requests, such as the client ID and secret, and performs the token request with a set
+ * of request options common to any IAM token management scheme. It is intended that this
+ * class be extended with specific implementations.
  */
 export class IamRequestBasedTokenManager extends JwtTokenManager {
   private clientId: string;
@@ -51,7 +53,6 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
    * Create a new [[IamRequestBasedTokenManager]] instance.
    *
    * @param {object} options Configuration options.
-   * @param {string} options.apikey The IAM api key.
    * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
    * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
@@ -65,6 +66,9 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
    * @constructor
    */
   constructor(options: IamRequestOptions) {
+    // all parameters are optional
+    options = options || ({} as IamRequestOptions);
+
     super(options);
 
     // Canonicalize the URL by removing the operation path if it was specified by the user.

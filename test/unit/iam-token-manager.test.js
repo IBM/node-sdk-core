@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 
 jest.mock('../../dist/lib/request-wrapper');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
-const logger = require('../../dist/lib/logger').default;
 
 jwt.decode = jest.fn(() => ({ exp: 100, iat: 100 }));
 
