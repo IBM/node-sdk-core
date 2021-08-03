@@ -17,11 +17,11 @@ describe('Logger', () => {
 
   it('no logger should be enabled', () => {
     const logger = require('../../dist/lib/logger').default;
-    expect(logger.warn.enabled).toBe(false);
-    expect(logger.verbose.enabled).toBe(false);
-    expect(logger.info.enabled).toBe(false);
-    expect(logger.error.enabled).toBe(false);
-    expect(logger.debug.enabled).toBe(false);
+    expect(logger.warn.enabled).toBeFalsy();
+    expect(logger.verbose.enabled).toBeFalsy();
+    expect(logger.info.enabled).toBeFalsy();
+    expect(logger.error.enabled).toBeFalsy();
+    expect(logger.debug.enabled).toBeFalsy();
   });
 
   it('should enable all loggers when axios debug flag is set', () => {
