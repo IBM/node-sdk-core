@@ -20,18 +20,21 @@
  *
  * Identity and Access Management (IAM)
  * Cloud Pak for Data
+ * Container (IKS, etc)
  *
  * The token managers sit inside of an authenticator and do the work to retrieve
  * tokens where as the authenticators add these tokens to the actual request.
  *
  * classes:
- *   IamTokenManager: Token Manager of CloudPak for data.
- *   Cp4dTokenManager: Authenticator for passing IAM authentication information to service endpoint.
+ *   IamTokenManager: Token Manager of IAM via apikey.
+ *   Cp4dTokenManager: Token Manager of CloudPak for data.
+ *   ContainerTokenManager: Token manager of IAM via compute resource token.
  *   JwtTokenManager: A class for shared functionality for parsing, storing, and requesting JWT tokens.
  */
 
 export { IamTokenManager } from './iam-token-manager';
 export { Cp4dTokenManager } from './cp4d-token-manager';
+export { ContainerTokenManager } from './container-token-manager';
 export { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-based-token-manager';
 export { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 export { TokenManager, TokenManagerOptions } from './token-manager';

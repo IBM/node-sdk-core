@@ -24,6 +24,6 @@
  */
 
 export * from './helpers';
-export * from './read-credentials-file';
+export * from './file-reading-helpers';
 export { getAuthenticatorFromEnvironment } from './get-authenticator-from-environment';
 export { readExternalSources } from './read-external-sources';

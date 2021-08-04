@@ -4,7 +4,10 @@ import os = require('os');
 import path = require('path');
 import logger from '../../lib/logger';
 
-const filename: string = 'ibm-credentials.env';
+// Putting all file-reading related code in this file to isolate the usage of the
+// `fs` module, as it causes problems in browser environments.
+
+const defaultCredsFilename: string = 'ibm-credentials.env';
 
 /**
  * Return a config object based on a credentials file. Credentials files can
@@ -50,7 +53,7 @@ export function readCredentialsFile() {
   return dotenv.parse(credsFile);
 }
 
-export function fileExistsAtPath(filepath): boolean {
+export function fileExistsAtPath(filepath: string): boolean {
   if (fs.existsSync(filepath)) {
     const stats = fs.lstatSync(filepath);
     return stats.isFile() || stats.isSymbolicLink();
@@ -59,11 +62,33 @@ export function fileExistsAtPath(filepath): boolean {
   return false;
 }
 
-export function constructFilepath(filepath): string {
+export function constructFilepath(filepath: string): string {
   // ensure filepath includes the filename
-  if (!filepath.endsWith(filename)) {
-    filepath = path.join(filepath, filename);
+  if (!filepath.endsWith(defaultCredsFilename)) {
+    filepath = path.join(filepath, defaultCredsFilename);
   }
 
   return filepath;
+}
+
+export function readCrTokenFile(filepath: string): string {
+  if (!fs.existsSync) {
+    return '';
+  }
+
+  let token: string = '';
+  if (fileExistsAtPath(filepath)) {
+    token = fs.readFileSync(filepath, 'utf8');
+    logger.debug(`Successfully read CR token from file: ${filepath}`);
+  } else {
+    logger.error(`Expected to find CR token file but the file does not exist: ${filepath}`);
+    throw new Error(`File does not exist: ${filepath}`);
+  }
+
+  if (token === '') {
+    logger.error(`Expected to read CR token from file but the file is empty: ${filepath}`);
+    throw new Error(`No token could be read from file: '${filepath}'`);
+  }
+
+  return token;
 }
