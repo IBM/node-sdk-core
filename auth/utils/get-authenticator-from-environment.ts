@@ -20,6 +20,7 @@ import {
   BearerTokenAuthenticator,
   CloudPakForDataAuthenticator,
   IamAuthenticator,
+  ContainerAuthenticator,
   NoAuthAuthenticator,
 } from '../authenticators';
 
@@ -63,10 +64,12 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
     delete credentials.authDisableSsl;
   }
 
-  // default the auth type to `iam` if authType is undefined, or not a string
+  // in the situation where the auth type is not provided:
+  // if an apikey is provided, default to IAM
+  // if not, default to container auth
   let { authType } = credentials;
   if (!authType || typeof authType !== 'string') {
-    authType = 'iam';
+    authType = credentials.apikey ? 'iam' : 'container';
   }
 
   // create and return the appropriate authenticator
@@ -88,6 +91,9 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
       break;
     case 'iam':
       authenticator = new IamAuthenticator(credentials);
+      break;
+    case 'container':
+      authenticator = new ContainerAuthenticator(credentials);
       break;
     default:
       throw new Error(`Invalid value for AUTH_TYPE: ${authType}`);
