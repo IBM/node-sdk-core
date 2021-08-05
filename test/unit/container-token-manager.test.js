@@ -2,7 +2,6 @@
 
 const path = require('path');
 const { ContainerTokenManager } = require('../../dist/auth');
-let { getCrToken } = require('../../dist/auth/utils');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 const logger = require('../../dist/lib/logger').default;
 
