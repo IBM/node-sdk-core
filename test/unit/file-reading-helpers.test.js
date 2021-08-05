@@ -1,5 +1,12 @@
 const fs = require('fs');
-const { constructFilepath, fileExistsAtPath, readCredentialsFile } = require('../../dist/auth');
+const {
+  constructFilepath,
+  fileExistsAtPath,
+  readCredentialsFile,
+  readCrTokenFile,
+} = require('../../dist/auth');
+
+const logger = require('../../dist/lib/logger').default;
 
 describe('browser scenario', () => {
   const existSync = fs.existsSync;
@@ -7,9 +14,14 @@ describe('browser scenario', () => {
     fs.existsSync = undefined;
   });
 
-  it('should return empty object when webpack override fs with empty object', () => {
+  it('should return empty object from `readCredentialsFile` when webpack override fs with empty object', () => {
     const cred = readCredentialsFile();
     expect(cred).toEqual({});
+  });
+
+  it('should return empty object from `readCrTokenFile` when webpack override fs with empty object', () => {
+    const cred = readCrTokenFile('/made/up/path');
+    expect(cred).toEqual('');
   });
 
   afterAll(() => {
@@ -107,5 +119,69 @@ describe('read ibm credentials file', () => {
       const obj = readCredentialsFile();
       expect(obj).toEqual({});
     });
+  });
+});
+
+describe('Read CR Token File', () => {
+  const loggerDebugMock = jest.spyOn(logger, 'debug').mockImplementation(() => {});
+  const loggerErrorMock = jest.spyOn(logger, 'error').mockImplementation(() => {});
+
+  afterEach(() => {
+    loggerDebugMock.mockClear();
+    loggerErrorMock.mockClear();
+  });
+
+  afterAll(() => {
+    loggerDebugMock.mockRestore();
+    loggerErrorMock.mockRestore();
+  });
+
+  it('should successfully return contents of file as a string', () => {
+    const filename = `${__dirname}/../resources/vault-token`;
+    const token = readCrTokenFile(filename);
+
+    expect(token).toBe('my-cr-token-123');
+    expect(loggerDebugMock).toHaveBeenCalledWith(
+      `Successfully read CR token from file: ${filename}`
+    );
+  });
+
+  it('should throw an error if given file does not exist', () => {
+    const filename = '/path/to/nowhere/';
+    expect(() => {
+      const token = readCrTokenFile(filename);
+    }).toThrow(`File does not exist: ${filename}`);
+
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      `Expected to find CR token file but the file does not exist: ${filename}`
+    );
+  });
+
+  it('should throw an error if given file is empty', () => {
+    const filename = `${__dirname}/../resources/empty-file`;
+    expect(() => {
+      const token = readCrTokenFile(filename);
+    }).toThrow(`No token could be read from file: '${filename}'`);
+
+    expect(loggerErrorMock).toHaveBeenCalledWith(
+      `Expected to read CR token from file but the file is empty: ${filename}`
+    );
+  });
+
+  it('should throw an error if file read goes wrong', () => {
+    const filename = `${__dirname}/../resources/vault-token`;
+    const fileReadingError = 'Bad file read!';
+    const readFileMock = jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
+      throw new Error(fileReadingError);
+    });
+
+    expect(() => {
+      const token = readCrTokenFile(filename);
+    }).toThrow(fileReadingError);
+
+    expect(loggerDebugMock).not.toHaveBeenCalled();
+    expect(loggerErrorMock).not.toHaveBeenCalled();
+
+    readFileMock.mockRestore();
   });
 });
