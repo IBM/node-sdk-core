@@ -4,6 +4,7 @@ The node-sdk-core project supports the following types of authentication:
 - Bearer Token
 - Identity and Access Management (IAM)
 - Cloud Pak for Data
+- Container
 - No Authentication
 
 The SDK user configures the appropriate type of authentication for use with service instances.
@@ -169,6 +170,41 @@ import { getAuthenticatorFromEnvironment } from 'ibm-cloud-sdk-core';
 // MY_SERVICE_PASSWORD=<password>
 // MY_SERVICE_APIKEY=<apikey>
 const cp4dAuthenticator = getAuthenticatorFromEnvironment('my-service');
+```
+
+## Container
+The `ContainerAuthenticator` will read a compute resource token from the file system (typically, a container running on a system like IKS) and will perform the necessary interactions with the IAM token service to obtain a suitable bearer token for the compute resource.  The authenticator will also obtain  a new bearer token when the current token expires.  The bearer token is then added to each outbound request in the `Authorization` header in the form:
+
+```
+   Authorization: Bearer <bearer-token>
+```
+
+### Properties
+- crTokenFilename: (optional) The name of the file containing the injected CR token value. If not specified, then `/var/run/secrets/tokens/vault-token` is used as the default value. The application must have `read` permissions on the file containing the CR token value.
+- iamProfileName: (optional) The name of the linked trusted IAM profile to be used when obtaining the IAM access token (a CR token might map to multiple IAM profiles). One of `iamProfileName` or `iamProfileId` must be specified.
+- iamProfileId: (optional) The ID of the linked trusted IAM profile to be used when obtaining the IAM access token (a CR token might map to multiple IAM profiles). One of `iamProfileName` or `iamProfileId` must be specified.
+- url: (optional) The URL representing the IAM token service endpoint.  If not specified, a suitable default value is used.
+- clientId/clientSecret: (optional) The `clientId` and `clientSecret` fields are used to form a "basic auth" Authorization header for interactions with the IAM token server. If neither field is specified, then no Authorization header will be sent with token server requests.  These fields are optional, but must be specified together.
+- disableSslVerification: (optional) A flag that indicates whether verificaton of the server's SSL certificate should be disabled or not. The default value is `false`.
+- headers: (optional) A set of key/value pairs that will be sent as HTTP headers in requests made to the IAM token service.
+
+### Programming example
+```js
+import { ContainerAuthenticator } from 'ibm-cloud-sdk-core';
+
+const authenticator = new ContainerAuthenticator({
+  iamProfileName: '{profile-name}',
+});
+```
+
+### External configuration example
+```js
+import { getAuthenticatorFromEnvironment } from 'ibm-cloud-sdk-core';
+
+// env vars
+// MY_SERVICE_AUTH_TYPE=container
+// MY_SERVICE_IAM_PROFILE_ID=my_profile_name
+const containerAuthenticator = getAuthenticatorFromEnvironment('my-service');
 ```
 
 ## No Auth Authentication
