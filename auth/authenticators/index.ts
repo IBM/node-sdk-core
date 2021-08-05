@@ -44,4 +44,5 @@ export { BearerTokenAuthenticator } from './bearer-token-authenticator';
 export { CloudPakForDataAuthenticator } from './cloud-pak-for-data-authenticator';
 export { IamAuthenticator } from './iam-authenticator';
 export { NoAuthAuthenticator } from './no-auth-authenticator';
+export { IamRequestBasedAuthenticator } from './iam-request-based-authenticator';
 export { TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
