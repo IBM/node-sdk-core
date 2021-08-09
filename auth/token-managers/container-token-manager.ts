@@ -84,7 +84,7 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
 
   /**
    * Setter for the filename of the compute resource token.
-   * @param {string} scope A string containing a path to the CR token file
+   * @param {string} crTokenFilename A string containing a path to the CR token file
    */
   public setCrTokenFilename(crTokenFilename: string): void {
     this.crTokenFilename = crTokenFilename;
@@ -92,7 +92,7 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
 
   /**
    * Setter for the "profile_name" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} scope A string that makes up the iamProfileName parameter
+   * @param {string} iamProfileName A string that makes up the iamProfileName parameter
    */
   public setIamProfileName(iamProfileName: string): void {
     this.iamProfileName = iamProfileName;
@@ -100,7 +100,7 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
 
   /**
    * Setter for the "profile_id" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} scope A string that makes up the iamProfileId parameter
+   * @param {string} iamProfileId A string that makes up the iamProfileId parameter
    */
   public setIamProfileId(iamProfileId: string): void {
     this.iamProfileId = iamProfileId;
