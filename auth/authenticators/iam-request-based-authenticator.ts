@@ -59,7 +59,7 @@ export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator
    *   whether verification of the token server's SSL certificate should be
    *   disabled or not
    * @param {string} options.url for HTTP token requests.
-   * @param {object<string, string>} options.headers to be sent with every
+   * @param {object<string, string>} options.headers to be sent with every IAM token request
    * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
    *   authorization header for IAM token requests.
    * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
