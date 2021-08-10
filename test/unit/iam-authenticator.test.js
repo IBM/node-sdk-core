@@ -43,13 +43,13 @@ describe('IAM Authenticator', () => {
     }).toThrow();
   });
 
-  it('should throw an error when username has a bad character', () => {
+  it('should throw an error when apikey has a bad character', () => {
     expect(() => {
       const unused = new IamAuthenticator({ apikey: '"<your-apikey>"' });
     }).toThrow(/Revise these credentials/);
   });
 
-  it('should update the options and resolve with `null`', async (done) => {
+  it('should update the options and resolve with `null` when `authenticate` is called', async () => {
     const authenticator = new IamAuthenticator({ apikey: 'testjustanapikey' });
 
     // override the created token manager with the mocked one
@@ -67,7 +67,6 @@ describe('IAM Authenticator', () => {
     // verify the scope param wasn't set
     expect(authenticator.scope).toBeUndefined();
     expect(authenticator.tokenManager.scope).toBeUndefined();
-    done();
   });
 
   it('should re-set the client id and secret using the setter', () => {

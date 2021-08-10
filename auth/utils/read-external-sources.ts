@@ -19,7 +19,7 @@
 import camelcase = require('camelcase');
 import isEmpty = require('lodash.isempty');
 import logger from '../../lib/logger';
-import { readCredentialsFile } from './read-credentials-file';
+import { readCredentialsFile } from './file-reading-helpers';
 
 /**
  * Read properties stored in external sources like Environment Variables,

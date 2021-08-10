@@ -4,6 +4,7 @@ const {
   BearerTokenAuthenticator,
   CloudPakForDataAuthenticator,
   IamAuthenticator,
+  ContainerAuthenticator,
   NoAuthAuthenticator,
 } = require('../../dist/auth');
 
@@ -16,6 +17,7 @@ const readExternalSourcesMock = readExternalSourcesModule.readExternalSources;
 const SERVICE_NAME = 'dummy';
 const APIKEY = '123456789';
 const TOKEN_URL = 'get-token.com/api';
+const IAM_PROFILE_NAME = 'some-name';
 
 describe('Get Authenticator From Environment Module', () => {
   afterEach(() => {
@@ -67,6 +69,12 @@ describe('Get Authenticator From Environment Module', () => {
     expect(authenticator).toBeInstanceOf(CloudPakForDataAuthenticator);
   });
 
+  it('should get container authenticator', () => {
+    setUpContainerPayload();
+    const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
+    expect(authenticator).toBeInstanceOf(ContainerAuthenticator);
+  });
+
   it('should throw away service properties and use auth properties', () => {
     setUpAuthPropsPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
@@ -76,7 +84,14 @@ describe('Get Authenticator From Environment Module', () => {
     expect(authenticator.url).toBe(TOKEN_URL);
   });
 
-  it('should default to iam when auth type is not provided', () => {
+  it('should default to container auth when auth type is not provided', () => {
+    readExternalSourcesMock.mockImplementation(() => ({ iamProfileName: IAM_PROFILE_NAME }));
+    const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
+    expect(authenticator).toBeInstanceOf(ContainerAuthenticator);
+    expect(authenticator.iamProfileName).toBe(IAM_PROFILE_NAME);
+  });
+
+  it('should default to iam when auth type is not provided and apikey is provided', () => {
     readExternalSourcesMock.mockImplementation(() => ({ apikey: APIKEY }));
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(IamAuthenticator);
@@ -151,5 +166,14 @@ function setUpAuthPropsPayload() {
     authDisableSsl: true,
     url: 'thisshouldbethrownaway.com',
     disableSsl: false,
+  }));
+}
+
+function setUpContainerPayload() {
+  readExternalSourcesMock.mockImplementation(() => ({
+    authType: 'container',
+    crTokenFilename: '/path/to/file',
+    iamProfileName: IAM_PROFILE_NAME,
+    iamProfileId: 'some-id',
   }));
 }

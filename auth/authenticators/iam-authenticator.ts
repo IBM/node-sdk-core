@@ -16,27 +16,12 @@
 
 import { IamTokenManager } from '../token-managers';
 import { validateInput } from '../utils';
-import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
+import { IamRequestOptions, IamRequestBasedAuthenticator } from './iam-request-based-authenticator';
 
 /** Configuration options for IAM authentication. */
-export interface Options extends BaseOptions {
+export interface Options extends IamRequestOptions {
   /** The IAM api key */
   apikey: string;
-  /**
-   * The `clientId` and `clientSecret` fields are used to form a "basic"
-   * authorization header for IAM token requests.
-   */
-  clientId?: string;
-  /**
-   * The `clientId` and `clientSecret` fields are used to form a "basic"
-   * authorization header for IAM token requests.
-   */
-  clientSecret?: string;
-
-  /**
-   * The "scope" parameter to use when fetching the bearer token from the IAM token server.
-   */
-  scope?: string;
 }
 
 /**
@@ -50,18 +35,12 @@ export interface Options extends BaseOptions {
  *
  *      Authorization: Bearer <bearer-token>
  */
-export class IamAuthenticator extends TokenRequestBasedAuthenticator {
+export class IamAuthenticator extends IamRequestBasedAuthenticator {
   protected requiredOptions = ['apikey'];
 
   protected tokenManager: IamTokenManager;
 
   private apikey: string;
-
-  private clientId: string;
-
-  private clientSecret: string;
-
-  private scope: string;
 
   /**
    *
@@ -88,39 +67,10 @@ export class IamAuthenticator extends TokenRequestBasedAuthenticator {
     validateInput(options, this.requiredOptions);
 
     this.apikey = options.apikey;
-    this.clientId = options.clientId;
-    this.clientSecret = options.clientSecret;
-    this.scope = options.scope;
 
     // the param names are shared between the authenticator and the token
     // manager so we can just pass along the options object
     this.tokenManager = new IamTokenManager(options);
-  }
-
-  /**
-   * Setter for the mutually inclusive `clientId` and the `clientSecret`.
-   * @param {string} clientId The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} clientSecret The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   */
-  public setClientIdAndSecret(clientId: string, clientSecret: string): void {
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
-
-    // update properties in token manager
-    this.tokenManager.setClientIdAndSecret(clientId, clientSecret);
-  }
-
-  /**
-   * Setter for the "scope" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} scope A space seperated string that makes up the scope parameter
-   */
-  public setScope(scope: string): void {
-    this.scope = scope;
-
-    // update properties in token manager
-    this.tokenManager.setScope(scope);
   }
 
   /**

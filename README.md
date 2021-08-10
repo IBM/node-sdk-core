@@ -31,6 +31,7 @@ This library provides a set of Authenticators used to authenticate requests from
 - Bearer Token
 - IAM
 - CP4D
+- Container
 
 There are two ways to create an authenticator:
 1. Creating an instance and providing credentials programmatically

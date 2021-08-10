@@ -2,3 +2,7 @@
 export function readCredentialsFile() {
   return {};
 }
+
+export function readCrTokenFile() {
+  return '';
+}

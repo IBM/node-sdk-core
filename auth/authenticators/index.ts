@@ -21,6 +21,7 @@
  * Basic Authentication
  * Bearer Token
  * Identity and Access Management (IAM)
+ * Container (IKS, etc)
  * Cloud Pak for Data
  * No Authentication
  *
@@ -34,6 +35,7 @@
  *   BearerTokenAuthenticator: Authenticator for passing supplied bearer token to service endpoint.
  *   CloudPakForDataAuthenticator: Authenticator for passing CP4D authentication information to service endpoint.
  *   IAMAuthenticator: Authenticator for passing IAM authentication information to service endpoint.
+ *   ContainerAuthenticator: Authenticator for passing IAM authentication to a service, based on a token living on the container.
  *   NoAuthAuthenticator: Performs no authentication. Useful for testing purposes.
  */
 
@@ -43,5 +45,7 @@ export { BasicAuthenticator } from './basic-authenticator';
 export { BearerTokenAuthenticator } from './bearer-token-authenticator';
 export { CloudPakForDataAuthenticator } from './cloud-pak-for-data-authenticator';
 export { IamAuthenticator } from './iam-authenticator';
+export { ContainerAuthenticator } from './container-authenticator';
 export { NoAuthAuthenticator } from './no-auth-authenticator';
+export { IamRequestBasedAuthenticator } from './iam-request-based-authenticator';
 export { TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
