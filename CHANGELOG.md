@@ -1,3 +1,10 @@
+# [2.12.0](https://github.com/IBM/node-sdk-core/compare/v2.11.3...v2.12.0) (2021-08-10)
+
+
+### Features
+
+* add support for new ContainerAuthenticator ([#151](https://github.com/IBM/node-sdk-core/issues/151)) ([b01c011](https://github.com/IBM/node-sdk-core/commit/b01c011021671ebeb3c49de84fb17315eae3629f))
+
 ## [2.11.3](https://github.com/IBM/node-sdk-core/compare/v2.11.2...v2.11.3) (2021-06-14)
 
 
