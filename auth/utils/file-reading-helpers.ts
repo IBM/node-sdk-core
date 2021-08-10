@@ -77,17 +77,19 @@ export function readCrTokenFile(filepath: string): string {
   }
 
   let token: string = '';
-  if (fileExistsAtPath(filepath)) {
+  const fileExists = fileExistsAtPath(filepath);
+  if (fileExists) {
     token = fs.readFileSync(filepath, 'utf8');
     logger.debug(`Successfully read CR token from file: ${filepath}`);
-  } else {
-    logger.error(`Expected to find CR token file but the file does not exist: ${filepath}`);
-    throw new Error(`File does not exist: ${filepath}`);
   }
 
   if (token === '') {
-    logger.error(`Expected to read CR token from file but the file is empty: ${filepath}`);
-    throw new Error(`No token could be read from file: '${filepath}'`);
+    if (fileExists) {
+      logger.error(`Expected to read CR token from file but the file is empty: ${filepath}`);
+    } else {
+      logger.error(`Expected to find CR token file but the file does not exist: ${filepath}`);
+    }
+    throw new Error(`Unable to retrieve the CR token value from file: ${filepath}`);
   }
 
   return token;

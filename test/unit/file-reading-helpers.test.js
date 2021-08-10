@@ -150,7 +150,7 @@ describe('Read CR Token File', () => {
     const filename = '/path/to/nowhere/';
     expect(() => {
       const token = readCrTokenFile(filename);
-    }).toThrow(`File does not exist: ${filename}`);
+    }).toThrow(`Unable to retrieve the CR token value from file: ${filename}`);
 
     expect(loggerErrorMock).toHaveBeenCalledWith(
       `Expected to find CR token file but the file does not exist: ${filename}`
@@ -161,7 +161,7 @@ describe('Read CR Token File', () => {
     const filename = `${__dirname}/../resources/empty-file`;
     expect(() => {
       const token = readCrTokenFile(filename);
-    }).toThrow(`No token could be read from file: '${filename}'`);
+    }).toThrow(`Unable to retrieve the CR token value from file: ${filename}`);
 
     expect(loggerErrorMock).toHaveBeenCalledWith(
       `Expected to read CR token from file but the file is empty: ${filename}`
