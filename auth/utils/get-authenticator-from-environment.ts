@@ -68,6 +68,11 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
   // if an apikey is provided, default to IAM
   // if not, default to container auth
   let { authType } = credentials;
+
+  if (!authType) {
+    // Support the alternate "AUTHTYPE" config property.
+    authType = credentials.authtype;
+  }
   if (!authType || typeof authType !== 'string') {
     authType = credentials.apikey ? 'iam' : 'container';
   }
