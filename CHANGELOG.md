@@ -1,3 +1,10 @@
+## [2.12.1](https://github.com/IBM/node-sdk-core/compare/v2.12.0...v2.12.1) (2021-08-11)
+
+
+### Bug Fixes
+
+* use typescript 3.8.x to build the published code ([#152](https://github.com/IBM/node-sdk-core/issues/152)) ([4362a37](https://github.com/IBM/node-sdk-core/commit/4362a376b3419baa5e7e428b03490bf021d0a295))
+
 # [2.12.0](https://github.com/IBM/node-sdk-core/compare/v2.11.3...v2.12.0) (2021-08-10)
 
 
