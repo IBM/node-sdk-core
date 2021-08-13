@@ -42,11 +42,6 @@ describe('Get Authenticator From Environment Module', () => {
 
   it('should get basic authenticator', () => {
     setUpBasicPayload();
-    // readExternalSourcesMock.mockImplementation(() => ({
-    //   authtype: 'basic',
-    //   username: 'a',
-    //   password: 'b',
-    // }));
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(BasicAuthenticator);
   });
