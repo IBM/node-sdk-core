@@ -47,6 +47,17 @@ describe('Read External Sources Module', () => {
     expect(properties.scope).toBe(SCOPE);
   });
 
+  it('should return properties for service_3 from creds file', () => {
+    setupCredsFile();
+    const properties = readExternalSources('service_3');
+    expect(properties).not.toBeNull();
+    // auth props
+    expect(properties.authType).not.toBeDefined();
+    expect(properties.authtype).toBe('basic');
+    expect(properties.username).toBe('user1');
+    expect(properties.password).toBe('password1');
+  });
+
   // env
   it('should return an object from environment variables', () => {
     setupEnvVars();

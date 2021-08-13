@@ -42,11 +42,6 @@ describe('Get Authenticator From Environment Module', () => {
 
   it('should get basic authenticator', () => {
     setUpBasicPayload();
-    readExternalSourcesMock.mockImplementation(() => ({
-      authType: 'basic',
-      username: 'a',
-      password: 'b',
-    }));
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(BasicAuthenticator);
   });
@@ -122,7 +117,7 @@ function setUpNoAuthPayload() {
 
 function setUpBasicPayload() {
   readExternalSourcesMock.mockImplementation(() => ({
-    authType: 'basic',
+    authtype: 'basic',
     username: 'a',
     password: 'b',
   }));
@@ -152,7 +147,7 @@ function setUpIamPayloadWithScope() {
 
 function setUpCp4dPayload() {
   readExternalSourcesMock.mockImplementation(() => ({
-    authType: 'cp4d',
+    authtype: 'cp4d',
     username: 'a',
     password: 'b',
     authUrl: TOKEN_URL,
