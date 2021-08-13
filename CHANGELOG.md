@@ -1,3 +1,10 @@
+## [2.12.2](https://github.com/IBM/node-sdk-core/compare/v2.12.1...v2.12.2) (2021-08-13)
+
+
+### Bug Fixes
+
+* support 'AUTHTYPE' as alias for 'AUTH_TYPE' config property ([#153](https://github.com/IBM/node-sdk-core/issues/153)) ([fccf209](https://github.com/IBM/node-sdk-core/commit/fccf2093874835d9c77c08843809b79e57fb0e78))
+
 ## [2.12.1](https://github.com/IBM/node-sdk-core/compare/v2.12.0...v2.12.1) (2021-08-11)
 
 
