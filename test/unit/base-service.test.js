@@ -11,9 +11,11 @@ const requestWrapperLocation = '../../dist/lib/request-wrapper';
 jest.mock(requestWrapperLocation);
 const { RequestWrapper } = require(requestWrapperLocation);
 const sendRequestMock = jest.fn();
+const getHttpClientMock = jest.fn().mockImplementation(() => 'axios');
 
 RequestWrapper.mockImplementation(() => ({
   sendRequest: sendRequestMock,
+  getHttpClient: getHttpClientMock,
 }));
 
 // mock the authenticator
@@ -48,6 +50,7 @@ describe('Base Service', () => {
   afterEach(() => {
     // clear and the metadata attached to the mocks
     sendRequestMock.mockClear();
+    getHttpClientMock.mockClear();
     RequestWrapper.mockClear();
     // also, reset the implementation of the readExternalSourcesMock
     readExternalSourcesMock.mockReset();
@@ -127,6 +130,18 @@ describe('Base Service', () => {
     });
 
     expect(testService.getAuthenticator()).toEqual(AUTHENTICATOR);
+  });
+
+  it('should return the stored, underlying axios instance with getHttpClient', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+
+    const httpClient = testService.getHttpClient();
+
+    // the request wrapper instance is mocked to return the literal string 'axios'
+    expect(httpClient).toEqual('axios');
+    expect(getHttpClientMock).toHaveBeenCalled();
   });
 
   it('should store disableSslVerification when set', () => {
