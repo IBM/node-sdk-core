@@ -163,6 +163,14 @@ export class BaseService {
   }
 
   /**
+   * Get the Axios instance set on the service.
+   * All requests will be made using this instance.
+   */
+  public getHttpClient() {
+    return this.requestWrapperInstance.getHttpClient();
+  }
+
+  /**
    * Configure the service using external configuration
    *
    * @param {string} serviceName The name of the service. Will be used to read from external

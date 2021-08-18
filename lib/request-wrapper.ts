@@ -342,6 +342,10 @@ export class RequestWrapper {
     return error;
   }
 
+  public getHttpClient() {
+    return this.axiosInstance;
+  }
+
   private async gzipRequestBody(data: any, headers: OutgoingHttpHeaders): Promise<Buffer | any> {
     // skip compression if user has set the encoding header to gzip
     const contentSetToGzip =

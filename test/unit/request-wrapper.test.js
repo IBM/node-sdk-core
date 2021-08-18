@@ -786,6 +786,13 @@ describe('formatError', () => {
   });
 });
 
+describe('getHttpClient', () => {
+  it('should return the axios instance', () => {
+    const client = requestWrapperInstance.getHttpClient();
+    expect(client).toEqual(mockAxiosInstance);
+  });
+});
+
 describe('gzipRequestBody', () => {
   const gzipSpy = jest.spyOn(zlib, 'gzipSync');
   const errorLogSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
