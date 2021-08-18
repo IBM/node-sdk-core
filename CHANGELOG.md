@@ -1,3 +1,10 @@
+# [2.13.0](https://github.com/IBM/node-sdk-core/compare/v2.12.2...v2.13.0) (2021-08-18)
+
+
+### Features
+
+* add method `getHttpClient` to get underlying axios instance of base service ([#155](https://github.com/IBM/node-sdk-core/issues/155)) ([2aede01](https://github.com/IBM/node-sdk-core/commit/2aede013cd398a2605fd67c0412e6ca5669c415e))
+
 ## [2.12.2](https://github.com/IBM/node-sdk-core/compare/v2.12.1...v2.12.2) (2021-08-13)
 
 
