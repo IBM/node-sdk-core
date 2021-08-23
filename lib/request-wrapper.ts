@@ -16,7 +16,8 @@
  * limitations under the License.
  */
 
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import * as rax from 'retry-axios';
 
 import axiosCookieJarSupport from 'axios-cookiejar-support';
 import extend = require('extend');
@@ -36,10 +37,29 @@ import {
 import logger from './logger';
 import { streamToPromise } from './stream-to-promise';
 
-export class RequestWrapper {
-  private axiosInstance;
+/**
+ * Retry configuration options.
+ */
+export interface RetryOptions {
+  /**
+   * Maximum retries to attempt.
+   */
+  maxRetries?: number;
 
-  private compressRequestData: boolean;
+  /**
+   * Ceiling for the retry delay (in ms) - delay will not exceed this value.
+   */
+  maxRetryInterval?: number;
+}
+
+export class RequestWrapper {
+  private axiosInstance: AxiosInstance;
+
+  private retryInterceptorId: number;
+
+  private retryConfig: rax.RetryConfig;
+
+  public compressRequestData: boolean;
 
   constructor(axiosOptions?) {
     axiosOptions = axiosOptions || {};
@@ -240,6 +260,7 @@ export class RequestWrapper {
       headers,
       params: qs,
       data,
+      raxConfig: this.retryConfig ?? this.retryConfig,
       responseType: options.responseType || 'json',
       paramsSerializer: (params) => querystring.stringify(params),
     };
@@ -257,7 +278,8 @@ export class RequestWrapper {
         delete res.request;
 
         // the other sdks use the interface `result` for the body
-        res.result = res.data;
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        res['result'] = res.data;
         delete res.data;
 
         // return another promise that resolves with 'res' to be handled in generated code
@@ -344,6 +366,40 @@ export class RequestWrapper {
 
   public getHttpClient() {
     return this.axiosInstance;
+  }
+
+  private static getRetryConfig(
+    axiosInstance: AxiosInstance,
+    retryConfig?: RetryOptions
+  ): rax.RetryConfig {
+    const config: rax.RetryConfig = {
+      instance: axiosInstance,
+      backoffType: 'exponential',
+      checkRetryAfter: true,
+    };
+    if (retryConfig) {
+      if (typeof retryConfig.maxRetries === 'number') {
+        config.retry = retryConfig.maxRetries;
+      }
+      if (typeof retryConfig.maxRetryInterval === 'number') {
+        config.maxRetryDelay = retryConfig.maxRetryInterval;
+      }
+    }
+    return config;
+  }
+
+  public enableRetries(retryConfig?: RetryOptions) {
+    this.axiosInstance.defaults.raxConfig = {
+      instance: this.axiosInstance,
+    };
+    this.retryConfig = RequestWrapper.getRetryConfig(this.axiosInstance, retryConfig);
+    this.retryInterceptorId = rax.attach(this.axiosInstance);
+  }
+
+  public disableRetries() {
+    if (this.retryInterceptorId) {
+      rax.detach(this.retryInterceptorId, this.axiosInstance);
+    }
   }
 
   private async gzipRequestBody(data: any, headers: OutgoingHttpHeaders): Promise<Buffer | any> {

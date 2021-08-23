@@ -78,6 +78,7 @@
     "mime-types": "~2.1.18",
     "object.omit": "~3.0.0",
     "object.pick": "~1.3.0",
+    "retry-axios": "^2.6.0",
     "semver": "^6.2.0",
     "tough-cookie": "^4.0.0"
   },

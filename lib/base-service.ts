@@ -18,7 +18,7 @@ import { OutgoingHttpHeaders } from 'http';
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
 import logger from './logger';
-import { RequestWrapper } from './request-wrapper';
+import { RequestWrapper, RetryOptions } from './request-wrapper';
 
 /**
  * Configuration values for a service.
@@ -65,7 +65,7 @@ export class BaseService {
 
   private authenticator: AuthenticatorInterface;
 
-  private requestWrapperInstance;
+  private requestWrapperInstance: RequestWrapper;
 
   /**
    * Configuration values for a service.
@@ -168,6 +168,22 @@ export class BaseService {
    */
   public getHttpClient() {
     return this.requestWrapperInstance.getHttpClient();
+  }
+
+  /**
+   * Enable retries for unfulfilled requests.
+   *
+   * @param {Map<string, number>} retryConfig configuration for retries
+   */
+  public enableRetries(retryConfig?: RetryOptions) {
+    return this.requestWrapperInstance.enableRetries(retryConfig);
+  }
+
+  /**
+   * Disables retries.
+   */
+  public disableRetries() {
+    return this.requestWrapperInstance.disableRetries();
   }
 
   /**
