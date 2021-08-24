@@ -940,4 +940,17 @@ describe('gzipRequestBody', () => {
     expect(debugLogSpy).toHaveBeenCalled();
     expect(debugLogSpy.mock.calls[0][0].message).toMatch('bad zip');
   });
+
+  it('retry config should have expected values', () => {
+    const config = {
+      maxRetries: 5,
+      maxRetryInterval: 100,
+    };
+    requestWrapperInstance.enableRetries(config);
+
+    expect(requestWrapperInstance.raxConfig.retry).toBe(5);
+    expect(requestWrapperInstance.raxConfig.maxRetryDelay).toBe(100 * 1000);
+    expect(requestWrapperInstance.raxConfig.backoffType).toBe('exponential');
+    expect(requestWrapperInstance.raxConfig.checkRetryAfter).toBe(true);
+  });
 });

@@ -12,10 +12,16 @@ jest.mock(requestWrapperLocation);
 const { RequestWrapper } = require(requestWrapperLocation);
 const sendRequestMock = jest.fn();
 const getHttpClientMock = jest.fn().mockImplementation(() => 'axios');
+const setCompressRequestDataMock = jest.fn();
+const enableRetriesMock = jest.fn();
+const disableRetriesMock = jest.fn();
 
 RequestWrapper.mockImplementation(() => ({
   sendRequest: sendRequestMock,
   getHttpClient: getHttpClientMock,
+  setCompressRequestData: setCompressRequestDataMock,
+  enableRetries: enableRetriesMock,
+  disableRetries: disableRetriesMock,
 }));
 
 // mock the authenticator
@@ -52,6 +58,9 @@ describe('Base Service', () => {
     sendRequestMock.mockClear();
     getHttpClientMock.mockClear();
     RequestWrapper.mockClear();
+    setCompressRequestDataMock.mockClear();
+    enableRetriesMock.mockClear();
+    disableRetriesMock.mockClear();
     // also, reset the implementation of the readExternalSourcesMock
     readExternalSourcesMock.mockReset();
     authenticateMock.mockReset();
@@ -111,12 +120,13 @@ describe('Base Service', () => {
 
     const on = true;
     testService.setEnableGzipCompression(on);
-    expect(testService.requestWrapperInstance.compressRequestData).toBe(on);
+    expect(setCompressRequestDataMock).toHaveBeenCalledWith(on);
     expect(testService.baseOptions.enableGzipCompression).toBe(on);
 
+    setCompressRequestDataMock.mockClear();
     const off = false;
     testService.setEnableGzipCompression(off);
-    expect(testService.requestWrapperInstance.compressRequestData).toBe(off);
+    expect(setCompressRequestDataMock).toHaveBeenCalledWith(off);
     expect(testService.baseOptions.enableGzipCompression).toBe(off);
   });
 
@@ -428,22 +438,6 @@ describe('Base Service', () => {
     }
 
     expect(err).toStrictEqual(fakeError);
-  });
-
-  it('retry config should have expected values', () => {
-    const testService = new TestService({
-      authenticator: AUTHENTICATOR,
-    });
-    const config = {
-      maxRetries: 5,
-      maxRetryInterval: 100,
-    }
-    testService.enableRetries(config);
-
-    expect(testService.requestWrapperInstance.raxConfig.retry).toBe(5);
-    expect(testService.requestWrapperInstance.raxConfig.maxRetryDelay).toBe(100 * 1000);
-    expect(testService.requestWrapperInstance.raxConfig.backoffType).toBe('exponential');
-    expect(testService.requestWrapperInstance.raxConfig.checkRetryAfter).toBe(true);
   });
 });
 

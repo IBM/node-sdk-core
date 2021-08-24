@@ -55,11 +55,11 @@ export interface RetryOptions {
 export class RequestWrapper {
   private axiosInstance: AxiosInstance;
 
+  private compressRequestData: boolean;
+
   private retryInterceptorId: number;
 
   private raxConfig: rax.RetryConfig;
-
-  public compressRequestData: boolean;
 
   constructor(axiosOptions?) {
     axiosOptions = axiosOptions || {};
@@ -163,6 +163,10 @@ export class RequestWrapper {
         }
       );
     }
+  }
+
+  public setCompressRequestData(setting: boolean) {
+    this.compressRequestData = setting;
   }
 
   /**
@@ -391,15 +395,12 @@ export class RequestWrapper {
     return config;
   }
 
-  public enableRetries(retryOptions?: RetryOptions) {
-    this.axiosInstance.defaults.raxConfig = {
-      instance: this.axiosInstance,
-    };
+  public enableRetries(retryOptions?: RetryOptions): void {
     this.raxConfig = RequestWrapper.getRaxConfig(this.axiosInstance, retryOptions);
     this.retryInterceptorId = rax.attach(this.axiosInstance);
   }
 
-  public disableRetries() {
+  public disableRetries(): void {
     if (this.retryInterceptorId) {
       rax.detach(this.retryInterceptorId, this.axiosInstance);
       delete this.retryInterceptorId;

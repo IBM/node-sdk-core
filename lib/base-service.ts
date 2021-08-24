@@ -156,7 +156,7 @@ export class BaseService {
    * @param {boolean} setting Will turn it on if 'true', off if 'false'.
    */
   public setEnableGzipCompression(setting: boolean): void {
-    this.requestWrapperInstance.compressRequestData = setting;
+    this.requestWrapperInstance.setCompressRequestData(setting);
 
     // persist setting so that baseOptions accurately reflects the state of the flag
     this.baseOptions.enableGzipCompression = setting;
@@ -175,15 +175,15 @@ export class BaseService {
    *
    * @param {RetryOptions} retryOptions configuration for retries
    */
-  public enableRetries(retryOptions?: RetryOptions) {
-    return this.requestWrapperInstance.enableRetries(retryOptions);
+  public enableRetries(retryOptions?: RetryOptions): void {
+    this.requestWrapperInstance.enableRetries(retryOptions);
   }
 
   /**
    * Disables retries.
    */
-  public disableRetries() {
-    return this.requestWrapperInstance.disableRetries();
+  public disableRetries(): void {
+    this.requestWrapperInstance.disableRetries();
   }
 
   /**
