@@ -439,6 +439,28 @@ describe('Base Service', () => {
 
     expect(err).toStrictEqual(fakeError);
   });
+
+  it('ensure enableRetries is called with the correct config', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+    const retryOptions = {
+      maxRetries: 5,
+      maxRetryInterval: 100,
+    };
+    testService.enableRetries(retryOptions);
+
+    expect(enableRetriesMock).toHaveBeenCalledWith(retryOptions);
+  });
+
+  it('ensure disableRetries is called', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+    testService.disableRetries();
+
+    expect(disableRetriesMock).toHaveBeenCalled();
+  });
 });
 
 function TestService(options) {
