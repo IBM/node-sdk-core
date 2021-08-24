@@ -429,6 +429,22 @@ describe('Base Service', () => {
 
     expect(err).toStrictEqual(fakeError);
   });
+
+  it('retry config should have expected values', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+    const config = {
+      maxRetries: 5,
+      maxRetryInterval: 100,
+    }
+    testService.enableRetries(config);
+
+    expect(testService.requestWrapperInstance.raxConfig.retry).toBe(5);
+    expect(testService.requestWrapperInstance.raxConfig.maxRetryDelay).toBe(100 * 1000);
+    expect(testService.requestWrapperInstance.raxConfig.backoffType).toBe('exponential');
+    expect(testService.requestWrapperInstance.raxConfig.checkRetryAfter).toBe(true);
+  });
 });
 
 function TestService(options) {
