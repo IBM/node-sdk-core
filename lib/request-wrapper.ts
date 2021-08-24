@@ -47,7 +47,7 @@ export interface RetryOptions {
   maxRetries?: number;
 
   /**
-   * Ceiling for the retry delay (in ms) - delay will not exceed this value.
+   * Ceiling for the retry delay (in seconds) - delay will not exceed this value.
    */
   maxRetryInterval?: number;
 }
@@ -57,7 +57,7 @@ export class RequestWrapper {
 
   private retryInterceptorId: number;
 
-  private retryConfig: rax.RetryConfig;
+  private raxConfig: rax.RetryConfig;
 
   public compressRequestData: boolean;
 
@@ -260,7 +260,7 @@ export class RequestWrapper {
       headers,
       params: qs,
       data,
-      raxConfig: this.retryConfig ?? this.retryConfig,
+      raxConfig: this.raxConfig,
       responseType: options.responseType || 'json',
       paramsSerializer: (params) => querystring.stringify(params),
     };
@@ -368,37 +368,42 @@ export class RequestWrapper {
     return this.axiosInstance;
   }
 
-  private static getRetryConfig(
+  private static getRaxConfig(
     axiosInstance: AxiosInstance,
-    retryConfig?: RetryOptions
+    retryOptions?: RetryOptions
   ): rax.RetryConfig {
     const config: rax.RetryConfig = {
       instance: axiosInstance,
       backoffType: 'exponential',
       checkRetryAfter: true,
     };
-    if (retryConfig) {
-      if (typeof retryConfig.maxRetries === 'number') {
-        config.retry = retryConfig.maxRetries;
+
+    if (retryOptions) {
+      if (typeof retryOptions.maxRetries === 'number') {
+        config.retry = retryOptions.maxRetries;
       }
-      if (typeof retryConfig.maxRetryInterval === 'number') {
-        config.maxRetryDelay = retryConfig.maxRetryInterval;
+      if (typeof retryOptions.maxRetryInterval === 'number') {
+        // convert seconds to ms for retry-axios
+        config.maxRetryDelay = retryOptions.maxRetryInterval * 1000;
       }
     }
+
     return config;
   }
 
-  public enableRetries(retryConfig?: RetryOptions) {
+  public enableRetries(retryOptions?: RetryOptions) {
     this.axiosInstance.defaults.raxConfig = {
       instance: this.axiosInstance,
     };
-    this.retryConfig = RequestWrapper.getRetryConfig(this.axiosInstance, retryConfig);
+    this.raxConfig = RequestWrapper.getRaxConfig(this.axiosInstance, retryOptions);
     this.retryInterceptorId = rax.attach(this.axiosInstance);
   }
 
   public disableRetries() {
     if (this.retryInterceptorId) {
       rax.detach(this.retryInterceptorId, this.axiosInstance);
+      delete this.retryInterceptorId;
+      delete this.raxConfig;
     }
   }
 

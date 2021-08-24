@@ -173,10 +173,10 @@ export class BaseService {
   /**
    * Enable retries for unfulfilled requests.
    *
-   * @param {Map<string, number>} retryConfig configuration for retries
+   * @param {RetryOptions} retryOptions configuration for retries
    */
-  public enableRetries(retryConfig?: RetryOptions) {
-    return this.requestWrapperInstance.enableRetries(retryConfig);
+  public enableRetries(retryOptions?: RetryOptions) {
+    return this.requestWrapperInstance.enableRetries(retryOptions);
   }
 
   /**
