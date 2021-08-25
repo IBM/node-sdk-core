@@ -396,12 +396,17 @@ export class RequestWrapper {
   }
 
   public enableRetries(retryOptions?: RetryOptions): void {
+    // avoid attaching the same interceptor multiple times
+    // to protect against user error and ensure disableRetries() always disables retries
+    if (typeof this.retryInterceptorId === 'number') {
+      this.disableRetries();
+    }
     this.raxConfig = RequestWrapper.getRaxConfig(this.axiosInstance, retryOptions);
     this.retryInterceptorId = rax.attach(this.axiosInstance);
   }
 
   public disableRetries(): void {
-    if (this.retryInterceptorId) {
+    if (typeof this.retryInterceptorId === 'number') {
       rax.detach(this.retryInterceptorId, this.axiosInstance);
       delete this.retryInterceptorId;
       delete this.raxConfig;
