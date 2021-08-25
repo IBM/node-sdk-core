@@ -381,9 +381,11 @@ export class RequestWrapper {
     retryOptions?: RetryOptions
   ): rax.RetryConfig {
     const config: rax.RetryConfig = {
+      retry: 4,                   // 4 retries by default
+      retryDelay: 100,            // 1000 ms (1 sec) initial delay
       instance: axiosInstance,
       backoffType: 'exponential',
-      checkRetryAfter: true,
+      checkRetryAfter: true,      // use Retry-After header first
     };
 
     if (retryOptions) {
