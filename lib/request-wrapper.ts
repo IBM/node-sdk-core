@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as rax from 'retry-axios';
 
 import axiosCookieJarSupport from 'axios-cookiejar-support';
@@ -36,6 +36,10 @@ import {
 } from './helper';
 import logger from './logger';
 import { streamToPromise } from './stream-to-promise';
+
+interface Response extends AxiosResponse {
+  result: any;
+}
 
 /**
  * Retry configuration options.
@@ -269,7 +273,7 @@ export class RequestWrapper {
       paramsSerializer: (params) => querystring.stringify(params),
     };
 
-    return this.axiosInstance(requestParams).then(
+    return this.axiosInstance.request<any, Response>(requestParams).then(
       (res) => {
         // sometimes error responses will still trigger the `then` block - escape that behavior here
         if (!res) {
@@ -283,7 +287,7 @@ export class RequestWrapper {
 
         // the other sdks use the interface `result` for the body
         // eslint-disable-next-line @typescript-eslint/dot-notation
-        res['result'] = res.data;
+        res.result = res.data;
         delete res.data;
 
         // return another promise that resolves with 'res' to be handled in generated code
