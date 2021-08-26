@@ -202,6 +202,16 @@ export class BaseService {
     Object.assign(this.baseOptions, this.readOptionsFromExternalConfig(serviceName));
     // overwrite the requestWrapperInstance with the new base options if applicable
     this.requestWrapperInstance = new RequestWrapper(this.baseOptions);
+    if (process.env.ENABLE_RETRIES) {
+      const config: RetryOptions = {};
+      if (process.env.MAX_RETRIES) {
+        config.maxRetries = parseInt(process.env.MAX_RETRIES, 10); // parse with base 10
+      }
+      if (process.env.RETRY_INTERVAL) {
+        config.maxRetryInterval = parseInt(process.env.RETRY_INTERVAL, 10); // parse with base 10
+      }
+      this.enableRetries(config);
+    }
   }
 
   /**

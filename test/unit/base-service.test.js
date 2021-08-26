@@ -64,6 +64,9 @@ describe('Base Service', () => {
     // also, reset the implementation of the readExternalSourcesMock
     readExternalSourcesMock.mockReset();
     authenticateMock.mockReset();
+    delete process.env.ENABLE_RETRIES;
+    delete process.env.MAX_RETRIES;
+    delete process.env.RETRY_INTERVAL;
   });
 
   // tests
@@ -422,6 +425,42 @@ describe('Base Service', () => {
     expect(testService.baseOptions.serviceUrl).toEqual('abc123.com');
     expect(testService.baseOptions.disableSslVerification).toEqual(true);
     expect(testService.baseOptions.enableGzipCompression).toEqual(true);
+  });
+
+  it('should configure service and enable retries when environment variables used', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+
+    process.env.ENABLE_RETRIES = true;
+    process.env.MAX_RETRIES = 10;
+    process.env.RETRY_INTERVAL = 35;
+
+    testService.configureService(DEFAULT_NAME);
+
+    expect(enableRetriesMock).toHaveBeenCalledWith({ maxRetries: 10, maxRetryInterval: 35 });
+  });
+
+  it('should enable retries with empty config with no MAX_RETRIES nor RETRY_INTERVAL', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+
+    process.env.ENABLE_RETRIES = true;
+
+    testService.configureService(DEFAULT_NAME);
+
+    expect(enableRetriesMock).toHaveBeenCalledWith({});
+  });
+
+  it('should NOT enable retries when ENABLE_RETRIES is not set', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+
+    testService.configureService(DEFAULT_NAME);
+
+    expect(enableRetriesMock).toHaveBeenCalledTimes(0);
   });
 
   it('configureService method should throw error if service name is not provided', () => {
