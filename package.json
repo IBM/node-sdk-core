@@ -98,8 +98,8 @@
     "lint": "npm run eslint:check",
     "lint:fix": "npm run eslint:fix",
     "jest": "jest",
-    "test": "jest test/unit/ test/acceptance/",
-    "test-travis": "jest --runInBand test/unit/ test/acceptance/",
+    "test": "jest test/unit/",
+    "test-travis": "jest --runInBand test/unit/",
     "report-coverage": "codecov",
     "build": "tsc",
     "postversion": "tsc-publish --no-checks --dry-run"
