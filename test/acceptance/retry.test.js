@@ -4,11 +4,9 @@ const rax = require('retry-axios');
 const url = 'http://example.test-url.com';
 nock.disableNetConnect();
 
-const { NoAuthAuthenticator } = require('../../dist/auth/authenticators/no-auth-authenticator');
+const { NoAuthAuthenticator, BaseService } = require('../../dist');
 
 const AUTHENTICATOR = new NoAuthAuthenticator();
-
-const { BaseService } = require('../../dist/lib/base-service');
 
 const service = new BaseService({
   authenticator: AUTHENTICATOR,
@@ -65,7 +63,7 @@ describe('Node Core retries', () => {
 
   it('should not retry after we call disableRetries', async () => {
     const scopes = [
-      nock(url).get('/').reply(500, 'success!'),
+      nock(url).get('/').reply(500, undefined),
       nock(url).get('/').reply(200, 'should not get this!'),
     ];
 

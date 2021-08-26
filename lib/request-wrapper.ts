@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import * as rax from 'retry-axios';
 
 import axiosCookieJarSupport from 'axios-cookiejar-support';
@@ -36,10 +36,6 @@ import {
 } from './helper';
 import logger from './logger';
 import { streamToPromise } from './stream-to-promise';
-
-interface Response extends AxiosResponse {
-  result: any;
-}
 
 /**
  * Retry configuration options.
@@ -273,7 +269,7 @@ export class RequestWrapper {
       paramsSerializer: (params) => querystring.stringify(params),
     };
 
-    return this.axiosInstance.request<any, Response>(requestParams).then(
+    return this.axiosInstance(requestParams).then(
       (res) => {
         // sometimes error responses will still trigger the `then` block - escape that behavior here
         if (!res) {
@@ -287,7 +283,7 @@ export class RequestWrapper {
 
         // the other sdks use the interface `result` for the body
         // eslint-disable-next-line @typescript-eslint/dot-notation
-        res.result = res.data;
+        res['result'] = res.data;
         delete res.data;
 
         // return another promise that resolves with 'res' to be handled in generated code
@@ -381,11 +377,11 @@ export class RequestWrapper {
     retryOptions?: RetryOptions
   ): rax.RetryConfig {
     const config: rax.RetryConfig = {
-      retry: 4,                   // 4 retries by default
-      retryDelay: 100,            // 1000 ms (1 sec) initial delay
+      retry: 4, // 4 retries by default
+      retryDelay: 1000, // 1000 ms (1 sec) initial delay
       instance: axiosInstance,
       backoffType: 'exponential',
-      checkRetryAfter: true,      // use Retry-After header first
+      checkRetryAfter: true, // use Retry-After header first
     };
 
     if (retryOptions) {
