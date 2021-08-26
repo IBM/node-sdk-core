@@ -96,6 +96,18 @@ function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
     credentials.enableGzip = credentials.enableGzip === 'true';
   }
 
+  if (typeof credentials.enableRetries === 'string') {
+    credentials.enableRetries = credentials.enableRetries === 'true';
+  }
+
+  if (typeof credentials.maxRetries === 'string') {
+    credentials.maxRetries = parseInt(credentials.maxRetries, 10);
+  }
+
+  if (typeof credentials.retryInterval === 'string') {
+    credentials.retryInterval = parseInt(credentials.retryInterval, 10);
+  }
+
   return credentials;
 }
 

@@ -120,6 +120,14 @@ describe('RequestWrapper constructor', () => {
     const rw = new RequestWrapper({ enableGzipCompression: true });
     expect(rw.compressRequestData).toBe(true);
   });
+
+  it('should enable retries from axiosOptions', () => {
+    const rw = new RequestWrapper({ enableRetries: true, maxRetries: 111, retryInterval: 123 });
+
+    expect(rw.retryInterceptorId).toBeDefined();
+    expect(rw.raxConfig.retry).toBe(111);
+    expect(rw.raxConfig.maxRetryDelay).toBe(123 * 1000);
+  });
 });
 
 describe('sendRequest', () => {

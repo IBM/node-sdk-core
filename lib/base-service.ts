@@ -47,7 +47,10 @@ export interface UserOptions {
  */
 export interface BaseServiceOptions extends UserOptions {
   /** Querystring to be sent with every request. If not a string will be stringified. */
-  qs: any;
+  qs?: any;
+  enableRetries?: boolean;
+  maxRetries?: number;
+  retryInterval?: number;
 }
 
 /**
@@ -202,16 +205,6 @@ export class BaseService {
     Object.assign(this.baseOptions, this.readOptionsFromExternalConfig(serviceName));
     // overwrite the requestWrapperInstance with the new base options if applicable
     this.requestWrapperInstance = new RequestWrapper(this.baseOptions);
-    if (process.env.ENABLE_RETRIES) {
-      const config: RetryOptions = {};
-      if (process.env.MAX_RETRIES) {
-        config.maxRetries = parseInt(process.env.MAX_RETRIES, 10); // parse with base 10
-      }
-      if (process.env.RETRY_INTERVAL) {
-        config.maxRetryInterval = parseInt(process.env.RETRY_INTERVAL, 10); // parse with base 10
-      }
-      this.enableRetries(config);
-    }
   }
 
   /**
@@ -249,8 +242,8 @@ export class BaseService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private readOptionsFromExternalConfig(serviceName: string) {
-    const results = {} as any;
+  private readOptionsFromExternalConfig(serviceName: string): BaseServiceOptions {
+    const results: BaseServiceOptions = {};
     const properties = readExternalSources(serviceName);
 
     if (properties !== null) {
@@ -259,7 +252,7 @@ export class BaseService {
       // - disableSsl
       // - enableGzip
 
-      const { url, disableSsl, enableGzip } = properties;
+      const { url, disableSsl, enableGzip, enableRetries, maxRetries, retryInterval } = properties;
 
       if (url) {
         results.serviceUrl = stripTrailingSlash(url);
@@ -269,6 +262,15 @@ export class BaseService {
       }
       if (enableGzip === true) {
         results.enableGzipCompression = enableGzip;
+      }
+      if (enableRetries !== undefined) {
+        results.enableRetries = enableRetries;
+      }
+      if (maxRetries !== undefined) {
+        results.maxRetries = maxRetries;
+      }
+      if (retryInterval !== undefined) {
+        results.retryInterval = retryInterval;
       }
     }
 

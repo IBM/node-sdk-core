@@ -115,6 +115,18 @@ export class RequestWrapper {
       this.axiosInstance.defaults.jar = axiosOptions.jar;
     }
 
+    // get retry config properties and conditionally enable retries
+    if (axiosOptions.enableRetries) {
+      const retryOptions: RetryOptions = {};
+      if (axiosOptions.maxRetries !== undefined) {
+        retryOptions.maxRetries = axiosOptions.maxRetries;
+      }
+      if (axiosOptions.retryInterval !== undefined) {
+        retryOptions.maxRetryInterval = axiosOptions.retryInterval;
+      }
+      this.enableRetries(retryOptions);
+    }
+
     // set debug interceptors
     if (process.env.NODE_DEBUG === 'axios' || process.env.DEBUG) {
       this.axiosInstance.interceptors.request.use(
@@ -382,6 +394,7 @@ export class RequestWrapper {
       instance: axiosInstance,
       backoffType: 'exponential',
       checkRetryAfter: true, // use Retry-After header first
+      maxRetryDelay: 30 * 1000, // default to 30 sec max delay
     };
 
     if (retryOptions) {

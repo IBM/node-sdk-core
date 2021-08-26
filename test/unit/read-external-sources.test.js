@@ -45,6 +45,11 @@ describe('Read External Sources Module', () => {
     expect(properties.disableSsl).toBe(true);
     expect(properties.url).toBe('service.com/api');
     expect(properties.scope).toBe(SCOPE);
+
+    // retry props
+    expect(properties.enableRetries).toBe(true);
+    expect(properties.maxRetries).toBe(1234);
+    expect(properties.retryInterval).toBe(5678);
   });
 
   it('should return properties for service_3 from creds file', () => {
@@ -66,6 +71,11 @@ describe('Read External Sources Module', () => {
     expect(properties.authType).toBe('basic');
     expect(properties.username).toBe(USERNAME);
     expect(properties.password).toBe(PASSWORD);
+
+    // retry props
+    expect(properties.enableRetries).toBe(true);
+    expect(properties.maxRetries).toBe(1357);
+    expect(properties.retryInterval).toBe(2468);
   });
 
   // vcap
@@ -167,6 +177,10 @@ function setupEnvVars() {
   process.env.TEST_SERVICE_PASSWORD = PASSWORD;
   // just for coverage on all potential auth properties
   process.env.TEST_SERVICE_BEARER_TOKEN = BEARER_TOKEN;
+  // set up retry environment variables
+  process.env.TEST_SERVICE_ENABLE_RETRIES = 'true';
+  process.env.TEST_SERVICE_MAX_RETRIES = '1357';
+  process.env.TEST_SERVICE_RETRY_INTERVAL = '2468';
   // Service1 auth properties configured with IAM and a token containing '='
   process.env.SERVICE_1_AUTH_TYPE = 'iam';
   process.env.SERVICE_1_APIKEY = 'V4HXmoUtMjohnsnow=KotN';
