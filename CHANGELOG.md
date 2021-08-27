@@ -1,3 +1,10 @@
+# [2.14.0](https://github.com/IBM/node-sdk-core/compare/v2.13.0...v2.14.0) (2021-08-27)
+
+
+### Features
+
+* add enableRetries and disableRetries ([#156](https://github.com/IBM/node-sdk-core/issues/156)) ([d6f12e7](https://github.com/IBM/node-sdk-core/commit/d6f12e76c91f9f0ddce4fef09f5ff024ca3947bc))
+
 # [2.13.0](https://github.com/IBM/node-sdk-core/compare/v2.12.2...v2.13.0) (2021-08-18)
 
 
