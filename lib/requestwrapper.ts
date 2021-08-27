@@ -285,8 +285,8 @@ export class RequestWrapper {
       // The request was made but no response was received
       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
       // http.ClientRequest in node.js
-      error.message = 'Response not received. Body of error is HTTP ClientRequest object';
-      error.body = axiosError.request;
+      error.message = axiosError.message;
+      error.body = 'Response not received - no connection was made to the service.';
 
     } else {
       // Something happened in setting up the request that triggered an Error

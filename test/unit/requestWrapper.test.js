@@ -458,8 +458,8 @@ describe('formatError', () => {
     delete basicAxiosError.response;
     const error = requestWrapperInstance.formatError(basicAxiosError);
     expect(error instanceof Error).toBe(true);
-    expect(error.message).toBe('Response not received. Body of error is HTTP ClientRequest object');
-    expect(error.body).toEqual(basicAxiosError.request);
+    expect(error.message).toBe('error in building the request');
+    expect(error.body).toBe('Response not received - no connection was made to the service.');
   });
 
   it('check the message flow', () => {

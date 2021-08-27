@@ -39,6 +39,7 @@ export type Options = {
   iamUrl?: string;
   iamClientId?: string;
   iamClientSecret?: string;
+  disableSslVerification?: boolean;
 }
 
 // this interface is a representation of the response
@@ -62,6 +63,7 @@ export class IamTokenManagerV1 {
   private iamClientId: string;
   private iamClientSecret: string;
   private requestWrapperInstance;
+  private disableSslVerification: boolean;
 
   /**
    * IAM Token Manager Service
@@ -94,7 +96,15 @@ export class IamTokenManagerV1 {
       console.log(CLIENT_ID_SECRET_WARNING);
     }
 
-    this.requestWrapperInstance = new RequestWrapper();
+    if (options.disableSslVerification) {
+      this.disableSslVerification = options.disableSslVerification;
+    }
+
+    const axiosConfig = {
+      rejectUnauthorized: !this.disableSslVerification,
+    };
+
+    this.requestWrapperInstance = new RequestWrapper(axiosConfig);
   }
 
   /**

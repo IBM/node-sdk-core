@@ -167,14 +167,16 @@ export class BaseService {
         iamAccessToken: _options.iam_access_token,
         iamUrl: _options.iam_url,
         iamClientId: _options.iam_client_id,
-        iamClientSecret: _options.iam_client_secret
+        iamClientSecret: _options.iam_client_secret,
+        disableSslVerification: _options.disable_ssl_verification
       });
     } else if (usesBasicForIam(_options)) {
       this.tokenManager = new IamTokenManagerV1({
         iamApikey: _options.password,
         iamUrl: _options.iam_url,
         iamClientId: _options.iam_client_id,
-        iamClientSecret: _options.iam_client_secret
+        iamClientSecret: _options.iam_client_secret,
+        disableSslVerification: _options.disable_ssl_verification
       });
     } else {
       this.tokenManager = null;
@@ -234,7 +236,8 @@ export class BaseService {
       this.tokenManager.setAccessToken(iam_access_token);
     } else {
       this.tokenManager = new IamTokenManagerV1({
-        iamAccessToken: iam_access_token
+        iamAccessToken: iam_access_token,
+        disableSslVerification: this._options.disable_ssl_verification
       });
     }
   }
