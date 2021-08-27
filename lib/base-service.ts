@@ -18,7 +18,7 @@ import { OutgoingHttpHeaders } from 'http';
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
 import logger from './logger';
-import { RequestWrapper } from './request-wrapper';
+import { RequestWrapper, RetryOptions } from './request-wrapper';
 
 /**
  * Configuration values for a service.
@@ -47,7 +47,10 @@ export interface UserOptions {
  */
 export interface BaseServiceOptions extends UserOptions {
   /** Querystring to be sent with every request. If not a string will be stringified. */
-  qs: any;
+  qs?: any;
+  enableRetries?: boolean;
+  maxRetries?: number;
+  retryInterval?: number;
 }
 
 /**
@@ -65,7 +68,7 @@ export class BaseService {
 
   private authenticator: AuthenticatorInterface;
 
-  private requestWrapperInstance;
+  private requestWrapperInstance: RequestWrapper;
 
   /**
    * Configuration values for a service.
@@ -156,7 +159,7 @@ export class BaseService {
    * @param {boolean} setting Will turn it on if 'true', off if 'false'.
    */
   public setEnableGzipCompression(setting: boolean): void {
-    this.requestWrapperInstance.compressRequestData = setting;
+    this.requestWrapperInstance.setCompressRequestData(setting);
 
     // persist setting so that baseOptions accurately reflects the state of the flag
     this.baseOptions.enableGzipCompression = setting;
@@ -168,6 +171,22 @@ export class BaseService {
    */
   public getHttpClient() {
     return this.requestWrapperInstance.getHttpClient();
+  }
+
+  /**
+   * Enable retries for unfulfilled requests.
+   *
+   * @param {RetryOptions} retryOptions configuration for retries
+   */
+  public enableRetries(retryOptions?: RetryOptions): void {
+    this.requestWrapperInstance.enableRetries(retryOptions);
+  }
+
+  /**
+   * Disables retries.
+   */
+  public disableRetries(): void {
+    this.requestWrapperInstance.disableRetries();
   }
 
   /**
@@ -223,8 +242,8 @@ export class BaseService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private readOptionsFromExternalConfig(serviceName: string) {
-    const results = {} as any;
+  private readOptionsFromExternalConfig(serviceName: string): BaseServiceOptions {
+    const results: BaseServiceOptions = {};
     const properties = readExternalSources(serviceName);
 
     if (properties !== null) {
@@ -233,7 +252,7 @@ export class BaseService {
       // - disableSsl
       // - enableGzip
 
-      const { url, disableSsl, enableGzip } = properties;
+      const { url, disableSsl, enableGzip, enableRetries, maxRetries, retryInterval } = properties;
 
       if (url) {
         results.serviceUrl = stripTrailingSlash(url);
@@ -243,6 +262,15 @@ export class BaseService {
       }
       if (enableGzip === true) {
         results.enableGzipCompression = enableGzip;
+      }
+      if (enableRetries !== undefined) {
+        results.enableRetries = enableRetries;
+      }
+      if (maxRetries !== undefined) {
+        results.maxRetries = maxRetries;
+      }
+      if (retryInterval !== undefined) {
+        results.retryInterval = retryInterval;
       }
     }
 

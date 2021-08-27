@@ -12,10 +12,16 @@ jest.mock(requestWrapperLocation);
 const { RequestWrapper } = require(requestWrapperLocation);
 const sendRequestMock = jest.fn();
 const getHttpClientMock = jest.fn().mockImplementation(() => 'axios');
+const setCompressRequestDataMock = jest.fn();
+const enableRetriesMock = jest.fn();
+const disableRetriesMock = jest.fn();
 
 RequestWrapper.mockImplementation(() => ({
   sendRequest: sendRequestMock,
   getHttpClient: getHttpClientMock,
+  setCompressRequestData: setCompressRequestDataMock,
+  enableRetries: enableRetriesMock,
+  disableRetries: disableRetriesMock,
 }));
 
 // mock the authenticator
@@ -52,6 +58,9 @@ describe('Base Service', () => {
     sendRequestMock.mockClear();
     getHttpClientMock.mockClear();
     RequestWrapper.mockClear();
+    setCompressRequestDataMock.mockClear();
+    enableRetriesMock.mockClear();
+    disableRetriesMock.mockClear();
     // also, reset the implementation of the readExternalSourcesMock
     readExternalSourcesMock.mockReset();
     authenticateMock.mockReset();
@@ -111,12 +120,13 @@ describe('Base Service', () => {
 
     const on = true;
     testService.setEnableGzipCompression(on);
-    expect(testService.requestWrapperInstance.compressRequestData).toBe(on);
+    expect(setCompressRequestDataMock).toHaveBeenCalledWith(on);
     expect(testService.baseOptions.enableGzipCompression).toBe(on);
 
+    setCompressRequestDataMock.mockClear();
     const off = false;
     testService.setEnableGzipCompression(off);
-    expect(testService.requestWrapperInstance.compressRequestData).toBe(off);
+    expect(setCompressRequestDataMock).toHaveBeenCalledWith(off);
     expect(testService.baseOptions.enableGzipCompression).toBe(off);
   });
 
@@ -404,6 +414,9 @@ describe('Base Service', () => {
       url: 'abc123.com',
       disableSsl: true,
       enableGzip: true,
+      enableRetries: true,
+      maxRetries: 1010,
+      retryInterval: 12301,
     }));
 
     testService.configureService(DEFAULT_NAME);
@@ -412,6 +425,9 @@ describe('Base Service', () => {
     expect(testService.baseOptions.serviceUrl).toEqual('abc123.com');
     expect(testService.baseOptions.disableSslVerification).toEqual(true);
     expect(testService.baseOptions.enableGzipCompression).toEqual(true);
+    expect(testService.baseOptions.enableRetries).toBe(true);
+    expect(testService.baseOptions.maxRetries).toBe(1010);
+    expect(testService.baseOptions.retryInterval).toBe(12301);
   });
 
   it('configureService method should throw error if service name is not provided', () => {
@@ -428,6 +444,28 @@ describe('Base Service', () => {
     }
 
     expect(err).toStrictEqual(fakeError);
+  });
+
+  it('ensure enableRetries is called with the correct config', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+    const retryOptions = {
+      maxRetries: 5,
+      maxRetryInterval: 100,
+    };
+    testService.enableRetries(retryOptions);
+
+    expect(enableRetriesMock).toHaveBeenCalledWith(retryOptions);
+  });
+
+  it('ensure disableRetries is called', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+    testService.disableRetries();
+
+    expect(disableRetriesMock).toHaveBeenCalled();
   });
 });
 

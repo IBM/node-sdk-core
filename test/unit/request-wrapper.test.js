@@ -2,12 +2,16 @@ const fs = require('fs');
 const https = require('https');
 const { Readable } = require('stream');
 const zlib = require('zlib');
+// eslint-disable-next-line import/order
 const logger = require('../../dist/lib/logger').default;
 
 process.env.NODE_DEBUG = 'axios';
 jest.mock('axios');
+jest.mock('retry-axios');
 // eslint-disable-next-line import/order
 const axios = require('axios');
+// eslint-disable-next-line import/order
+const rax = require('retry-axios');
 
 const mockAxiosInstance = jest.fn();
 mockAxiosInstance.interceptors = {
@@ -19,6 +23,7 @@ mockAxiosInstance.interceptors = {
   },
 };
 axios.default.create.mockReturnValue(mockAxiosInstance);
+rax.attach.mockReturnValue(1);
 
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 
@@ -114,6 +119,14 @@ describe('RequestWrapper constructor', () => {
   it('should set `compressRequestData` based on user options', () => {
     const rw = new RequestWrapper({ enableGzipCompression: true });
     expect(rw.compressRequestData).toBe(true);
+  });
+
+  it('should enable retries from axiosOptions', () => {
+    const rw = new RequestWrapper({ enableRetries: true, maxRetries: 111, retryInterval: 123 });
+
+    expect(rw.retryInterceptorId).toBeDefined();
+    expect(rw.raxConfig.retry).toBe(111);
+    expect(rw.raxConfig.maxRetryDelay).toBe(123 * 1000);
   });
 });
 
@@ -939,5 +952,40 @@ describe('gzipRequestBody', () => {
     );
     expect(debugLogSpy).toHaveBeenCalled();
     expect(debugLogSpy.mock.calls[0][0].message).toMatch('bad zip');
+  });
+
+  it('retry config should have expected values', () => {
+    const config = {
+      maxRetries: 5,
+      maxRetryInterval: 100,
+    };
+    requestWrapperInstance.enableRetries(config);
+
+    expect(requestWrapperInstance.raxConfig.retry).toBe(5);
+    expect(requestWrapperInstance.raxConfig.maxRetryDelay).toBe(100 * 1000);
+    expect(requestWrapperInstance.raxConfig.backoffType).toBe('exponential');
+    expect(requestWrapperInstance.raxConfig.checkRetryAfter).toBe(true);
+    expect(requestWrapperInstance.retryInterceptorId).toBeDefined();
+  });
+
+  it('should be able to call enableRetries without a config object', () => {
+    requestWrapperInstance.enableRetries();
+
+    expect(requestWrapperInstance.raxConfig.backoffType).toBe('exponential');
+    expect(requestWrapperInstance.raxConfig.checkRetryAfter).toBe(true);
+    expect(requestWrapperInstance.retryInterceptorId).toBeDefined();
+  });
+
+  it('disableRetries should delete the raxConfig and interceptorId', () => {
+    requestWrapperInstance.enableRetries();
+
+    expect(requestWrapperInstance.raxConfig.backoffType).toBe('exponential');
+    expect(requestWrapperInstance.raxConfig.checkRetryAfter).toBe(true);
+    expect(requestWrapperInstance.retryInterceptorId).toBeDefined();
+
+    requestWrapperInstance.disableRetries();
+
+    expect(requestWrapperInstance.retryInterceptorId).toBeUndefined();
+    expect(requestWrapperInstance.raxConfig).toBeUndefined();
   });
 });

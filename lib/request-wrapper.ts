@@ -16,7 +16,8 @@
  * limitations under the License.
  */
 
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import * as rax from 'retry-axios';
 
 import axiosCookieJarSupport from 'axios-cookiejar-support';
 import extend = require('extend');
@@ -36,10 +37,29 @@ import {
 import logger from './logger';
 import { streamToPromise } from './stream-to-promise';
 
+/**
+ * Retry configuration options.
+ */
+export interface RetryOptions {
+  /**
+   * Maximum retries to attempt.
+   */
+  maxRetries?: number;
+
+  /**
+   * Ceiling for the retry delay (in seconds) - delay will not exceed this value.
+   */
+  maxRetryInterval?: number;
+}
+
 export class RequestWrapper {
-  private axiosInstance;
+  private axiosInstance: AxiosInstance;
 
   private compressRequestData: boolean;
+
+  private retryInterceptorId: number;
+
+  private raxConfig: rax.RetryConfig;
 
   constructor(axiosOptions?) {
     axiosOptions = axiosOptions || {};
@@ -95,6 +115,18 @@ export class RequestWrapper {
       this.axiosInstance.defaults.jar = axiosOptions.jar;
     }
 
+    // get retry config properties and conditionally enable retries
+    if (axiosOptions.enableRetries) {
+      const retryOptions: RetryOptions = {};
+      if (axiosOptions.maxRetries !== undefined) {
+        retryOptions.maxRetries = axiosOptions.maxRetries;
+      }
+      if (axiosOptions.retryInterval !== undefined) {
+        retryOptions.maxRetryInterval = axiosOptions.retryInterval;
+      }
+      this.enableRetries(retryOptions);
+    }
+
     // set debug interceptors
     if (process.env.NODE_DEBUG === 'axios' || process.env.DEBUG) {
       this.axiosInstance.interceptors.request.use(
@@ -143,6 +175,10 @@ export class RequestWrapper {
         }
       );
     }
+  }
+
+  public setCompressRequestData(setting: boolean) {
+    this.compressRequestData = setting;
   }
 
   /**
@@ -240,6 +276,7 @@ export class RequestWrapper {
       headers,
       params: qs,
       data,
+      raxConfig: this.raxConfig,
       responseType: options.responseType || 'json',
       paramsSerializer: (params) => querystring.stringify(params),
     };
@@ -257,7 +294,8 @@ export class RequestWrapper {
         delete res.request;
 
         // the other sdks use the interface `result` for the body
-        res.result = res.data;
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        res['result'] = res.data;
         delete res.data;
 
         // return another promise that resolves with 'res' to be handled in generated code
@@ -344,6 +382,50 @@ export class RequestWrapper {
 
   public getHttpClient() {
     return this.axiosInstance;
+  }
+
+  private static getRaxConfig(
+    axiosInstance: AxiosInstance,
+    retryOptions?: RetryOptions
+  ): rax.RetryConfig {
+    const config: rax.RetryConfig = {
+      retry: 4, // 4 retries by default
+      retryDelay: 1000, // 1000 ms (1 sec) initial delay
+      instance: axiosInstance,
+      backoffType: 'exponential',
+      checkRetryAfter: true, // use Retry-After header first
+      maxRetryDelay: 30 * 1000, // default to 30 sec max delay
+    };
+
+    if (retryOptions) {
+      if (typeof retryOptions.maxRetries === 'number') {
+        config.retry = retryOptions.maxRetries;
+      }
+      if (typeof retryOptions.maxRetryInterval === 'number') {
+        // convert seconds to ms for retry-axios
+        config.maxRetryDelay = retryOptions.maxRetryInterval * 1000;
+      }
+    }
+
+    return config;
+  }
+
+  public enableRetries(retryOptions?: RetryOptions): void {
+    // avoid attaching the same interceptor multiple times
+    // to protect against user error and ensure disableRetries() always disables retries
+    if (typeof this.retryInterceptorId === 'number') {
+      this.disableRetries();
+    }
+    this.raxConfig = RequestWrapper.getRaxConfig(this.axiosInstance, retryOptions);
+    this.retryInterceptorId = rax.attach(this.axiosInstance);
+  }
+
+  public disableRetries(): void {
+    if (typeof this.retryInterceptorId === 'number') {
+      rax.detach(this.retryInterceptorId, this.axiosInstance);
+      delete this.retryInterceptorId;
+      delete this.raxConfig;
+    }
   }
 
   private async gzipRequestBody(data: any, headers: OutgoingHttpHeaders): Promise<Buffer | any> {
