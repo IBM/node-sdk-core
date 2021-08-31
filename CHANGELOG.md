@@ -1,3 +1,10 @@
+## [2.14.1](https://github.com/IBM/node-sdk-core/compare/v2.14.0...v2.14.1) (2021-08-31)
+
+
+### Performance Improvements
+
+* use maxContentLength -1 instead of Infinity ([#158](https://github.com/IBM/node-sdk-core/issues/158)) ([adbbb3b](https://github.com/IBM/node-sdk-core/commit/adbbb3bceb388b34753f9fe3579eec3f0520ddb3))
+
 # [2.14.0](https://github.com/IBM/node-sdk-core/compare/v2.13.0...v2.14.0) (2021-08-27)
 
 
