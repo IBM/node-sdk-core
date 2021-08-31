@@ -70,7 +70,7 @@ describe('RequestWrapper constructor', () => {
     // the constructor puts together a config object and creates the
     // axios instance with it
     const createdAxiosConfig = axios.default.create.mock.calls[0][0];
-    expect(createdAxiosConfig.maxContentLength).toBe(Infinity);
+    expect(createdAxiosConfig.maxContentLength).toBe(-1);
     expect(createdAxiosConfig.maxBodyLength).toBe(Infinity);
     expect(createdAxiosConfig.headers).toBeDefined();
     expect(createdAxiosConfig.headers.post).toBeDefined();
