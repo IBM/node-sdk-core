@@ -70,7 +70,7 @@ export class RequestWrapper {
     // to 'application/x-www-form-urlencoded'. This causes problems, so overriding the
     // defaults here
     const axiosConfig: AxiosRequestConfig = {
-      maxContentLength: Infinity,
+      maxContentLength: -1,
       maxBodyLength: Infinity,
       headers: {
         post: {
