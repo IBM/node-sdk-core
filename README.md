@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/IBM/node-sdk-core.svg?branch=main)](https://travis-ci.com/IBM/node-sdk-core)
+[![Build Status](https://app.travis-ci.com/IBM/node-sdk-core.svg?branch=main)](https://app.travis-ci.com/IBM/node-sdk-core)
 [![npm-version](https://img.shields.io/npm/v/ibm-cloud-sdk-core.svg)](https://www.npmjs.com/package/ibm-cloud-sdk-core)
 [![codecov](https://codecov.io/gh/IBM/node-sdk-core/branch/main/graph/badge.svg)](https://codecov.io/gh/IBM/node-sdk-core)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
