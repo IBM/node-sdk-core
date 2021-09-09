@@ -1,3 +1,10 @@
+## [2.14.3](https://github.com/IBM/node-sdk-core/compare/v2.14.2...v2.14.3) (2021-09-09)
+
+
+### Bug Fixes
+
+* **build:** update dependencies ([#161](https://github.com/IBM/node-sdk-core/issues/161)) ([8a37ef0](https://github.com/IBM/node-sdk-core/commit/8a37ef030c5ea793e79ea451043f71cd860ff14b))
+
 ## [2.14.2](https://github.com/IBM/node-sdk-core/compare/v2.14.1...v2.14.2) (2021-09-09)
 
 
