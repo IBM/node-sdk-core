@@ -1,3 +1,10 @@
+## [2.14.2](https://github.com/IBM/node-sdk-core/compare/v2.14.1...v2.14.2) (2021-09-09)
+
+
+### Bug Fixes
+
+* **build:** bump axios to 0.21.4 to avoid vulnerabilities ([#160](https://github.com/IBM/node-sdk-core/issues/160)) ([12a6c5b](https://github.com/IBM/node-sdk-core/commit/12a6c5b799ff349c9e5ad12df8f383f4f673417d))
+
 ## [2.14.1](https://github.com/IBM/node-sdk-core/compare/v2.14.0...v2.14.1) (2021-08-31)
 
 
