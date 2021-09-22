@@ -62,6 +62,19 @@ describe('Node Core retries', () => {
     scopes.forEach((s) => s.done());
   });
 
+  it('should retry after we call enableRetries with POST verb', async () => {
+    const scopes = [
+      nock(url).post('/').reply(429, undefined),
+      nock(url).post('/').reply(200, 'retry success!'),
+    ];
+
+    parameters.options.method = 'POST';
+    const result = await service.createRequest(parameters);
+    expect(result.result).toBe('retry success!');
+    // ensure all mocks satisfied
+    scopes.forEach((s) => s.done());
+  });
+
   it('should not retry more than `maxRetries`', async () => {
     const scopes = [
       nock(url).get('/').reply(500, undefined),
