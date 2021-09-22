@@ -1,3 +1,10 @@
+## [2.14.4](https://github.com/IBM/node-sdk-core/compare/v2.14.3...v2.14.4) (2021-09-22)
+
+
+### Bug Fixes
+
+* support POST for retry-axios ([#165](https://github.com/IBM/node-sdk-core/issues/165)) ([6b055d3](https://github.com/IBM/node-sdk-core/commit/6b055d38f791977bac686b14fa230a43fa74b6de))
+
 ## [2.14.3](https://github.com/IBM/node-sdk-core/compare/v2.14.2...v2.14.3) (2021-09-09)
 
 
