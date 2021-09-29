@@ -50,7 +50,7 @@
     "eslint-plugin-jsdoc": "^34.6.3",
     "eslint-plugin-node": "^9.0.0",
     "eslint-plugin-prettier": "^3.0.1",
-    "jest": "^26.6.3",
+    "jest": "^27.2.4",
     "nock": "^13.1.2",
     "object.assign": "~4.1.0",
     "prettier": "^2.3.0",
