@@ -297,7 +297,7 @@ describe('Base Service', () => {
     expect(args[0]).toEqual(parameters.defaultOptions);
   });
 
-  it('should call sendRequest on authenticate() success', async (done) => {
+  it('should call sendRequest on authenticate() success', async () => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
@@ -324,10 +324,9 @@ describe('Base Service', () => {
     const args = sendRequestMock.mock.calls[0];
     expect(args[0]).toEqual(parameters);
     expect(testService.requestWrapperInstance.sendRequest).toBe(sendRequestMock); // verify it is calling the instance
-    done();
   });
 
-  it('createRequest should reject with an error if `serviceUrl` is not set', async (done) => {
+  it('createRequest should reject with an error if `serviceUrl` is not set', async () => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
@@ -357,10 +356,9 @@ describe('Base Service', () => {
     // assert results
     expect(err).toBeInstanceOf(Error);
     expect(res).toBeUndefined();
-    done();
   });
 
-  it('should send error back to user on authenticate() failure', async (done) => {
+  it('should send error back to user on authenticate() failure', async () => {
     const testService = new TestService({
       authenticator: AUTHENTICATOR,
     });
@@ -385,7 +383,6 @@ describe('Base Service', () => {
 
     expect(err).toBe(fakeError);
     expect(authenticateMock).toHaveBeenCalled();
-    done();
   });
 
   it('readOptionsFromExternalConfig should return an empty object if no properties are found', () => {

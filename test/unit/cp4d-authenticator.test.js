@@ -125,7 +125,7 @@ describe('CP4D Authenticator', () => {
     }).toThrow(/Revise these credentials/);
   });
 
-  it('should update the options and resolve with `null`', async (done) => {
+  it('should update the options and resolve with `null`', async () => {
     const authenticator = new CloudPakForDataAuthenticator(CONFIG);
 
     // override the created token manager with the mocked one
@@ -140,7 +140,6 @@ describe('CP4D Authenticator', () => {
 
     // verify that the original options are kept intact
     expect(options.headers['X-Some-Header']).toBe('user-supplied header');
-    done();
   });
 
   it('should re-set disableSslVerification using the setter', () => {

@@ -43,7 +43,7 @@ describe('JWT Token Manager', () => {
   });
 
   describe('getToken', () => {
-    it('should request a token if no token is stored', async (done) => {
+    it('should request a token if no token is stored', async () => {
       const instance = new JwtTokenManager();
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
 
@@ -64,10 +64,9 @@ describe('JWT Token Manager', () => {
       saveTokenInfoSpy.mockRestore();
       decodeSpy.mockRestore();
       requestTokenSpy.mockRestore();
-      done();
     });
 
-    it('should pace token requests', async (done) => {
+    it('should pace token requests', async () => {
       const instance = new JwtTokenManager();
 
       const decodeSpy = jest
@@ -94,10 +93,9 @@ describe('JWT Token Manager', () => {
 
       decodeSpy.mockRestore();
       requestTokenSpy.mockRestore();
-      done();
     });
 
-    it('should reject all paced token requests on error from token service', async (done) => {
+    it('should reject all paced token requests on error from token service', async () => {
       const instance = new JwtTokenManager();
 
       const requestTokenSpy = jest.spyOn(instance, 'requestToken').mockImplementation(
@@ -126,10 +124,9 @@ describe('JWT Token Manager', () => {
       expect(requestTokenSpy.mock.calls).toHaveLength(1);
 
       requestTokenSpy.mockRestore();
-      done();
     });
 
-    it('should request a token if token is stored but needs refresh', async (done) => {
+    it('should request a token if token is stored but needs refresh', async () => {
       const instance = new JwtTokenManager();
       instance.tokenInfo.access_token = CURRENT_ACCESS_TOKEN;
 
@@ -151,10 +148,9 @@ describe('JWT Token Manager', () => {
       saveTokenInfoSpy.mockRestore();
       decodeSpy.mockRestore();
       requestTokenSpy.mockRestore();
-      done();
     });
 
-    it('should not save token info if token request returned an error', async (done) => {
+    it('should not save token info if token request returned an error', async () => {
       const instance = new JwtTokenManager();
 
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
@@ -176,10 +172,9 @@ describe('JWT Token Manager', () => {
 
       saveTokenInfoSpy.mockRestore();
       requestTokenSpy.mockRestore();
-      done();
     });
 
-    it('should catch and reject lower level errors', async (done) => {
+    it('should catch and reject lower level errors', async () => {
       const instance = new JwtTokenManager();
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
 
@@ -203,10 +198,9 @@ describe('JWT Token Manager', () => {
 
       saveTokenInfoSpy.mockRestore();
       requestTokenSpy.mockRestore();
-      done();
     });
 
-    it('should use an sdk-managed token if present and not expired', async (done) => {
+    it('should use an sdk-managed token if present and not expired', async () => {
       const instance = new JwtTokenManager();
       instance.tokenInfo.access_token = ACCESS_TOKEN;
       instance.accessToken = ACCESS_TOKEN;
@@ -214,11 +208,10 @@ describe('JWT Token Manager', () => {
       instance.refreshTime = getCurrentTime() + 800;
       const token = await instance.getToken();
       expect(token).toBe(ACCESS_TOKEN);
-      done();
     });
   });
 
-  it('should reject with error if requestToken is not overriden', async (done) => {
+  it('should reject with error if requestToken is not overriden', async () => {
     const instance = new JwtTokenManager();
 
     let err;
@@ -231,7 +224,6 @@ describe('JWT Token Manager', () => {
 
     expect(err).toBeInstanceOf(Error);
     expect(token).toBeUndefined();
-    done();
   });
 
   describe('isTokenExpired', () => {
