@@ -173,7 +173,7 @@ describe('sendRequest', () => {
     mockAxiosInstance.mockReset();
   });
 
-  it('should send a request with default parameters', async (done) => {
+  it('should send a request with default parameters', async () => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
@@ -206,10 +206,9 @@ describe('sendRequest', () => {
     );
     expect(res).toEqual(expectedResult);
     expect(mockAxiosInstance.mock.calls).toHaveLength(1);
-    done();
   });
 
-  it('sendRequest should strip trailing slashes', async (done) => {
+  it('sendRequest should strip trailing slashes', async () => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
@@ -233,10 +232,9 @@ describe('sendRequest', () => {
       'https://example.ibm.com/trailing/slash'
     );
     expect(res).toEqual(expectedResult);
-    done();
   });
 
-  it('should call formatError if request failed', async (done) => {
+  it('should call formatError if request failed', async () => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
@@ -264,10 +262,9 @@ describe('sendRequest', () => {
     // assert results
     expect(err).toBeInstanceOf(Error);
     expect(res).toBeUndefined();
-    done();
   });
 
-  it('should send a request where option parameters overrides defaults', async (done) => {
+  it('should send a request where option parameters overrides defaults', async () => {
     const parameters = {
       defaultOptions: {
         formData: '',
@@ -324,10 +321,9 @@ describe('sendRequest', () => {
     expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
     expect(res).toEqual(expectedResult);
     expect(mockAxiosInstance.mock.calls).toHaveLength(1);
-    done();
   });
 
-  it('should send a request with Host header set in default options', async (done) => {
+  it('should send a request with Host header set in default options', async () => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
@@ -354,10 +350,9 @@ describe('sendRequest', () => {
       'Accept-Encoding': 'gzip',
       Host: 'alternatehost.ibm.com:443',
     });
-    done();
   });
 
-  it('should send a request with Host header set in overridden options', async (done) => {
+  it('should send a request with Host header set in overridden options', async () => {
     const parameters = {
       defaultOptions: {
         body: 'post=body',
@@ -389,10 +384,9 @@ describe('sendRequest', () => {
       'Accept-Encoding': 'gzip',
       Host: 'correcthost.ibm.com:443',
     });
-    done();
   });
 
-  it('should handle merging of different options objects', async (done) => {
+  it('should handle merging of different options objects', async () => {
     const parameters = {
       defaultOptions: {
         qs: {
@@ -441,10 +435,9 @@ describe('sendRequest', () => {
     expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
     expect(res).toEqual(expectedResult);
     expect(mockAxiosInstance.mock.calls).toHaveLength(1);
-    done();
   });
 
-  it('should send a request with multiform data', async (done) => {
+  it('should send a request with multiform data', async () => {
     const parameters = {
       defaultOptions: {
         formData: '',
@@ -529,10 +522,9 @@ describe('sendRequest', () => {
 
     expect(res).toEqual(expectedResult);
     expect(mockAxiosInstance.mock.calls).toHaveLength(1);
-    done();
   });
 
-  it('should send a request with form data', async (done) => {
+  it('should send a request with form data', async () => {
     const parameters = {
       defaultOptions: {
         form: { a: 'a', b: 'b' },
@@ -585,7 +577,6 @@ describe('sendRequest', () => {
     expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual('json');
     expect(res).toEqual(expectedResult);
     expect(mockAxiosInstance.mock.calls).toHaveLength(1);
-    done();
   });
 
   it('should call `gzipRequestBody` if configured to do so', async () => {
@@ -617,7 +608,7 @@ describe('sendRequest', () => {
 
   // Need to rewrite this to test instantiation with userOptions
 
-  //   it('should keep parameters in options that are not explicitly set in requestwrapper', async done => {
+  //   it('should keep parameters in options that are not explicitly set in requestwrapper', async => {
   //     const parameters = {
   //       defaultOptions: {
   //         body: 'post=body',
@@ -644,7 +635,6 @@ describe('sendRequest', () => {
   //       expect(mockAxiosInstance.mock.calls[0][0].otherParam).toEqual(500);
   //       expect(res).toEqual(expectedResult);
   //       expect(mockAxiosInstance.mock.calls.length).toBe(1);
-  //       done();
   //     });
   //   });
 });
