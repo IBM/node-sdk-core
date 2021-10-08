@@ -35,8 +35,8 @@
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^7.0.1",
-    "@semantic-release/changelog": "5.0.1",
-    "@semantic-release/git": "9.0.0",
+    "@semantic-release/changelog": "6.0.0",
+    "@semantic-release/git": "10.0.0",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
     "codecov": "~3.7.1",
@@ -54,7 +54,7 @@
     "nock": "^13.1.2",
     "object.assign": "~4.1.0",
     "prettier": "^2.3.0",
-    "semantic-release": "17.4.2",
+    "semantic-release": "18.0.0",
     "tsc-publish": "^0.5.2",
     "typedoc": "^0.17.0",
     "typescript": "~3.8.3"
