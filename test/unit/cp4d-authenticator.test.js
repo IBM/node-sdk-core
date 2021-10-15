@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { CloudPakForDataAuthenticator } = require('../../dist/auth');
+const { Authenticator, CloudPakForDataAuthenticator } = require('../../dist/auth');
 const { Cp4dTokenManager } = require('../../dist/auth');
 
 const USERNAME = 'danmullen';
@@ -46,6 +46,7 @@ const getTokenSpy = jest
 describe('CP4D Authenticator', () => {
   it('should store all CONFIG options on the class', () => {
     const authenticator = new CloudPakForDataAuthenticator(CONFIG);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_CP4D);
     expect(authenticator.username).toBe(CONFIG.username);
     expect(authenticator.password).toBe(CONFIG.password);
     expect(authenticator.url).toBe(CONFIG.url);

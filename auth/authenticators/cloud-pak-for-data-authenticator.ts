@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Authenticator } from './authenticator';
 import { Cp4dTokenManager } from '../token-managers';
 import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 
@@ -74,5 +75,15 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
     // manager so we can just pass along the options object.
     // also, the token manager will handle input validation
     this.tokenManager = new Cp4dTokenManager(options);
+  }
+
+  /**
+   * Returns the authenticator's type ('cp4d').
+   *
+   * @returns a string that indicates the authenticator's type
+   */
+  // eslint-disable-next-line class-methods-use-this
+  public authenticationType(): string {
+    return Authenticator.AUTHTYPE_CP4D;
   }
 }

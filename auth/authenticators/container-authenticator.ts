@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Authenticator } from './authenticator';
 import { ContainerTokenManager } from '../token-managers';
 import { IamRequestOptions, IamRequestBasedAuthenticator } from './iam-request-based-authenticator';
 
@@ -112,5 +113,15 @@ export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
 
     // update properties in token manager
     this.tokenManager.setIamProfileId(iamProfileId);
+  }
+
+  /**
+   * Returns the authenticator's type ('container').
+   *
+   * @returns a string that indicates the authenticator's type
+   */
+  // eslint-disable-next-line class-methods-use-this
+  public authenticationType(): string {
+    return Authenticator.AUTHTYPE_CONTAINER;
   }
 }

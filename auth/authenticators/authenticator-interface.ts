@@ -45,4 +45,9 @@ export interface AuthenticatorInterface {
    *   authentication information will be added to.
    */
   authenticate(requestOptions: AuthenticateOptions): Promise<void | Error>;
+
+  /**
+   * Returns a string that indicates the authentication type.
+   */
+  authenticationType(): string;
 }

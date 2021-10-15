@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { IamAuthenticator } = require('../../dist/auth');
+const { Authenticator, IamAuthenticator } = require('../../dist/auth');
 const { IamTokenManager } = require('../../dist/auth');
 
 // mock the `getToken` method in the token manager - dont make any rest calls
@@ -41,6 +41,7 @@ describe('IAM Authenticator', () => {
   it('should store all config options on the class', () => {
     const authenticator = new IamAuthenticator(config);
 
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_IAM);
     expect(authenticator.apikey).toBe(config.apikey);
     expect(authenticator.url).toBe(config.url);
     expect(authenticator.clientId).toBe(config.clientId);

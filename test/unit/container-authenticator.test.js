@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { ContainerAuthenticator } = require('../../dist/auth');
+const { Authenticator, ContainerAuthenticator } = require('../../dist/auth');
 const { ContainerTokenManager } = require('../../dist/auth');
 
 // mock the `getToken` method in the token manager - dont make any rest calls
@@ -43,6 +43,7 @@ describe('Container Authenticator', () => {
   it('should store all config options on the class', () => {
     const authenticator = new ContainerAuthenticator(config);
 
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_CONTAINER);
     expect(authenticator.crTokenFilename).toBe(config.crTokenFilename);
     expect(authenticator.iamProfileName).toBe(config.iamProfileName);
     expect(authenticator.iamProfileId).toBe(config.iamProfileId);

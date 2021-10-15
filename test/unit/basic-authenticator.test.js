@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { BasicAuthenticator } = require('../../dist/auth');
+const { Authenticator, BasicAuthenticator } = require('../../dist/auth');
 
 const USERNAME = 'dave';
 const PASSWORD = 'grohl';
@@ -26,6 +26,7 @@ const CONFIG = {
 describe('Basic Authenticator', () => {
   it('should store the username and password on the class', () => {
     const authenticator = new BasicAuthenticator(CONFIG);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_BASIC);
     expect(authenticator.authHeader).toEqual({
       Authorization: 'Basic ZGF2ZTpncm9obA==',
     });

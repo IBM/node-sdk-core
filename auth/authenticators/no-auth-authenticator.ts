@@ -29,4 +29,13 @@ export class NoAuthAuthenticator extends Authenticator {
     // immediately proceed to request. it will probably fail
     return Promise.resolve();
   }
+
+  /**
+   * Returns the authenticator's type ('noauth').
+   *
+   * @returns a string that indicates the authenticator's type
+   */
+  public authenticationType(): string {
+    return Authenticator.AUTHTYPE_NOAUTH;
+  }
 }
