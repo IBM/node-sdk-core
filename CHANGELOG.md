@@ -1,3 +1,10 @@
+## [2.15.1](https://github.com/IBM/node-sdk-core/compare/v2.15.0...v2.15.1) (2021-10-15)
+
+
+### Bug Fixes
+
+* use correct authenticator type constants ([#170](https://github.com/IBM/node-sdk-core/issues/170)) ([ae19adc](https://github.com/IBM/node-sdk-core/commit/ae19adcc25a3257a7c336390f83033960844615e))
+
 # [2.15.0](https://github.com/IBM/node-sdk-core/compare/v2.14.4...v2.15.0) (2021-10-15)
 
 
