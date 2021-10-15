@@ -1,3 +1,10 @@
+# [2.15.0](https://github.com/IBM/node-sdk-core/compare/v2.14.4...v2.15.0) (2021-10-15)
+
+
+### Features
+
+* add authenticationType method to authenticators ([#169](https://github.com/IBM/node-sdk-core/issues/169)) ([2850c4f](https://github.com/IBM/node-sdk-core/commit/2850c4ff783e0781aa31c9efab5d6b314ce4e8f0))
+
 ## [2.14.4](https://github.com/IBM/node-sdk-core/compare/v2.14.3...v2.14.4) (2021-09-22)
 
 
