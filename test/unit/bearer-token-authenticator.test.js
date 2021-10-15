@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { BearerTokenAuthenticator } = require('../../dist/auth');
+const { Authenticator, BearerTokenAuthenticator } = require('../../dist/auth');
 
 describe('Bearer Token Authenticator', () => {
   const config = {
@@ -24,6 +24,7 @@ describe('Bearer Token Authenticator', () => {
   it('should store the bearer token on the class', () => {
     const authenticator = new BearerTokenAuthenticator(config);
 
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_BEARERTOKEN);
     expect(authenticator.bearerToken).toBe(config.bearerToken);
   });
 

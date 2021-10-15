@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Authenticator } from './authenticator';
 import { IamTokenManager } from '../token-managers';
 import { validateInput } from '../utils';
 import { IamRequestOptions, IamRequestBasedAuthenticator } from './iam-request-based-authenticator';
@@ -81,5 +82,15 @@ export class IamAuthenticator extends IamRequestBasedAuthenticator {
    */
   public getRefreshToken(): string {
     return this.tokenManager.getRefreshToken();
+  }
+
+  /**
+   * Returns the authenticator's type ('iam').
+   *
+   * @returns a string that indicates the authenticator's type
+   */
+  // eslint-disable-next-line class-methods-use-this
+  public authenticationType(): string {
+    return Authenticator.AUTHTYPE_IAM;
   }
 }

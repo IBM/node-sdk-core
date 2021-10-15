@@ -82,22 +82,22 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
 
   // fold authType to lower case for case insensitivity
   switch (authType.toLowerCase()) {
-    case 'noauth':
+    case Authenticator.AUTHTYPE_NOAUTH:
       authenticator = new NoAuthAuthenticator();
       break;
-    case 'basic':
+    case Authenticator.AUTHTYPE_BASIC:
       authenticator = new BasicAuthenticator(credentials);
       break;
-    case 'bearertoken':
+    case Authenticator.AUTHTYPE_BEARERTOKEN:
       authenticator = new BearerTokenAuthenticator(credentials);
       break;
-    case 'cp4d':
+    case Authenticator.AUTHTYPE_CP4D:
       authenticator = new CloudPakForDataAuthenticator(credentials);
       break;
-    case 'iam':
+    case Authenticator.AUTHTYPE_IAM:
       authenticator = new IamAuthenticator(credentials);
       break;
-    case 'container':
+    case Authenticator.AUTHTYPE_CONTAINER:
       authenticator = new ContainerAuthenticator(credentials);
       break;
     default:

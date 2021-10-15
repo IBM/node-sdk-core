@@ -24,6 +24,23 @@ import { AuthenticateOptions, AuthenticatorInterface } from './authenticator-int
  */
 export class Authenticator implements AuthenticatorInterface {
   /**
+   * Constants that define the various authenticator types.
+   */
+  static AUTHTYPE_BASIC = 'basic';
+
+  static AUTHTYPE_BEARERTOKEN = 'bearertoken';
+
+  static AUTHTYPE_IAM = 'iam';
+
+  static AUTHTYPE_CONTAINER = 'container';
+
+  static AUTHTYPE_CP4D = 'cp4d';
+
+  static AUTHTYPE_NOAUTH = 'noauth';
+
+  static AUTHTYPE_UNKNOWN = 'unknown';
+
+  /**
    * Create a new Authenticator instance.
    *
    * @throws {Error} The `new` keyword was not used to create construct the
@@ -47,5 +64,20 @@ export class Authenticator implements AuthenticatorInterface {
   public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
     const error = new Error('Should be implemented by subclass!');
     return Promise.reject(error);
+  }
+
+  /**
+   * Retrieves the authenticator's type.
+   * The returned value will be the same string that is used
+   * when configuring an instance of the authenticator with the
+   * "<service_name>_AUTH_TYPE" configuration property
+   * (e.g. "basic", "iam", etc.).
+   * This function should be overridden in each authenticator
+   * implementation class that extends this class.
+   *
+   * @returns a string that indicates the authenticator's type
+   */
+  public authenticationType(): string {
+    return Authenticator.AUTHTYPE_UNKNOWN;
   }
 }

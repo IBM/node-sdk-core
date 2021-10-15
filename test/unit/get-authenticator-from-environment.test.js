@@ -16,6 +16,7 @@
 
 const {
   getAuthenticatorFromEnvironment,
+  Authenticator,
   BasicAuthenticator,
   BearerTokenAuthenticator,
   CloudPakForDataAuthenticator,
@@ -53,6 +54,7 @@ describe('Get Authenticator From Environment Module', () => {
     setUpNoAuthPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(NoAuthAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_NOAUTH);
     expect(readExternalSourcesMock).toHaveBeenCalled();
   });
 
@@ -60,36 +62,42 @@ describe('Get Authenticator From Environment Module', () => {
     setUpBasicPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(BasicAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_BASIC);
   });
 
   it('should get bearer token authenticator', () => {
     setUpBearerTokenPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(BearerTokenAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_BEARERTOKEN);
   });
 
   it('should get iam authenticator', () => {
     setUpIamPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(IamAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_IAM);
   });
 
   it('should get cp4d authenticator', () => {
     setUpCp4dPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(CloudPakForDataAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_CP4D);
   });
 
   it('should get container authenticator', () => {
     setUpContainerPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(ContainerAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_CONTAINER);
   });
 
   it('should throw away service properties and use auth properties', () => {
     setUpAuthPropsPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(IamAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_IAM);
     expect(authenticator.apikey).toBe(APIKEY);
     expect(authenticator.disableSslVerification).toBe(true);
     expect(authenticator.url).toBe(TOKEN_URL);
@@ -99,6 +107,7 @@ describe('Get Authenticator From Environment Module', () => {
     readExternalSourcesMock.mockImplementation(() => ({ iamProfileName: IAM_PROFILE_NAME }));
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(ContainerAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_CONTAINER);
     expect(authenticator.iamProfileName).toBe(IAM_PROFILE_NAME);
   });
 
@@ -106,6 +115,7 @@ describe('Get Authenticator From Environment Module', () => {
     readExternalSourcesMock.mockImplementation(() => ({ apikey: APIKEY }));
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(IamAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_IAM);
     expect(authenticator.apikey).toBe(APIKEY);
   });
 
@@ -120,6 +130,7 @@ describe('Get Authenticator From Environment Module', () => {
     setUpIamPayloadWithScope();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(IamAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_IAM);
     expect(authenticator.scope).toBe('jon snow');
   });
 });

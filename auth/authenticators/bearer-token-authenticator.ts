@@ -82,4 +82,14 @@ export class BearerTokenAuthenticator extends Authenticator {
       resolve();
     });
   }
+
+  /**
+   * Returns the authenticator's type ('bearertoken').
+   *
+   * @returns a string that indicates the authenticator's type
+   */
+  // eslint-disable-next-line class-methods-use-this
+  public authenticationType(): string {
+    return Authenticator.AUTHTYPE_BEARERTOKEN;
+  }
 }
