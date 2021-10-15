@@ -144,7 +144,7 @@ function setUpNoAuthPayload() {
 
 function setUpBasicPayload() {
   readExternalSourcesMock.mockImplementation(() => ({
-    authtype: 'basic',
+    authtype: 'bAsIC',
     username: 'a',
     password: 'b',
   }));
@@ -152,7 +152,7 @@ function setUpBasicPayload() {
 
 function setUpBearerTokenPayload() {
   readExternalSourcesMock.mockImplementation(() => ({
-    authType: 'bearerToken',
+    authType: 'BeaRerToken',
     bearerToken: 'a',
   }));
 }
@@ -174,7 +174,7 @@ function setUpIamPayloadWithScope() {
 
 function setUpCp4dPayload() {
   readExternalSourcesMock.mockImplementation(() => ({
-    authtype: 'cp4d',
+    authtype: 'cP4d',
     username: 'a',
     password: 'b',
     authUrl: TOKEN_URL,
@@ -193,7 +193,7 @@ function setUpAuthPropsPayload() {
 
 function setUpContainerPayload() {
   readExternalSourcesMock.mockImplementation(() => ({
-    authType: 'container',
+    authType: 'conTAINer',
     crTokenFilename: '/path/to/file',
     iamProfileName: IAM_PROFILE_NAME,
     iamProfileId: 'some-id',
