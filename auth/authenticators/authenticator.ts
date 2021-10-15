@@ -28,7 +28,7 @@ export class Authenticator implements AuthenticatorInterface {
    */
   static AUTHTYPE_BASIC = 'basic';
 
-  static AUTHTYPE_BEARERTOKEN = 'bearertoken';
+  static AUTHTYPE_BEARERTOKEN = 'bearerToken';
 
   static AUTHTYPE_IAM = 'iam';
 
@@ -36,7 +36,7 @@ export class Authenticator implements AuthenticatorInterface {
 
   static AUTHTYPE_CP4D = 'cp4d';
 
-  static AUTHTYPE_NOAUTH = 'noauth';
+  static AUTHTYPE_NOAUTH = 'noAuth';
 
   static AUTHTYPE_UNKNOWN = 'unknown';
 

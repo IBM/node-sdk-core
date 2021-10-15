@@ -74,34 +74,29 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
     authType = credentials.authtype;
   }
   if (!authType || typeof authType !== 'string') {
-    authType = credentials.apikey ? 'iam' : 'container';
+    authType = credentials.apikey ? Authenticator.AUTHTYPE_IAM : Authenticator.AUTHTYPE_CONTAINER;
   }
 
-  // create and return the appropriate authenticator
+  // Create and return the appropriate authenticator.
   let authenticator;
 
-  // fold authType to lower case for case insensitivity
-  switch (authType.toLowerCase()) {
-    case Authenticator.AUTHTYPE_NOAUTH:
-      authenticator = new NoAuthAuthenticator();
-      break;
-    case Authenticator.AUTHTYPE_BASIC:
-      authenticator = new BasicAuthenticator(credentials);
-      break;
-    case Authenticator.AUTHTYPE_BEARERTOKEN:
-      authenticator = new BearerTokenAuthenticator(credentials);
-      break;
-    case Authenticator.AUTHTYPE_CP4D:
-      authenticator = new CloudPakForDataAuthenticator(credentials);
-      break;
-    case Authenticator.AUTHTYPE_IAM:
-      authenticator = new IamAuthenticator(credentials);
-      break;
-    case Authenticator.AUTHTYPE_CONTAINER:
-      authenticator = new ContainerAuthenticator(credentials);
-      break;
-    default:
-      throw new Error(`Invalid value for AUTH_TYPE: ${authType}`);
+  // Compare the authType against our constants case-insensitively to
+  // determine which authenticator type needs to be constructed.
+  authType = authType.toLowerCase();
+  if (authType === Authenticator.AUTHTYPE_NOAUTH.toLowerCase()) {
+    authenticator = new NoAuthAuthenticator();
+  } else if (authType === Authenticator.AUTHTYPE_BASIC.toLowerCase()) {
+    authenticator = new BasicAuthenticator(credentials);
+  } else if (authType === Authenticator.AUTHTYPE_BEARERTOKEN.toLowerCase()) {
+    authenticator = new BearerTokenAuthenticator(credentials);
+  } else if (authType === Authenticator.AUTHTYPE_CP4D.toLowerCase()) {
+    authenticator = new CloudPakForDataAuthenticator(credentials);
+  } else if (authType === Authenticator.AUTHTYPE_IAM.toLowerCase()) {
+    authenticator = new IamAuthenticator(credentials);
+  } else if (authType === Authenticator.AUTHTYPE_CONTAINER.toLowerCase()) {
+    authenticator = new ContainerAuthenticator(credentials);
+  } else {
+    throw new Error(`Invalid value for AUTH_TYPE: ${authType}`);
   }
 
   return authenticator;
