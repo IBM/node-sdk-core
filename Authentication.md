@@ -48,7 +48,7 @@ each outbound request in the `Authorization` header in the form:
 
 ### Programming example
 ```js
-const BasicAuthenticator = require('ibm-cloud-sdk-core');
+const { BasicAuthenticator } = require('ibm-cloud-sdk-core');
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const authenticator = new BasicAuthenticator({
@@ -57,7 +57,7 @@ const authenticator = new BasicAuthenticator({
 });
 
 const options = {
-  authenticator
+  authenticator,
 };
 
 const service = new ExampleServiceV1(options);
@@ -77,7 +77,7 @@ Application code:
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const options = {
-  serviceName: 'example_service'
+  serviceName: 'example_service',
 };
 
 const service = ExampleServiceV1.newInstance(options);
@@ -100,7 +100,7 @@ each outbound request in the `Authorization` header in the form:
 
 ### Programming example
 ```js
-const BearerTokenAuthenticator = require('ibm-cloud-sdk-core');
+const { BearerTokenAuthenticator } = require('ibm-cloud-sdk-core');
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const bearerToken = // ... obtain bearer token value ...
@@ -109,7 +109,7 @@ const authenticator = new BearerTokenAuthenticator({
 });
 
 const options = {
-  authenticator
+  authenticator,
 };
 
 const service = new ExampleServiceV1(options);
@@ -118,7 +118,7 @@ const service = new ExampleServiceV1(options);
 ...
 // Later, if your bearer token value expires, you can set a new one like this:
 newToken = // ... obtain new bearer token value
-authenticator.bearerToken = newToken
+authenticator.bearerToken = newToken;
 ```
 
 ### Configuration example
@@ -132,7 +132,7 @@ Application code:
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const options = {
-  serviceName: 'example_service'
+  serviceName: 'example_service',
 };
 
 const service = ExampleServiceV1.newInstance(options);
@@ -182,7 +182,7 @@ made to the IAM token service.
 
 ### Programming example
 ```js
-const IamAuthenticator = require('ibm-cloud-sdk-core');
+const { IamAuthenticator } = require('ibm-cloud-sdk-core');
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const authenticator = new IamAuthenticator({
@@ -190,7 +190,7 @@ const authenticator = new IamAuthenticator({
 });
 
 const options = {
-  authenticator
+  authenticator,
 };
 
 const service = new ExampleServiceV1(options);
@@ -209,7 +209,7 @@ Application code:
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const options = {
-  serviceName: 'example_service'
+  serviceName: 'example_service',
 };
 
 const service = ExampleServiceV1.newInstance(options);
@@ -278,7 +278,7 @@ The application must have `read` permissions on the file containing the CR token
 
 ### Programming example
 ```js
-const ContainerAuthenticator = require('ibm-cloud-sdk-core');
+const { ContainerAuthenticator } = require('ibm-cloud-sdk-core');
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const authenticator = new ContainerAuthenticator({
@@ -286,7 +286,7 @@ const authenticator = new ContainerAuthenticator({
 });
 
 const options = {
-  authenticator
+  authenticator,
 };
 
 const service = new ExampleServiceV1(options);
@@ -305,7 +305,7 @@ Application code:
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const options = {
-  serviceName: 'example_service'
+  serviceName: 'example_service',
 };
 
 const service = ExampleServiceV1.newInstance(options);
@@ -345,7 +345,7 @@ made to the Cloud Pak for Data token service.
 
 ### Programming examples
 ```js
-const CloudPakForDataAuthenticator = require('ibm-cloud-sdk-core');
+const { CloudPakForDataAuthenticator } = require('ibm-cloud-sdk-core');
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const authenticator = new CloudPakForDataAuthenticator({
@@ -355,7 +355,7 @@ const authenticator = new CloudPakForDataAuthenticator({
 });
 
 const options = {
-  authenticator
+  authenticator,
 };
 
 const service = new ExampleServiceV1(options);
@@ -377,7 +377,7 @@ Application code:
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const options = {
-  serviceName: 'example_service'
+  serviceName: 'example_service',
 };
 
 const service = ExampleServiceV1.newInstance(options);
@@ -396,13 +396,13 @@ None
 
 ### Programming example
 ```js
-const NoAuthAuthenticator = require('ibm-cloud-sdk-core');
+const { NoAuthAuthenticator } = require('ibm-cloud-sdk-core');
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const authenticator = new NoAuthAuthenticator();
 
 const options = {
-  authenticator
+  authenticator,
 };
 
 const service = new ExampleServiceV1(options);
@@ -420,7 +420,7 @@ Application code:
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const options = {
-  serviceName: 'example_service'
+  serviceName: 'example_service',
 };
 
 const service = ExampleServiceV1.newInstance(options);
