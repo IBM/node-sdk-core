@@ -22,6 +22,7 @@ import {
   IamAuthenticator,
   ContainerAuthenticator,
   NoAuthAuthenticator,
+  VpcInstanceAuthenticator,
 } from '../authenticators';
 
 import { readExternalSources } from './read-external-sources';
@@ -95,6 +96,8 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
     authenticator = new IamAuthenticator(credentials);
   } else if (authType === Authenticator.AUTHTYPE_CONTAINER.toLowerCase()) {
     authenticator = new ContainerAuthenticator(credentials);
+  } else if (authType === Authenticator.AUTHTYPE_VPC.toLowerCase()) {
+    authenticator = new VpcInstanceAuthenticator(credentials);
   } else {
     throw new Error(`Invalid value for AUTH_TYPE: ${authType}`);
   }

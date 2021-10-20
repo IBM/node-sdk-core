@@ -129,3 +129,16 @@ export function removeSuffix(str: string, suffix: string): string {
 export function atLeastOne(a: any, b: any): boolean {
   return Boolean(a || b);
 }
+
+/**
+ * Verify that both properties are not specified.
+ * Returns true if only a, only b, or neither is defined.
+ * Returns false if both are defined.
+ *
+ * @param {any} a - The first object
+ * @param {any} b - The second object
+ * @returns {boolean}
+ */
+export function atMostOne(a: any, b: any): boolean {
+  return Boolean(!(a && b));
+}

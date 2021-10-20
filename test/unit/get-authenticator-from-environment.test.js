@@ -22,6 +22,7 @@ const {
   CloudPakForDataAuthenticator,
   IamAuthenticator,
   ContainerAuthenticator,
+  VpcInstanceAuthenticator,
   NoAuthAuthenticator,
 } = require('../../dist/auth');
 
@@ -91,6 +92,13 @@ describe('Get Authenticator From Environment Module', () => {
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(ContainerAuthenticator);
     expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_CONTAINER);
+  });
+
+  it('should get vpc instance authenticator', () => {
+    setUpVpcInstancePayload();
+    const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
+    expect(authenticator).toBeInstanceOf(VpcInstanceAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_VPC);
   });
 
   it('should throw away service properties and use auth properties', () => {
@@ -196,6 +204,13 @@ function setUpContainerPayload() {
     authType: 'conTAINer',
     crTokenFilename: '/path/to/file',
     iamProfileName: IAM_PROFILE_NAME,
+    iamProfileId: 'some-id',
+  }));
+}
+
+function setUpVpcInstancePayload() {
+  readExternalSourcesMock.mockImplementation(() => ({
+    authType: 'vPc',
     iamProfileId: 'some-id',
   }));
 }

@@ -38,6 +38,8 @@ export class Authenticator implements AuthenticatorInterface {
 
   static AUTHTYPE_NOAUTH = 'noAuth';
 
+  static AUTHTYPE_VPC = 'vpc';
+
   static AUTHTYPE_UNKNOWN = 'unknown';
 
   /**

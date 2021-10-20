@@ -22,6 +22,7 @@
  * Bearer Token
  * Identity and Access Management (IAM)
  * Container (IKS, etc)
+ * VPC Instance
  * Cloud Pak for Data
  * No Authentication
  *
@@ -36,6 +37,7 @@
  *   CloudPakForDataAuthenticator: Authenticator for passing CP4D authentication information to service endpoint.
  *   IAMAuthenticator: Authenticator for passing IAM authentication information to service endpoint.
  *   ContainerAuthenticator: Authenticator for passing IAM authentication to a service, based on a token living on the container.
+ *   VpcInstanceAuthenticator: Authenticator that uses the VPC Instance Metadata Service API to retrieve an IAM token.
  *   NoAuthAuthenticator: Performs no authentication. Useful for testing purposes.
  */
 
@@ -49,3 +51,4 @@ export { ContainerAuthenticator } from './container-authenticator';
 export { NoAuthAuthenticator } from './no-auth-authenticator';
 export { IamRequestBasedAuthenticator } from './iam-request-based-authenticator';
 export { TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
+export { VpcInstanceAuthenticator } from './vpc-instance-authenticator';
