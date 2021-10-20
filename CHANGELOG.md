@@ -1,3 +1,10 @@
+# [2.16.0](https://github.com/IBM/node-sdk-core/compare/v2.15.1...v2.16.0) (2021-10-20)
+
+
+### Features
+
+* add support for retrieving refresh tokens from iam-based authenticators ([#173](https://github.com/IBM/node-sdk-core/issues/173)) ([e7f11fc](https://github.com/IBM/node-sdk-core/commit/e7f11fce7bbbfff1273c289b9e9b8fba27c705dc))
+
 ## [2.15.1](https://github.com/IBM/node-sdk-core/compare/v2.15.0...v2.15.1) (2021-10-15)
 
 
