@@ -119,4 +119,12 @@ describe('Container Authenticator', () => {
     // verify that the original options are kept intact
     expect(options.headers['X-Some-Header']).toBe('user-supplied header');
   });
+
+  it('should return the refresh token stored in the token manager', () => {
+    const token = 'some-token';
+    const authenticator = new ContainerAuthenticator({ iamProfileName: config.iamProfileName });
+    expect(authenticator.tokenManager.refreshToken).toBeUndefined();
+    authenticator.tokenManager.refreshToken = token;
+    expect(authenticator.getRefreshToken()).toEqual(token);
+  });
 });

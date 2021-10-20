@@ -30,8 +30,6 @@ interface Options extends IamRequestOptions {
 export class IamTokenManager extends IamRequestBasedTokenManager {
   protected requiredOptions = ['apikey'];
 
-  protected refreshToken: string;
-
   private apikey: string;
 
   /**
@@ -63,32 +61,5 @@ export class IamTokenManager extends IamRequestBasedTokenManager {
     this.formData.apikey = this.apikey;
     this.formData.grant_type = 'urn:ibm:params:oauth:grant-type:apikey';
     this.formData.response_type = 'cloud_iam';
-  }
-
-  /**
-   * Return the most recently stored refresh token.
-   *
-   * @public
-   * @returns {string}
-   */
-  public getRefreshToken(): string {
-    return this.refreshToken;
-  }
-
-  /**
-   * Extend this method from the parent class to extract the refresh token from
-   * the request and save it.
-   *
-   * @param tokenResponse - Response object from JWT service request
-   * @protected
-   * @returns {void}
-   */
-  protected saveTokenInfo(tokenResponse): void {
-    super.saveTokenInfo(tokenResponse);
-
-    const responseBody = tokenResponse.result || {};
-    if (responseBody.refresh_token) {
-      this.refreshToken = responseBody.refresh_token;
-    }
   }
 }
