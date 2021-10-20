@@ -75,16 +75,6 @@ export class IamAuthenticator extends IamRequestBasedAuthenticator {
   }
 
   /**
-   * Return the most recently stored refresh token.
-   *
-   * @public
-   * @returns {string}
-   */
-  public getRefreshToken(): string {
-    return this.tokenManager.getRefreshToken();
-  }
-
-  /**
    * Returns the authenticator's type ('iam').
    *
    * @returns a string that indicates the authenticator's type

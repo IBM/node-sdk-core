@@ -136,4 +136,12 @@ describe('IAM Authenticator', () => {
     // also, verify that the underlying token manager has been updated
     expect(authenticator.tokenManager.scope).toEqual(newScope);
   });
+
+  it('should return the refresh token stored in the token manager', () => {
+    const token = 'some-token';
+    const authenticator = new IamAuthenticator(config);
+    expect(authenticator.tokenManager.refreshToken).toBeUndefined();
+    authenticator.tokenManager.refreshToken = token;
+    expect(authenticator.getRefreshToken()).toEqual(token);
+  });
 });
