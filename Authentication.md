@@ -18,7 +18,7 @@ The node-sdk-core allows an authenticator to be specified in one of two ways:
 desired authenticator and then passes the authenticator instance when constructing an instance of the service.
 2. configuration - the SDK user provides external configuration information (in the form of environment variables
 or a credentials file) to indicate the type of authenticator, along with the configuration of the necessary properties
-for that authenticator.  The SDK user then invokes the configuration-based authenticator factory to construct an instance
+for that authenticator. The SDK user then invokes the configuration-based authenticator factory to construct an instance
 of the authenticator that is described in the external configuration information.
 
 The sections below will provide detailed information for each authenticator
