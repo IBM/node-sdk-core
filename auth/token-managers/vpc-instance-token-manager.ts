@@ -21,7 +21,7 @@ import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 const DEFAULT_IMS_ENDPOINT = 'http://169.254.169.254';
 const METADATA_SERVICE_VERSION = '2021-09-20';
 
-/** Configuration options for CP4D token retrieval. */
+/** Configuration options for VPC token retrieval. */
 interface Options extends JwtTokenManagerOptions {
   /** The CRN of the linked trusted IAM profile to be used as the identity of the compute resource */
   iamProfileCrn?: string;
