@@ -82,7 +82,7 @@ describe('VPC Instance Authenticator', () => {
     expect(authenticator.tokenManager.iamProfileId).toEqual(config.iamProfileId);
   });
 
-  // "end to end" style test, to make sure this authenticator ingregates properly with parent classes
+  // "end to end" style test, to make sure this authenticator integrates properly with parent classes
   it('should update the options and resolve with `null` when `authenticate` is called', async () => {
     const authenticator = new VpcInstanceAuthenticator({ iamProfileCrn: config.iamProfileCrn });
 
