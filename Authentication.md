@@ -382,7 +382,7 @@ const service = new ExampleServiceV1(options);
 External configuration:
 ```
 export EXAMPLE_SERVICE_AUTH_TYPE=vpc
-export EXAMPLE_SERVICE_IAM_PROFILE_CRN=abc-123
+export EXAMPLE_SERVICE_IAM_PROFILE_CRN=crn:iam-profile-123
 ```
 Application code:
 ```js
