@@ -343,12 +343,6 @@ The IAM access token is added to each outbound request in the `Authorization` he
 - url: (optional) The VPC Instance Metadata Service's base URL.  
 The default value of this property is `http://169.254.169.254`, and should not need to be specified in normal situations.
 
-- disableSslVerification: (optional) A flag that indicates whether verificaton of the server's SSL 
-certificate should be disabled or not. The default value is `false`.
-
-- headers: (optional) A set of key/value pairs that will be sent as HTTP headers in requests
-made to the IAM token service.
-
 Usage Notes:
 1. At most one of `iamProfileCrn` or `iamProfileId` may be specified.  The specified value must map
 to a trusted IAM profile that has been linked to the compute resource (virtual server instance).
