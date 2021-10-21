@@ -48,16 +48,12 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
    *
    * @param {object} [options] Configuration options for VpcInstance authentication.
    * @param {string} [options.iamProfileCrn] The CRN of the linked trusted IAM profile to be used as the identity of the compute resource.
-   *    At most one of IAMProfileCRN or IAMProfileID may be specified.
+   *    At most one of iamProfileCrn or iamProfileId may be specified.
    *    If neither one is specified, then the default IAM profile defined for the compute resource will be used.
    * @param {string} [options.iamProfileId] The ID of the linked trusted IAM profile to be used when obtaining the IAM access token.
-   *    At most one of IAMProfileCRN or IAMProfileID may be specified.
+   *    At most one of iamProfileCrn or iamProfileId may be specified.
    *    If neither one is specified, then the default IAM profile defined for the compute resource will be used.
    * @param {string} [options.url] The VPC Instance Metadata Service's base endpoint URL. Default value: "http://169.254.169.254"
-   * @param {boolean} [options.disableSslVerification] A flag that indicates
-   *    whether verification of the token server's SSL certificate should be
-   *    disabled or not
-   * @param {object<string, string>} [options.headers] to be sent with every.
    */
   constructor(options: Options) {
     // all parameters are optional

@@ -29,10 +29,6 @@ describe('VPC Instance Authenticator', () => {
   const config = {
     iamProfileId: 'some-id',
     url: 'someurl.com',
-    disableSslVerification: true,
-    headers: {
-      'X-My-Header': 'some-value',
-    },
   };
 
   it('should store all config options on the class', () => {
@@ -42,8 +38,6 @@ describe('VPC Instance Authenticator', () => {
     expect(authenticator.iamProfileCrn).not.toBeDefined();
     expect(authenticator.iamProfileId).toBe(config.iamProfileId);
     expect(authenticator.url).toBe(config.url);
-    expect(authenticator.disableSslVerification).toBe(config.disableSslVerification);
-    expect(authenticator.headers).toEqual(config.headers);
 
     // should also create a token manager
     expect(authenticator.tokenManager).toBeInstanceOf(VpcInstanceTokenManager);
@@ -89,14 +83,11 @@ describe('VPC Instance Authenticator', () => {
     // override the created token manager with the mocked one
     authenticator.tokenManager = mockedTokenManager;
 
-    const options = { headers: { 'X-Some-Header': 'user-supplied header' } };
+    const options = {};
     const result = await authenticator.authenticate(options);
 
     expect(result).toBeUndefined();
     expect(options.headers.Authorization).toBe(`Bearer ${fakeToken}`);
     expect(getTokenSpy).toHaveBeenCalled();
-
-    // verify that the original options are kept intact
-    expect(options.headers['X-Some-Header']).toBe('user-supplied header');
   });
 });

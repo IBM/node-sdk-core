@@ -106,7 +106,6 @@ describe('VPC Instance Token Manager', () => {
       expect(parameters.options).toBeDefined();
       expect(parameters.options.url).toBe('123.345.567/instance_identity/v1/token');
       expect(parameters.options.method).toBe('PUT');
-      expect(parameters.options.rejectUnauthorized).toBe(true);
 
       expect(parameters.options.qs).toBeDefined();
       expect(parameters.options.qs.version).toBe('2021-09-20');
@@ -158,7 +157,6 @@ describe('VPC Instance Token Manager', () => {
       expect(parameters.options).toBeDefined();
       expect(parameters.options.url).toBe('123.345.567/instance_identity/v1/iam_token');
       expect(parameters.options.method).toBe('POST');
-      expect(parameters.options.rejectUnauthorized).toBe(true);
 
       expect(parameters.options.qs).toBeDefined();
       expect(parameters.options.qs.version).toBe('2021-09-20');

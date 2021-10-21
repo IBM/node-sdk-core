@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import extend = require('extend');
 import logger from '../../lib/logger';
 import { atMostOne } from '../utils';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
@@ -36,7 +35,7 @@ export interface VpcTokenResponse {
   access_token: string;
   created_at: string;
   expires_at: string;
-  expires_in: string;
+  expires_in: number;
 }
 
 /**
@@ -52,17 +51,12 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
    *
    * @param {object} [options] Configuration options.
    * @param {string} [options.iamProfileCrn] The CRN of the linked trusted IAM profile to be used as the identity of the compute resource.
-   *    At most one of iamProfileCRN or iamProfileID may be specified.
+   *    At most one of iamProfileCrn or iamProfileId may be specified.
    *    If neither one is specified, then the default IAM profile defined for the compute resource will be used.
    * @param {string} [options.iamProfileId] The ID of the linked trusted IAM profile to be used when obtaining the IAM access token.
-   *    At most one of IAMProfileCRN or IAMProfileID may be specified.
+   *    At most one of iamProfileCrn or iamProfileId may be specified.
    *    If neither one is specified, then the default IAM profile defined for the compute resource will be used.
    * @param {string} [options.url] The VPC Instance Metadata Service's base endpoint URL. Default value: "http://169.254.169.254"
-   * @param {boolean} [options.disableSslVerification] A flag that indicates
-   *    whether verification of the token server's SSL certificate should be
-   *    disabled or not.
-   * @param {object<string, string>} [options.headers] Headers to be sent with every
-   *    outbound HTTP requests to token services.
    * @constructor
    */
   constructor(options: Options) {
@@ -104,13 +98,6 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   protected async requestToken(): Promise<any> {
     const instanceIdentityToken: string = await this.getInstanceIdentityToken();
 
-    // these cannot be overwritten
-    const requiredHeaders = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${instanceIdentityToken}`,
-    };
-
     const parameters = {
       options: {
         url: `${this.url}/instance_identity/v1/iam_token`,
@@ -121,8 +108,11 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
           trusted_profile: this.iamProfileId || this.iamProfileCrn, // if neither are given, this will remain undefined
         },
         method: 'POST',
-        headers: extend(true, {}, this.headers, requiredHeaders),
-        rejectUnauthorized: !this.disableSslVerification,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${instanceIdentityToken}`,
+        },
       },
     };
 
@@ -132,13 +122,6 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   }
 
   private async getInstanceIdentityToken(): Promise<string> {
-    // these cannot be overwritten
-    const requiredHeaders = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'Metadata-Flavor': 'ibm',
-    };
-
     const parameters = {
       options: {
         url: `${this.url}/instance_identity/v1/token`,
@@ -149,8 +132,11 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
           expires_in: 300,
         },
         method: 'PUT',
-        headers: extend(true, {}, this.headers, requiredHeaders),
-        rejectUnauthorized: !this.disableSslVerification,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'Metadata-Flavor': 'ibm',
+        },
       },
     };
 
