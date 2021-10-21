@@ -366,7 +366,7 @@ const { VpcInstanceAuthenticator } = require('ibm-cloud-sdk-core');
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const authenticator = new VpcInstanceAuthenticator({
-  iamProfileCrn: 'abc-123',
+  iamProfileCrn: 'crn:iam-profile-123',
 });
 
 const options = {
