@@ -52,7 +52,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
    *
    * @param {object} [options] Configuration options.
    * @param {string} [options.iamProfileCrn] The CRN of the linked trusted IAM profile to be used as the identity of the compute resource.
-   *    At most one of IAMProfileCRN or IAMProfileID may be specified.
+   *    At most one of iamProfileCRN or iamProfileID may be specified.
    *    If neither one is specified, then the default IAM profile defined for the compute resource will be used.
    * @param {string} [options.iamProfileId] The ID of the linked trusted IAM profile to be used when obtaining the IAM access token.
    *    At most one of IAMProfileCRN or IAMProfileID may be specified.
