@@ -75,7 +75,7 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
   }
 
   /**
-   * Setter for the "profile_name" parameter to use when fetching the bearer token from the IAM token server.
+   * Setter for the "profile_crn" parameter to use when fetching the bearer token from the IAM token server.
    * @param {string} scope A string that makes up the iamProfileCrn parameter
    */
   public setIamProfileCrn(iamProfileCrn: string): void {
