@@ -184,7 +184,8 @@ describe('VPC Instance Token Manager', () => {
       expect(parameters).toBeDefined();
       expect(parameters.options).toBeDefined();
       expect(parameters.options.body).toBeDefined();
-      expect(parameters.options.body.trusted_profile).toBe('some-crn');
+      expect(parameters.options.body.trusted_profile).toBeDefined();
+      expect(parameters.options.body.trusted_profile.crn).toBe('some-crn');
     });
 
     it('should set trusted profile to iam profile id, if set', async () => {
@@ -195,7 +196,8 @@ describe('VPC Instance Token Manager', () => {
       expect(parameters).toBeDefined();
       expect(parameters.options).toBeDefined();
       expect(parameters.options.body).toBeDefined();
-      expect(parameters.options.body.trusted_profile).toBe('some-id');
+      expect(parameters.options.body.trusted_profile).toBeDefined();
+      expect(parameters.options.body.trusted_profile.id).toBe('some-id');
     });
   });
 });

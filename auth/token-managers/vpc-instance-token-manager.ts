@@ -31,11 +31,20 @@ interface Options extends JwtTokenManagerOptions {
 
 // this interface is a representation of the response received from
 // the VPC "create_access_token" and "create_iam_token" operations.
-export interface VpcTokenResponse {
+interface VpcTokenResponse {
   access_token: string;
   created_at: string;
   expires_at: string;
   expires_in: number;
+}
+
+interface TrustedProfile {
+  id?: string;
+  crn?: string;
+}
+
+interface CreateIamTokenBody {
+  trusted_profile?: TrustedProfile;
 }
 
 /**
@@ -98,15 +107,21 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   protected async requestToken(): Promise<any> {
     const instanceIdentityToken: string = await this.getInstanceIdentityToken();
 
+    // construct request body
+    const body = {} as CreateIamTokenBody;
+    if (this.iamProfileId) {
+      body.trusted_profile = { id: this.iamProfileId };
+    } else if (this.iamProfileCrn) {
+      body.trusted_profile = { crn: this.iamProfileCrn };
+    }
+
     const parameters = {
       options: {
         url: `${this.url}/instance_identity/v1/iam_token`,
         qs: {
           version: METADATA_SERVICE_VERSION,
         },
-        body: {
-          trusted_profile: this.iamProfileId || this.iamProfileCrn, // if neither are given, this will remain undefined
-        },
+        body,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
