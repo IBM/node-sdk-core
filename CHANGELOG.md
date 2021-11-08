@@ -1,3 +1,10 @@
+# [2.17.0](https://github.com/IBM/node-sdk-core/compare/v2.16.0...v2.17.0) (2021-11-08)
+
+
+### Features
+
+* **VpcInstanceAuthenticator:** add support for new VPC authentication flow ([#172](https://github.com/IBM/node-sdk-core/issues/172)) ([8bbe704](https://github.com/IBM/node-sdk-core/commit/8bbe704ced5ee9126b4ffdcb2f2c2f7978f9b1d7))
+
 # [2.16.0](https://github.com/IBM/node-sdk-core/compare/v2.15.1...v2.16.0) (2021-10-20)
 
 
