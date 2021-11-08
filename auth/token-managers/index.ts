@@ -21,6 +21,7 @@
  * Identity and Access Management (IAM)
  * Cloud Pak for Data
  * Container (IKS, etc)
+ * VPC Instance
  *
  * The token managers sit inside of an authenticator and do the work to retrieve
  * tokens where as the authenticators add these tokens to the actual request.
@@ -29,6 +30,7 @@
  *   IamTokenManager: Token Manager of IAM via apikey.
  *   Cp4dTokenManager: Token Manager of CloudPak for data.
  *   ContainerTokenManager: Token manager of IAM via compute resource token.
+ *   VpcInstanceTokenManager: Token manager of VPC Instance Metadata Service API tokens.
  *   JwtTokenManager: A class for shared functionality for parsing, storing, and requesting JWT tokens.
  */
 
@@ -38,3 +40,4 @@ export { ContainerTokenManager } from './container-token-manager';
 export { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-based-token-manager';
 export { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 export { TokenManager, TokenManagerOptions } from './token-manager';
+export { VpcInstanceTokenManager } from './vpc-instance-token-manager';
