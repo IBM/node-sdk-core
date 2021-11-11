@@ -3,7 +3,8 @@
   "version": "2.17.0",
   "description": "Core functionality to support SDKs generated with IBM's OpenAPI SDK Generator.",
   "main": "./dist/index",
-  "module": "./dist/es/index",
+  "module": "./dist/es/index.js",
+  "typings": "./dist/es/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/IBM/node-sdk-core.git"
