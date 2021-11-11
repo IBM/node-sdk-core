@@ -20,13 +20,13 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import * as rax from 'retry-axios';
 
 import axiosCookieJarSupport from 'axios-cookiejar-support';
-import extend = require('extend');
-import FormData = require('form-data');
+import extend from 'extend';
+import FormData from 'form-data';
 import { OutgoingHttpHeaders } from 'http';
-import https = require('https');
-import isStream = require('isstream');
-import querystring = require('querystring');
-import zlib = require('zlib');
+import { Agent } from 'https';
+import isStream from 'isstream';
+import { stringify } from 'querystring';
+import { gzipSync } from 'zlib';
 import {
   buildRequestFileObject,
   isEmptyObject,
@@ -99,7 +99,7 @@ export class RequestWrapper {
         }
       } else {
         // if no agent is present, create a new one
-        axiosConfig.httpsAgent = new https.Agent({
+        axiosConfig.httpsAgent = new Agent({
           rejectUnauthorized: false,
         });
       }
@@ -252,7 +252,7 @@ export class RequestWrapper {
     let data = body;
 
     if (form) {
-      data = querystring.stringify(form);
+      data = stringify(form);
       headers['Content-type'] = 'application/x-www-form-urlencoded';
     }
 
@@ -278,7 +278,7 @@ export class RequestWrapper {
       data,
       raxConfig: this.raxConfig,
       responseType: options.responseType || 'json',
-      paramsSerializer: (params) => querystring.stringify(params),
+      paramsSerializer: (params) => stringify(params),
     };
 
     return this.axiosInstance(requestParams).then(
@@ -456,7 +456,7 @@ export class RequestWrapper {
     }
 
     try {
-      data = zlib.gzipSync(reqBuffer);
+      data = gzipSync(reqBuffer);
 
       // update the headers by reference - only if the data was actually compressed
       headers['Content-Encoding'] = 'gzip';

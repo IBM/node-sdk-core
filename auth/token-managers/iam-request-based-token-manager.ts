@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import extend = require('extend');
+import extend from 'extend';
 import { OutgoingHttpHeaders } from 'http';
 import logger from '../../lib/logger';
 import { computeBasicAuthHeader, onlyOne, removeSuffix } from '../utils';

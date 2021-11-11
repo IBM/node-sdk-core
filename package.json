@@ -3,6 +3,7 @@
   "version": "2.17.0",
   "description": "Core functionality to support SDKs generated with IBM's OpenAPI SDK Generator.",
   "main": "./dist/index",
+  "module": "./dist/es6/index",
   "repository": {
     "type": "git",
     "url": "https://github.com/IBM/node-sdk-core.git"
@@ -33,6 +34,11 @@
     "url": "https://github.com/IBM/node-sdk-core/issues"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/lodash.isempty": "^4.4.6",
+    "@types/dotenv": "^8.2.0",
+    "@types/extend": "^3.0.1",
+    "@types/mime-types": "^2.1.1",
     "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^7.0.1",
     "@semantic-release/changelog": "6.0.0",
@@ -57,7 +63,8 @@
     "semantic-release": "18.0.0",
     "tsc-publish": "^0.5.2",
     "typedoc": "^0.17.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "npm-run-all": "^4.1.5"
   },
   "dependencies": {
     "@types/file-type": "~5.2.1",
@@ -101,7 +108,9 @@
     "test": "jest test/unit/",
     "test-travis": "jest --runInBand test/unit/",
     "report-coverage": "codecov",
-    "build": "tsc",
+    "build": "npm-run-all -p build:umd build:es",
+    "build:umd": "tsc",
+    "build:es": "tsc -p tsconfig-es6.json",
     "postversion": "tsc-publish --no-checks --dry-run",
     "all": "npm run build && npm run test && npm run lint"
   },

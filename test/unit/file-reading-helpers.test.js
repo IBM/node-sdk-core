@@ -15,13 +15,13 @@
  */
 
 const fs = require('fs');
+const { normalize } = require('path');
 const {
   constructFilepath,
   fileExistsAtPath,
   readCredentialsFile,
   readCrTokenFile,
 } = require('../../dist/auth');
-
 const logger = require('../../dist/lib/logger').default;
 
 describe('browser scenario', () => {
@@ -54,17 +54,17 @@ describe('read ibm credentials file', () => {
 
     it('should build filepath from absolute path', () => {
       const path = constructFilepath('/path/to/file/');
-      expect(path).toBe(expectedPath);
+      expect(normalize(path)).toBe(normalize(expectedPath));
     });
 
     it('should build filepath from relative path', () => {
       const path = constructFilepath('/path/to/file');
-      expect(path).toBe(expectedPath);
+      expect(normalize(path)).toBe(normalize(expectedPath));
     });
 
     it('should not alter path if ends with correct filename', () => {
       const path = constructFilepath(expectedPath);
-      expect(path).toBe(expectedPath);
+      expect(normalize(path)).toBe(normalize(expectedPath));
     });
   });
 

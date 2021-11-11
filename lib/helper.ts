@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import fileType = require('file-type');
+import fileType from 'file-type';
 import { isReadable } from 'isstream';
 import { lookup } from 'mime-types';
 import { basename } from 'path';
@@ -71,7 +71,7 @@ export function getContentType(inputData: NodeJS.ReadableStream | Buffer): strin
   let contentType = null;
   if (isFileStream(inputData)) {
     // if the inputData is a NodeJS.ReadableStream
-    const mimeType = lookup(inputData.path);
+    const mimeType = lookup(inputData.path as any); // TODO: cleue quick hack, per type definition path could also be a Buffer
     contentType = { mime: mimeType || null };
   } else if (Buffer.isBuffer(inputData)) {
     // if the inputData is a Buffer

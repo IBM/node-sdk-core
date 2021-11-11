@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import expect = require('expect');
+import expect from 'expect';
 
 /**
  * This module provides a set of helper methods used to reduce code duplication in the generated unit tests
