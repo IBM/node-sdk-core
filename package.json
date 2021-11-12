@@ -121,7 +121,7 @@
     "build:doc": "npm-run-all build:api build:md copy:doc",
     "copy:doc": "cpx \"temp/ibm-cloud-sdk-core.api.json\" dist/docs",
     "postversion": "tsc-publish --no-checks --dry-run",
-    "all": "npm run build && npm run test && npm run lint"
+    "all": "npm-run-all build test lint"
   },
   "jest": {
     "collectCoverage": true,
