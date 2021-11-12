@@ -5,6 +5,7 @@
   "main": "./dist/index",
   "module": "./dist/es/index.js",
   "typings": "./dist/es/index.d.ts",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/IBM/node-sdk-core.git"
