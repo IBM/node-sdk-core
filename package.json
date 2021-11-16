@@ -2,9 +2,9 @@
   "name": "ibm-cloud-sdk-core",
   "version": "2.17.0",
   "description": "Core functionality to support SDKs generated with IBM's OpenAPI SDK Generator.",
-  "main": "./dist/index",
-  "module": "./dist/es/index.js",
-  "typings": "./dist/es/index.d.ts",
+  "main": "./index.js",
+  "module": "./es/index.js",
+  "typings": "./es/index.d.ts",
   "sideEffects": false,
   "repository": {
     "type": "git",
@@ -69,7 +69,9 @@
     "tsc-publish": "^0.5.2",
     "typedoc": "^0.17.0",
     "typescript": "~3.8.3",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "package-json-reducer": "^1.0.18",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "@types/file-type": "~5.2.1",
@@ -113,7 +115,8 @@
     "test": "jest test/unit/",
     "test-travis": "jest --runInBand test/unit/",
     "report-coverage": "codecov",
-    "build": "npm-run-all build:code build:doc",
+    "build:clean": "rimraf dist",
+    "build": "npm-run-all build:code build:doc copy:pkg",
     "build:code": "npm-run-all -p build:umd build:es",
     "build:umd": "tsc",
     "build:es": "tsc -p tsconfig-es6.json",
@@ -121,6 +124,7 @@
     "build:md": "api-documenter markdown -i temp --output-folder build/docs",
     "build:doc": "npm-run-all build:api build:md copy:doc",
     "copy:doc": "cpx \"temp/ibm-cloud-sdk-core.api.json\" dist/docs",
+    "copy:pkg": "package-json-reducer -s \"config devDependencies directories scripts jestSonar jest\" -o ./dist/package.json package.json",
     "postversion": "tsc-publish --no-checks --dry-run",
     "all": "npm-run-all build test lint"
   },
