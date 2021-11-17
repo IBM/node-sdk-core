@@ -10,9 +10,6 @@ script:
 - npm run lint
 - npm run test-travis
 
-after_success:
-- npm run report-coverage
-
 deploy:
 - provider: script
   skip_cleanup: true

@@ -39,7 +39,6 @@
     "@semantic-release/git": "10.0.0",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
-    "codecov": "~3.7.1",
     "dependency-lint": "~5.0.1",
     "eslint": "^7.26.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -100,7 +99,6 @@
     "jest": "jest",
     "test": "jest test/unit/",
     "test-travis": "jest --runInBand test/unit/",
-    "report-coverage": "codecov",
     "build": "tsc",
     "postversion": "tsc-publish --no-checks --dry-run",
     "all": "npm run build && npm run test && npm run lint"
