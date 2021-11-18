@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import jwt = require('jsonwebtoken');
+import { decode } from 'jsonwebtoken';
 import logger from '../../lib/logger';
 import { TokenManager, TokenManagerOptions } from './token-manager';
 
@@ -85,7 +85,7 @@ export class JwtTokenManager extends TokenManager {
 
     // the time of expiration is found by decoding the JWT access token
     // exp is the time of expire and iat is the time of token retrieval
-    const decodedResponse = jwt.decode(this.accessToken);
+    const decodedResponse = decode(this.accessToken);
     if (!decodedResponse) {
       const err = 'Access token recieved is not a valid JWT';
       logger.error(err);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import logger = require('debug');
+import logger from 'debug';
 
 const debug = logger('ibm-cloud-sdk-core:debug');
 const error = logger('ibm-cloud-sdk-core:error');

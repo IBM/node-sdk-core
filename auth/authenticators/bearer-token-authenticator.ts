@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import extend = require('extend');
+import extend from 'extend';
 import { validateInput } from '../utils';
 import { Authenticator } from './authenticator';
 import { AuthenticateOptions } from './authenticator-interface';

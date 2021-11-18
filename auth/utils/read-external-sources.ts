@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-import camelcase = require('camelcase');
-import isEmpty = require('lodash.isempty');
+import camelcase from 'camelcase';
+import isEmpty from 'lodash.isempty';
 import logger from '../../lib/logger';
 import { readCredentialsFile } from './file-reading-helpers';
 

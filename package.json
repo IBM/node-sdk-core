@@ -2,7 +2,10 @@
   "name": "ibm-cloud-sdk-core",
   "version": "2.17.0",
   "description": "Core functionality to support SDKs generated with IBM's OpenAPI SDK Generator.",
-  "main": "./dist/index",
+  "main": "./index.js",
+  "module": "./es/index.js",
+  "typings": "./es/index.d.ts",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/IBM/node-sdk-core.git"
@@ -33,12 +36,20 @@
     "url": "https://github.com/IBM/node-sdk-core/issues"
   },
   "devDependencies": {
+    "@microsoft/api-documenter": "^7.13.68",
+    "@microsoft/api-extractor": "^7.18.19",
+    "@types/debug": "^4.1.7",
+    "@types/lodash.isempty": "^4.4.6",
+    "@types/dotenv": "^8.2.0",
+    "@types/extend": "^3.0.1",
+    "@types/mime-types": "^2.1.1",
     "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^7.0.1",
     "@semantic-release/changelog": "6.0.0",
     "@semantic-release/git": "10.0.0",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
+    "cpx": "^1.5.0",
     "dependency-lint": "~5.0.1",
     "eslint": "^7.26.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -56,7 +67,10 @@
     "semantic-release": "18.0.0",
     "tsc-publish": "^0.5.2",
     "typedoc": "^0.17.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "npm-run-all": "^4.1.5",
+    "package-json-reducer": "^1.0.18",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "@types/file-type": "~5.2.1",
@@ -99,9 +113,18 @@
     "jest": "jest",
     "test": "jest test/unit/",
     "test-travis": "jest --runInBand test/unit/",
-    "build": "tsc",
+    "build:clean": "rimraf dist",
+    "build": "npm-run-all build:code build:doc copy:pkg",
+    "build:code": "npm-run-all -p build:umd build:es",
+    "build:umd": "tsc",
+    "build:es": "tsc -p tsconfig-es6.json",
+    "build:api": "api-extractor run --local",
+    "build:md": "api-documenter markdown -i temp --output-folder build/docs",
+    "build:doc": "npm-run-all build:api build:md copy:doc",
+    "copy:doc": "cpx \"temp/ibm-cloud-sdk-core.api.json\" dist/docs",
+    "copy:pkg": "package-json-reducer -s \"config devDependencies directories scripts jestSonar jest\" -o ./dist/package.json package.json",
     "postversion": "tsc-publish --no-checks --dry-run",
-    "all": "npm run build && npm run test && npm run lint"
+    "all": "npm-run-all build test lint"
   },
   "jest": {
     "collectCoverage": true,

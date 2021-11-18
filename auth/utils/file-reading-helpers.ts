@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import dotenv = require('dotenv');
-import fs = require('fs');
-import os = require('os');
-import path = require('path');
+import { parse } from 'dotenv';
+import { existsSync, readFileSync, lstatSync } from 'fs';
+import { homedir } from 'os';
+import { join } from 'path';
 import logger from '../../lib/logger';
 
 // Putting all file-reading related code in this file to isolate the usage of the
@@ -30,7 +30,7 @@ const defaultCredsFilename: string = 'ibm-credentials.env';
  * be specified filepath via the environment variable: `IBM_CREDENTIALS_FILE`.
  */
 export function readCredentialsFile() {
-  if (!fs.existsSync) {
+  if (!existsSync) {
     return {};
   }
 
@@ -42,7 +42,7 @@ export function readCredentialsFile() {
 
   const givenFilepath: string = process.env.IBM_CREDENTIALS_FILE || '';
   const workingDir: string = constructFilepath(process.cwd());
-  const homeDir: string = constructFilepath(os.homedir());
+  const homeDir: string = constructFilepath(homedir());
 
   let filepathToUse: string;
 
@@ -64,14 +64,14 @@ export function readCredentialsFile() {
     return {};
   }
 
-  const credsFile = fs.readFileSync(filepathToUse);
+  const credsFile = readFileSync(filepathToUse);
 
-  return dotenv.parse(credsFile);
+  return parse(credsFile);
 }
 
 export function fileExistsAtPath(filepath: string): boolean {
-  if (fs.existsSync(filepath)) {
-    const stats = fs.lstatSync(filepath);
+  if (existsSync(filepath)) {
+    const stats = lstatSync(filepath);
     return stats.isFile() || stats.isSymbolicLink();
   }
 
@@ -81,21 +81,21 @@ export function fileExistsAtPath(filepath: string): boolean {
 export function constructFilepath(filepath: string): string {
   // ensure filepath includes the filename
   if (!filepath.endsWith(defaultCredsFilename)) {
-    filepath = path.join(filepath, defaultCredsFilename);
+    filepath = join(filepath, defaultCredsFilename);
   }
 
   return filepath;
 }
 
 export function readCrTokenFile(filepath: string): string {
-  if (!fs.existsSync) {
+  if (!existsSync) {
     return '';
   }
 
   let token: string = '';
   const fileExists = fileExistsAtPath(filepath);
   if (fileExists) {
-    token = fs.readFileSync(filepath, 'utf8');
+    token = readFileSync(filepath, 'utf8');
     logger.debug(`Successfully read CR token from file: ${filepath}`);
   }
 

@@ -24,3 +24,6 @@ coverage.lcov
 .secrets.baseline
 .pre-commit-config.yaml
 dist/
+temp/
+build/
+es/tsdoc-metadata.json
