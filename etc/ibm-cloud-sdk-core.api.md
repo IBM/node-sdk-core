@@ -433,6 +433,11 @@ export interface UserOptions {
 export function validateInput(options: any, requiredOptions: string[]): void;
 
 // @public
+export function validateParams(params: {
+    [key: string]: any;
+}, requiredParams: string[], allParams: string[]): null | Error;
+
+// @public
 export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
     // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
     constructor(options: Options_10);
