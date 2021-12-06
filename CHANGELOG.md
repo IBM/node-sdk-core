@@ -1,3 +1,10 @@
+## [2.17.1](https://github.com/IBM/node-sdk-core/compare/v2.17.0...v2.17.1) (2021-12-06)
+
+
+### Bug Fixes
+
+* add new validateParams function ([#180](https://github.com/IBM/node-sdk-core/issues/180)) ([514d187](https://github.com/IBM/node-sdk-core/commit/514d187895cb1aa9ca5c642a9dcfccf8e09eb0ed))
+
 # [2.17.0](https://github.com/IBM/node-sdk-core/compare/v2.16.0...v2.17.0) (2021-11-08)
 
 
