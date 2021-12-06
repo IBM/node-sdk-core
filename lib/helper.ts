@@ -132,6 +132,66 @@ export function getMissingParams(params: { [key: string]: any }, requires: strin
 }
 
 /**
+ * Validates that "params" contains a value for each key listed in "requiredParams",
+ * and that each key contained in "params" is a valid key listed in "allParams".
+ * In essence, we want params to contain only valid keys and we want params
+ * to contain at least the required keys.
+ *
+ * @param params - the "params" object passed into an operation containing method parameters.
+ * @param requiredParams - the names of required parameters.
+ * If null, then the "required params" check is bypassed.
+ * @param allParams - the names of all valid parameters.
+ * If null, then the "valid params" check is bypassed.
+ * @returns {Error|null}
+ */
+export function validateParams(
+  params: { [key: string]: any },
+  requiredParams: string[],
+  allParams: string[]
+): null | Error {
+  let missing = [];
+  const invalid = [];
+
+  // If there are any required fields, then make sure they are present in "params".
+  if (requiredParams) {
+    if (!params) {
+      missing = requiredParams;
+    } else {
+      requiredParams.forEach((require) => {
+        if (isMissing(params[require])) {
+          missing.push(require);
+        }
+      });
+    }
+  }
+
+  // Make sure that each field specified in "params" is a valid param.
+  if (allParams && params) {
+    Object.keys(params).forEach((key) => {
+      if (!allParams.includes(key)) {
+        invalid.push(key);
+      }
+    });
+  }
+
+  // If no errors found, then bail now.
+  if (missing.length === 0 && invalid.length === 0) {
+    return null;
+  }
+
+  // Return an Error object identifying the errors we found.
+  let errorMsg = 'Parameter validation errors:';
+  if (missing.length > 0) {
+    errorMsg += `\n  Missing required parameters: ${missing.join(', ')}`;
+  }
+  if (invalid.length > 0) {
+    errorMsg += `\n  Found invalid parameters: ${invalid.join(', ')}`;
+  }
+
+  return new Error(errorMsg);
+}
+
+/**
  * Returns true if value is determined to be "missing". Currently defining "missing"
  * as `undefined`, `null`, or the empty string.
  *
