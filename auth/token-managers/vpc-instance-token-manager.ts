@@ -108,11 +108,15 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     const instanceIdentityToken: string = await this.getInstanceIdentityToken();
 
     // construct request body
-    const body = {} as CreateIamTokenBody;
+    let body: CreateIamTokenBody;
     if (this.iamProfileId) {
-      body.trusted_profile = { id: this.iamProfileId };
+      body = {
+        trusted_profile: { id: this.iamProfileId },
+      };
     } else if (this.iamProfileCrn) {
-      body.trusted_profile = { crn: this.iamProfileCrn };
+      body = {
+        trusted_profile: { crn: this.iamProfileCrn },
+      };
     }
 
     const parameters = {

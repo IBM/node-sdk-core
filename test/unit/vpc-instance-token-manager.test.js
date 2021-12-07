@@ -45,7 +45,7 @@ describe('VPC Instance Token Manager', () => {
   });
 
   describe('constructor', () => {
-    it('should throw an error when both `iamProfileId` are `iamProfileCrn` are provided', () => {
+    it('should throw an error when both `iamProfileId` and `iamProfileCrn` are provided', () => {
       expect(
         () =>
           new VpcInstanceTokenManager({
@@ -161,9 +161,8 @@ describe('VPC Instance Token Manager', () => {
       expect(parameters.options.qs).toBeDefined();
       expect(parameters.options.qs.version).toBe('2021-09-20');
 
-      expect(parameters.options.body).toBeDefined();
-      // if neither the profile id or crn is set, this should be undefined
-      expect(parameters.options.body.trusted_profile).toBeUndefined();
+      // if neither the profile id or crn is set, then the body should be undefined
+      expect(parameters.options.body).toBeUndefined();
 
       expect(parameters.options.headers).toBeDefined();
       expect(parameters.options.headers['Content-Type']).toBe('application/json');
