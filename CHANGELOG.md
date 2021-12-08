@@ -1,3 +1,10 @@
+## [2.17.2](https://github.com/IBM/node-sdk-core/compare/v2.17.1...v2.17.2) (2021-12-08)
+
+
+### Bug Fixes
+
+* **VpcInstanceAuthenticator:** omit request body for default profile scenario ([#181](https://github.com/IBM/node-sdk-core/issues/181)) ([1e3fb2d](https://github.com/IBM/node-sdk-core/commit/1e3fb2d8efede7f1382538d4a4918b16e04deeea))
+
 ## [2.17.1](https://github.com/IBM/node-sdk-core/compare/v2.17.0...v2.17.1) (2021-12-06)
 
 
