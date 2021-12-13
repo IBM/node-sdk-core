@@ -1,3 +1,10 @@
+## [2.17.3](https://github.com/IBM/node-sdk-core/compare/v2.17.2...v2.17.3) (2021-12-13)
+
+
+### Bug Fixes
+
+* bump dependencies to avoid vulnerability alerts ([#183](https://github.com/IBM/node-sdk-core/issues/183)) ([aef2c6a](https://github.com/IBM/node-sdk-core/commit/aef2c6a2b2a58ce71990b4ae754a3a0ce32e64fd))
+
 ## [2.17.2](https://github.com/IBM/node-sdk-core/compare/v2.17.1...v2.17.2) (2021-12-08)
 
 
