@@ -442,7 +442,8 @@ export class RequestWrapper {
 
     try {
       if (isStream(data)) {
-        reqBuffer = Buffer.from(await streamToPromise(data));
+        const streamData = await streamToPromise(data);
+        reqBuffer = Buffer.isBuffer(streamData) ? streamData : Buffer.from(streamData);
       } else if (data.toString && data.toString() !== '[object Object]' && !Array.isArray(data)) {
         // this handles pretty much any primitive that isnt a JSON object or array
         reqBuffer = Buffer.from(data.toString());
