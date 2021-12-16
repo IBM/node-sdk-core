@@ -1,3 +1,10 @@
+## [2.17.4](https://github.com/IBM/node-sdk-core/compare/v2.17.3...v2.17.4) (2021-12-16)
+
+
+### Bug Fixes
+
+* don't always convert bytes to text in streamToPromise ([#182](https://github.com/IBM/node-sdk-core/issues/182)) ([7fe261b](https://github.com/IBM/node-sdk-core/commit/7fe261b20f934cd3fde45acc69b9d4888836aa69))
+
 ## [2.17.3](https://github.com/IBM/node-sdk-core/compare/v2.17.2...v2.17.3) (2021-12-13)
 
 
