@@ -14,17 +14,60 @@
  * limitations under the License.
  */
 
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const { Transform } = require('stream');
 const toPromise = require('../../dist/lib/stream-to-promise').streamToPromise;
 
 describe('toPromise()', () => {
-  it('should resolve with results buffer as a string', () => {
+  // Testing stream of text in Buffer mode
+  it('should resolve with results buffer (text)', () => {
+    const fileChecksum = crypto.createHash('md5');
     const file = fs.createReadStream(path.join(__dirname, '../resources/weather-data-train.csv'));
-    // jest doesn't support type matching yet https://github.com/facebook/jest/issues/3457
-    return expect(toPromise(file).then((res) => typeof res)).resolves.toBe('string');
+    const p = toPromise(file);
+    file.pipe(fileChecksum);
+    return p
+      .then((buffer) => {
+        // Check we received a buffer
+        expect(buffer).toBeInstanceOf(Buffer);
+        // Check it was of the correct length
+        expect(buffer).toHaveLength(1794);
+        // Calculate a checksum
+        const promiseChecksum = crypto.createHash('md5');
+        promiseChecksum.update(buffer);
+        return promiseChecksum;
+      })
+      .then((promiseChecksum) => {
+        // Verify the checksum from the promise buffer matches the original file
+        expect(promiseChecksum.digest('hex')).toEqual(fileChecksum.digest('hex'));
+      });
   });
 
+  // Testing stream of text in Buffer mode
+  it('should resolve with results buffer (binary)', () => {
+    const fileChecksum = crypto.createHash('md5');
+    const file = fs.createReadStream(path.join(__dirname, '../resources/blank.wav'));
+    const p = toPromise(file);
+    file.pipe(fileChecksum);
+    return p
+      .then((buffer) => {
+        // Check we received a buffer
+        expect(buffer).toBeInstanceOf(Buffer);
+        // Check it was of the correct length
+        expect(buffer).toHaveLength(113520);
+        // Calculate a checksum
+        const promiseChecksum = crypto.createHash('md5');
+        promiseChecksum.update(buffer);
+        return promiseChecksum;
+      })
+      .then((promiseChecksum) => {
+        // Verify the checksum from the promise buffer matches the original file
+        expect(promiseChecksum.digest('hex')).toEqual(fileChecksum.digest('hex'));
+      });
+  });
+
+  // Testing stream of text in String mode
   it('should resolve with results string as an array', () => {
     const file = fs.createReadStream(path.join(__dirname, '../resources/weather-data-train.csv'));
     file.setEncoding('utf-8');
