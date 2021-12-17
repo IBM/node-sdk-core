@@ -908,6 +908,19 @@ describe('gzipRequestBody', () => {
     expect(headers['Content-Encoding']).toBe('gzip');
   });
 
+  it('should compress buffer data into a buffer', async () => {
+    // Use an invalid UTF-8 overlong encoding as example binary data
+    const originalData = Buffer.from('f08282ac', 'hex');
+    const headers = {};
+
+    const data = await requestWrapperInstance.gzipRequestBody(originalData, headers);
+    expect(data).toBeInstanceOf(Buffer);
+    expect(gzipSpy).toHaveBeenCalled();
+    expect(headers['Content-Encoding']).toBe('gzip');
+    // If UTF-8 has been assumed the data will not match
+    expect(zlib.gunzipSync(data)).toEqual(originalData);
+  });
+
   it('should log an error and return data unaltered if data cant be stringified', async () => {
     let data = { key: 'value' };
     data.circle = data;
