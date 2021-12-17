@@ -1,3 +1,10 @@
+## [2.17.5](https://github.com/IBM/node-sdk-core/compare/v2.17.4...v2.17.5) (2021-12-17)
+
+
+### Bug Fixes
+
+* avoid Buffer re-encode during compression ([#184](https://github.com/IBM/node-sdk-core/issues/184)) ([8b82f36](https://github.com/IBM/node-sdk-core/commit/8b82f36bf6d4ac0163563ce3a10f0a395bd87627))
+
 ## [2.17.4](https://github.com/IBM/node-sdk-core/compare/v2.17.3...v2.17.4) (2021-12-16)
 
 
