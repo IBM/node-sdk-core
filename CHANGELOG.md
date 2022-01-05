@@ -1,3 +1,10 @@
+## [2.17.6](https://github.com/IBM/node-sdk-core/compare/v2.17.5...v2.17.6) (2022-01-05)
+
+
+### Bug Fixes
+
+* use npm8 and package-lock v2 ([#186](https://github.com/IBM/node-sdk-core/issues/186)) ([6b1122c](https://github.com/IBM/node-sdk-core/commit/6b1122c5318c304454414dcd9cafb9b151c5b51a))
+
 ## [2.17.5](https://github.com/IBM/node-sdk-core/compare/v2.17.4...v2.17.5) (2021-12-17)
 
 
