@@ -132,22 +132,12 @@ export class RequestWrapper {
       this.axiosInstance.interceptors.request.use(
         (config) => {
           logger.debug('Request:');
-          try {
-            logger.debug(JSON.stringify(config, null, 2));
-          } catch {
-            logger.error(config);
-          }
-
+          logger.debug(config);
           return config;
         },
         (error) => {
           logger.error('Error: ');
-          try {
-            logger.error(JSON.stringify(error, null, 2));
-          } catch {
-            logger.error(error);
-          }
-
+          logger.error(error);
           return Promise.reject(error);
         }
       );
@@ -155,22 +145,12 @@ export class RequestWrapper {
       this.axiosInstance.interceptors.response.use(
         (response) => {
           logger.debug('Response:');
-          try {
-            logger.debug(JSON.stringify(response, null, 2));
-          } catch {
-            logger.error(response);
-          }
-
+          logger.debug(response);
           return response;
         },
         (error) => {
           logger.error('Error: ');
-          try {
-            logger.error(JSON.stringify(error, null, 2));
-          } catch {
-            logger.error(error);
-          }
-
+          logger.error(error);
           return Promise.reject(error);
         }
       );
