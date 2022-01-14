@@ -1,3 +1,10 @@
+## [2.17.7](https://github.com/IBM/node-sdk-core/compare/v2.17.6...v2.17.7) (2022-01-14)
+
+
+### Bug Fixes
+
+* remove 'module' entry from package.json ([#187](https://github.com/IBM/node-sdk-core/issues/187)) ([3a0aea5](https://github.com/IBM/node-sdk-core/commit/3a0aea5109f01d61ad54c79a7a6f2606fb845ab8))
+
 ## [2.17.6](https://github.com/IBM/node-sdk-core/compare/v2.17.5...v2.17.6) (2022-01-05)
 
 
