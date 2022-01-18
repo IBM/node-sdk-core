@@ -1,3 +1,10 @@
+## [2.17.8](https://github.com/IBM/node-sdk-core/compare/v2.17.7...v2.17.8) (2022-01-18)
+
+
+### Bug Fixes
+
+* avoid errors during logging of requests/responses ([#188](https://github.com/IBM/node-sdk-core/issues/188)) ([d05ea1a](https://github.com/IBM/node-sdk-core/commit/d05ea1a560a35a33a44aea0c5f9d24af65929d0b))
+
 ## [2.17.7](https://github.com/IBM/node-sdk-core/compare/v2.17.6...v2.17.7) (2022-01-14)
 
 
