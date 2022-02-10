@@ -105,6 +105,7 @@
     "node": ">=10"
   },
   "scripts": {
+    "clean": "rm -fr node_modules",
     "commitmsg": "commitlint -E GIT_PARAMS",
     "eslint:config": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint:fix": "eslint . --fix",
