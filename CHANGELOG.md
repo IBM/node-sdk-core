@@ -1,3 +1,10 @@
+## [2.17.10](https://github.com/IBM/node-sdk-core/compare/v2.17.9...v2.17.10) (2022-02-10)
+
+
+### Bug Fixes
+
+* bump follow-redirects to avoid vuln ([#191](https://github.com/IBM/node-sdk-core/issues/191)) ([8a69d8e](https://github.com/IBM/node-sdk-core/commit/8a69d8e3e525c39cf1b9dcd17dc911df769702a1))
+
 ## [2.17.9](https://github.com/IBM/node-sdk-core/compare/v2.17.8...v2.17.9) (2022-01-19)
 
 
