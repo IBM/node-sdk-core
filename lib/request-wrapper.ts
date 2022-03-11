@@ -65,24 +65,10 @@ export class RequestWrapper {
     axiosOptions = axiosOptions || {};
     this.compressRequestData = Boolean(axiosOptions.enableGzipCompression);
 
-    // override several axios defaults
-    // axios sets the default Content-Type for `post`, `put`, and `patch` operations
-    // to 'application/x-www-form-urlencoded'. This causes problems, so overriding the
-    // defaults here
+    // override a couple axios defaults
     const axiosConfig: AxiosRequestConfig = {
       maxContentLength: -1,
       maxBodyLength: Infinity,
-      headers: {
-        post: {
-          'Content-Type': 'application/json',
-        },
-        put: {
-          'Content-Type': 'application/json',
-        },
-        patch: {
-          'Content-Type': 'application/json',
-        },
-      },
     };
 
     // merge axios config into default
@@ -106,6 +92,13 @@ export class RequestWrapper {
     }
 
     this.axiosInstance = axios.create(axiosConfig);
+
+    // axios sets the default Content-Type for `post`, `put`, and `patch` operations
+    // to 'application/x-www-form-urlencoded'. This causes problems, so overriding the
+    // defaults here
+    ['post', 'put', 'patch'].forEach((op) => {
+      this.axiosInstance.defaults.headers[op]['Content-Type'] = 'application/json';
+    });
 
     // if a cookie jar is provided, wrap the axios instance and update defaults
     if (axiosOptions.jar) {
