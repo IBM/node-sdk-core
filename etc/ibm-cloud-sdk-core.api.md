@@ -7,6 +7,7 @@
 /// <reference types="node" />
 
 import { AxiosInstance } from 'axios';
+import type { CookieJar } from 'tough-cookie';
 import { OutgoingHttpHeaders } from 'http';
 import { Stream } from 'stream';
 
@@ -423,7 +424,7 @@ export interface UserOptions {
     authenticator?: AuthenticatorInterface;
     disableSslVerification?: boolean;
     headers?: OutgoingHttpHeaders;
-    jar?: any;
+    jar?: CookieJar | boolean;
     serviceUrl?: string;
     url?: string;
     version?: string;
