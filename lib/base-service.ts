@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { CookieJar } from 'tough-cookie';
 import { OutgoingHttpHeaders } from 'http';
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
@@ -35,7 +36,7 @@ export interface UserOptions {
   /** Set to `true` to allow unauthorized requests - not recommended for production use. */
   disableSslVerification?: boolean;
   /** Set your own cookie jar object */
-  jar?: any;
+  jar?: CookieJar | boolean;
   /** Deprecated. Use `serviceUrl` instead. */
   url?: string;
   /** Allow additional request config parameters */
