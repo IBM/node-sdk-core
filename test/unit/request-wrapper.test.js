@@ -38,6 +38,17 @@ mockAxiosInstance.interceptors = {
     use: jest.fn(),
   },
 };
+
+// the request wrapper code makes assumptions about the axios instance.
+// axios sets up this object by default, so we should do that here
+mockAxiosInstance.defaults = {
+  headers: {
+    post: {},
+    put: {},
+    patch: {},
+  },
+};
+
 axios.default.create.mockReturnValue(mockAxiosInstance);
 rax.attach.mockReturnValue(1);
 
@@ -88,13 +99,16 @@ describe('RequestWrapper constructor', () => {
     const createdAxiosConfig = axios.default.create.mock.calls[0][0];
     expect(createdAxiosConfig.maxContentLength).toBe(-1);
     expect(createdAxiosConfig.maxBodyLength).toBe(Infinity);
-    expect(createdAxiosConfig.headers).toBeDefined();
-    expect(createdAxiosConfig.headers.post).toBeDefined();
-    expect(createdAxiosConfig.headers.put).toBeDefined();
-    expect(createdAxiosConfig.headers.patch).toBeDefined();
-    expect(createdAxiosConfig.headers.post['Content-Type']).toBe('application/json');
-    expect(createdAxiosConfig.headers.put['Content-Type']).toBe('application/json');
-    expect(createdAxiosConfig.headers.patch['Content-Type']).toBe('application/json');
+
+    // the axios instance should have the updated default headers
+    expect(mockAxiosInstance.defaults).toBeDefined();
+    expect(mockAxiosInstance.defaults.headers).toBeDefined();
+    expect(mockAxiosInstance.defaults.headers.post).toBeDefined();
+    expect(mockAxiosInstance.defaults.headers.put).toBeDefined();
+    expect(mockAxiosInstance.defaults.headers.patch).toBeDefined();
+    expect(mockAxiosInstance.defaults.headers.post['Content-Type']).toBe('application/json');
+    expect(mockAxiosInstance.defaults.headers.put['Content-Type']).toBe('application/json');
+    expect(mockAxiosInstance.defaults.headers.patch['Content-Type']).toBe('application/json');
   });
 
   it('should override the defaults with user-provided input', () => {
