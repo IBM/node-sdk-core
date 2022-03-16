@@ -1,3 +1,11 @@
+## [2.17.11](https://github.com/IBM/node-sdk-core/compare/v2.17.10...v2.17.11) (2022-03-16)
+
+
+### Bug Fixes
+
+* update axios to remove vulnerability ([90e0417](https://github.com/IBM/node-sdk-core/commit/90e04179a14409ae209e80e4341779b61e45c772))
+* use correct type for cookie jar option ([59a440a](https://github.com/IBM/node-sdk-core/commit/59a440a66f96279b5842d1e6d2b1d48b0b0c2fe8))
+
 ## [2.17.10](https://github.com/IBM/node-sdk-core/compare/v2.17.9...v2.17.10) (2022-02-10)
 
 
