@@ -1,3 +1,10 @@
+## [2.17.12](https://github.com/IBM/node-sdk-core/compare/v2.17.11...v2.17.12) (2022-03-16)
+
+
+### Bug Fixes
+
+* update minimum Node version in package.json ([#192](https://github.com/IBM/node-sdk-core/issues/192)) ([dfbebee](https://github.com/IBM/node-sdk-core/commit/dfbebee3bf3b3234c3149323d93272f21b031cf2))
+
 ## [2.17.11](https://github.com/IBM/node-sdk-core/compare/v2.17.10...v2.17.11) (2022-03-16)
 
 
