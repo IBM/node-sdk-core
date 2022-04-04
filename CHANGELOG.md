@@ -1,3 +1,10 @@
+## [2.17.13](https://github.com/IBM/node-sdk-core/compare/v2.17.12...v2.17.13) (2022-04-04)
+
+
+### Bug Fixes
+
+* bump dependencies to avoid minimist vulnerability ([#195](https://github.com/IBM/node-sdk-core/issues/195)) ([4de8a9d](https://github.com/IBM/node-sdk-core/commit/4de8a9d4fe35d595c1c1c65b4a2b033c6d5f8b42))
+
 ## [2.17.12](https://github.com/IBM/node-sdk-core/compare/v2.17.11...v2.17.12) (2022-03-16)
 
 
