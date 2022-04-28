@@ -90,6 +90,15 @@ describe('Node Core retries', () => {
     await service.createRequest(parameters).catch((err) => expect(err).toBeDefined());
   });
 
+  it('should not retry on 501`', async () => {
+    const scopes = [
+      nock(url).get('/').reply(501, undefined),
+      nock(url).get('/').reply(200, 'retry success!'),
+    ];
+
+    await service.createRequest(parameters).catch((err) => expect(err).toBeDefined());
+  });
+
   it('should not retry after we call disableRetries', async () => {
     const scopes = [
       nock(url).get('/').reply(500, undefined),
