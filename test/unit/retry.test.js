@@ -96,7 +96,11 @@ describe('Node Core retries', () => {
       nock(url).get('/').reply(200, 'retry success!'),
     ];
 
-    await service.createRequest(parameters).catch((err) => expect(err).toBeDefined());
+    let err;
+    await service.createRequest(parameters).catch((error) => {
+      err = error;
+    });
+    expect(err).toBeDefined();
   });
 
   it('should not retry after we call disableRetries', async () => {
