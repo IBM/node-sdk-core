@@ -1,3 +1,10 @@
+## [2.17.14](https://github.com/IBM/node-sdk-core/compare/v2.17.13...v2.17.14) (2022-05-02)
+
+
+### Bug Fixes
+
+* do not retry on 501 ([#197](https://github.com/IBM/node-sdk-core/issues/197)) ([5cb9081](https://github.com/IBM/node-sdk-core/commit/5cb9081f581c73b3ba16e470eb4c03c9b8f5c266))
+
 ## [2.17.13](https://github.com/IBM/node-sdk-core/compare/v2.17.12...v2.17.13) (2022-04-04)
 
 
