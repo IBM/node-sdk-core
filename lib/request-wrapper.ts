@@ -365,7 +365,12 @@ export class RequestWrapper {
       retry: 4, // 4 retries by default
       retryDelay: 1000, // 1000 ms (1 sec) initial delay
       httpMethodsToRetry: ['GET', 'HEAD', 'OPTIONS', 'DELETE', 'PUT', 'POST'],
-      statusCodesToRetry: [[429], [500], [502, 599]], // do not retry on 501
+      // do not retry on 501
+      statusCodesToRetry: [
+        [429, 429],
+        [500, 500],
+        [502, 599],
+      ],
       instance: axiosInstance,
       backoffType: 'exponential',
       checkRetryAfter: true, // use Retry-After header first
