@@ -1,3 +1,10 @@
+## [2.17.15](https://github.com/IBM/node-sdk-core/compare/v2.17.14...v2.17.15) (2022-07-05)
+
+
+### Bug Fixes
+
+* ensure dist/docs is a directory during build ([#202](https://github.com/IBM/node-sdk-core/issues/202)) ([1b3ef62](https://github.com/IBM/node-sdk-core/commit/1b3ef621e3cbfe0586d433269f63acf77dfa7251))
+
 ## [2.17.14](https://github.com/IBM/node-sdk-core/compare/v2.17.13...v2.17.14) (2022-05-02)
 
 
