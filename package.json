@@ -121,7 +121,7 @@
     "build:api": "api-extractor run --local",
     "build:md": "api-documenter markdown -i temp --output-folder build/docs",
     "build:doc": "npm-run-all build:api build:md copy:doc",
-    "copy:doc": "cp \"temp/ibm-cloud-sdk-core.api.json\" dist/docs",
+    "copy:doc": "mkdir -p dist/docs && cp \"temp/ibm-cloud-sdk-core.api.json\" dist/docs",
     "copy:pkg": "package-json-reducer -s \"config devDependencies directories scripts jestSonar jest\" -o ./dist/package.json package.json",
     "postversion": "publisher --no-checks --dry-run",
     "all": "npm-run-all build test lint"
