@@ -20,29 +20,29 @@ const { getContentType } = require('../../dist/lib/helper');
 const filepath = `${__dirname}/../resources/blank.wav`;
 
 describe('getContentType', () => {
-  it('should read content type from read stream', () => {
+  it('should read content type from read stream', async () => {
     const streamFile = fs.createReadStream(filepath);
-    expect(getContentType(streamFile)).toBe('audio/wave');
+    expect(await getContentType(streamFile)).toBe('audio/wave');
   });
 
-  it('should not get content type from read stream with corrupted path property', () => {
+  it('should not get content type from read stream with corrupted path property', async () => {
     const streamFile = fs.createReadStream(filepath);
     streamFile.path = 'unrecognizeable-format';
-    expect(getContentType(streamFile)).toBeNull();
+    expect(await getContentType(streamFile)).toBeNull();
   });
 
-  it('should read content type from buffer', () => {
+  it('should read content type from buffer', async () => {
     const bufferFile = fs.readFileSync(filepath);
-    expect(getContentType(bufferFile)).toBe('audio/x-wav');
+    expect(await getContentType(bufferFile)).toBe('audio/vnd.wave');
   });
 
-  it('should not read content type from a string', () => {
+  it('should not read content type from a string', async () => {
     const str = 'a,b,c,d,e';
-    expect(getContentType(str)).toBeNull();
+    expect(await getContentType(str)).toBeNull();
   });
 
-  it('should not read content type from a number', () => {
+  it('should not read content type from a number', async () => {
     const number = 4;
-    expect(getContentType(number)).toBeNull();
+    expect(await getContentType(number)).toBeNull();
   });
 });

@@ -24,18 +24,18 @@ describe('buildRequestFileObject', () => {
   const customName = 'custom-name.env';
 
   describe('filename tests', () => {
-    it('should prioritze user given filename', () => {
+    it('should prioritze user given filename', async () => {
       const fileParams = {
         data: fs.createReadStream(filepath),
         filename: customName,
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.filename).toBeDefined();
       expect(fileObj.options.filename).toBe(customName);
     });
 
-    it('should handle file object with `value` property', () => {
+    it('should handle file object with `value` property', async () => {
       const fileParams = {
         data: {
           value: fs.readFileSync(filepath),
@@ -44,23 +44,23 @@ describe('buildRequestFileObject', () => {
           },
         },
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.filename).toBeDefined();
       expect(fileObj.options.filename).toBe(customName);
     });
 
-    it('should get filename from readable stream', () => {
+    it('should get filename from readable stream', async () => {
       const fileParams = {
         data: fs.createReadStream(filepath),
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.filename).toBeDefined();
       expect(fileObj.options.filename).toBe('other-file.env');
     });
 
-    it('should handle file object with a readable stream as its `value`', () => {
+    it('should handle file object with a readable stream as its `value`', async () => {
       const fileStream = fs.createReadStream(filepath);
       fileStream.path = `/fake/path/${customName}`;
 
@@ -69,13 +69,13 @@ describe('buildRequestFileObject', () => {
           value: fileStream,
         },
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.filename).toBeDefined();
       expect(fileObj.options.filename).toBe(customName);
     });
 
-    it('should handle path property being a buffer', () => {
+    it('should handle path property being a buffer', async () => {
       const fileStream = fs.createReadStream(filepath);
       fileStream.path = Buffer.from(`/fake/path/${customName}`);
 
@@ -84,18 +84,18 @@ describe('buildRequestFileObject', () => {
           value: fileStream,
         },
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(Buffer.isBuffer(fileStream.path)).toBe(true);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.filename).toBeDefined();
       expect(fileObj.options.filename).toBe(customName);
     });
 
-    it('should use an underscore when filename is not found', () => {
+    it('should use an underscore when filename is not found', async () => {
       const fileParams = {
         data: fs.readFileSync(filepath),
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.filename).toBeDefined();
       expect(fileObj.options.filename).toBe('_');
@@ -104,7 +104,7 @@ describe('buildRequestFileObject', () => {
 
   //      CONTENT TYPE
   describe('content type tests', () => {
-    it('should read contentType from options in file object', () => {
+    it('should read contentType from options in file object', async () => {
       const fileParams = {
         data: {
           value: {},
@@ -113,50 +113,50 @@ describe('buildRequestFileObject', () => {
           },
         },
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.contentType).toBeDefined();
       expect(fileObj.options.contentType).toBe('audio/wave');
     });
 
-    it('should read contentType from user parameter', () => {
+    it('should read contentType from user parameter', async () => {
       const fileParams = {
         contentType: 'audio/wave',
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.contentType).toBeDefined();
       expect(fileObj.options.contentType).toBe('audio/wave');
     });
 
-    it('should use `getContentType` to read mime type from file object', () => {
+    it('should use `getContentType` to read mime type from file object', async () => {
       const fileParams = {
         data: {
           value: fs.createReadStream(audioFile),
         },
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.contentType).toBeDefined();
       expect(fileObj.options.contentType).toBe('audio/wave');
     });
 
-    it('should use `getContentType` to read mime type from data', () => {
+    it('should use `getContentType` to read mime type from data', async () => {
       const fileParams = {
         data: fs.createReadStream(audioFile),
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.contentType).toBeDefined();
       expect(fileObj.options.contentType).toBe('audio/wave');
     });
 
-    it('should default to `application/octet-stream` if no other content type is defined', () => {
+    it('should default to `application/octet-stream` if no other content type is defined', async () => {
       const fileParams = {
         // the `lookup` package doesn't have a value for a file with extension `.env`
         data: fs.createReadStream(filepath),
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.options).toBeDefined();
       expect(fileObj.options.contentType).toBeDefined();
       expect(fileObj.options.contentType).toBe('application/octet-stream');
@@ -165,34 +165,34 @@ describe('buildRequestFileObject', () => {
 
   //      VALUE
   describe('value tests', () => {
-    it('should read value from data.value for a file object', () => {
+    it('should read value from data.value for a file object', async () => {
       const data = fs.createReadStream(filepath);
       const fileParams = {
         data: {
           value: data,
         },
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.value).toBeDefined();
       expect(fileObj.value).toBe(data);
     });
 
-    it('should read value from data property', () => {
+    it('should read value from data property', async () => {
       const data = fs.readFileSync(filepath);
       const fileParams = {
         data,
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.value).toBeDefined();
       expect(fileObj.value).toBe(data);
     });
 
-    it('should convert string data to a buffer', () => {
+    it('should convert string data to a buffer', async () => {
       const data = 'just a string';
       const fileParams = {
         data,
       };
-      const fileObj = buildRequestFileObject(fileParams);
+      const fileObj = await buildRequestFileObject(fileParams);
       expect(fileObj.value).toBeDefined();
       expect(Buffer.isBuffer(fileObj.value)).toBe(true);
       expect(fileObj.value.toString()).toBe(data);
