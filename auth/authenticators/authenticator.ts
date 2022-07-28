@@ -63,7 +63,7 @@ export class Authenticator implements AuthenticatorInterface {
    * @throws {Error} - The authenticate method was not implemented by a
    *   subclass.
    */
-  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     const error = new Error('Should be implemented by subclass!');
     return Promise.reject(error);
   }

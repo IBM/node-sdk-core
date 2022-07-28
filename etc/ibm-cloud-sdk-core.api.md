@@ -21,7 +21,7 @@ export function atMostOne(a: any, b: any): boolean;
 export class Authenticator implements AuthenticatorInterface {
     constructor();
     // Warning: (ae-forgotten-export) The symbol "AuthenticateOptions" needs to be exported by the entry point index.d.ts
-    authenticate(requestOptions: AuthenticateOptions): Promise<void | Error>;
+    authenticate(requestOptions: AuthenticateOptions): Promise<void>;
     authenticationType(): string;
     static AUTHTYPE_BASIC: string;
     // (undocumented)
@@ -42,7 +42,7 @@ export class Authenticator implements AuthenticatorInterface {
 
 // @public
 export interface AuthenticatorInterface {
-    authenticate(requestOptions: AuthenticateOptions): Promise<void | Error>;
+    authenticate(requestOptions: AuthenticateOptions): Promise<void>;
     authenticationType(): string;
 }
 
@@ -72,7 +72,7 @@ export class BaseService {
 export class BasicAuthenticator extends Authenticator {
     // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
     constructor(options: Options);
-    authenticate(requestOptions: AuthenticateOptions): Promise<void | Error>;
+    authenticate(requestOptions: AuthenticateOptions): Promise<void>;
     authenticationType(): string;
     // (undocumented)
     protected authHeader: {
@@ -390,7 +390,7 @@ export type TokenManagerOptions = {
 export class TokenRequestBasedAuthenticator extends Authenticator {
     // Warning: (ae-forgotten-export) The symbol "BaseOptions" needs to be exported by the entry point index.d.ts
     constructor(options: BaseOptions);
-    authenticate(requestOptions: AuthenticateOptions): Promise<void | Error>;
+    authenticate(requestOptions: AuthenticateOptions): Promise<void>;
     // (undocumented)
     protected disableSslVerification: boolean;
     // (undocumented)

@@ -119,7 +119,7 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
    *   authentication information will be added too. Overrides default headers
    *   where there's conflict.
    */
-  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     return this.tokenManager.getToken().then((token) => {
       const authHeader = { Authorization: `Bearer ${token}` };
       requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
