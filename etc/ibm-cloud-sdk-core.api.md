@@ -94,7 +94,7 @@ export class BearerTokenAuthenticator extends Authenticator {
 }
 
 // @public
-export function buildRequestFileObject(fileParam: FileWithMetadata): FileObject;
+export function buildRequestFileObject(fileParam: FileWithMetadata): Promise<FileObject>;
 
 // @public
 export function checkCredentials(obj: any, credsToCheck: string[]): Error | null;
@@ -155,7 +155,7 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
 
 // @public (undocumented)
 export const contentType: {
-    fromFilename: (file: String | File | Buffer | NodeJS.ReadableStream | FileObject) => string;
+    fromFilename: (file: String | File | FileObject | NodeJS.ReadableStream | Buffer) => string;
     fromHeader: (buffer: Buffer) => string;
 };
 
@@ -211,7 +211,7 @@ export interface FileWithMetadata {
 export function getAuthenticatorFromEnvironment(serviceName: string): Authenticator;
 
 // @public
-export function getContentType(inputData: NodeJS.ReadableStream | Buffer): string;
+export function getContentType(inputData: NodeJS.ReadableStream | Buffer): Promise<string>;
 
 // @public
 export function getCurrentTime(): number;

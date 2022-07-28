@@ -178,7 +178,7 @@ export class RequestWrapper {
         // Skip keys with undefined/null values or empty object value
         values
           .filter((v) => v != null && !isEmptyObject(v))
-          .forEach((value) => {
+          .forEach(async (value) => {
             // Special case of empty file object
             if (
               Object.prototype.hasOwnProperty.call(value, 'contentType') &&
@@ -188,7 +188,7 @@ export class RequestWrapper {
             }
 
             if (isFileWithMetadata(value)) {
-              const fileObj = buildRequestFileObject(value);
+              const fileObj = await buildRequestFileObject(value);
               multipartForm.append(key, fileObj.value, fileObj.options);
             } else {
               if (typeof value === 'object' && !isFileData(value)) {

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import fileType from 'file-type';
 import { isReadable } from 'isstream';
 import { lookup } from 'mime-types';
 import { basename } from 'path';
 import logger from './logger';
+
+const FileType = require('file-type');
 
 export interface FileObject {
   value: NodeJS.ReadableStream | Buffer | string;
@@ -67,7 +68,7 @@ export function isEmptyObject(obj: any): boolean {
  * @param {NodeJS.ReadableStream|Buffer} inputData - The data to retrieve content type for.
  * @returns {string} the content type of the input.
  */
-export function getContentType(inputData: NodeJS.ReadableStream | Buffer): string {
+export async function getContentType(inputData: NodeJS.ReadableStream | Buffer): Promise<string> {
   let contentType = null;
   if (isFileStream(inputData)) {
     // if the inputData is a NodeJS.ReadableStream
@@ -75,7 +76,7 @@ export function getContentType(inputData: NodeJS.ReadableStream | Buffer): strin
     contentType = { mime: mimeType || null };
   } else if (Buffer.isBuffer(inputData)) {
     // if the inputData is a Buffer
-    contentType = fileType(inputData);
+    contentType = await FileType.fromBuffer(inputData);
   }
 
   return contentType ? contentType.mime : null;
@@ -239,7 +240,7 @@ export function getFormat(params: { [key: string]: any }, formats: string[]): st
  * @param {string} fileParam.contentType The content type of the file.
  * @returns {FileObject}
  */
-export function buildRequestFileObject(fileParam: FileWithMetadata): FileObject {
+export async function buildRequestFileObject(fileParam: FileWithMetadata): Promise<FileObject> {
   let fileObj: FileObject;
   if (isFileObject(fileParam.data)) {
     // For backward compatibility, we allow the data to be a FileObject.
@@ -277,7 +278,8 @@ export function buildRequestFileObject(fileParam: FileWithMetadata): FileObject 
 
   // build contentType
   if (!fileObj.options.contentType && isFileData(fileObj.value)) {
-    fileObj.options.contentType = getContentType(fileObj.value) || 'application/octet-stream';
+    fileObj.options.contentType =
+      (await getContentType(fileObj.value)) || 'application/octet-stream';
   }
 
   return fileObj;
