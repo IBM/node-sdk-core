@@ -155,6 +155,20 @@ export class BaseService {
   }
 
   /**
+   * Set the HTTP headers to be sent in every request.
+   *
+   * @param {OutgoingHttpHeaders} headers The map of headers to include in requests.
+   */
+  public setDefaultHeaders(headers: OutgoingHttpHeaders): void {
+    if (typeof headers !== 'object') {
+      // do nothing, for now
+      return;
+    }
+
+    this.baseOptions.headers = headers;
+  }
+
+  /**
    * Turn request body compression on or off.
    *
    * @param {boolean} setting Will turn it on if 'true', off if 'false'.
