@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/IBM/node-sdk-core/compare/v3.0.0...v3.0.1) (2022-07-28)
+
+
+### Bug Fixes
+
+* correct AuthenticatorInterface type ([#206](https://github.com/IBM/node-sdk-core/issues/206)) ([31dc7bd](https://github.com/IBM/node-sdk-core/commit/31dc7bd1e744a071cdabc2b5bf1e9513024079ac)), closes [#176](https://github.com/IBM/node-sdk-core/issues/176)
+
 # [3.0.0](https://github.com/IBM/node-sdk-core/compare/v2.17.15...v3.0.0) (2022-07-28)
 
 
