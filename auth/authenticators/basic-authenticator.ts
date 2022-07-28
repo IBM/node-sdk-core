@@ -69,7 +69,7 @@ export class BasicAuthenticator extends Authenticator {
    * @param {object.<string, string>} requestOptions.headers - The headers the
    *   authentication information will be added too.
    */
-  public authenticate(requestOptions: AuthenticateOptions): Promise<void | Error> {
+  public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     return new Promise((resolve) => {
       requestOptions.headers = extend(true, {}, requestOptions.headers, this.authHeader);
       resolve();
