@@ -480,6 +480,35 @@ describe('Base Service', () => {
 
     expect(disableRetriesMock).toHaveBeenCalled();
   });
+
+  it('setDefaultHeaders should override the headers object with new headers', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+      headers: {
+        'X-Some-Header': 'value',
+      },
+    });
+
+    testService.setDefaultHeaders({ 'X-New-Header': 'new value' });
+
+    expect(testService.baseOptions.headers['X-New-Header']).toEqual('new value');
+    expect(testService.baseOptions.headers['X-Some-Header']).toBeUndefined();
+    expect(Object.keys(testService.baseOptions.headers)).toEqual(['X-New-Header']);
+  });
+
+  it('setDefaultHeaders should do nothing when not given an object', () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+      headers: {
+        'X-Some-Header': 'value',
+      },
+    });
+
+    testService.setDefaultHeaders('new header: another value');
+
+    expect(Object.keys(testService.baseOptions.headers)).toEqual(['X-Some-Header']);
+    expect(testService.baseOptions.headers['X-Some-Header']).toEqual('value');
+  });
 });
 
 function TestService(options) {

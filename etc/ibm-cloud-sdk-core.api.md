@@ -64,6 +64,7 @@ export class BaseService {
     enableRetries(retryOptions?: RetryOptions): void;
     getAuthenticator(): any;
     getHttpClient(): AxiosInstance;
+    setDefaultHeaders(headers: OutgoingHttpHeaders): void;
     setEnableGzipCompression(setting: boolean): void;
     setServiceUrl(url: string): void;
 }
