@@ -1,3 +1,20 @@
+# [3.0.0](https://github.com/IBM/node-sdk-core/compare/v2.17.15...v3.0.0) (2022-07-28)
+
+
+### Bug Fixes
+
+* update file-type to resolve vulnerability ([#205](https://github.com/IBM/node-sdk-core/issues/205)) ([843e66d](https://github.com/IBM/node-sdk-core/commit/843e66d10aeb43dc5a0f7c9583f93ce6a5dbaa7e)), closes [#204](https://github.com/IBM/node-sdk-core/issues/204)
+
+
+### BREAKING CHANGES
+
+* two synchronous public functions are now asynchronous
+
+The function `getContentType` formerly returned a string but now returns a
+Promise that resolves to a string. The function `buildRequestFileObject`
+formerly returned a `FileObject` but now returns a Promise that resolves to
+a `FileObject`.
+
 ## [2.17.15](https://github.com/IBM/node-sdk-core/compare/v2.17.14...v2.17.15) (2022-07-05)
 
 
