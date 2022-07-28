@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/IBM/node-sdk-core/compare/v3.0.1...v3.1.0) (2022-07-28)
+
+
+### Features
+
+* add `setDefaultHeaders` method on base service class ([#207](https://github.com/IBM/node-sdk-core/issues/207)) ([29bec13](https://github.com/IBM/node-sdk-core/commit/29bec13b67ea08071be488af62b919899f21ec50))
+
 ## [3.0.1](https://github.com/IBM/node-sdk-core/compare/v3.0.0...v3.0.1) (2022-07-28)
 
 
