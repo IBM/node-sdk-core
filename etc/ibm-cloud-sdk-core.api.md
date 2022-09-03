@@ -361,7 +361,7 @@ export class TokenManager {
     protected disableSslVerification: boolean;
     // (undocumented)
     protected expireTime: number;
-    getToken(): Promise<any>;
+    getToken(): Promise<string>;
     // (undocumented)
     protected headers: OutgoingHttpHeaders;
     protected pacedRequestToken(): Promise<any>;

@@ -74,10 +74,7 @@ export class TokenManager {
    * @param {object<string, string>} [options.headers] Headers to be sent with every
    *   outbound HTTP requests to token services.
    */
-  constructor(options: TokenManagerOptions) {
-    // all parameters are optional
-    options = options || ({} as TokenManagerOptions);
-
+  constructor(options: TokenManagerOptions = {}) {
     if (options.url) {
       this.url = stripTrailingSlash(options.url);
     }
@@ -98,7 +95,7 @@ export class TokenManager {
    *   currently stored token from a previous call, or the previous token
    *   has expired.
    */
-  public getToken(): Promise<any> {
+  public getToken(): Promise<string> {
     if (!this.accessToken || this.isTokenExpired()) {
       // 1. request a new token
       return this.pacedRequestToken().then(() => this.accessToken);
