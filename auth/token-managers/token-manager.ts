@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { OutgoingHttpHeaders } from 'http';
+import type { OutgoingHttpHeaders } from 'http';
 import { stripTrailingSlash } from '../../lib/helper';
 import logger from '../../lib/logger';
 import { RequestWrapper } from '../../lib/request-wrapper';
