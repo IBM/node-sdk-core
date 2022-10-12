@@ -71,7 +71,7 @@ describe('get new logger', () => {
     expect(logger.warn.enabled).toBe(true);
   });
 
-  it('should return an error-scoped logger when configued with "error"', () => {
+  it('should return an error-scoped logger when configured with "error"', () => {
     const getNewLogger = setEnvironmentAndResetModule('test-module:error');
     const logger = getNewLogger('test-module');
 
