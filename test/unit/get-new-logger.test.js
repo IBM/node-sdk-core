@@ -49,7 +49,7 @@ describe('get new logger', () => {
     expect(logger.warn.enabled).toBe(true);
   });
 
-  it('should return a logger with all methods enabled when configued with "*"', () => {
+  it('should return a logger with all methods enabled when configured with "*"', () => {
     const getNewLogger = setEnvironmentAndResetModule('test-module*');
     const logger = getNewLogger('test-module');
 
