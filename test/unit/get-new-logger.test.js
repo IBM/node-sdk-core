@@ -82,7 +82,7 @@ describe('get new logger', () => {
     expect(logger.warn.enabled).toBe(false);
   });
 
-  it('should return an info-scoped logger when configued with "info"', () => {
+  it('should return an info-scoped logger when configured with "info"', () => {
     const getNewLogger = setEnvironmentAndResetModule('test-module:info');
     const logger = getNewLogger('test-module');
 
