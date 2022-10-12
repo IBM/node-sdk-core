@@ -104,7 +104,7 @@ describe('get new logger', () => {
     expect(logger.warn.enabled).toBe(true);
   });
 
-  it('should return a warn-scoped logger when configued with "warning"', () => {
+  it('should return a warn-scoped logger when configured with "warning"', () => {
     const getNewLogger = setEnvironmentAndResetModule('test-module:warning');
     const logger = getNewLogger('test-module');
 
