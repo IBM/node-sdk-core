@@ -93,7 +93,7 @@ describe('get new logger', () => {
     expect(logger.verbose.enabled).toBe(false);
   });
 
-  it('should return a verbose-scoped logger when configued with "verbose"', () => {
+  it('should return a verbose-scoped logger when configured with "verbose"', () => {
     const getNewLogger = setEnvironmentAndResetModule('test-module:verbose');
     const logger = getNewLogger('test-module');
 
