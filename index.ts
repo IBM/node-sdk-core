@@ -27,3 +27,4 @@ export { default as qs } from './lib/querystring';
 export { default as contentType } from './lib/content-type';
 export * from './lib/stream-to-promise';
 export { unitTestUtils };
+export { getNewLogger, SDKLogger } from './lib/get-new-logger';

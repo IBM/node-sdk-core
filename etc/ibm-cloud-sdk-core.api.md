@@ -8,6 +8,7 @@
 
 import { AxiosInstance } from 'axios';
 import type { CookieJar } from 'tough-cookie';
+import { Debugger } from 'debug';
 import { OutgoingHttpHeaders } from 'http';
 import { Stream } from 'stream';
 
@@ -228,6 +229,9 @@ export function getMissingParams(params: {
 }, requires: string[]): null | Error;
 
 // @public
+export function getNewLogger(moduleName: string): SDKLogger;
+
+// @public
 function getOptions(createRequestMock: any): any;
 
 // @public
@@ -345,6 +349,20 @@ export function readExternalSources(serviceName: string): any;
 
 // @public
 export function removeSuffix(str: string, suffix: string): string;
+
+// @public (undocumented)
+export interface SDKLogger {
+    // (undocumented)
+    debug: Debugger;
+    // (undocumented)
+    error: Debugger;
+    // (undocumented)
+    info: Debugger;
+    // (undocumented)
+    verbose: Debugger;
+    // (undocumented)
+    warn: Debugger;
+}
 
 // @public
 export function streamToPromise(stream: Stream): Promise<any>;
