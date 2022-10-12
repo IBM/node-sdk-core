@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/IBM/node-sdk-core/compare/v3.1.0...v3.2.0) (2022-10-12)
+
+
+### Features
+
+* add method `getNewLogger` to public API ([#210](https://github.com/IBM/node-sdk-core/issues/210)) ([07b99de](https://github.com/IBM/node-sdk-core/commit/07b99def47a0eb5fcb1ab3d88b2eb3bd271b8819))
+
 # [3.1.0](https://github.com/IBM/node-sdk-core/compare/v3.0.1...v3.1.0) (2022-07-28)
 
 
