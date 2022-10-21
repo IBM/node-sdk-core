@@ -173,22 +173,19 @@ export class RequestWrapper {
 
     // Form params
     if (formData) {
-      Object.keys(formData).forEach((key) => {
-        const values = Array.isArray(formData[key]) ? formData[key] : [formData[key]];
+      for (const key of Object.keys(formData)) { // eslint-disable-line
+        let values = Array.isArray(formData[key]) ? formData[key] : [formData[key]];
         // Skip keys with undefined/null values or empty object value
-        values
-          .filter((v) => v != null && !isEmptyObject(v))
-          .forEach(async (value) => {
-            // Special case of empty file object
-            if (
-              Object.prototype.hasOwnProperty.call(value, 'contentType') &&
-              !Object.prototype.hasOwnProperty.call(value, 'data')
-            ) {
-              return;
-            }
+        values = values.filter((v) => v != null && !isEmptyObject(v));
 
+        for (let value of values) { // eslint-disable-line
+          // Ignore special case of empty file object
+          if (
+            !Object.prototype.hasOwnProperty.call(value, 'contentType') ||
+            Object.prototype.hasOwnProperty.call(value, 'data')
+          ) {
             if (isFileWithMetadata(value)) {
-              const fileObj = await buildRequestFileObject(value);
+              const fileObj = await buildRequestFileObject(value); // eslint-disable-line
               multipartForm.append(key, fileObj.value, fileObj.options);
             } else {
               if (typeof value === 'object' && !isFileData(value)) {
@@ -196,8 +193,9 @@ export class RequestWrapper {
               }
               multipartForm.append(key, value);
             }
-          });
-      });
+          }
+        }
+      }
     }
 
     // Path params
