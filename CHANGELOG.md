@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/IBM/node-sdk-core/compare/v3.2.0...v3.2.1) (2022-10-21)
+
+
+### Bug Fixes
+
+* allow for synchronous building of file requests ([#211](https://github.com/IBM/node-sdk-core/issues/211)) ([dcce4ea](https://github.com/IBM/node-sdk-core/commit/dcce4ea78189e4619cde2d736436a30128cf4b59))
+
 # [3.2.0](https://github.com/IBM/node-sdk-core/compare/v3.1.0...v3.2.0) (2022-10-12)
 
 
