@@ -49,7 +49,7 @@ mockAxiosInstance.defaults = {
   },
 };
 
-axios.default.create.mockReturnValue(mockAxiosInstance);
+axios.create.mockReturnValue(mockAxiosInstance);
 rax.attach.mockReturnValue(1);
 
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
@@ -80,7 +80,7 @@ describe('RequestWrapper constructor', () => {
 
   // the axios mock needs slightly different behavior here
   beforeEach(() => {
-    axios.default.create.mockClear();
+    axios.create.mockClear();
   });
 
   it('should handle scenario that no arguments are provided', () => {
@@ -96,7 +96,7 @@ describe('RequestWrapper constructor', () => {
 
     // the constructor puts together a config object and creates the
     // axios instance with it
-    const createdAxiosConfig = axios.default.create.mock.calls[0][0];
+    const createdAxiosConfig = axios.create.mock.calls[0][0];
     expect(createdAxiosConfig.maxContentLength).toBe(-1);
     expect(createdAxiosConfig.maxBodyLength).toBe(Infinity);
 
@@ -117,7 +117,7 @@ describe('RequestWrapper constructor', () => {
       maxBodyLength: 200,
     });
 
-    const createdAxiosConfig = axios.default.create.mock.calls[0][0];
+    const createdAxiosConfig = axios.create.mock.calls[0][0];
     expect(createdAxiosConfig.maxContentLength).toBe(100);
     expect(createdAxiosConfig.maxBodyLength).toBe(200);
   });
@@ -127,7 +127,7 @@ describe('RequestWrapper constructor', () => {
       disableSslVerification: true,
     });
 
-    const createdAxiosConfig = axios.default.create.mock.calls[0][0];
+    const createdAxiosConfig = axios.create.mock.calls[0][0];
     expect(createdAxiosConfig.httpsAgent).toBeInstanceOf(https.Agent);
     expect(createdAxiosConfig.httpsAgent.options).toBeDefined();
     expect(createdAxiosConfig.httpsAgent.options.rejectUnauthorized).toBe(false);
@@ -139,7 +139,7 @@ describe('RequestWrapper constructor', () => {
       httpsAgent: new https.Agent({ keepAlive: true }),
     });
 
-    const createdAxiosConfig = axios.default.create.mock.calls[0][0];
+    const createdAxiosConfig = axios.create.mock.calls[0][0];
     expect(createdAxiosConfig.httpsAgent).toBeDefined();
     expect(createdAxiosConfig.httpsAgent.keepAlive).toBe(true); // this is false by default
     expect(createdAxiosConfig.httpsAgent.options).toBeDefined();
@@ -312,7 +312,7 @@ describe('sendRequest', () => {
     let serializedParams;
     mockAxiosInstance.mockImplementation((requestParams) => {
       // This runs the paramsSerializer code in the payload we send with axios
-      serializedParams = requestParams.paramsSerializer(requestParams.params);
+      serializedParams = requestParams.paramsSerializer.serialize(requestParams.params);
       return Promise.resolve(axiosResolveValue);
     });
 
@@ -426,7 +426,7 @@ describe('sendRequest', () => {
     let serializedParams;
     mockAxiosInstance.mockImplementation((requestParams) => {
       // This runs the paramsSerializer code in the payload we send with axios
-      serializedParams = requestParams.paramsSerializer(requestParams.params);
+      serializedParams = requestParams.paramsSerializer.serialize(requestParams.params);
       return Promise.resolve(axiosResolveValue);
     });
 
@@ -494,7 +494,7 @@ describe('sendRequest', () => {
     };
 
     mockAxiosInstance.mockImplementation((requestParams) => {
-      requestParams.paramsSerializer(requestParams.params);
+      requestParams.paramsSerializer.serialize(requestParams.params);
       return Promise.resolve(axiosResolveValue);
     });
 
@@ -570,7 +570,7 @@ describe('sendRequest', () => {
     };
 
     mockAxiosInstance.mockImplementation((requestParams) => {
-      requestParams.paramsSerializer(requestParams.params);
+      requestParams.paramsSerializer.serialize(requestParams.params);
       return Promise.resolve(axiosResolveValue);
     });
 
