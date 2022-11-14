@@ -26,7 +26,8 @@ describe('getContentType', () => {
   });
 
   it('should not get content type from read stream with corrupted path property', async () => {
-    const streamFile = fs.createReadStream(filepath);
+    // Note add an on error handler to avoid unhandled error events
+    const streamFile = fs.createReadStream(filepath).on('error', () => {});
     streamFile.path = 'unrecognizeable-format';
     expect(await getContentType(streamFile)).toBeNull();
   });
