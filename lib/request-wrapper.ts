@@ -19,7 +19,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import * as rax from 'retry-axios';
 
-import axiosCookieJarSupport from 'axios-cookiejar-support';
+import { wrapper as axiosCookieJarSupport } from 'axios-cookiejar-support';
 import extend from 'extend';
 import FormData from 'form-data';
 import { OutgoingHttpHeaders } from 'http';
@@ -27,6 +27,7 @@ import { Agent } from 'https';
 import isStream from 'isstream';
 import { stringify } from 'querystring';
 import { gzipSync } from 'zlib';
+import { CookieJar } from 'tough-cookie';
 import {
   buildRequestFileObject,
   isEmptyObject,
@@ -104,8 +105,14 @@ export class RequestWrapper {
     if (axiosOptions.jar) {
       axiosCookieJarSupport(this.axiosInstance);
 
-      this.axiosInstance.defaults.withCredentials = true;
-      this.axiosInstance.defaults.jar = axiosOptions.jar;
+      // axios-cookiejar-support < 2.x accepted a boolean
+      // some SDKs might be using that, so create a default
+      // CookieJar if detecting true.
+      if (axiosOptions.jar === true) {
+        this.axiosInstance.defaults.jar = new CookieJar();
+      } else {
+        this.axiosInstance.defaults.jar = axiosOptions.jar;
+      }
     }
 
     // get retry config properties and conditionally enable retries
@@ -249,7 +256,7 @@ export class RequestWrapper {
       data,
       raxConfig: this.raxConfig,
       responseType: options.responseType || 'json',
-      paramsSerializer: (params) => stringify(params),
+      paramsSerializer: { serialize: (params) => stringify(params) },
     };
 
     return this.axiosInstance(requestParams).then(
