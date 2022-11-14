@@ -101,7 +101,6 @@ export class RequestWrapper {
 
     // if a cookie jar is provided, wrap the axios instance and update defaults
     if (axiosOptions.jar) {
-      this.axiosInstance.defaults.withCredentials = true;
       const cookieInterceptor = new CookieInterceptor(axiosOptions.jar);
       const requestCookieInterceptor = (config) => cookieInterceptor.requestInterceptor(config);
       const responseCookieInterceptor = (response) =>
@@ -251,7 +250,7 @@ export class RequestWrapper {
       data,
       raxConfig: this.raxConfig,
       responseType: options.responseType || 'json',
-      paramsSerializer: (params) => stringify(params),
+      paramsSerializer: { serialize: (params) => stringify(params) },
     };
 
     return this.axiosInstance(requestParams).then(
