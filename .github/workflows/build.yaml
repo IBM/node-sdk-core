@@ -1,0 +1,47 @@
+# This workflow will build and unit test the project.
+# If the workflow is running on the "main" branch, then
+# semantic-release is also run to create a new release (if
+# warranted by the new commits being built).
+
+name: Build & Test
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+  workflow_dispatch:
+    # Allow workflow to be triggered manually.
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    name: Build & Test (Node v${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Avoid node 16.x for now s there is a unit test error - LOL
+        node-version: ['14.x']
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build/Test Project
+        run: |
+          npm ci
+          npm run build
+          npm run lint
+          npm run test-travis
+
+      - name: Semantic Release
+        # Only run this step on the main branch and only for our min version of Node.
+        if: "github.ref_name == 'main' && matrix.node-version == '14.x'"
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release --dry-run
