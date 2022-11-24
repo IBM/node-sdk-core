@@ -99,7 +99,7 @@
     "./lib/sdk-test-helpers": "./lib/sdk-test-helpers.browser"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "scripts": {
     "clean": "rm -fr node_modules",
