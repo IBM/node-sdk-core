@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2014, 2021.
+ * (C) Copyright IBM Corp. 2014, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
 
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import * as rax from 'retry-axios';
-
-import axiosCookieJarSupport from 'axios-cookiejar-support';
 import extend from 'extend';
 import FormData from 'form-data';
 import { OutgoingHttpHeaders } from 'http';
@@ -36,6 +34,7 @@ import {
 } from './helper';
 import logger from './logger';
 import { streamToPromise } from './stream-to-promise';
+import { CookieInterceptor } from './cookie-support';
 
 /**
  * Retry configuration options.
@@ -102,10 +101,13 @@ export class RequestWrapper {
 
     // if a cookie jar is provided, wrap the axios instance and update defaults
     if (axiosOptions.jar) {
-      axiosCookieJarSupport(this.axiosInstance);
-
       this.axiosInstance.defaults.withCredentials = true;
-      this.axiosInstance.defaults.jar = axiosOptions.jar;
+      const cookieInterceptor = new CookieInterceptor(axiosOptions.jar);
+      const requestCookieInterceptor = (config) => cookieInterceptor.requestInterceptor(config);
+      const responseCookieInterceptor = (response) =>
+        cookieInterceptor.responseInterceptor(response);
+      this.axiosInstance.interceptors.request.use(requestCookieInterceptor);
+      this.axiosInstance.interceptors.response.use(responseCookieInterceptor);
     }
 
     // get retry config properties and conditionally enable retries
