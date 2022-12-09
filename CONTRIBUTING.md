@@ -26,14 +26,13 @@ If you want to contribute to the repository, follow these steps:
 2. Install dependencies: `npm install`
 3. Build the code: `npm run build`
 4. Verify the build before beginning your changes: `npm test`
-2. Develop and test your code changes.
-4. Add a test for your changes. Only refactoring and documentation changes require no new tests.
-5. Make sure all the tests pass.
-2. Check code style with `npm run lint` and fix any issues.
-6. Commit your changes. Remember the follow the correct commit message guidelines.
-7. Push to your fork and submit a pull request.
-3. Travis-CI will run the tests once your changes are merged.
-8. Be sure to sign the CLA.
+5. Develop and test your code changes.
+6. Add a test for your changes. Only refactoring and documentation changes require no new tests.
+7. Make sure all the tests pass.
+8. Check code style with `npm run lint` and fix any issues.
+9. Commit your changes. Remember to follow the correct commit message guidelines.
+10. Push to your fork and submit a pull request.
+11. Be sure to sign the CLA.
 
 ## Tests
 
