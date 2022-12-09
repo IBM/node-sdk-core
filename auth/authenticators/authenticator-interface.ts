@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,8 @@ export interface AuthenticatorInterface {
   /**
    * Add authentication information to the specified request.
    *
-   * @param {object} requestOptions The request to augment with authentication information.
-   * @param {object.<string, string>} requestOptions.headers The headers the
-   *   authentication information will be added to.
+   * @param requestOptions - The request to which authentication information is added
+   * (in the headers field).
    */
   authenticate(requestOptions: AuthenticateOptions): Promise<void>;
 

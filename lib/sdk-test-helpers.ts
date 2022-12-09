@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,9 @@ import expect from 'expect';
  * Takes the request options constructed by the SDK and checks that the `url` and `method` properties
  * were set to their correct values.
  *
- * @param {Object} options - the options object put together by the SDK, retrieved from the createRequest mock
- * @param {String} url - The URL path of the service endpoint, from the paths section of the API definition
- * @param {String} string - The HTTP method for the request, from the API definition
- * @returns {void}
+ * @param options - the options object put together by the SDK, retrieved from the createRequest mock
+ * @param url - The URL path of the service endpoint, from the paths section of the API definition
+ * @param method - The HTTP method for the request, from the API definition
  */
 export function checkUrlAndMethod(options, url: string, method: any) {
   expect(options.url).toEqual(url);
@@ -41,10 +40,9 @@ export function checkUrlAndMethod(options, url: string, method: any) {
  * and checks for the expected values for `Accept` and `Content-Type`. This to verify that the SDK sets
  * the correct values in the code.
  *
- * @param {Object} createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
- * @param {String} accept - the expected value for the `Accept` header
- * @param {String} contentType - the expected value for the `Content-Type` header
- * @returns {void}
+ * @param createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
+ * @param accept - the expected value for the `Accept` header
+ * @param contentType - the expected value for the `Content-Type` header
  */
 export function checkMediaHeaders(createRequestMock, accept: string, contentType: string) {
   const { headers } = createRequestMock.mock.calls[0][0].defaultOptions;
@@ -57,10 +55,9 @@ export function checkMediaHeaders(createRequestMock, accept: string, contentType
  * and checks for the expected value for a user-defined header. This is verify that the SDK accepts header
  * parameters and sends them as headers in the request.
  *
- * @param {Object} createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
- * @param {String} userHeaderName - the name of the header passed by the user, e.g. `Contained-Content-Type`
- * @param {String} userHeaderValue - the expected value for the header passed by the user
- * @returns {void}
+ * @param createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
+ * @param userHeaderName - the name of the header passed by the user, e.g. `Contained-Content-Type`
+ * @param userHeaderValue - the expected value for the header passed by the user
  */
 export function checkUserHeader(
   createRequestMock,
@@ -75,8 +72,7 @@ export function checkUserHeader(
  * This method simply ensures that the method executed without any issues by extracting
  * the argument from the mock object for the `createRequest` method and verifying that it is an object.
  *
- * @param {Object} createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
- * @returns {void}
+ * @param createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
  */
 export function checkForSuccessfulExecution(createRequestMock) {
   const sdkParams = createRequestMock.mock.calls[0][0];
@@ -88,8 +84,8 @@ export function checkForSuccessfulExecution(createRequestMock) {
  * an object containing all of the SDK method-specific information (like `path` and `body`) used to build a request.
  * This method is just a convenience method for the unit tests to be able to make assertions on the items in the request.
  *
- * @param {Object} createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
- * @returns {Object}
+ * @param createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
+ * @returns Object
  */
 export function getOptions(createRequestMock) {
   return createRequestMock.mock.calls[0][0].options;
@@ -99,8 +95,7 @@ export function getOptions(createRequestMock) {
  * This method simply ensures that the SDK methods return Promises by checking for
  * the `then` function - common way to assess whether or not an object is a Promise.
  *
- * @param {Promise<any>} sdkPromise - the Promise returned by an SDK method
- * @returns {void}
+ * @param sdkPromise - the Promise returned by an SDK method
  */
 export function expectToBePromise(sdkPromise) {
   expect(typeof sdkPromise.then).toBe('function');

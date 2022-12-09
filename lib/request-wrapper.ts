@@ -161,9 +161,8 @@ export class RequestWrapper {
    * 2. Checks for missing parameters
    * 3. Encode path and query parameters
    * 4. Call the api
-   * @private
-   * @returns {ReadableStream|undefined}
-   * @throws {Error}
+   * @returns ReadableStream|undefined
+   * @throws Error
    */
   public async sendRequest(parameters): Promise<any> {
     const options = extend(true, {}, parameters.defaultOptions, parameters.options);
@@ -282,9 +281,8 @@ export class RequestWrapper {
 
   /**
    * Format error returned by axios
-   * @param  {object} the object returned by axios via rejection
-   * @private
-   * @returns {Error}
+   * @param axiosError - the object returned by axios via rejection
+   * @returns the Error object
    */
   public formatError(axiosError: any): Error {
     // return an actual error object,
@@ -453,10 +451,10 @@ export class RequestWrapper {
 }
 
 /**
- * @private
- * @param {string} path
- * @param {Object} params
- * @returns {string}
+ * Parses the path.
+ * @param path - the path
+ * @param params - the params
+ * @returns the parsed path
  */
 function parsePath(path: string, params: Object): string {
   if (!path || !params) {
@@ -470,9 +468,8 @@ function parsePath(path: string, params: Object): string {
 
 /**
  * Determine if the error is due to bad credentials
- * @private
- * @param {Object} error - error object returned from axios
- * @returns {boolean} true if error is due to authentication
+ * @param error - error object returned from axios
+ * @returns true if error is due to authentication
  */
 function isAuthenticationError(error: any): boolean {
   let isAuthErr = false;
@@ -492,9 +489,8 @@ function isAuthenticationError(error: any): boolean {
 
 /**
  * Determine if the error is due to a bad self signed certificate
- * @private
- * @param {Object} error - error object returned from axios
- * @returns {boolean} true if error is due to an SSL error
+ * @param error - error object returned from axios
+ * @returnstrue if error is due to an SSL error
  */
 function isSelfSignedCertificateError(error: any): boolean {
   let result = false;
@@ -514,10 +510,9 @@ function isSelfSignedCertificateError(error: any): boolean {
 
 /**
  * Return true if object has a specified property that is a string
- * @private
- * @param {Object} obj - object to look for property in
- * @param {string} property - name of the property to look for
- * @returns {boolean} true if property exists and is string
+ * @param obj - object to look for property in
+ * @param property - name of the property to look for
+ * @returns true if property exists and is string
  */
 function hasStringProperty(obj: any, property: string): boolean {
   return Boolean(obj[property] && typeof obj[property] === 'string');
@@ -527,9 +522,8 @@ function hasStringProperty(obj: any, property: string): boolean {
  * Look for service error message in common places, by priority
  * first look in `errors[0].message`, then in `error`, then in
  * `message`, then in `errorMessage`
- * @private
- * @param {Object} response - error response body received from service
- * @returns {string | undefined} the error message if is was found, undefined otherwise
+ * @param response - error response body received from service
+ * @returns the error message if is was found, undefined otherwise
  */
 function parseServiceErrorMessage(response: any): string | undefined {
   let message;

@@ -34,10 +34,10 @@ export interface SDKLogger {
  * Additionally, the logger will be turned on automatically if the "NODE_DEBUG"
  * environment variable is set to "axios".
  *
- * @param {string} moduleName - the namespace for the logger. The name will appear in
+ * @param moduleName - the namespace for the logger. The name will appear in
  * the logs and it will be the name used for configuring the log level.
  *
- * @returns {SDKLogger} the new logger
+ * @returns the new logger
  */
 export function getNewLogger(moduleName: string): SDKLogger {
   const debug = logger(`${moduleName}:debug`);

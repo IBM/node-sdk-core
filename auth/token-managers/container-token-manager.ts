@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 2022 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,23 +41,23 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
 
   /**
    *
-   * Create a new [[ContainerTokenManager]] instance.
+   * Create a new ContainerTokenManager instance.
    *
-   * @param {object} options Configuration options.
-   * @param {string} [crTokenFilename='/var/run/secrets/tokens/vault-token'] The file containing the compute resource token.
-   * @param {string} [iamProfileName] The IAM profile name associated with the compute resource token.
-   * @param {string} [iamProfileId] The IAM profile ID associated with the compute resource token.
-   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [url='https://iam.cloud.ibm.com'] The IAM endpoint for token requests.
-   * @param {boolean} [options.disableSslVerification] A flag that indicates
-   *   whether verification of the token server's SSL certificate should be
-   *   disabled or not.
-   * @param {object<string, string>} [options.headers] Headers to be sent with every
-   *   outbound HTTP requests to token services.
-   * @constructor
+   * @param options - Configuration options.
+   * This should be an object containing these fields:
+   * - url: (optional) the endpoint URL for the token service (default: "https://iam.cloud.ibm.com")
+   * - crTokenFilename: (optional) the file containing the compute resource token (default: "/var/run/secrets/tokens/vault-token")
+   * - iamProfileName: (optional) the name of the IAM trusted profile associated with the compute resource token (required if iamProfileId is not specified)
+   * - iamProfileId]: (optional) the ID of the IAM trusted profile associated with the compute resource token (required if iamProfileName is not specified)
+   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
+   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
+   * should be disabled or not
+   * - clientId: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - clientSecret: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   *
+   * @throws Error: the configuration options were invalid
    */
   constructor(options: Options) {
     // all parameters are optional
@@ -83,24 +83,24 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
   }
 
   /**
-   * Setter for the filename of the compute resource token.
-   * @param {string} crTokenFilename A string containing a path to the CR token file
+   * Sets the "crTokenFilename" field
+   * @param crTokenFilename - the name of the file containing the CR token
    */
   public setCrTokenFilename(crTokenFilename: string): void {
     this.crTokenFilename = crTokenFilename;
   }
 
   /**
-   * Setter for the "profile_name" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} iamProfileName A string that makes up the iamProfileName parameter
+   * Sets the name of the IAM trusted profile to use when obtaining an access token from the IAM token server.
+   * @param iamProfileName - the name of the IAM trusted profile
    */
   public setIamProfileName(iamProfileName: string): void {
     this.iamProfileName = iamProfileName;
   }
 
   /**
-   * Setter for the "profile_id" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} iamProfileId A string that makes up the iamProfileId parameter
+   * Sets the ID of the IAM trusted profile to use when obtaining an access token from the IAM token server.
+   * @param iamProfileId - the ID of the IAM trusted profile
    */
   public setIamProfileId(iamProfileId: string): void {
     this.iamProfileId = iamProfileId;
@@ -108,8 +108,6 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
 
   /**
    * Request an IAM token using a compute resource token.
-   *
-   * @returns {Promise}
    */
   protected async requestToken(): Promise<any> {
     const crToken = getCrToken(this.crTokenFilename);

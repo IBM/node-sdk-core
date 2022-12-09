@@ -367,7 +367,7 @@ export interface SDKLogger {
 // @public
 export function streamToPromise(stream: Stream): Promise<any>;
 
-// @public (undocumented)
+// @public
 export function stripTrailingSlash(url: string): string;
 
 // @public
@@ -449,7 +449,7 @@ export interface UserOptions {
     version?: string;
 }
 
-// @public (undocumented)
+// @public
 export function validateInput(options: any, requiredOptions: string[]): void;
 
 // @public

@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,8 @@ import { readCredentialsFile } from './file-reading-helpers';
  * and will be converted to lower camel case.
  *
  * Only one source will be used at a time.
- * @param {string} serviceName The service name prefix.
+ *
+ * @param serviceName - the service name prefix
  */
 export function readExternalSources(serviceName: string) {
   if (!serviceName) {
@@ -68,8 +69,8 @@ function getProperties(serviceName: string): any {
  * For example, if service.name is speech_to_text,
  * env properties are SPEECH_TO_TEXT_USERNAME and SPEECH_TO_TEXT_PASSWORD
  *
- * @param {object} envObj - the object containing the credentials keyed by environment variables
- * @returns {Credentials}
+ * @param envObj - the object containing the credentials keyed by environment variables
+ * @returns the set of credentials
  */
 function filterPropertiesByServiceName(envObj: any, serviceName: string): any {
   const credentials = {} as any;

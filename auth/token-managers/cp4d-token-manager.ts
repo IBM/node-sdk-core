@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,19 +61,19 @@ export class Cp4dTokenManager extends JwtTokenManager {
   private apikey: string;
 
   /**
-   * Create a new [[Cp4dTokenManager]] instance.
+   * Create a new Cp4dTokenManager instance.
    *
-   * @param {object} options Configuration options.
-   * @param {string} options.username The username used to obtain a bearer token.
-   * @param {string} options.password The password used to obtain a bearer token [required if apikey not specified].
-   * @param {string} options.apikey The API key used to obtain a bearer token [required if password not specified].
-   * @param {string} options.url The endpoint for CP4D token requests.
-   * @param {boolean} [options.disableSslVerification] A flag that indicates
-   *   whether verification of the token server's SSL certificate should be
-   *   disabled or not.
-   * @param {object<string, string>} [options.headers] Headers to be sent with every
-   *   outbound HTTP requests to token services.
-   * @constructor
+   * @param options - Configuration options
+   * This should be an object containing these fields:
+   * - url: (required) the endpoint URL for the CloudPakForData token service
+   * - username: (required) the username used to obtain a bearer token
+   * - password: (optional) the password used to obtain a bearer token (required if apikey is not specified)
+   * - apikey: (optional) the API key used to obtain a bearer token (required if password is not specified)
+   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
+   * should be disabled or not
+   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
+   *
+   * @throws Error: the configuration options were invalid.
    */
   constructor(options: Options) {
     super(options);

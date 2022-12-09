@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2021.
+ * (C) Copyright IBM Corp. 2021, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,14 @@ export interface Options extends BaseOptions {
 }
 
 /**
- * The [[VpcInstanceAuthenticator]] implements an authentication scheme in which it retrieves an "instance identity token"
+ * The VpcInstanceAuthenticator implements an authentication scheme in which it retrieves an "instance identity token"
  * and exchanges that for an IAM access token using the VPC Instance Metadata Service API which is available on the local
  * compute resource (VM). The instance identity token is similar to an IAM apikey, except that it is managed automatically
  * by the compute resource provider (VPC).
  *
  * The resulting IAM access token is then added to outbound requests in an Authorization header
  *
- *      Authorization: Bearer <access-token>
+ *      Authorization: Bearer \<access-token\>
  */
 export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
   protected tokenManager: VpcInstanceTokenManager;
@@ -44,16 +44,17 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
   private iamProfileId: string;
 
   /**
-   * Create a new [[VpcInstanceAuthenticator]] instance.
+   * Create a new VpcInstanceAuthenticator instance.
    *
-   * @param {object} [options] Configuration options for VpcInstance authentication.
-   * @param {string} [options.iamProfileCrn] The CRN of the linked trusted IAM profile to be used as the identity of the compute resource.
-   *    At most one of iamProfileCrn or iamProfileId may be specified.
-   *    If neither one is specified, then the default IAM profile defined for the compute resource will be used.
-   * @param {string} [options.iamProfileId] The ID of the linked trusted IAM profile to be used when obtaining the IAM access token.
-   *    At most one of iamProfileCrn or iamProfileId may be specified.
-   *    If neither one is specified, then the default IAM profile defined for the compute resource will be used.
-   * @param {string} [options.url] The VPC Instance Metadata Service's base endpoint URL. Default value: "http://169.254.169.254"
+   * @param options - Configuration options for VpcInstance authentication.
+   * This should be an object containing these fields:
+   * - url: (optional) the endpoint URL for the VPC Instance Metadata Service (default value: "http://169.254.169.254")
+   * - iamProfileCrn: (optional) the CRN of the linked IAM trusted profile to be used to obtain the IAM access token
+   * - iamProfileId: (optional) the ID of the linked IAM trusted profile to be used to obtain the IAM access token
+   *
+   * @remarks
+   * At most one of "iamProfileCrn" or "iamProfileId" may be specified. If neither one is specified,
+   * then the default IAM profile defined for the compute resource will be used.
    */
   constructor(options: Options) {
     // all parameters are optional
@@ -75,8 +76,8 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
   }
 
   /**
-   * Setter for the "profile_crn" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} A string that makes up the iamProfileCrn parameter
+   * Sets the "iamProfileCrn" value to be used when obtaining an IAM access token
+   * @param iamProfileCrn - the CRN of the linked IAM trusted profile to use when obtaining an IAM access token
    */
   public setIamProfileCrn(iamProfileCrn: string): void {
     this.iamProfileCrn = iamProfileCrn;
@@ -86,8 +87,8 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
   }
 
   /**
-   * Setter for the "profile_id" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} A string that makes up the iamProfileId parameter
+   * Sets the "iamProfileId" value to be used when obtaining an IAM access token
+   * @param iamProfileId - the ID of the linked IAM trusted profile to use when obtaining an IAM access token
    */
   public setIamProfileId(iamProfileId: string): void {
     this.iamProfileId = iamProfileId;

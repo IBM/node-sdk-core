@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,20 +52,21 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
 
   /**
    *
-   * Create a new [[IamRequestBasedTokenManager]] instance.
+   * Create a new IamRequestBasedTokenManager instance.
    *
-   * @param {object} options Configuration options.
-   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [url='https://iam.cloud.ibm.com'] The IAM endpoint for token requests.
-   * @param {boolean} [options.disableSslVerification] A flag that indicates
-   *   whether verification of the token server's SSL certificate should be
-   *   disabled or not.
-   * @param {object<string, string>} [options.headers] Headers to be sent with every
-   *   outbound HTTP requests to token services.
-   * @constructor
+   * @param options - Configuration options.
+   * This should be an object containing these fields:
+   * - url: (optional) the endpoint URL for the token service (default value: "https://iam.cloud.ibm.com")
+   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
+   * should be disabled or not
+   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
+   * - clientId: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - clientSecret: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - scope: (optional) the "scope" parameter to use when fetching the bearer token from the token service
+   *
+   * @throws Error: the configuration options are not valid.
    */
   constructor(options: IamRequestOptions) {
     // all parameters are optional
@@ -95,27 +96,24 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
   }
 
   /**
-   * Set the IAM `scope` value.
-   * This value is the form parameter to use when fetching the bearer token
-   * from the IAM token server.
+   * Sets the IAM "scope" value.
+   * This value is sent as the "scope" form parameter within the request sent to the IAM token service.
    *
-   * @param {string} scope - A space seperated string that makes up the scope parameter.
-   * @returns {void}
+   * @param scope - a space-separated string that contains one or more scope names
    */
   public setScope(scope: string): void {
     this.scope = scope;
   }
 
   /**
-   * Set the IAM `clientId` and `clientSecret` values.
+   * Sets the IAM "clientId" and "clientSecret" values.
    * These values are used to compute the Authorization header used
    * when retrieving the IAM access token.
    * If these values are not set, no Authorization header will be
    * set on the request (it is not required).
    *
-   * @param {string} clientId - The client id.
-   * @param {string} clientSecret - The client secret.
-   * @returns {void}
+   * @param clientId - the client id.
+   * @param clientSecret - the client secret.
    */
   public setClientIdAndSecret(clientId: string, clientSecret: string): void {
     this.clientId = clientId;
@@ -127,10 +125,9 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
   }
 
   /**
-   * Return the most recently stored refresh token.
+   * Returns the most recently stored refresh token.
    *
-   * @public
-   * @returns {string}
+   * @returns the refresh token
    */
   public getRefreshToken(): string {
     return this.refreshToken;
@@ -140,9 +137,7 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
    * Extend this method from the parent class to extract the refresh token from
    * the request and save it.
    *
-   * @param tokenResponse - Response object from JWT service request
-   * @protected
-   * @returns {void}
+   * @param tokenResponse - the response object from JWT service request
    */
   protected saveTokenInfo(tokenResponse): void {
     super.saveTokenInfo(tokenResponse);
@@ -154,9 +149,9 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
   }
 
   /**
-   * Request an IAM token using an API key.
+   * Request an IAM access token using an API key.
    *
-   * @returns {Promise}
+   * @returns Promise
    */
   protected requestToken(): Promise<any> {
     // these cannot be overwritten

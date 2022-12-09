@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,15 @@ export interface Options extends IamRequestOptions {
 }
 
 /**
- * The [[IamAuthenticator]] will use the user-supplied `apikey`
- * values to obtain a bearer token from a token server.  When the bearer token
+ * The IamAuthenticator will use the user-supplied `apikey`
+ * value to obtain a bearer token from a token server.  When the bearer token
  * expires, a new token is obtained from the token server. If specified, the
- * optional, mutually inclusive `clientId` and`clientSecret` pair can be used to
+ * optional, mutually inclusive "clientId" and "clientSecret" pair can be used to
  * influence rate-limiting for requests to the IAM token server.
  *
  * The bearer token will be sent as an Authorization header in the form:
  *
- *      Authorization: Bearer <bearer-token>
+ *      Authorization: Bearer \<bearer-token\>
  */
 export class IamAuthenticator extends IamRequestBasedAuthenticator {
   protected requiredOptions = ['apikey'];
@@ -45,22 +45,22 @@ export class IamAuthenticator extends IamRequestBasedAuthenticator {
 
   /**
    *
-   * Create a new [[IamAuthenticator]] instance.
+   * Create a new IamAuthenticator instance.
    *
-   * @param {object} options Configuration options for IAM authentication.
-   * @param {boolean} options.disableSslVerification A flag that indicates
-   *   whether verification of the token server's SSL certificate should be
-   *   disabled or not
-   * @param {string} options.url for HTTP token requests.
-   * @param {object<string, string>} options.headers to be sent with every
-   * @param {string} options.apikey The IAM api key.
-   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [options.scope] The "scope" parameter to use when fetching the bearer token from the
-   *   IAM token server.
-   * @throws {Error} When the configuration options are not valid.
+   * @param options - Configuration options for IAM authentication.
+   * This should be an object containing these fields:
+   * - url: (optional) the endpoint URL for the token service
+   * - apikey: (required) the IAM api key
+   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
+   * should be disabled or not
+   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
+   * - clientId: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - clientSecret: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - scope: (optional) the "scope" parameter to use when fetching the bearer token from the token service
+   *
+   * @throws Error: the configuration options are not valid.
    */
   constructor(options: Options) {
     super(options);

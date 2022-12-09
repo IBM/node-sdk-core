@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2021.
+ * (C) Copyright IBM Corp. 2021, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,17 +56,17 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   private iamProfileId: string;
 
   /**
-   * Create a new [[VpcInstanceTokenManager]] instance.
+   * Create a new VpcInstanceTokenManager instance.
    *
-   * @param {object} [options] Configuration options.
-   * @param {string} [options.iamProfileCrn] The CRN of the linked trusted IAM profile to be used as the identity of the compute resource.
-   *    At most one of iamProfileCrn or iamProfileId may be specified.
-   *    If neither one is specified, then the default IAM profile defined for the compute resource will be used.
-   * @param {string} [options.iamProfileId] The ID of the linked trusted IAM profile to be used when obtaining the IAM access token.
-   *    At most one of iamProfileCrn or iamProfileId may be specified.
-   *    If neither one is specified, then the default IAM profile defined for the compute resource will be used.
-   * @param {string} [options.url] The VPC Instance Metadata Service's base endpoint URL. Default value: "http://169.254.169.254"
-   * @constructor
+   * @param options - Configuration options.
+   * This should be an object containing these fields:
+   * - url: (optional) the endpoint URL for the VPC Instance Metadata Service (default value: "http://169.254.169.254")
+   * - iamProfileCrn: (optional) the CRN of the linked IAM trusted profile to be used to obtain the IAM access token
+   * - iamProfileId: (optional) the ID of the linked IAM trusted profile to be used to obtain the IAM access token
+   *
+   * @remarks
+   * At most one of "iamProfileCrn" or "iamProfileId" may be specified. If neither one is specified,
+   * then the default IAM profile defined for the compute resource will be used.
    */
   constructor(options: Options) {
     // all parameters are optional
@@ -89,16 +89,16 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   }
 
   /**
-   * Setter for the "trusted_profile" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} iamProfileCrn A string that makes up the iamProfileCrn parameter
+   * Sets the CRN of the IAM trusted profile to use when fetching the access token from the IAM token server.
+   * @param iamProfileCrn - the CRN of the IAM trusted profile
    */
   public setIamProfileCrn(iamProfileCrn: string): void {
     this.iamProfileCrn = iamProfileCrn;
   }
 
   /**
-   * Setter for the "trusted_profile" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} iamProfileId A string that makes up the iamProfileId parameter
+   * Sets the Id of the IAM trusted profile to use when fetching the access token from the IAM token server.
+   * @param iamProfileId - the ID of the IAM trusted profile
    */
   public setIamProfileId(iamProfileId: string): void {
     this.iamProfileId = iamProfileId;

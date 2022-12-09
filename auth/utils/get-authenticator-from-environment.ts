@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import { readExternalSources } from './read-external-sources';
  * 2. Environment variables
  * 3. VCAP Services (Cloud Foundry)
  *
- * @param {string} serviceName The service name prefix.
+ * @param serviceName - the service name prefix.
  *
  */
 export function getAuthenticatorFromEnvironment(serviceName: string): Authenticator {

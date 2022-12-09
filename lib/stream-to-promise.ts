@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import { Stream } from 'stream';
  * or array of text chunks
  * Essentially a smaller version of concat-stream wrapped in a promise
  *
- * @param {Stream} stream Optional stream param for when not bound to an existing stream instance.
- * @return {Promise}
+ * @param stream - optional stream param for when not bound to an existing stream instance.
+ * @returns Promise
  */
 export function streamToPromise(stream: Stream): Promise<any> {
   stream = stream || this;

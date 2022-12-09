@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2020, 2021.
+ * (C) Copyright IBM Corp. 2020, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ export type TokenManagerOptions = {
 /**
  * A class for shared functionality for storing, and requesting tokens.
  * Intended to be used as a parent to be extended for token request management.
- * Child classes should implement `requestToken()` to retrieve the token
- * from intended sources and `saveTokenInfo(tokenResponse)` to parse and save
+ * Child classes should implement "requestToken()" to retrieve the token
+ * from intended sources and "saveTokenInfo(tokenResponse)" to parse and save
  * token information from the response.
  */
 export class TokenManager {
@@ -64,15 +64,14 @@ export class TokenManager {
   private pendingRequests: any[];
 
   /**
-   * Create a new [[TokenManager]] instance.
-   * @constructor
-   * @param {object} options Configuration options.
-   * @param {string} options.url for HTTP token requests.
-   * @param {boolean} [options.disableSslVerification] A flag that indicates
-   *   whether verification of the token server's SSL certificate should be
-   *   disabled or not.
-   * @param {object<string, string>} [options.headers] Headers to be sent with every
-   *   outbound HTTP requests to token services.
+   * Create a new TokenManager instance.
+   *
+   * @param options - Configuration options.
+   * This should be an object containing these fields:
+   * - url: (optional) the endpoint URL for the token service
+   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
+   * should be disabled or not
+   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
    */
   constructor(options: TokenManagerOptions) {
     // all parameters are optional
@@ -94,9 +93,9 @@ export class TokenManager {
   }
 
   /**
-   * Retrieve a new token using `requestToken()` in the case there is not a
-   *   currently stored token from a previous call, or the previous token
-   *   has expired.
+   * Retrieves a new token using "requestToken()" if there is not a
+   * currently stored token from a previous call, or the previous token
+   * has expired.
    */
   public getToken(): Promise<any> {
     if (!this.accessToken || this.isTokenExpired()) {
@@ -114,11 +113,9 @@ export class TokenManager {
   }
 
   /**
-   * Setter for the disableSslVerification property.
+   * Sets the "disableSslVerification" property.
    *
-   * @param {boolean} value - the new value for the disableSslVerification
-   *   property
-   * @returns {void}
+   * @param value - the new value for the disableSslVerification property
    */
   public setDisableSslVerification(value: boolean): void {
     // if they try to pass in a non-boolean value,
@@ -127,10 +124,9 @@ export class TokenManager {
   }
 
   /**
-   * Set a completely new set of headers.
+   * Sets the headers to be included with each outbound request to the token server.
    *
-   * @param {OutgoingHttpHeaders} headers - the new set of headers as an object
-   * @returns {void}
+   * @param headers - the set of headers to send with each request to the token server
    */
   public setHeaders(headers: OutgoingHttpHeaders): void {
     if (typeof headers !== 'object') {
@@ -141,7 +137,7 @@ export class TokenManager {
   }
 
   /**
-   * Paces requests to request_token.
+   * Paces requests to requestToken().
    *
    * This method pseudo-serializes requests for an access_token
    * when the current token is undefined or expired.
@@ -180,7 +176,7 @@ export class TokenManager {
   /**
    * Request a token using an API endpoint.
    *
-   * @returns {Promise}
+   * @returns Promise
    */
   protected requestToken(): Promise<any> {
     const errMsg = '`requestToken` MUST be overridden by a subclass of TokenManagerV1.';
@@ -195,9 +191,7 @@ export class TokenManager {
    * Calculate expiration and refresh time from the received info
    * and store them in fields `expireTime` and `refreshTime`.
    *
-   * @param tokenResponse - Response object from a token service request
-   * @protected
-   * @returns {void}
+   * @param tokenResponse - the response object from a token service request
    */
   protected saveTokenInfo(tokenResponse): void {
     const errMsg = '`saveTokenInfo` MUST be overridden by a subclass of TokenManager.';
@@ -205,10 +199,7 @@ export class TokenManager {
   }
 
   /**
-   * Check if currently stored token is expired
-   *
-   * @private
-   * @returns {boolean}
+   * Checks if currently-stored token is expired
    */
   private isTokenExpired(): boolean {
     const { expireTime } = this;
@@ -222,11 +213,8 @@ export class TokenManager {
   }
 
   /**
-   * Check if currently stored token should be refreshed
+   * Checks if currently-stored token should be refreshed
    * i.e. past the window to request a new token
-   *
-   * @private
-   * @returns {boolean}
    */
   private tokenNeedsRefresh(): boolean {
     const { refreshTime } = this;

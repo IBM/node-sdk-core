@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ export interface IamRequestOptions extends BaseOptions {
 }
 
 /**
- * The [[IamRequestBasedAuthenticator]] provides shared configuration and functionality
- * for authenticators that interact with the IAM service to inherit. This authenticator
+ * The IamRequestBasedAuthenticator provides shared configuration and functionality
+ * for authenticators that interact with the IAM token service. This authenticator
  * is not meant for use on its own.
  */
 export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator {
@@ -52,21 +52,21 @@ export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator
 
   /**
    *
-   * Create a new [[IamRequestBasedAuthenticator]] instance.
+   * Create a new IamRequestBasedAuthenticator instance.
    *
-   * @param {object} options Configuration options for IAM authentication.
-   * @param {boolean} options.disableSslVerification A flag that indicates
-   *   whether verification of the token server's SSL certificate should be
-   *   disabled or not
-   * @param {string} options.url for HTTP token requests.
-   * @param {object<string, string>} options.headers to be sent with every IAM token request
-   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [options.scope] The "scope" parameter to use when fetching the bearer token from the
-   *   IAM token server.
-   * @throws {Error} When the configuration options are not valid.
+   * @param options - Configuration options for IAM authentication.
+   * This should be an object containing these fields:
+   * - url: (optional) the endpoint URL for the token service
+   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
+   * should be disabled or not
+   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
+   * - clientId: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - clientSecret: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - scope: (optional) the "scope" parameter to use when fetching the bearer token from the token service
+   *
+   * @throws Error: the configuration options are not valid.
    */
   constructor(options: IamRequestOptions) {
     // all parameters are optional
@@ -82,11 +82,9 @@ export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator
   }
 
   /**
-   * Setter for the mutually inclusive `clientId` and the `clientSecret`.
-   * @param {string} clientId The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} clientSecret The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
+   * Setter for the mutually inclusive "clientId" and the "clientSecret" fields.
+   * @param clientId - the "clientId" value used to form a Basic Authorization header for IAM token requests
+   * @param clientSecret - the "clientSecret" value used to form a Basic Authorization header for IAM token requests
    */
   public setClientIdAndSecret(clientId: string, clientSecret: string): void {
     this.clientId = clientId;
@@ -98,7 +96,8 @@ export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator
 
   /**
    * Setter for the "scope" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} scope A space seperated string that makes up the scope parameter
+   * @param scope - (optional) a space-separated string that specifies one or more scopes to be
+   * associated with IAM token requests
    */
   public setScope(scope: string): void {
     this.scope = scope;
@@ -110,8 +109,7 @@ export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator
   /**
    * Return the most recently stored refresh token.
    *
-   * @public
-   * @returns {string}
+   * @returns the refresh token string
    */
   public getRefreshToken(): string {
     return this.tokenManager.getRefreshToken();

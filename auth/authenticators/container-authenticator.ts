@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 2022 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,13 +31,13 @@ export interface Options extends IamRequestOptions {
 }
 
 /**
- * The [[ContainerAuthenticator]] will read a compute resource token from the file system
+ * The ContainerAuthenticator will read a compute resource token from the file system
  * and use this value to obtain a bearer token from the IAM token server.  When the bearer
  * token expires, a new token is obtained from the token server.
  *
  * The bearer token will be sent as an Authorization header in the form:
  *
- *      Authorization: Bearer <bearer-token>
+ *      Authorization: Bearer \<bearer-token\>
  */
 export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
   protected tokenManager: ContainerTokenManager;
@@ -50,24 +50,24 @@ export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
 
   /**
    *
-   * Create a new [[ContainerAuthenticator]] instance.
+   * Create a new ContainerAuthenticator instance.
    *
-   * @param {object} options Configuration options for IAM authentication.
-   * @param {string} [options.crTokenFilename] The file containing the compute resource token.
-   * @param {string} [options.iamProfileName] The IAM profile name associated with the compute resource token.
-   * @param {string} [options.iamProfileId] The IAM profile ID associated with the compute resource token.
-   * @param {boolean} [options.disableSslVerification] A flag that indicates
-   *   whether verification of the token server's SSL certificate should be
-   *   disabled or not
-   * @param {string} [options.url] for HTTP token requests.
-   * @param {object<string, string>} options.headers to be sent with every
-   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [options.scope] The "scope" parameter to use when fetching the bearer token from the
-   *   IAM token server.
-   * @throws {Error} When the configuration options are not valid.
+   * @param options - Configuration options for IAM authentication.
+   * This should be an object containing these fields:
+   * - url: (optional) the endpoint URL for the token service
+   * - crTokenFilename: (optional) the file containing the compute resource token
+   * - iamProfileName: (optional) the name of the IAM trusted profile associated with the compute resource token (required if iamProfileId is not specified)
+   * - iamProfileId]: (optional) the ID of the IAM trusted profile associated with the compute resource token (required if iamProfileName is not specified)
+   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
+   * should be disabled or not
+   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
+   * - clientId: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - clientSecret: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - scope: (optional) the "scope" parameter to use when fetching the bearer token from the token service
+   *
+   * @throws Error: the configuration options are not valid.
    */
   constructor(options: Options) {
     super(options);
@@ -84,7 +84,7 @@ export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
 
   /**
    * Setter for the filename of the compute resource token.
-   * @param {string} A string containing a path to the CR token file
+   * @param crTokenFilename - A string containing a path to the CR token file
    */
   public setCrTokenFilename(crTokenFilename: string): void {
     this.crTokenFilename = crTokenFilename;
@@ -95,7 +95,7 @@ export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
 
   /**
    * Setter for the "profile_name" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} A string that makes up the iamProfileName parameter
+   * @param iamProfileName - the name of the IAM trusted profile
    */
   public setIamProfileName(iamProfileName: string): void {
     this.iamProfileName = iamProfileName;
@@ -106,7 +106,7 @@ export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
 
   /**
    * Setter for the "profile_id" parameter to use when fetching the bearer token from the IAM token server.
-   * @param {string} A string that makes up the iamProfileId parameter
+   * @param iamProfileId - the ID of the IAM trusted profile
    */
   public setIamProfileId(iamProfileId: string): void {
     this.iamProfileId = iamProfileId;

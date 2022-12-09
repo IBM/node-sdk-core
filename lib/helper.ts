@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2014, 2021.
+ * (C) Copyright IBM Corp. 2014, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,8 +65,8 @@ export function isEmptyObject(obj: any): boolean {
 
 /**
  * This function retrieves the content type of the input.
- * @param {NodeJS.ReadableStream|Buffer} inputData - The data to retrieve content type for.
- * @returns {string} the content type of the input.
+ * @param inputData - The data to retrieve content type for.
+ * @returns the content type of the input.
  */
 export async function getContentType(inputData: NodeJS.ReadableStream | Buffer): Promise<string> {
   let contentType = null;
@@ -83,9 +83,9 @@ export async function getContentType(inputData: NodeJS.ReadableStream | Buffer):
 }
 
 /**
- *
- * @param {string} url - the url string.
- * @returns {string}
+ * Strips trailing slashes from "url", if present.
+ * @param  url - the url string
+ * @returns the url with any trailing slashes removed
  */
 export function stripTrailingSlash(url: string): string {
   // Match a forward slash / at the end of the string ($)
@@ -95,11 +95,9 @@ export function stripTrailingSlash(url: string): string {
 /**
  * Return a query parameter value from a URL
  *
- * @param {string} urlStr - the url string.
- * @param {string} param - the name of the query parameter
- *                     whose value should be returned
- * @returns {string} the value of the `param` query parameter
- * @throws if urlStr is an invalid URL
+ * @param urlStr - the url string.
+ * @param param - the name of the query parameter whose value should be returned
+ * @returns the value of the "param" query parameter
  */
 export function getQueryParam(urlStr: string, param: string): string {
   // The base URL is a dummy value just so we can process relative URLs
@@ -111,7 +109,7 @@ export function getQueryParam(urlStr: string, param: string): string {
  * Validates that all required params are provided
  * @param params - the method parameters.
  * @param requires - the required parameter names.
- * @returns {Error|null}
+ * @returns null if no errors found, otherwise an Error instance
  */
 export function getMissingParams(params: { [key: string]: any }, requires: string[]): null | Error {
   let missing;
@@ -143,7 +141,7 @@ export function getMissingParams(params: { [key: string]: any }, requires: strin
  * If null, then the "required params" check is bypassed.
  * @param allParams - the names of all valid parameters.
  * If null, then the "valid params" check is bypassed.
- * @returns {Error|null}
+ * @returns null if no errors found, otherwise an Error instance
  */
 export function validateParams(
   params: { [key: string]: any },
@@ -197,7 +195,7 @@ export function validateParams(
  * as `undefined`, `null`, or the empty string.
  *
  * @param value - the parameter value
- * @returns boolean
+ * @returns true if "value" is either undefined, null or "" (empty string)
  */
 function isMissing(value: any): boolean {
   return value === undefined || value === null || value === '';
@@ -205,8 +203,8 @@ function isMissing(value: any): boolean {
 
 /**
  * Return true if 'text' is html
- * @param  {string} text - The 'text' to analyze
- * @returns {boolean} true if 'text' has html tags
+ * @param  text - The 'text' to analyze
+ * @returns true if 'text' has html tags
  */
 export function isHTML(text: string): boolean {
   logger.debug(`Determining if the text ${text} is HTML.`);
@@ -216,9 +214,8 @@ export function isHTML(text: string): boolean {
 /**
  * Returns the first match from formats that is key the params map
  * otherwise null
- * @param  {Object} params - The parameters.
- * @param  {string[]} requires - The keys we want to check
- * @returns {string|null}
+ * @param  params - The parameters.
+ * @param  requires - The keys we want to check
  */
 export function getFormat(params: { [key: string]: any }, formats: string[]): string {
   if (!formats || !params) {
@@ -234,11 +231,8 @@ export function getFormat(params: { [key: string]: any }, formats: string[]): st
 
 /**
  * This function builds a `form-data` object for each file parameter.
- * @param {FileWithMetadata} fileParam The file parameter.
- * @param {NodeJS.ReadableStream|Buffer} fileParam.data The data content of the file.
- * @param {string} fileParam.filename The filename of the file.
- * @param {string} fileParam.contentType The content type of the file.
- * @returns {FileObject}
+ * @param fileParam - The FileWithMetadata instance that contains the file information
+ * @returns the FileObject instance
  */
 export async function buildRequestFileObject(fileParam: FileWithMetadata): Promise<FileObject> {
   let fileObj: FileObject;
@@ -288,8 +282,8 @@ export async function buildRequestFileObject(fileParam: FileWithMetadata): Promi
 /**
  * This function converts an object's keys to lower case.
  * note: does not convert nested keys
- * @param {Object} obj The object to convert the keys of.
- * @returns {Object}
+ * @param obj - The object to convert the keys of.
+ * @returns the object with keys folded to lowercase
  */
 export function toLowerKeys(obj: Object): Object {
   let lowerCaseObj = {};
@@ -307,13 +301,12 @@ export function toLowerKeys(obj: Object): Object {
 /**
  * Constructs a service URL by formatting a parameterized URL.
  *
- * @param {string} parameterizedUrl URL that contains variable placeholders, e.g. '{scheme}://ibm.com'.
- * @param {Map<string, string>} defaultUrlVariables Map from variable names to default values.
+ * @param parameterizedUrl - a URL that contains variable placeholders, e.g. '\{scheme\}://ibm.com'.
+ * @param defaultUrlVariables - a Map of variable names to default values.
  *  Each variable in the parameterized URL must have a default value specified in this map.
- * @param {Map<string, string>} providedUrlVariables Map from variable names to desired values.
- *  If a variable is not provided in this map,
- *  the default variable value will be used instead.
- * @returns {string} The formatted URL with all variable placeholders replaced by values.
+ * @param providedUrlVariables - a Map of variable names to desired values.
+ *  If a variable is not provided in this map, the default variable value will be used instead.
+ * @returns the formatted URL with all variable placeholders replaced by values.
  */
 export function constructServiceUrl(
   parameterizedUrl: string,
