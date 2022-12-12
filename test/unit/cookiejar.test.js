@@ -75,19 +75,19 @@ describe('cookie interceptor', () => {
     expect(cookieInterceptor.cookieJar).toEqual(mockCookieJar);
   });
 
-  it('request interceptor should get cookies', () => {
+  it('request interceptor should get cookies', async () => {
     const jar = new tough.CookieJar();
     const spiedGetCookie = jest.spyOn(jar, 'getCookieString');
     const cookieInterceptor = new CookieInterceptor(jar);
-    cookieInterceptor.requestInterceptor(mockRequest);
+    await cookieInterceptor.requestInterceptor(mockRequest);
     expect(spiedGetCookie).toHaveBeenCalled();
   });
 
-  it('response interceptor should store cookies', () => {
+  it('response interceptor should store cookies', async () => {
     const jar = new tough.CookieJar();
     const spiedSetCookie = jest.spyOn(jar, 'setCookie');
     const cookieInterceptor = new CookieInterceptor(jar);
-    cookieInterceptor.responseInterceptor(mockResponse);
+    await cookieInterceptor.responseInterceptor(mockResponse);
     expect(spiedSetCookie).toHaveBeenCalled();
   });
 
@@ -153,7 +153,7 @@ describe('cookie jar support', () => {
     expect(getInterceptors(wrapper, 'response')).toHaveLength(noCookieInterceptorSize);
   });
 
-  it('given `true` for `jar`, the request-wrapper should have interceptors', () => {
+  it('given `true` for `jar`, the request-wrapper should have interceptors', async () => {
     const wrapper = new RequestWrapper({ jar: true });
 
     expect(getInterceptors(wrapper, 'request')).toHaveLength(cookieInterceptorSize);
@@ -163,14 +163,14 @@ describe('cookie jar support', () => {
     const cookieResponseInterceptor = getCookieInterceptor(wrapper, 'response');
 
     // invoke the interceptors
-    const fn = cookieRequestInterceptor({
+    await cookieRequestInterceptor({
       ...wrapper.axiosInstance.defaults,
       ...mockRequest,
     });
-    cookieResponseInterceptor(mockResponse);
+    await cookieResponseInterceptor(mockResponse);
   });
 
-  it('given a tough-cookie jar for `jar`, the jar should be used', () => {
+  it('given a tough-cookie jar for `jar`, the jar should be used', async () => {
     const cookieJar = new tough.CookieJar();
     const wrapper = new RequestWrapper({ jar: cookieJar });
 
@@ -185,15 +185,15 @@ describe('cookie jar support', () => {
     // Invoke the interceptors and assert they called the jar
     // Request
     const spiedGetCookie = jest.spyOn(cookieJar, 'getCookieString');
-    cookieRequestInterceptor({ ...wrapper.axiosInstance.defaults, ...mockRequest });
+    await cookieRequestInterceptor({ ...wrapper.axiosInstance.defaults, ...mockRequest });
     expect(spiedGetCookie).toHaveBeenCalledTimes(1);
     // Response
     const spiedSetCookie = jest.spyOn(cookieJar, 'setCookie');
-    cookieResponseInterceptor(mockResponse);
+    await cookieResponseInterceptor(mockResponse);
     expect(spiedSetCookie).toHaveBeenCalledTimes(1);
   });
 
-  it('given arbitrary value for `jar` it should be used as cookie jar', () => {
+  it('given arbitrary value for `jar` it should be used as cookie jar', async () => {
     const mockCookieJar = {
       getCookieString: () => 'mock-string',
       setCookie: () => {},
@@ -215,7 +215,7 @@ describe('cookie jar support', () => {
     expect(spiedGetCookie).toHaveBeenCalledTimes(1);
     // Response
     const spiedSetCookie = jest.spyOn(mockCookieJar, 'setCookie');
-    cookieResponseInterceptor(mockResponse);
+    await cookieResponseInterceptor(mockResponse);
     expect(spiedSetCookie).toHaveBeenCalledTimes(1);
   });
 });
