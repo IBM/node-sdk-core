@@ -19,7 +19,7 @@ of this development dependency.
 Run `npm i -D '@typescript-eslint/eslint-plugin'` to upgrade.
 
 ### Jest Version
-The `jest` development dependnecy is now required to be at least version 29.
+The `jest` development dependency is now required to be at least version 29.
 
 Run `npm install -D jest@29` to upgrade to version 29.
 
