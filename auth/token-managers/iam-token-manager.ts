@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ interface Options extends IamRequestOptions {
 /**
  * The IAMTokenManager takes an api key and performs the necessary interactions with
  * the IAM token service to obtain and store a suitable bearer token. Additionally, the IAMTokenManager
- * will retrieve bearer tokens via basic auth using a supplied `clientId` and `clientSecret` pair.
+ * will retrieve bearer tokens via basic auth using a supplied "clientId" and "clientSecret" pair.
  */
 export class IamTokenManager extends IamRequestBasedTokenManager {
   protected requiredOptions = ['apikey'];
@@ -34,21 +34,22 @@ export class IamTokenManager extends IamRequestBasedTokenManager {
 
   /**
    *
-   * Create a new [[IamTokenManager]] instance.
+   * Create a new IamTokenManager instance.
    *
-   * @param {object} options Configuration options.
-   * @param {string} options.apikey The IAM api key.
-   * @param {string} [options.clientId] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [options.clientSecret] The `clientId` and `clientSecret` fields are used to form a "basic"
-   *   authorization header for IAM token requests.
-   * @param {string} [url='https://iam.cloud.ibm.com'] The IAM endpoint for token requests.
-   * @param {boolean} [options.disableSslVerification] A flag that indicates
-   *   whether verification of the token server's SSL certificate should be
-   *   disabled or not.
-   * @param {object<string, string>} [options.headers] Headers to be sent with every
-   *   outbound HTTP requests to token services.
-   * @constructor
+   * @param options - Configuration options.
+   * This should be an object containing these fields:
+   * - url: (optional) the endpoint URL for the IAM token service (default value: "https://iam.cloud.ibm.com")
+   * - apikey: (required) the IAM api key
+   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
+   * should be disabled or not
+   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
+   * - clientId: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - clientSecret: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
+   * Authorization header to be included in each request to the token service
+   * - scope: (optional) the "scope" parameter to use when fetching the bearer token from the token service
+   *
+   * @throws Error: the configuration options are not valid.
    */
   constructor(options: Options) {
     super(options);

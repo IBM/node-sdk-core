@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,7 @@ export class Authenticator implements AuthenticatorInterface {
   /**
    * Create a new Authenticator instance.
    *
-   * @throws {Error} The `new` keyword was not used to create construct the
-   *   authenticator.
+   * @throws Error: the "new" keyword was not used to construct the authenticator.
    */
   constructor() {
     if (!(this instanceof Authenticator)) {
@@ -57,11 +56,8 @@ export class Authenticator implements AuthenticatorInterface {
   /**
    * Augment the request with authentication information.
    *
-   * @param {object} requestOptions - The request to augment with authentication information.
-   * @param {object.<string, string>} requestOptions.headers - The headers the
-   *   authentication information will be added too.
-   * @throws {Error} - The authenticate method was not implemented by a
-   *   subclass.
+   * @param requestOptions - The request to augment with authentication information.
+   * @throws Error: The authenticate method was not implemented by a subclass.
    */
   public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     const error = new Error('Should be implemented by subclass!');
@@ -72,7 +68,7 @@ export class Authenticator implements AuthenticatorInterface {
    * Retrieves the authenticator's type.
    * The returned value will be the same string that is used
    * when configuring an instance of the authenticator with the
-   * "<service_name>_AUTH_TYPE" configuration property
+   * \<service_name\>_AUTH_TYPE configuration property
    * (e.g. "basic", "iam", etc.).
    * This function should be overridden in each authenticator
    * implementation class that extends this class.

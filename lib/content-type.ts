@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ const filenameContentTypes: { [key: string]: string } = {
 /**
  * Takes the beginning of an audio file and returns the associated content-type / mime type
  *
- * @param {Buffer} buffer With at least the first 4 bytes of the file
- * @return {String|undefined} The contentType or undefined
+ * @param buffer - a Buffer containing at least the first 4 bytes of the file
+ * @return sthe contentType or undefined
  */
 const fromHeader = (buffer: Buffer): string => {
   const headerStr = buffer
@@ -66,8 +66,8 @@ const fromHeader = (buffer: Buffer): string => {
  * Note: Blob and File objects include a .type property, but we're ignoring it because it's frequently either
  * incorrect (e.g. video/ogg instead of audio/ogg) or else a different format than what's expected (e.g. audio/x-wav)
  *
- * @param {String|ReadableStream|FileObject|Buffer|File} file String filename or url, or binary File/Blob object.
- * @return {String|undefined}
+ * @param file - a String filename or url, or binary File/Blob object.
+ * @returns the content type
  */
 const fromFilename = (file: String | NodeJS.ReadableStream | FileObject | Buffer | File): string => {
   const ext: string = extname(

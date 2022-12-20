@@ -86,7 +86,7 @@ export class BasicAuthenticator extends Authenticator {
 
 // @public
 export class BearerTokenAuthenticator extends Authenticator {
-    // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Options_2" needs to be exported by the entry point index.d.ts
     constructor(options: Options_2);
     authenticate(requestOptions: AuthenticateOptions): Promise<void>;
     authenticationType(): string;
@@ -115,7 +115,7 @@ function checkUserHeader(createRequestMock: any, userHeaderName: string, userHea
 
 // @public
 export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator {
-    // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Options_4" needs to be exported by the entry point index.d.ts
     constructor(options: Options_4);
     authenticationType(): string;
     // (undocumented)
@@ -135,7 +135,7 @@ export function constructServiceUrl(parameterizedUrl: string, defaultUrlVariable
 
 // @public
 export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
-    // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Options_8" needs to be exported by the entry point index.d.ts
     constructor(options: Options_8);
     authenticationType(): string;
     setCrTokenFilename(crTokenFilename: string): void;
@@ -147,7 +147,7 @@ export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
 
 // @public
 export class ContainerTokenManager extends IamRequestBasedTokenManager {
-    // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Options_7" needs to be exported by the entry point index.d.ts
     constructor(options: Options_7);
     protected requestToken(): Promise<any>;
     setCrTokenFilename(crTokenFilename: string): void;
@@ -163,7 +163,7 @@ export const contentType: {
 
 // @public
 export class Cp4dTokenManager extends JwtTokenManager {
-    // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Options_3" needs to be exported by the entry point index.d.ts
     constructor(options: Options_3);
     // (undocumented)
     protected requestToken(): Promise<any>;
@@ -239,7 +239,7 @@ export function getQueryParam(urlStr: string, param: string): string;
 
 // @public
 export class IamAuthenticator extends IamRequestBasedAuthenticator {
-    // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Options_6" needs to be exported by the entry point index.d.ts
     constructor(options: Options_6);
     authenticationType(): string;
     // (undocumented)
@@ -250,7 +250,7 @@ export class IamAuthenticator extends IamRequestBasedAuthenticator {
 
 // @public
 export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator {
-    // Warning: (ae-forgotten-export) The symbol "IamRequestOptions" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IamRequestOptions_2" needs to be exported by the entry point index.d.ts
     constructor(options: IamRequestOptions_2);
     // (undocumented)
     protected clientId: string;
@@ -291,7 +291,7 @@ export interface IamRequestOptions extends JwtTokenManagerOptions {
 
 // @public
 export class IamTokenManager extends IamRequestBasedTokenManager {
-    // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Options_5" needs to be exported by the entry point index.d.ts
     constructor(options: Options_5);
     // (undocumented)
     protected requiredOptions: string[];
@@ -367,7 +367,7 @@ export interface SDKLogger {
 // @public
 export function streamToPromise(stream: Stream): Promise<any>;
 
-// @public (undocumented)
+// @public
 export function stripTrailingSlash(url: string): string;
 
 // @public
@@ -449,7 +449,7 @@ export interface UserOptions {
     version?: string;
 }
 
-// @public (undocumented)
+// @public
 export function validateInput(options: any, requiredOptions: string[]): void;
 
 // @public
@@ -459,7 +459,7 @@ export function validateParams(params: {
 
 // @public
 export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
-    // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Options_10" needs to be exported by the entry point index.d.ts
     constructor(options: Options_10);
     authenticationType(): string;
     setIamProfileCrn(iamProfileCrn: string): void;
@@ -470,7 +470,7 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
 
 // @public
 export class VpcInstanceTokenManager extends JwtTokenManager {
-    // Warning: (ae-forgotten-export) The symbol "Options" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Options_9" needs to be exported by the entry point index.d.ts
     constructor(options: Options_9);
     // (undocumented)
     protected requestToken(): Promise<any>;

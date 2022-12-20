@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 /**
  * Lightweight implementation for stringify-ing query params
  *
- * @param {object<string, object>} queryParams
- * @return {String}
+ * @param queryParams - the query params
+ * @returns the query string
  */
 const stringify = (queryParams: Object): string =>
   Object.keys(queryParams)

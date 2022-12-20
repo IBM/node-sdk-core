@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import { getMissingParams } from '../../lib/helper';
 /**
  * Compute and return a Basic Authorization header from a username and password.
  *
- * @param {string} username - The username or client id
- * @param {string} password - The password or client secret
- * @returns {string} - A Basic Auth header with format "Basic <encoded-credentials>"
+ * @param username - The username or client id
+ * @param password - The password or client secret
+ * @returns a Basic Auth header with format "Basic <encoded-credentials>"
  */
 export function computeBasicAuthHeader(username: string, password: string): string {
   const encodedCreds = Buffer.from(`${username}:${password}`).toString('base64');
@@ -37,11 +37,11 @@ function badCharAtAnEnd(value: string): boolean {
 }
 
 /**
- * Checks credentials for common user mistakes of copying {, }, or " characters from the documentation
+ * Checks credentials for common user mistakes of copying \{, \}, or \" characters from the documentation
  *
- * @param {object} obj - The options object holding credentials
- * @param {string[]} credsToCheck - An array containing the keys of the credentials to check for problems
- * @returns {string | null} - Returns a string with the error message if there were problems, null if not
+ * @param obj - the options object holding credentials
+ * @param credsToCheck - an array containing the keys of the credentials to check for problems
+ * @returns a string with the error message if there were problems, null if not
  */
 export function checkCredentials(obj: any, credsToCheck: string[]): Error | null {
   let errorMessage = '';
@@ -60,8 +60,11 @@ export function checkCredentials(obj: any, credsToCheck: string[]): Error | null
 }
 
 /**
- * @param {object} options - A configuration options object.
- * @param {string[]} requiredOptions - The list of properties that must be specified.
+ * Validates "options".
+ * @param options - a configuration options object
+ * @param requiredOptions - the list of properties that must be present in "options"
+ *
+ * @throws Error: "options" failed validation
  */
 export function validateInput(options: any, requiredOptions: string[]): void {
   // check for required params
@@ -80,34 +83,35 @@ export function validateInput(options: any, requiredOptions: string[]): void {
 }
 
 /**
- * Get the current time
+ * Gets the current time.
  *
- * @returns {number} - Returns the current time in seconds.
+ * @returns the current time in seconds.
  */
 export function getCurrentTime(): number {
   return Math.floor(Date.now() / 1000);
 }
 
 /**
- * Check for only one of two elements being defined.
+ * Checks for only one of two elements being defined.
  * Returns true if a is defined and b is undefined,
  * or vice versa. Returns false if both are defined
  * or both are undefined.
  *
- * @param {any} a - The first object
- * @param {any} b - The second object
- * @returns {boolean}
+ * @param a - The first object
+ * @param b - The second object
+ * @returns true if and only if exactly one of a or b is defined
  */
 export function onlyOne(a: any, b: any): boolean {
   return Boolean((a && !b) || (b && !a));
 }
 
 /**
- * Remove a given suffix if it exists.
+ * Removes a given suffix if it exists.
  *
- * @param {string} str - The base string to operate on
- * @param {string} suffix - The suffix to remove, if present
- * @returns {string}
+ * @param str - the base string to operate on
+ * @param suffix - the suffix to remove, if present
+ *
+ * @returns the substring of "str" that remains after the suffix is removed
  */
 export function removeSuffix(str: string, suffix: string): string {
   if (str.endsWith(suffix)) {
@@ -118,26 +122,24 @@ export function removeSuffix(str: string, suffix: string): string {
 }
 
 /**
- * Check for at least one of two elements being defined.
- * Returns true if a or b is defined. Returns false if
- * both are undefined.
+ * Checks for at least one of two elements being defined.
  *
- * @param {any} a - The first object
- * @param {any} b - The second object
- * @returns {boolean}
+ * @param a - the first object
+ * @param b - the second object
+ * @returns true if a or b is defined; false if both are undefined
  */
 export function atLeastOne(a: any, b: any): boolean {
   return Boolean(a || b);
 }
 
 /**
- * Verify that both properties are not specified.
- * Returns true if only a, only b, or neither is defined.
- * Returns false if both are defined.
+ * Verifies that both properties are not specified.
  *
- * @param {any} a - The first object
- * @param {any} b - The second object
- * @returns {boolean}
+ * @param a - The first object
+ * @param b - The second object
+ *
+ * @returns  false if a and b are both defined, true otherwise
+
  */
 export function atMostOne(a: any, b: any): boolean {
   return Boolean(!(a && b));
