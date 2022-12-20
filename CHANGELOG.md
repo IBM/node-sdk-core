@@ -1,3 +1,34 @@
+# [4.0.0](https://github.com/IBM/node-sdk-core/compare/v3.2.1...v4.0.0) (2022-12-20)
+
+
+### Bug Fixes
+
+* axios 1.x in request-wrapper ([9ba195b](https://github.com/IBM/node-sdk-core/commit/9ba195b60d01dc345c2b294dd13af9214671787b))
+
+
+### Build System
+
+* **deps-dev:** update typescript to 4.9.4 ([1764e22](https://github.com/IBM/node-sdk-core/commit/1764e2256a292e4a758c98cf7706cea686e59b12))
+
+
+### Features
+
+* update minimum Node.js version to 14 ([5021118](https://github.com/IBM/node-sdk-core/commit/5021118fca8b5cb94544815488cd6d7ac67b0467))
+
+
+### BREAKING CHANGES
+
+* **deps-dev:** Minimum typescript version is 4.
+
+Upgrade to typescript 4.x.
+
+Signed-off-by: Rich Ellis <ricellis@users.noreply.github.com>
+* Minimum Node.js version is 14.
+
+Upgrade to at least Node.js 14.
+
+Signed-off-by: Rich Ellis <ricellis@users.noreply.github.com>
+
 ## [3.2.1](https://github.com/IBM/node-sdk-core/compare/v3.2.0...v3.2.1) (2022-10-21)
 
 
