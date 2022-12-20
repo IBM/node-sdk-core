@@ -19,15 +19,13 @@
 ### BREAKING CHANGES
 
 * **deps-dev:** Minimum typescript version is 4.
-
 Upgrade to typescript 4.x.
 
-Signed-off-by: Rich Ellis <ricellis@users.noreply.github.com>
 * Minimum Node.js version is 14.
-
 Upgrade to at least Node.js 14.
 
-Signed-off-by: Rich Ellis <ricellis@users.noreply.github.com>
+* **For assistance migrating to v4** - see the [migration guide](https://github.com/IBM/node-sdk-core/blob/main/MIGRATION-V4.md).
+
 
 ## [3.2.1](https://github.com/IBM/node-sdk-core/compare/v3.2.0...v3.2.1) (2022-10-21)
 
