@@ -12,11 +12,10 @@ Run `npm install -D typescript@4` to upgrade to version 4.
 
 Code produced by the IBM OpenAPI SDK Generator should already be compliant with TypeScript v4.
 
-Additionally, you may need to upgrade `@typescript-eslint/eslint-plugin` to be compatible with the new
-version of TypeScript. This upgrade should be safe and compatible, especially if you remain on major version 4
-of this development dependency.
+Additionally, you may need to upgrade `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser` to
+v5 to be compatible with the new version of TypeScript. This upgrade should be safe and compatible.
 
-Run `npm i -D '@typescript-eslint/eslint-plugin'` to upgrade.
+Run `npm i -D '@typescript-eslint/eslint-plugin@latest' '@typescript-eslint/parser@latest'` to upgrade.
 
 ### Jest Version
 The `jest` development dependency is now required to be at least version 29.
