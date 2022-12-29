@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/IBM/node-sdk-core/compare/v4.0.0...v4.0.1) (2022-12-29)
+
+
+### Bug Fixes
+
+* **auth:** migrate to secure usage of jwt for token authentication ([#225](https://github.com/IBM/node-sdk-core/issues/225)) ([10e0728](https://github.com/IBM/node-sdk-core/commit/10e07283cec2205eb6bda5723e63e5403d9b23f6))
+
 # [4.0.0](https://github.com/IBM/node-sdk-core/compare/v3.2.1...v4.0.0) (2022-12-20)
 
 
