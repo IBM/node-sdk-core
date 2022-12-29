@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { decode } from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 import logger from '../../lib/logger';
 import { TokenManager, TokenManagerOptions } from './token-manager';
 
@@ -80,15 +80,26 @@ export class JwtTokenManager extends TokenManager {
       throw new Error(err);
     }
 
-    // the time of expiration is found by decoding the JWT access token
-    // exp is the time of expire and iat is the time of token retrieval
-    const decodedResponse = decode(this.accessToken);
+    let decodedResponse;
+    try {
+      decodedResponse = verify(this.accessToken);
+    } catch (e) {
+      // the token is either an invalid JWT or it could not be verified
+      logger.error('Failed to verify the JWT. See error message:');
+      logger.error(e);
+      throw new Error(e);
+    }
+
+    // the 'catch' method above should handle any verificiation/decoding issues but
+    // this check is here as a failsafe
     if (!decodedResponse) {
       const err = 'Access token recieved is not a valid JWT';
       logger.error(err);
       throw new Error(err);
     }
 
+    // the time of expiration is found by decoding the JWT access token
+    // 'exp' is the time of expire and 'iat' is the time of token retrieval
     const { exp, iat } = decodedResponse;
     // There are no required claims in JWT
     if (!exp || !iat) {
