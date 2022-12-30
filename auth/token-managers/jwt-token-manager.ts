@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { verify } from 'jsonwebtoken';
+import { decode } from 'jsonwebtoken';
 import logger from '../../lib/logger';
 import { TokenManager, TokenManagerOptions } from './token-manager';
 
@@ -80,18 +80,7 @@ export class JwtTokenManager extends TokenManager {
       throw new Error(err);
     }
 
-    let decodedResponse;
-    try {
-      decodedResponse = verify(this.accessToken);
-    } catch (e) {
-      // the token is either an invalid JWT or it could not be verified
-      logger.error('Failed to verify the JWT. See error message:');
-      logger.error(e);
-      throw new Error(e);
-    }
-
-    // the 'catch' method above should handle any verificiation/decoding issues but
-    // this check is here as a failsafe
+    const decodedResponse = decode(this.accessToken);
     if (!decodedResponse) {
       const err = 'Access token recieved is not a valid JWT';
       logger.error(err);
