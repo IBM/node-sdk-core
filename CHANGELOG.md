@@ -1,3 +1,10 @@
+## [4.0.2](https://github.com/IBM/node-sdk-core/compare/v4.0.1...v4.0.2) (2022-12-30)
+
+
+### Bug Fixes
+
+* **auth:** revert to using decode instead verify for jwt ([#227](https://github.com/IBM/node-sdk-core/issues/227)) ([cf3d641](https://github.com/IBM/node-sdk-core/commit/cf3d64106f35943c34f2a9c5d1b4de63994aed2a))
+
 ## [4.0.1](https://github.com/IBM/node-sdk-core/compare/v4.0.0...v4.0.1) (2022-12-29)
 
 
