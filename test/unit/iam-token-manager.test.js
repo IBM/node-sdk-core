@@ -16,12 +16,13 @@
  * limitations under the License.
  */
 
-const jwt = require('jsonwebtoken');
+jest.mock('jsonwebtoken/decode');
+const decode = require('jsonwebtoken/decode');
+
+decode.mockImplementation(() => ({ exp: 100, iat: 100 }));
 
 jest.mock('../../dist/lib/request-wrapper');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
-
-jwt.verify = jest.fn(() => ({ exp: 100, iat: 100 }));
 
 const { IamTokenManager } = require('../../dist/auth');
 
