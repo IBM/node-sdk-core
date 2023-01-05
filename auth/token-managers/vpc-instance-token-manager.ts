@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2021, 2022.
+ * (C) Copyright IBM Corp. 2021, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { atMostOne } from '../utils';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
 const DEFAULT_IMS_ENDPOINT = 'http://169.254.169.254';
-const METADATA_SERVICE_VERSION = '2021-09-20';
+const METADATA_SERVICE_VERSION = '2022-03-01';
 
 /** Configuration options for VPC token retrieval. */
 interface Options extends JwtTokenManagerOptions {
