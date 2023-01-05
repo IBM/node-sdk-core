@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * Copyright 2021 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 2023 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ describe('VPC Instance Token Manager', () => {
       expect(parameters.options.method).toBe('PUT');
 
       expect(parameters.options.qs).toBeDefined();
-      expect(parameters.options.qs.version).toBe('2021-09-20');
+      expect(parameters.options.qs.version).toBe('2022-03-01');
 
       expect(parameters.options.body).toBeDefined();
       expect(parameters.options.body.expires_in).toBe(300);
@@ -159,7 +159,7 @@ describe('VPC Instance Token Manager', () => {
       expect(parameters.options.method).toBe('POST');
 
       expect(parameters.options.qs).toBeDefined();
-      expect(parameters.options.qs.version).toBe('2021-09-20');
+      expect(parameters.options.qs.version).toBe('2022-03-01');
 
       // if neither the profile id or crn is set, then the body should be undefined
       expect(parameters.options.body).toBeUndefined();
