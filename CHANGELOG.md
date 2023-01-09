@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/IBM/node-sdk-core/compare/v4.0.2...v4.0.3) (2023-01-09)
+
+
+### Bug Fixes
+
+* **VpcInstanceAuthenticator:** use correct version string ([4a1411a](https://github.com/IBM/node-sdk-core/commit/4a1411a76a09e9b1ade2c94bd98e63f79d845494))
+
 ## [4.0.2](https://github.com/IBM/node-sdk-core/compare/v4.0.1...v4.0.2) (2022-12-30)
 
 
