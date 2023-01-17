@@ -61,7 +61,7 @@ describe('buildRequestFileObject', () => {
     });
 
     it('should handle file object with a readable stream as its `value`', async () => {
-      const fileStream = fs.createReadStream(filepath);
+      const fileStream = fs.createReadStream(filepath).on('error', () => {});
       fileStream.path = `/fake/path/${customName}`;
 
       const fileParams = {
@@ -76,7 +76,7 @@ describe('buildRequestFileObject', () => {
     });
 
     it('should handle path property being a buffer', async () => {
-      const fileStream = fs.createReadStream(filepath);
+      const fileStream = fs.createReadStream(filepath).on('error', () => {});
       fileStream.path = Buffer.from(`/fake/path/${customName}`);
 
       const fileParams = {
