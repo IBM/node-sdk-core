@@ -3,7 +3,7 @@
 ## Breaking Changes
 
 ### Node Version
-Node versions 12 is no longer supported - 14 is the minimum version supported.
+Node version 12 is no longer supported - 14 is the minimum version supported.
 
 ### TypeScript Version
 The `typescript` development dependnecy is now required to be at least version 4.
