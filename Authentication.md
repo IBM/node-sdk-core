@@ -8,13 +8,13 @@ The node-sdk-core project supports the following types of authentication:
 - Cloud Pak for Data Authentication
 - No Authentication
 
-The SDK user configures the appropriate type of authentication for use with service instances.  
+The SDK user configures the appropriate type of authentication for use with service instances.
 The authentication types that are appropriate for a particular service may vary from service to service,
 so it is important for the SDK user to consult with the appropriate service documentation to understand
 which authentication types are supported for that service.
 
 The node-sdk-core allows an authenticator to be specified in one of two ways:
-1. programmatically - the SDK user invokes the appropriate function(s) to create an instance of the 
+1. programmatically - the SDK user invokes the appropriate function(s) to create an instance of the
 desired authenticator and then passes the authenticator instance when constructing an instance of the service.
 2. configuration - the SDK user provides external configuration information (in the form of environment variables
 or a credentials file) to indicate the type of authenticator, along with the configuration of the necessary properties
@@ -143,15 +143,15 @@ const service = ExampleServiceV1.newInstance(options);
 Note that the use of external configuration is not as useful with the `BearerTokenAuthenticator` as it
 is for other authenticator types because bearer tokens typically need to be obtained and refreshed
 programmatically since they normally have a relatively short lifespan before they expire.  This
-authenticator type is intended for situations in which the application will be managing the bearer 
+authenticator type is intended for situations in which the application will be managing the bearer
 token itself in terms of initial acquisition and refreshing as needed.
 
 
 ## Identity and Access Management Authentication (IAM)
 The `IamAuthenticator` will accept a user-supplied api key and will perform
 the necessary interactions with the IAM token service to obtain a suitable
-bearer token for the specified api key.  The authenticator will also obtain 
-a new bearer token when the current token expires.  The bearer token is 
+bearer token for the specified api key.  The authenticator will also obtain
+a new bearer token when the current token expires.  The bearer token is
 then added to each outbound request in the `Authorization` header in the
 form:
 ```
@@ -276,15 +276,15 @@ However, if your application is using an instance of a service in the "staging" 
 then you would also need to configure the authenticator to use the IAM token service "staging"
 endpoint as well (`https://iam.test.cloud.ibm.com`).
 
-- clientId/clientSecret: (optional) The `clientId` and `clientSecret` fields are used to form a 
-"basic auth" Authorization header for interactions with the IAM token service. If neither field 
-is specified, then no Authorization header will be sent with token server requests.  These fields 
+- clientId/clientSecret: (optional) The `clientId` and `clientSecret` fields are used to form a
+"basic auth" Authorization header for interactions with the IAM token service. If neither field
+is specified, then no Authorization header will be sent with token server requests.  These fields
 are optional, but must be specified together.
 
 - scope: (optional) the scope to be associated with the IAM access token.
 If not specified, then no scope will be associated with the access token.
 
-- disableSslVerification: (optional) A flag that indicates whether verificaton of the server's SSL 
+- disableSslVerification: (optional) A flag that indicates whether verificaton of the server's SSL
 certificate should be disabled or not. The default value is `false`.
 
 - headers: (optional) A set of key/value pairs that will be sent as HTTP headers in requests
@@ -358,8 +358,9 @@ The IAM access token is added to each outbound request in the `Authorization` he
 
 - iamProfileId: (optional) the id of the linked trusted IAM profile to be used when obtaining the IAM access token.
 
-- url: (optional) The VPC Instance Metadata Service's base URL.  
-The default value of this property is `http://169.254.169.254`, and should not need to be specified in normal situations.
+- url: (optional) The VPC Instance Metadata Service's base URL.
+The default value of this property is `http://169.254.169.254`.  However, if the VPC Instance Metadata Service is configured
+with the HTTP Secure Protocol setting (`https`), then you should configure this property to be `https://api.metadata.cloud.ibm.com`.
 
 Usage Notes:
 1. At most one of `iamProfileCrn` or `iamProfileId` may be specified.  The specified value must map
@@ -367,7 +368,7 @@ to a trusted IAM profile that has been linked to the compute resource (virtual s
 
 2. If both `iamProfileCrn` and `iamProfileId` are specified, then an error occurs.
 
-3. If neither `iamProfileCrn` nor `iamProfileId` are specified, then the default trusted profile linked to the 
+3. If neither `iamProfileCrn` nor `iamProfileId` are specified, then the default trusted profile linked to the
 compute resource will be used to perform the IAM token exchange.
 If no default trusted profile is defined for the compute resource, then an error occurs.
 
@@ -412,7 +413,7 @@ const service = ExampleServiceV1.newInstance(options);
 
 ##  Cloud Pak for Data Authentication
 The `CloudPakForDataAuthenticator` will accept a user-supplied username value, along with either a
-password or apikey, and will 
+password or apikey, and will
 perform the necessary interactions with the Cloud Pak for Data token service to obtain a suitable
 bearer token.  The authenticator will also obtain a new bearer token when the current token expires.
 The bearer token is then added to each outbound request in the `Authorization` header in the
@@ -433,7 +434,7 @@ Exactly one of password or apikey should be specified.
 - url: (required) The URL representing the Cloud Pak for Data token service endpoint's base URL string.
 This value should not include the `/v1/authorize` path portion.
 
-- disableSslVerification: (optional) A flag that indicates whether verificaton of the server's SSL 
+- disableSslVerification: (optional) A flag that indicates whether verificaton of the server's SSL
 certificate should be disabled or not. The default value is `false`.
 
 - headers: (optional) A set of key/value pairs that will be sent as HTTP headers in requests
