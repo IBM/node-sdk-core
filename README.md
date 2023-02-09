@@ -27,13 +27,14 @@ class YourSDK extends BaseService { ... }
 ```
 
 ## Authentication
-This library provides a set of Authenticators used to authenticate requests from an SDK. There are authenticators for the following authentication schemes:
-- No Auth
-- Basic
-- Bearer Token
-- IAM
-- CP4D
-- Container
+The node-sdk-core project supports the following types of authentication:
+- Basic Authentication
+- Bearer Token Authentication
+- Identity and Access Management (IAM) Authentication
+- Container Authentication
+- VPC Instance Authentication
+- Cloud Pak for Data Authentication
+- No Authentication (for testing)
 
 There are two ways to create an authenticator:
 1. Creating an instance and providing credentials programmatically
