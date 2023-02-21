@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2014, 2022.
+ * (C) Copyright IBM Corp. 2014, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -339,4 +339,15 @@ export function constructServiceUrl(
   });
 
   return formattedUrl;
+}
+
+/**
+ * Returns true if and only if "mimeType" is a "JSON-like" mime type
+ * (e.g. "application/json; charset=utf-8").
+ * @param mimeType - the mimeType string
+ * @returns true if "mimeType" represents a JSON media type and false otherwise
+ */
+export function isJsonMimeType(mimeType: string) {
+  logger.debug(`Determining if the mime type '${mimeType}' specifies JSON content.`);
+  return !!mimeType && /^application\/json(\s*;.*)?$/i.test(mimeType);
 }
