@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/IBM/node-sdk-core/compare/v4.0.3...v4.0.4) (2023-02-27)
+
+
+### Bug Fixes
+
+* return json error response body as object ([#238](https://github.com/IBM/node-sdk-core/issues/238)) ([6f201b7](https://github.com/IBM/node-sdk-core/commit/6f201b798df234510a6abf6baac96b81c72636bf))
+
 ## [4.0.3](https://github.com/IBM/node-sdk-core/compare/v4.0.2...v4.0.3) (2023-01-09)
 
 
