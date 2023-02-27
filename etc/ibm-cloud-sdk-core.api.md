@@ -310,6 +310,9 @@ export function isFileWithMetadata(obj: any): obj is FileWithMetadata;
 export function isHTML(text: string): boolean;
 
 // @public
+export function isJsonMimeType(mimeType: string): boolean;
+
+// @public
 export class JwtTokenManager extends TokenManager {
     constructor(options: JwtTokenManagerOptions);
     protected requestToken(): Promise<any>;

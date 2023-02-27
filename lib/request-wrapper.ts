@@ -30,6 +30,7 @@ import {
   isEmptyObject,
   isFileData,
   isFileWithMetadata,
+  isJsonMimeType,
   stripTrailingSlash,
 } from './helper';
 import logger from './logger';
@@ -266,7 +267,7 @@ export class RequestWrapper {
 
         // the other sdks use the interface `result` for the body
         // eslint-disable-next-line @typescript-eslint/dot-notation
-        res['result'] = res.data;
+        res['result'] = ensureJSONResponseBodyIsObject(res);
         delete res.data;
 
         // return another promise that resolves with 'res' to be handled in generated code
@@ -306,20 +307,19 @@ export class RequestWrapper {
 
       error.message = parseServiceErrorMessage(axiosError.data) || axiosError.statusText;
 
-      // some services bury the useful error message within 'data'
-      // adding it to the error under the key 'body' as a string or object
+      // attach the error response body to the error
       let errorBody;
       try {
-        // try/catch to handle objects with circular references
+        // try/catch to detect objects with circular references
         errorBody = JSON.stringify(axiosError.data);
       } catch (e) {
-        // ignore the error, use the object, and tack on a warning
+        logger.warn('Error field `result` contains circular reference(s)');
+        logger.debug(`Failed to stringify error response body: ${e}`);
         errorBody = axiosError.data;
-        errorBody.warning = 'Body contains circular reference';
-        logger.error(`Failed to stringify axiosError: ${e}`);
       }
 
-      error.body = errorBody;
+      error.result = ensureJSONResponseBodyIsObject(axiosError);
+      error.body = errorBody; // ** deprecated **
 
       // attach headers to error object
       error.headers = axiosError.headers;
@@ -544,4 +544,37 @@ function parseServiceErrorMessage(response: any): string | undefined {
 
   logger.info(`Parsing service error message: ${message}`);
   return message;
+}
+
+/**
+ * Check response for a JSON content type and a string-formatted body. If those
+ * conditions are met, we want to return an object for the body to the user. If
+ * the JSON string coming from the service is invalid, we want to raise an
+ * exception.
+ *
+ * @param response - incoming response object
+ * @returns response body - as either an object or a string
+ * @throws error - if the content is meant as JSON but is malformed
+ */
+function ensureJSONResponseBodyIsObject(response: any): any | string {
+  if (typeof response.data !== 'string' || !isJsonMimeType(response.headers['content-type'])) {
+    return response.data;
+  }
+
+  // If the content is supposed to be JSON but axios gave us a string, it is most
+  // likely due to the fact that the service sent malformed JSON, which is an error.
+  //
+  // We'll try to parse the string and return a proper object to the user but if
+  // it fails, we'll log an error and raise an exception.
+
+  let dataAsObject = response.data;
+  try {
+    dataAsObject = JSON.parse(response.data);
+  } catch (e) {
+    logger.error('Response body was supposed to have JSON content but JSON parsing failed.');
+    logger.error(`Malformed JSON string: ${response.data}`);
+    throw e;
+  }
+
+  return dataAsObject;
 }

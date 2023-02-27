@@ -56,6 +56,10 @@ const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 
 const requestWrapperInstance = new RequestWrapper();
 
+const warnLogSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
+const errorLogSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
+const debugLogSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
+
 describe('axios', () => {
   let env;
   beforeEach(() => {
@@ -620,6 +624,56 @@ describe('sendRequest', () => {
     requestWrapperInstance.compressRequestData = false;
   });
 
+  it('should convert string response body to object when content is JSON', async () => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        url: 'https://example.ibm.com/v1/environments',
+        headers: {},
+        responseType: 'json',
+      },
+    };
+
+    axiosResolveValue.data = '{"key": "value"}';
+    axiosResolveValue.headers = { 'content-type': 'application/json' };
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    expect(typeof res.result).toEqual('object');
+    expect(res.result).toEqual({ key: 'value' });
+  });
+
+  it('should raise exception when response body content is invalid json', async () => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        url: 'https://example.ibm.com/v1/environments',
+        headers: {},
+        responseType: 'json',
+      },
+    };
+
+    axiosResolveValue.data = '{"key": "value"';
+    axiosResolveValue.headers = { 'content-type': 'application/json; charset=utf8' };
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    await expect(requestWrapperInstance.sendRequest(parameters)).rejects.toThrow(
+      'Unexpected end of JSON input'
+    );
+    expect(errorLogSpy).toHaveBeenCalledTimes(2);
+    expect(errorLogSpy.mock.calls[0][0]).toBe(
+      'Response body was supposed to have JSON content but JSON parsing failed.'
+    );
+    expect(errorLogSpy.mock.calls[1][0]).toBe('Malformed JSON string: {"key": "value"');
+    errorLogSpy.mockClear();
+  });
+
   // Need to rewrite this to test instantiation with userOptions
 
   //   it('should keep parameters in options that are not explicitly set in requestwrapper', async => {
@@ -654,6 +708,12 @@ describe('sendRequest', () => {
 });
 
 describe('formatError', () => {
+  afterEach(() => {
+    warnLogSpy.mockClear();
+    errorLogSpy.mockClear();
+    debugLogSpy.mockClear();
+  });
+
   const basicAxiosError = {
     response: {
       config: 'large object',
@@ -682,19 +742,33 @@ describe('formatError', () => {
     code: 'SOME_STATUS_KEY',
   };
 
+  const axiosErrorCopy = makeCopy(basicAxiosError);
+
   it('should get the message from errors[0].message', () => {
     const error = requestWrapperInstance.formatError(basicAxiosError);
     expect(error instanceof Error).toBe(true);
     expect(error.name).toBe('Not Found');
     expect(error.code).toBe(404);
     expect(error.message).toBe('First error: no model found.');
+    expect(typeof error.result).toBe('object');
     expect(typeof error.body).toBe('string');
     expect(error.headers).toEqual(basicAxiosError.response.headers);
   });
 
-  it('should get the message from error', () => {
-    delete basicAxiosError.response.data.errors;
+  it('should return error with object "result" if content is JSON', () => {
     const error = requestWrapperInstance.formatError(basicAxiosError);
+    expect(error instanceof Error).toBe(true);
+    expect(error.statusText).toBe('Not Found');
+    expect(error.status).toBe(404);
+    expect(error.message).toBe('First error: no model found.');
+    expect(typeof error.result).toBe('object');
+    expect(error.body).toEqual(JSON.stringify(error.result));
+    expect(error.result).toEqual(basicAxiosError.response.data);
+  });
+
+  it('should get the message from error', () => {
+    delete axiosErrorCopy.response.data.errors;
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(error.name).toBe('Not Found');
     expect(error.code).toBe(404);
@@ -703,8 +777,8 @@ describe('formatError', () => {
   });
 
   it('should get the message from message', () => {
-    delete basicAxiosError.response.data.error;
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    delete axiosErrorCopy.response.data.error;
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(error.name).toBe('Not Found');
     expect(error.code).toBe(404);
@@ -713,48 +787,44 @@ describe('formatError', () => {
   });
 
   it('should get the message from errorMessage', () => {
-    delete basicAxiosError.response.data.message;
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    delete axiosErrorCopy.response.data.message;
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(error.name).toBe('Not Found');
     expect(error.code).toBe(404);
     expect(error.message).toBe('There is just no finding this model.');
-    expect(error.body).toBe('{"errorMessage":"There is just no finding this model.","code":404}');
     expect(error.headers).toEqual(basicAxiosError.response.headers);
   });
 
   it('should get error from status text when not found', () => {
-    delete basicAxiosError.response.data.errorMessage;
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    delete axiosErrorCopy.response.data.errorMessage;
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(error.message).toBe('Not Found');
   });
 
   it('check the unauthenticated thing - 401', () => {
-    basicAxiosError.response.status = 401;
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    axiosErrorCopy.response.status = 401;
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(error.message).toBe('Access is denied due to invalid credentials.');
   });
 
   it('check the unauthenticated thing - 403', () => {
-    basicAxiosError.response.status = 403;
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    axiosErrorCopy.response.status = 403;
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(error.message).toBe('Access is denied due to invalid credentials.');
   });
 
   it('check the unauthenticated thing - iam', () => {
-    basicAxiosError.response.status = 400;
-    basicAxiosError.response.data.context = {
+    axiosErrorCopy.response.status = 400;
+    axiosErrorCopy.response.data.context = {
       url: 'https://iam.cloud.ibm.com/identity/token',
     };
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(error.message).toBe('Access is denied due to invalid credentials.');
-
-    // clean up
-    delete basicAxiosError.response.data.context;
   });
 
   it('check error with circular ref in data', () => {
@@ -763,20 +833,27 @@ describe('formatError', () => {
         b: 'c',
       },
     };
-    basicAxiosError.response.data = {
+    axiosErrorCopy.response.data = {
       error: otherObject,
     };
     // create a circular reference
-    basicAxiosError.response.data.error.a.newKey = otherObject;
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    axiosErrorCopy.response.data.error.a.newKey = otherObject;
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(typeof error.body).toBe('object');
     expect(error.message).toBe('Not Found');
+
+    expect(warnLogSpy).toHaveBeenCalled();
+    expect(warnLogSpy.mock.calls[0][0]).toBe('Error field `result` contains circular reference(s)');
+    expect(debugLogSpy).toHaveBeenCalled();
+    expect(debugLogSpy.mock.calls[0][0]).toMatch(
+      'Failed to stringify error response body: TypeError: Converting circular structure to JSON'
+    );
   });
 
   it('check the request flow', () => {
-    delete basicAxiosError.response;
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    delete axiosErrorCopy.response;
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(error.message).toBe('error in building the request');
     expect(error.statusText).toBe('SOME_STATUS_KEY');
@@ -787,11 +864,11 @@ describe('formatError', () => {
     // save the original message
     const originalMessage = basicAxiosError.message;
 
-    basicAxiosError.message = 'request has self signed certificate';
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    axiosErrorCopy.message = 'request has self signed certificate';
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
 
     // put the original message back in, before expectations in case they fail
-    basicAxiosError.message = originalMessage;
+    axiosErrorCopy.message = originalMessage;
 
     expect(error instanceof Error).toBe(true);
     expect(error.message).toMatch(/SSL certificate is not valid/);
@@ -801,21 +878,61 @@ describe('formatError', () => {
     // save the original code
     const originalCode = basicAxiosError.code;
 
-    basicAxiosError.code = 'DEPTH_ZERO_SELF_SIGNED_CERT';
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    axiosErrorCopy.code = 'DEPTH_ZERO_SELF_SIGNED_CERT';
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
 
     // put the original message back in, before expectations in case they fail
-    basicAxiosError.code = originalCode;
+    axiosErrorCopy.code = originalCode;
 
     expect(error instanceof Error).toBe(true);
     expect(error.message).toMatch(/SSL certificate is not valid/);
   });
 
   it('check the message flow', () => {
-    delete basicAxiosError.request;
-    const error = requestWrapperInstance.formatError(basicAxiosError);
+    delete axiosErrorCopy.request;
+    const error = requestWrapperInstance.formatError(axiosErrorCopy);
     expect(error instanceof Error).toBe(true);
     expect(error.message).toBe('error in building the request');
+  });
+
+  it('should convert string response bodies to objects if content is JSON', () => {
+    const newAxiosError = makeCopy(basicAxiosError);
+    newAxiosError.response.data = '{ "errorMessage": "some error" }';
+    expect(newAxiosError.response.headers['content-type']).toBe('application/json');
+
+    const error = requestWrapperInstance.formatError(newAxiosError);
+    expect(error instanceof Error).toBe(true);
+    expect(typeof error.result).toBe('object');
+    expect(error.result.errorMessage).toBeDefined();
+    expect(error.result.errorMessage).toBe('some error');
+  });
+
+  it('should return error response body as string if content is not JSON', () => {
+    const newAxiosError = makeCopy(basicAxiosError);
+    newAxiosError.response.data = '{ "errorMessage": "some error" }';
+    newAxiosError.response.headers['content-type'] = 'text/plain';
+
+    const error = requestWrapperInstance.formatError(newAxiosError);
+    expect(error instanceof Error).toBe(true);
+    expect(typeof error.result).toBe('string');
+    expect(error.result).toBe('{ "errorMessage": "some error" }');
+  });
+
+  it('should raise an exception if content is JSON and error response body is malformed', () => {
+    const newAxiosError = makeCopy(basicAxiosError);
+    newAxiosError.response.data = '{ "errorMessage": "some error"';
+    expect(newAxiosError.response.headers['content-type']).toBe('application/json');
+
+    expect(() => {
+      requestWrapperInstance.formatError(newAxiosError);
+    }).toThrow('Unexpected end of JSON input');
+    expect(errorLogSpy).toHaveBeenCalledTimes(2);
+    expect(errorLogSpy.mock.calls[0][0]).toBe(
+      'Response body was supposed to have JSON content but JSON parsing failed.'
+    );
+    expect(errorLogSpy.mock.calls[1][0]).toBe(
+      'Malformed JSON string: { "errorMessage": "some error"'
+    );
   });
 });
 
@@ -828,8 +945,6 @@ describe('getHttpClient', () => {
 
 describe('gzipRequestBody', () => {
   const gzipSpy = jest.spyOn(zlib, 'gzipSync');
-  const errorLogSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
-  const debugLogSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
 
   afterEach(() => {
     gzipSpy.mockClear();
@@ -1022,3 +1137,7 @@ describe('gzipRequestBody', () => {
     expect(requestWrapperInstance.raxConfig).toBeUndefined();
   });
 });
+
+function makeCopy(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
