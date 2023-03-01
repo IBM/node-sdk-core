@@ -646,6 +646,48 @@ describe('sendRequest', () => {
     expect(res.result).toEqual({ key: 'value' });
   });
 
+  it('should return empty string when body is empty and content is JSON', async () => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        url: 'https://example.ibm.com/v1/environments',
+        headers: {},
+        responseType: 'json',
+      },
+    };
+
+    axiosResolveValue.data = '';
+    axiosResolveValue.headers = { 'content-type': 'application/json' };
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    expect(res.result).toBe('');
+  });
+
+  it('should return null when body is null and content is JSON', async () => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        url: 'https://example.ibm.com/v1/environments',
+        headers: {},
+        responseType: 'json',
+      },
+    };
+
+    axiosResolveValue.data = null;
+    axiosResolveValue.headers = { 'content-type': 'application/json' };
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    expect(res.result).toBeNull();
+  });
+
   it('should raise exception when response body content is invalid json', async () => {
     const parameters = {
       defaultOptions: {

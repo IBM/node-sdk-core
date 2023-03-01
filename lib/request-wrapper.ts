@@ -557,7 +557,13 @@ function parseServiceErrorMessage(response: any): string | undefined {
  * @throws error - if the content is meant as JSON but is malformed
  */
 function ensureJSONResponseBodyIsObject(response: any): any | string {
-  if (typeof response.data !== 'string' || !isJsonMimeType(response.headers['content-type'])) {
+  // If axios gave us an empty string, it is because the response had an empty body
+  // which can happen for a HEAD request, etc. Return the empty string in that case
+  if (
+    typeof response.data !== 'string' ||
+    response.data === '' ||
+    !isJsonMimeType(response.headers['content-type'])
+  ) {
     return response.data;
   }
 
