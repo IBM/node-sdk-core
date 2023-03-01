@@ -1,3 +1,10 @@
+## [4.0.5](https://github.com/IBM/node-sdk-core/compare/v4.0.4...v4.0.5) (2023-03-01)
+
+
+### Bug Fixes
+
+* correctly handle empty response bodies ([#239](https://github.com/IBM/node-sdk-core/issues/239)) ([d0c9cb3](https://github.com/IBM/node-sdk-core/commit/d0c9cb37b00adf4493fd46a3ae72123d6f1e33e7))
+
 ## [4.0.4](https://github.com/IBM/node-sdk-core/compare/v4.0.3...v4.0.4) (2023-02-27)
 
 
