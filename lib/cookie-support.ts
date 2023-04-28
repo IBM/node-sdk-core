@@ -15,7 +15,7 @@
  */
 
 import extend from 'extend';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { Cookie, CookieJar } from 'tough-cookie';
 import logger from './logger';
 
@@ -36,7 +36,7 @@ export class CookieInterceptor {
     }
   }
 
-  public async requestInterceptor(config: AxiosRequestConfig) {
+  public async requestInterceptor(config: InternalAxiosRequestConfig) {
     logger.debug('CookieInterceptor: intercepting request');
     if (config && config.url) {
       logger.debug(`CookieInterceptor: getting cookies for: ${config.url}`);
