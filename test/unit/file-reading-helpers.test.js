@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 2023 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,49 +139,20 @@ describe('read ibm credentials file', () => {
 });
 
 describe('Read CR Token File', () => {
-  const loggerDebugMock = jest.spyOn(logger, 'debug').mockImplementation(() => {});
-  const loggerErrorMock = jest.spyOn(logger, 'error').mockImplementation(() => {});
-
-  afterEach(() => {
-    loggerDebugMock.mockClear();
-    loggerErrorMock.mockClear();
-  });
-
-  afterAll(() => {
-    loggerDebugMock.mockRestore();
-    loggerErrorMock.mockRestore();
-  });
-
   it('should successfully return contents of file as a string', () => {
     const filename = `${__dirname}/../resources/vault-token`;
     const token = readCrTokenFile(filename);
 
     expect(token).toBe('my-cr-token-123');
-    expect(loggerDebugMock).toHaveBeenCalledWith(
-      `Successfully read CR token from file: ${filename}`
-    );
   });
 
   it('should throw an error if given file does not exist', () => {
     const filename = '/path/to/nowhere/';
+    const expectedMessage = new RegExp('Error reading CR token:.*ENOENT:.*/path/to/nowhere');
+
     expect(() => {
       const token = readCrTokenFile(filename);
-    }).toThrow(`Unable to retrieve the CR token value from file: ${filename}`);
-
-    expect(loggerErrorMock).toHaveBeenCalledWith(
-      `Expected to find CR token file but the file does not exist: ${filename}`
-    );
-  });
-
-  it('should throw an error if given file is empty', () => {
-    const filename = `${__dirname}/../resources/empty-file`;
-    expect(() => {
-      const token = readCrTokenFile(filename);
-    }).toThrow(`Unable to retrieve the CR token value from file: ${filename}`);
-
-    expect(loggerErrorMock).toHaveBeenCalledWith(
-      `Expected to read CR token from file but the file is empty: ${filename}`
-    );
+    }).toThrow(expectedMessage);
   });
 
   it('should throw an error if file read goes wrong', () => {
@@ -194,9 +165,6 @@ describe('Read CR Token File', () => {
     expect(() => {
       const token = readCrTokenFile(filename);
     }).toThrow(fileReadingError);
-
-    expect(loggerDebugMock).not.toHaveBeenCalled();
-    expect(loggerErrorMock).not.toHaveBeenCalled();
 
     readFileMock.mockRestore();
   });

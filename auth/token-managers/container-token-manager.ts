@@ -1,5 +1,5 @@
 /**
- * Copyright 2021, 2022 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 2023 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import logger from '../../lib/logger';
 import { atLeastOne, readCrTokenFile } from '../utils';
 import { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-based-token-manager';
 
-const DEFAULT_CR_TOKEN_FILEPATH = '/var/run/secrets/tokens/vault-token';
+const DEFAULT_CR_TOKEN_FILEPATH1 = '/var/run/secrets/tokens/vault-token';
+const DEFAULT_CR_TOKEN_FILEPATH2 = '/var/run/secrets/tokens/sa-token';
 
 /** Configuration options for IAM token retrieval. */
 interface Options extends IamRequestOptions {
@@ -69,7 +69,9 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
       throw new Error('At least one of `iamProfileName` or `iamProfileId` must be specified.');
     }
 
-    this.crTokenFilename = options.crTokenFilename || DEFAULT_CR_TOKEN_FILEPATH;
+    if (options.crTokenFilename) {
+      this.crTokenFilename = options.crTokenFilename;
+    }
 
     if (options.iamProfileName) {
       this.iamProfileName = options.iamProfileName;
@@ -110,8 +112,7 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
    * Request an IAM token using a compute resource token.
    */
   protected async requestToken(): Promise<any> {
-    const crToken = getCrToken(this.crTokenFilename);
-    this.formData.cr_token = crToken;
+    this.formData.cr_token = this.getCrToken();
 
     // these member variables can be reset, set them in the form data right
     // before making the request to ensure they're up to date
@@ -124,11 +125,33 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
 
     return super.requestToken();
   }
-}
 
-function getCrToken(filename: string): string {
-  logger.debug(`Attempting to read CR token from file: ${filename}`);
-
-  // moving the actual read to another file to isolate usage of node-only packages like `fs`
-  return readCrTokenFile(filename);
+  /**
+   * Retrieves the CR token from a file using this search order:
+   * 1. User-specified filename (if specified)
+   * 2. Default file #1 (/var/run/secrets/tokens/vault-token)
+   * 3. Default file #2 (/var/run/secrets/tokens/sa-token)
+   * First one found wins.
+   *
+   * @returns the CR token value as a string
+   */
+  protected getCrToken(): string {
+    try {
+      let crToken = null;
+      if (this.crTokenFilename) {
+        // If the user specified a filename, then try to read from that.
+        crToken = readCrTokenFile(this.crTokenFilename);
+      } else {
+        // If no filename was specified, then try our two default filenames.
+        try {
+          crToken = readCrTokenFile(DEFAULT_CR_TOKEN_FILEPATH1);
+        } catch (err) {
+          crToken = readCrTokenFile(DEFAULT_CR_TOKEN_FILEPATH2);
+        }
+      }
+      return crToken;
+    } catch (err) {
+      throw new Error(`Error reading CR token file: ${err.toString()}`);
+    }
+  }
 }

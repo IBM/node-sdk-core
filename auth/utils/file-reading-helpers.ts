@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 2023 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,21 +92,15 @@ export function readCrTokenFile(filepath: string): string {
     return '';
   }
 
-  let token: string = '';
-  const fileExists = fileExistsAtPath(filepath);
-  if (fileExists) {
+  try {
+    let token: string = '';
+    logger.debug(`Attempting to read CR token from file: ${filepath}`);
     token = readFileSync(filepath, 'utf8');
     logger.debug(`Successfully read CR token from file: ${filepath}`);
+    return token;
+  } catch (err) {
+    const msg = `Error reading CR token: ${err.toString()}`;
+    logger.debug(msg);
+    throw new Error(msg);
   }
-
-  if (token === '') {
-    if (fileExists) {
-      logger.error(`Expected to read CR token from file but the file is empty: ${filepath}`);
-    } else {
-      logger.error(`Expected to find CR token file but the file does not exist: ${filepath}`);
-    }
-    throw new Error(`Unable to retrieve the CR token value from file: ${filepath}`);
-  }
-
-  return token;
 }

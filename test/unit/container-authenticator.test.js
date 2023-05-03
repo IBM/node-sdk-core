@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 2023 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,9 +67,7 @@ describe('Container Authenticator', () => {
   it('should re-set crTokenFilename using the setter', () => {
     const authenticator = new ContainerAuthenticator({ iamProfileName: config.iamProfileName });
     expect(authenticator.crTokenFilename).toBeUndefined();
-    // the default is set on the token manager
-    expect(authenticator.tokenManager.crTokenFilename).toBeDefined();
-    expect(authenticator.tokenManager.crTokenFilename).not.toBe(config.crTokenFilename);
+    expect(authenticator.tokenManager.crTokenFilename).toBeUndefined();
 
     authenticator.setCrTokenFilename(config.crTokenFilename);
     expect(authenticator.crTokenFilename).toEqual(config.crTokenFilename);
