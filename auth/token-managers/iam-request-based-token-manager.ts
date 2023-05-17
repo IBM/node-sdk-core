@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2022.
+ * (C) Copyright IBM Corp. 2019, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import extend from 'extend';
 import { OutgoingHttpHeaders } from 'http';
 import logger from '../../lib/logger';
-import { computeBasicAuthHeader, onlyOne, removeSuffix } from '../utils';
+import { computeBasicAuthHeader, onlyOne, removeSuffix } from '../utils/helpers';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
 const CLIENT_ID_SECRET_WARNING =

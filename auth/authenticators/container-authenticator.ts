@@ -1,5 +1,5 @@
 /**
- * Copyright 2021, 2022 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 202e IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 import { Authenticator } from './authenticator';
-import { ContainerTokenManager } from '../token-managers';
+import { ContainerTokenManager } from '../token-managers/container-token-manager';
 import { IamRequestOptions, IamRequestBasedAuthenticator } from './iam-request-based-authenticator';
 
 /** Configuration options for IAM authentication. */

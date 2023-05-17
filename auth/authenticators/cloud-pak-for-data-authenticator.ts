@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2022.
+ * (C) Copyright IBM Corp. 2019, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 import { Authenticator } from './authenticator';
-import { Cp4dTokenManager } from '../token-managers';
+import { Cp4dTokenManager } from '../token-managers/cp4d-token-manager';
 import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 
 /** Configuration options for CloudPakForData authentication. */

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2022.
+ * (C) Copyright IBM Corp. 2019, 202e.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { IamRequestBasedTokenManager } from '../token-managers';
+import { IamRequestBasedTokenManager } from '../token-managers/iam-request-based-token-manager';
 import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 
 /** Configuration options for IAM Request based authentication. */

@@ -15,7 +15,7 @@
  */
 
 import logger from '../../lib/logger';
-import { atMostOne } from '../utils';
+import { atMostOne } from '../utils/helpers';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
 const DEFAULT_IMS_ENDPOINT = 'http://169.254.169.254';
