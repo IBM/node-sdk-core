@@ -59,6 +59,7 @@ const requestWrapperInstance = new RequestWrapper();
 const warnLogSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
 const errorLogSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
 const debugLogSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
+const verboseLogSpy = jest.spyOn(logger, 'verbose').mockImplementation(() => {});
 
 describe('axios', () => {
   let env;
@@ -706,14 +707,14 @@ describe('sendRequest', () => {
     mockAxiosInstance.mockResolvedValue(axiosResolveValue);
 
     await expect(requestWrapperInstance.sendRequest(parameters)).rejects.toThrow(
-      'Unexpected end of JSON input'
+      'Error processing HTTP response: SyntaxError: Unexpected end of JSON input'
     );
-    expect(errorLogSpy).toHaveBeenCalledTimes(2);
-    expect(errorLogSpy.mock.calls[0][0]).toBe(
+    expect(verboseLogSpy).toHaveBeenCalledTimes(2);
+    expect(verboseLogSpy.mock.calls[0][0]).toBe(
       'Response body was supposed to have JSON content but JSON parsing failed.'
     );
-    expect(errorLogSpy.mock.calls[1][0]).toBe('Malformed JSON string: {"key": "value"');
-    errorLogSpy.mockClear();
+    expect(verboseLogSpy.mock.calls[1][0]).toBe('Malformed JSON string: {"key": "value"');
+    verboseLogSpy.mockClear();
   });
 
   // Need to rewrite this to test instantiation with userOptions
@@ -754,6 +755,7 @@ describe('formatError', () => {
     warnLogSpy.mockClear();
     errorLogSpy.mockClear();
     debugLogSpy.mockClear();
+    verboseLogSpy.mockClear();
   });
 
   const basicAxiosError = {
@@ -967,12 +969,12 @@ describe('formatError', () => {
 
     expect(() => {
       requestWrapperInstance.formatError(newAxiosError);
-    }).toThrow('Unexpected end of JSON input');
-    expect(errorLogSpy).toHaveBeenCalledTimes(2);
-    expect(errorLogSpy.mock.calls[0][0]).toBe(
+    }).toThrow('Error processing HTTP response: SyntaxError: Unexpected end of JSON input');
+    expect(verboseLogSpy).toHaveBeenCalledTimes(2);
+    expect(verboseLogSpy.mock.calls[0][0]).toBe(
       'Response body was supposed to have JSON content but JSON parsing failed.'
     );
-    expect(errorLogSpy.mock.calls[1][0]).toBe(
+    expect(verboseLogSpy.mock.calls[1][0]).toBe(
       'Malformed JSON string: { "errorMessage": "some error"'
     );
   });
@@ -992,6 +994,7 @@ describe('gzipRequestBody', () => {
     gzipSpy.mockClear();
     errorLogSpy.mockClear();
     debugLogSpy.mockClear();
+    verboseLogSpy.mockClear();
   });
 
   it('should return unaltered data if encoding header is already set to gzip', async () => {
