@@ -36,6 +36,7 @@ import {
 import logger from './logger';
 import { streamToPromise } from './stream-to-promise';
 import { CookieInterceptor } from './cookie-support';
+import { chainError } from './chain-error';
 
 /**
  * Retry configuration options.
@@ -577,9 +578,9 @@ function ensureJSONResponseBodyIsObject(response: any): any | string {
   try {
     dataAsObject = JSON.parse(response.data);
   } catch (e) {
-    logger.error('Response body was supposed to have JSON content but JSON parsing failed.');
-    logger.error(`Malformed JSON string: ${response.data}`);
-    throw e;
+    logger.verbose('Response body was supposed to have JSON content but JSON parsing failed.');
+    logger.verbose(`Malformed JSON string: ${response.data}`);
+    throw chainError(new Error('Error processing HTTP response:'), e);
   }
 
   return dataAsObject;
