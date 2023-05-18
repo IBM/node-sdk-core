@@ -1,3 +1,10 @@
+## [4.0.6](https://github.com/IBM/node-sdk-core/compare/v4.0.5...v4.0.6) (2023-05-18)
+
+
+### Bug Fixes
+
+* use consistent message for JSON.parse() errors ([#243](https://github.com/IBM/node-sdk-core/issues/243)) ([3cc7bab](https://github.com/IBM/node-sdk-core/commit/3cc7babac6a14b1744d64cf3ab93063b2ce63643))
+
 ## [4.0.5](https://github.com/IBM/node-sdk-core/compare/v4.0.4...v4.0.5) (2023-03-01)
 
 
