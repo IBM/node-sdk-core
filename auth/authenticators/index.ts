@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@
  * authentication type is implemented as an Authenticator for consumption by a service.
  *
  * classes:
- *   AuthenticatorInterface: Implement this class to provide custom authentication schemes to services.
+ *   AuthenticatorInterface: Implement this interface to provide custom authentication schemes to services.
  *   Authenticator: Extend this class to provide custom authentication schemes to services.
  *   BasicAuthenticator: Authenticator for passing supplied basic authentication information to service endpoint.
  *   BearerTokenAuthenticator: Authenticator for passing supplied bearer token to service endpoint.

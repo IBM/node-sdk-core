@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { atLeastOne, readCrTokenFile } from '../utils';
+import { atLeastOne } from '../utils/helpers';
+import { readCrTokenFile } from '../utils/file-reading-helpers';
 import { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-based-token-manager';
 
 const DEFAULT_CR_TOKEN_FILEPATH1 = '/var/run/secrets/tokens/vault-token';

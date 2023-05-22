@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2020, 2022.
+ * (C) Copyright IBM Corp. 2020, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import { OutgoingHttpHeaders } from 'http';
 import { stripTrailingSlash } from '../../lib/helper';
 import logger from '../../lib/logger';
 import { RequestWrapper } from '../../lib/request-wrapper';
-import { getCurrentTime } from '../utils';
+import { getCurrentTime } from '../utils/helpers';
 
 /** Configuration options for token retrieval. */
 export type TokenManagerOptions = {

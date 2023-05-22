@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2022.
+ * (C) Copyright IBM Corp. 2019, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 
 import { Authenticator } from './authenticator';
-import { IamTokenManager } from '../token-managers';
-import { validateInput } from '../utils';
+import { IamTokenManager } from '../token-managers/iam-token-manager';
+import { validateInput } from '../utils/helpers';
 import { IamRequestOptions, IamRequestBasedAuthenticator } from './iam-request-based-authenticator';
 
 /** Configuration options for IAM authentication. */
