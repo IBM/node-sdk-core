@@ -1,3 +1,10 @@
+## [4.0.7](https://github.com/IBM/node-sdk-core/compare/v4.0.6...v4.0.7) (2023-05-22)
+
+
+### Bug Fixes
+
+* **ContainerAuthenticator:** add sa-token as default CR token filename ([#241](https://github.com/IBM/node-sdk-core/issues/241)) ([91f9932](https://github.com/IBM/node-sdk-core/commit/91f9932ab0a74c11e1de5aecb46481dee3058018))
+
 ## [4.0.6](https://github.com/IBM/node-sdk-core/compare/v4.0.5...v4.0.6) (2023-05-18)
 
 
