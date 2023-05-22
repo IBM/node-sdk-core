@@ -1,3 +1,10 @@
+## [4.0.8](https://github.com/IBM/node-sdk-core/compare/v4.0.7...v4.0.8) (2023-05-22)
+
+
+### Bug Fixes
+
+* refresh dependencies and address import cycles ([#244](https://github.com/IBM/node-sdk-core/issues/244)) ([72aa8d5](https://github.com/IBM/node-sdk-core/commit/72aa8d5f8308ea0e7d092e79b45743fc3f273506))
+
 ## [4.0.7](https://github.com/IBM/node-sdk-core/compare/v4.0.6...v4.0.7) (2023-05-22)
 
 
