@@ -149,6 +149,7 @@ export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
 export class ContainerTokenManager extends IamRequestBasedTokenManager {
     // Warning: (ae-forgotten-export) The symbol "Options_7" needs to be exported by the entry point index.d.ts
     constructor(options: Options_7);
+    protected getCrToken(): string;
     protected requestToken(): Promise<any>;
     setCrTokenFilename(crTokenFilename: string): void;
     setIamProfileId(iamProfileId: string): void;

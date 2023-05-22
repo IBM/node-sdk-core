@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * Copyright 2021 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 2023 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,12 +44,6 @@ describe('Container Token Manager', () => {
       );
     });
 
-    // use default filename
-    it('should use default filename if none is given', () => {
-      const instance = new ContainerTokenManager({ iamProfileName: IAM_PROFILE_NAME });
-      expect(instance.crTokenFilename).toBe('/var/run/secrets/tokens/vault-token');
-    });
-
     it('should set given values', () => {
       const instance = new ContainerTokenManager({
         crTokenFilename: CR_TOKEN_FILENAME,
@@ -74,7 +68,7 @@ describe('Container Token Manager', () => {
   describe('setters', () => {
     it('should set crTokenFilename with the setter', () => {
       const instance = new ContainerTokenManager({ iamProfileName: IAM_PROFILE_NAME });
-      expect(instance.crTokenFilename).toBe('/var/run/secrets/tokens/vault-token');
+      expect(instance.crTokenFilename).toBeUndefined();
 
       instance.setCrTokenFilename(CR_TOKEN_FILENAME);
       expect(instance.crTokenFilename).toBe(CR_TOKEN_FILENAME);
