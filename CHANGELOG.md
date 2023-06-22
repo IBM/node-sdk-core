@@ -1,3 +1,10 @@
+## [4.0.9](https://github.com/IBM/node-sdk-core/compare/v4.0.8...v4.0.9) (2023-06-22)
+
+
+### Bug Fixes
+
+* remove unused dependencies ([#246](https://github.com/IBM/node-sdk-core/issues/246)) ([3885ef0](https://github.com/IBM/node-sdk-core/commit/3885ef018ffa0ecb0def8ba6a38f1897b8f39077))
+
 ## [4.0.8](https://github.com/IBM/node-sdk-core/compare/v4.0.7...v4.0.8) (2023-05-22)
 
 
