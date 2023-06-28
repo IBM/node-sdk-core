@@ -56,6 +56,7 @@ export class BaseService {
     protected baseOptions: BaseServiceOptions;
     protected configureService(serviceName: string): void;
     protected createRequest(parameters: any): Promise<any>;
+    protected createRequestAndDeserializeResponse(parameters: any, deserializerFn: (any: any) => any, isMap?: boolean): Promise<any>;
     // (undocumented)
     static DEFAULT_SERVICE_NAME: string;
     // (undocumented)
@@ -65,6 +66,7 @@ export class BaseService {
     enableRetries(retryOptions?: RetryOptions): void;
     getAuthenticator(): any;
     getHttpClient(): AxiosInstance;
+    static serializeModel(input: any, serializerFn: any, isMap?: boolean): any;
     setDefaultHeaders(headers: OutgoingHttpHeaders): void;
     setEnableGzipCompression(setting: boolean): void;
     setServiceUrl(url: string): void;
