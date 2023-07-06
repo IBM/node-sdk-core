@@ -209,20 +209,20 @@ export class BaseService {
    * these types needs different handling.
    * Considering whether the input object is a map happens with an explicit parameter.
    * @param input - the input model object
-   * @param serializerFn - the function that is applied on the input object
+   * @param converterFn - the function that is applied on the input object
    * @param isMap - is `true` when the input object should be handled as a map
    */
-  public static serializeModel(input, serializerFn, isMap?: boolean) {
+  public static convertModel(input, converterFn, isMap?: boolean) {
     if (input == null || typeof input === 'string') {
-      // no need for serialization
+      // no need for conversation
       return input;
     }
     if (Array.isArray(input)) {
-      return BaseService.serializeArray(input, serializerFn, isMap);
+      return BaseService.convertArray(input, converterFn, isMap);
     } else if (isMap === true) {
-      return BaseService.serializeMap(input, serializerFn);
+      return BaseService.convertMap(input, converterFn);
     }
-    return serializerFn(input);
+    return converterFn(input);
   }
 
   /**
@@ -294,7 +294,7 @@ export class BaseService {
       this.createRequest(parameters)
         .then((r) => {
           if (r !== undefined && r.result !== undefined) {
-            r.result = BaseService.serializeModel(r.result, deserializerFn, isMap);
+            r.result = BaseService.convertModel(r.result, deserializerFn, isMap);
           }
           resolve(r);
         })
@@ -338,18 +338,18 @@ export class BaseService {
     return results;
   }
 
-  private static serializeArray(arrayInput, serializerFn, isMap) {
+  private static convertArray(arrayInput, converterFn, isMap) {
     const serializedList = [];
     arrayInput.forEach((element) => {
-      serializedList.push(this.serializeModel(element, serializerFn, isMap));
+      serializedList.push(this.convertModel(element, converterFn, isMap));
     });
     return serializedList;
   }
 
-  private static serializeMap(mapInput, serializerFn) {
+  private static convertMap(mapInput, converterFn) {
     const serializedMap = {};
     Object.keys(mapInput).forEach((key) => {
-      serializedMap[key] = BaseService.serializeModel(mapInput[key], serializerFn);
+      serializedMap[key] = BaseService.convertModel(mapInput[key], converterFn);
     });
     return serializedMap;
   }

@@ -136,7 +136,7 @@ class MockSerDeService extends BaseService {
   }
 
   postListOfSchemas(params) {
-    const body = BaseService.serializeModel(params.modelSchema, ModelSchema.serialize);
+    const body = BaseService.convertModel(params.modelSchema, ModelSchema.serialize);
     const parameters = {
       options: {
         url: '/listOfSchemas',
@@ -192,7 +192,7 @@ class MockSerDeService extends BaseService {
   }
 
   postListOfMapsOfSchemas(params) {
-    const body = BaseService.serializeModel(params.modelSchema, ModelSchema.serialize);
+    const body = BaseService.convertModel(params.modelSchema, ModelSchema.serialize);
     const parameters = {
       options: {
         url: '/listOfMapsOfSchemas',
@@ -220,7 +220,7 @@ class MockSerDeService extends BaseService {
   }
 
   postMapOfSchemas(params) {
-    const body = BaseService.serializeModel(params.requestBody, ModelSchema.serialize, true);
+    const body = BaseService.convertModel(params.requestBody, ModelSchema.serialize, true);
     const parameters = {
       options: {
         url: '/mapOfSchemas',
@@ -277,7 +277,7 @@ class MockSerDeService extends BaseService {
 
   postMapOfListOfSchemas(params) {
     const body = {
-      map_prop: BaseService.serializeModel(params.mapProp, ModelSchema.serialize, true),
+      map_prop: BaseService.convertModel(params.mapProp, ModelSchema.serialize, true),
     };
     const parameters = {
       options: {
@@ -323,7 +323,7 @@ class MapOfListOfSchemas {
     }
     const copy = {};
     if (obj.mapProp !== undefined) {
-      copy.map_prop = BaseService.serializeModel(obj.mapProp, ModelSchema.serialize);
+      copy.map_prop = BaseService.convertModel(obj.mapProp, ModelSchema.serialize);
     }
     return copy;
   }
@@ -334,7 +334,7 @@ class MapOfListOfSchemas {
     }
     const copy = {};
     if (obj.map_prop !== undefined) {
-      copy.mapProp = BaseService.serializeModel(obj.map_prop, ModelSchema.deserialize);
+      copy.mapProp = BaseService.convertModel(obj.map_prop, ModelSchema.deserialize);
     }
     return copy;
   }
@@ -440,13 +440,13 @@ class NestedModelSchema {
       copy.listofprimitivesprop = obj.listofprimitivesprop;
     }
     if (obj.listOfSchemasProp !== undefined) {
-      copy.list_of_schemas_prop = BaseService.serializeModel(
+      copy.list_of_schemas_prop = BaseService.convertModel(
         obj.listOfSchemasProp,
         ModelSchema.serialize
       );
     }
     if (obj.listofschemasprop !== undefined) {
-      copy.listofschemasprop = BaseService.serializeModel(
+      copy.listofschemasprop = BaseService.convertModel(
         obj.listofschemasprop,
         ModelSchema.serialize
       );
@@ -458,14 +458,14 @@ class NestedModelSchema {
       copy.mapofprimitivesprop = obj.mapofprimitivesprop;
     }
     if (obj.mapOfSchemasProp !== undefined) {
-      copy.map_of_schemas_prop = BaseService.serializeModel(
+      copy.map_of_schemas_prop = BaseService.convertModel(
         obj.mapOfSchemasProp,
         ModelSchema.serialize,
         true
       );
     }
     if (obj.mapofschemasprop !== undefined) {
-      copy.mapofschemasprop = BaseService.serializeModel(
+      copy.mapofschemasprop = BaseService.convertModel(
         obj.mapofschemasprop,
         ModelSchema.serialize,
         true
@@ -561,13 +561,13 @@ class NestedModelSchema {
       copy.listofprimitivesprop = obj.listofprimitivesprop;
     }
     if (obj.list_of_schemas_prop !== undefined) {
-      copy.listOfSchemasProp = BaseService.serializeModel(
+      copy.listOfSchemasProp = BaseService.convertModel(
         obj.list_of_schemas_prop,
         ModelSchema.deserialize
       );
     }
     if (obj.listofschemasprop !== undefined) {
-      copy.listofschemasprop = BaseService.serializeModel(
+      copy.listofschemasprop = BaseService.convertModel(
         obj.listofschemasprop,
         ModelSchema.deserialize
       );
@@ -579,14 +579,14 @@ class NestedModelSchema {
       copy.mapofprimitivesprop = obj.mapofprimitivesprop;
     }
     if (obj.map_of_schemas_prop !== undefined) {
-      copy.mapOfSchemasProp = BaseService.serializeModel(
+      copy.mapOfSchemasProp = BaseService.convertModel(
         obj.map_of_schemas_prop,
         ModelSchema.deserialize,
         true
       );
     }
     if (obj.mapofschemasprop !== undefined) {
-      copy.mapofschemasprop = BaseService.serializeModel(
+      copy.mapofschemasprop = BaseService.convertModel(
         obj.mapofschemasprop,
         ModelSchema.deserialize,
         true

@@ -106,7 +106,7 @@ describe('Serializer/Deserializer - Tests', () => {
           MockSerDeService.serializedModelSchema
         );
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             MockSerDeService.modelSchema,
             MockSerDeService.ModelSchema.serialize
           )
@@ -117,7 +117,7 @@ describe('Serializer/Deserializer - Tests', () => {
           MockSerDeService.ModelSchema.deserialize(MockSerDeService.serializedModelSchema)
         ).toEqual(MockSerDeService.modelSchema);
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             MockSerDeService.serializedModelSchema,
             MockSerDeService.ModelSchema.deserialize
           )
@@ -128,7 +128,7 @@ describe('Serializer/Deserializer - Tests', () => {
           MockSerDeService.NestedModelSchema.serialize(MockSerDeService.nestedModelSchema)
         ).toEqual(MockSerDeService.serializedNestedModelSchema);
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             MockSerDeService.nestedModelSchema,
             MockSerDeService.NestedModelSchema.serialize
           )
@@ -141,7 +141,7 @@ describe('Serializer/Deserializer - Tests', () => {
           )
         ).toEqual(MockSerDeService.nestedModelSchema);
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             MockSerDeService.serializedNestedModelSchema,
             MockSerDeService.NestedModelSchema.deserialize
           )
@@ -151,7 +151,7 @@ describe('Serializer/Deserializer - Tests', () => {
     describe('On lists', () => {
       it('modelSchema as a list member should equal serializedModelSchema as a list member after calling serialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             [MockSerDeService.modelSchema],
             MockSerDeService.ModelSchema.serialize
           )
@@ -159,7 +159,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('serializedModelSchema as a list member should equal modelSchema as a list member after calling deserialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             [MockSerDeService.serializedModelSchema],
             MockSerDeService.ModelSchema.deserialize
           )
@@ -167,7 +167,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('nestedModelSchema as a list member should equal serializedNestedModelSchema as a list member after calling serialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             [MockSerDeService.nestedModelSchema],
             MockSerDeService.NestedModelSchema.serialize
           )
@@ -175,7 +175,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('serializedNestedModelSchema as a list member should equal nestedModelSchema as a list member after calling deserialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             [MockSerDeService.serializedNestedModelSchema],
             MockSerDeService.NestedModelSchema.deserialize
           )
@@ -185,7 +185,7 @@ describe('Serializer/Deserializer - Tests', () => {
     describe('On maps', () => {
       it('modelSchema as a map member should equal serializedModelSchema as a map member after calling serialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             { key: MockSerDeService.modelSchema },
             MockSerDeService.ModelSchema.serialize,
             true
@@ -194,7 +194,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('serializedModelSchema as a map member should equal modelSchema as a map member after calling deserialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             { key: MockSerDeService.serializedModelSchema },
             MockSerDeService.ModelSchema.deserialize,
             true
@@ -203,7 +203,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('nestedModelSchema as a map member should equal serializedNestedModelSchema as a map member after calling serialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             { key: MockSerDeService.nestedModelSchema },
             MockSerDeService.NestedModelSchema.serialize,
             true
@@ -212,7 +212,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('serializedNestedModelSchema as a map member should equal nestedModelSchema as a map member after calling deserialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             { key: MockSerDeService.serializedNestedModelSchema },
             MockSerDeService.NestedModelSchema.deserialize,
             true
@@ -223,7 +223,7 @@ describe('Serializer/Deserializer - Tests', () => {
     describe('On list of maps', () => {
       it('modelSchema as a list of maps member should equal serializedModelSchema as a list of maps after calling serialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             [{ key: MockSerDeService.modelSchema }],
             MockSerDeService.ModelSchema.serialize,
             true
@@ -232,7 +232,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('serializedModelSchema as a list of maps member should equal modelSchema as a list of maps after calling deserialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             [{ key: MockSerDeService.serializedModelSchema }],
             MockSerDeService.ModelSchema.deserialize,
             true
@@ -241,7 +241,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('nestedModelSchema as a list of maps member should equal serializedNestedModelSchema as a list of maps after calling serialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             [{ key: MockSerDeService.nestedModelSchema }],
             MockSerDeService.NestedModelSchema.serialize,
             true
@@ -250,7 +250,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('serializedNestedModelSchema as a list of maps member should equal nestedModelSchema as a list of maps after calling deserialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             [{ key: MockSerDeService.serializedNestedModelSchema }],
             MockSerDeService.NestedModelSchema.deserialize,
             true
@@ -261,7 +261,7 @@ describe('Serializer/Deserializer - Tests', () => {
     describe('On map of lists', () => {
       it('modelSchema as a map of lists member should equal serializedModelSchema as a map of lists after calling serialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             { key: [MockSerDeService.modelSchema] },
             MockSerDeService.ModelSchema.serialize,
             true
@@ -270,7 +270,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('serializedModelSchema as a map of lists member should equal modelSchema as a map of lists after calling deserialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             { key: [MockSerDeService.serializedModelSchema] },
             MockSerDeService.ModelSchema.deserialize,
             true
@@ -279,7 +279,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('nestedModelSchema as a map of lists member should equal serializedNestedModelSchema as a map of lists after calling serialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             { key: [MockSerDeService.nestedModelSchema] },
             MockSerDeService.NestedModelSchema.serialize,
             true
@@ -288,7 +288,7 @@ describe('Serializer/Deserializer - Tests', () => {
       });
       it('serializedNestedModelSchema as a map of lists member should equal nestedModelSchema as a map of lists after calling deserialize on it', () => {
         expect(
-          BaseService.serializeModel(
+          BaseService.convertModel(
             { key: [MockSerDeService.serializedNestedModelSchema] },
             MockSerDeService.NestedModelSchema.deserialize,
             true
