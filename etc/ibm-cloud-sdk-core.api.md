@@ -55,7 +55,9 @@ export class BaseService {
     // (undocumented)
     protected baseOptions: BaseServiceOptions;
     protected configureService(serviceName: string): void;
+    static convertModel(input: any, converterFn: any, isMap?: boolean): any;
     protected createRequest(parameters: any): Promise<any>;
+    protected createRequestAndDeserializeResponse(parameters: any, deserializerFn: (any: any) => any, isMap?: boolean): Promise<any>;
     // (undocumented)
     static DEFAULT_SERVICE_NAME: string;
     // (undocumented)

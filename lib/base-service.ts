@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2014, 2022.
+ * (C) Copyright IBM Corp. 2014, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -204,6 +204,28 @@ export class BaseService {
   }
 
   /**
+   * Applies a given modifier function on a model object.
+   * Since the model object can be a map, or an array, or a model,
+   * these types needs different handling.
+   * Considering whether the input object is a map happens with an explicit parameter.
+   * @param input - the input model object
+   * @param converterFn - the function that is applied on the input object
+   * @param isMap - is `true` when the input object should be handled as a map
+   */
+  public static convertModel(input, converterFn, isMap?: boolean) {
+    if (input == null || typeof input === 'string') {
+      // no need for conversation
+      return input;
+    }
+    if (Array.isArray(input)) {
+      return BaseService.convertArray(input, converterFn, isMap);
+    } else if (isMap === true) {
+      return BaseService.convertMap(input, converterFn);
+    }
+    return converterFn(input);
+  }
+
+  /**
    * Configure the service using external configuration
    *
    * @param serviceName - the name of the service. This will be used to read from external
@@ -255,6 +277,31 @@ export class BaseService {
     );
   }
 
+  /**
+   * Wrapper around `createRequest` that enforces arrived response to be deserialized.
+   * @param parameters - see `parameters` in `createRequest`
+   * @param deserializerFn - the deserializer function that is applied on the response object
+   * @param isMap - is `true` when the response object should be handled as a map
+   * @protected
+   * @returns a Promise
+   */
+  protected createRequestAndDeserializeResponse(
+    parameters: any,
+    deserializerFn: (any) => any,
+    isMap?: boolean
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.createRequest(parameters)
+        .then((r) => {
+          if (r !== undefined && r.result !== undefined) {
+            r.result = BaseService.convertModel(r.result, deserializerFn, isMap);
+          }
+          resolve(r);
+        })
+        .catch((err) => reject(err));
+    });
+  }
+
   // eslint-disable-next-line class-methods-use-this
   private readOptionsFromExternalConfig(serviceName: string): BaseServiceOptions {
     const results: BaseServiceOptions = {};
@@ -289,5 +336,21 @@ export class BaseService {
     }
 
     return results;
+  }
+
+  private static convertArray(arrayInput, converterFn, isMap) {
+    const serializedList = [];
+    arrayInput.forEach((element) => {
+      serializedList.push(this.convertModel(element, converterFn, isMap));
+    });
+    return serializedList;
+  }
+
+  private static convertMap(mapInput, converterFn) {
+    const serializedMap = {};
+    Object.keys(mapInput).forEach((key) => {
+      serializedMap[key] = BaseService.convertModel(mapInput[key], converterFn);
+    });
+    return serializedMap;
   }
 }
