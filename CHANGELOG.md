@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/IBM/node-sdk-core/compare/v4.0.9...v4.1.0) (2023-07-06)
+
+
+### Features
+
+* add logic for serializing/deserializing model objects ([#247](https://github.com/IBM/node-sdk-core/issues/247)) ([2397eae](https://github.com/IBM/node-sdk-core/commit/2397eaef56c247a2720396c7d1444b2331ae5a73))
+
 ## [4.0.9](https://github.com/IBM/node-sdk-core/compare/v4.0.8...v4.0.9) (2023-06-22)
 
 
