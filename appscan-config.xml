@@ -3,6 +3,7 @@
     <Target path=".">
       <Exclude>scripts/</Exclude>
       <Exclude>test/</Exclude>
+      <Exclude>lib/request-wrapper.ts</Exclude>
     </Target>
   </Targets>
 </Configuration>

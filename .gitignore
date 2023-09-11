@@ -27,3 +27,4 @@ dist/
 temp/
 build/
 es/tsdoc-metadata.json
+.nvmrc
