@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2020, 2022.
+ * (C) Copyright IBM Corp. 2020, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 
 const tough = require('tough-cookie');
+const nock = require('nock');
 const { CookieInterceptor } = require('../../dist/lib/cookie-support');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
+const { NoAuthAuthenticator, BaseService } = require('../../dist');
 
 // DEBUG also uses an interceptor so if we want to debug when running the tests
 // we need our expectations adjusted by 1
@@ -217,5 +219,67 @@ describe('cookie jar support', () => {
     const spiedSetCookie = jest.spyOn(mockCookieJar, 'setCookie');
     await cookieResponseInterceptor(mockResponse);
     expect(spiedSetCookie).toHaveBeenCalledTimes(1);
+  });
+});
+describe('end-to-end tests', () => {
+  const cookieJar = new tough.CookieJar();
+  const url = 'http://cookie-test.com';
+  const path = '/cookieTest';
+  nock.disableNetConnect();
+
+  const service = new BaseService({
+    authenticator: new NoAuthAuthenticator(),
+    serviceUrl: url,
+    jar: cookieJar,
+  });
+
+  const parameters = {
+    options: {
+      method: 'GET',
+      url: path,
+      headers: {},
+    },
+    defaultOptions: {
+      serviceUrl: url,
+    },
+  };
+
+  let setCookieSpy;
+  let getCookieStringSpy;
+
+  beforeEach(() => {
+    setCookieSpy = jest.spyOn(cookieJar, 'setCookie').mockImplementation(() => {});
+    getCookieStringSpy = jest.spyOn(cookieJar, 'getCookieString').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    setCookieSpy.mockRestore();
+    getCookieStringSpy.mockRestore();
+  });
+
+  it('success response', async () => {
+    const scope = nock(url)
+      .get(path)
+      .reply(200, 'we have cookies!', { 'set-cookie': 'foo=bar; Secure; HttpOnly' });
+
+    const result = await service.createRequest(parameters);
+
+    expect(scope.isDone()).toBe(true);
+    expect(getCookieStringSpy).toHaveBeenCalled();
+    expect(setCookieSpy).toHaveBeenCalled();
+  });
+  it('error response', async () => {
+    const scope = nock(url)
+      .get(path)
+      .reply(400, 'someone ate the cookies!', { 'set-cookie': 'foo=bar; Secure; HttpOnly' });
+
+    try {
+      await service.createRequest(parameters);
+    } finally {
+      expect(scope.isDone()).toBe(true);
+      expect(getCookieStringSpy).toHaveBeenCalled();
+      expect(setCookieSpy).toHaveBeenCalled();
+    }
   });
 });

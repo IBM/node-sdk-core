@@ -282,7 +282,6 @@ export class BaseService {
    * @param parameters - see `parameters` in `createRequest`
    * @param deserializerFn - the deserializer function that is applied on the response object
    * @param isMap - is `true` when the response object should be handled as a map
-   * @protected
    * @returns a Promise
    */
   protected createRequestAndDeserializeResponse(

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2022.
+ * (C) Copyright IBM Corp. 2022, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,13 @@ export class CookieInterceptor {
     }
   }
 
+  /**
+   * This is called by Axios when a request is about to be sent in order to
+   * copy the cookie string from the URL to a request header.
+   *
+   * @param config the Axios request config
+   * @returns the request config
+   */
   public async requestInterceptor(config: InternalAxiosRequestConfig) {
     logger.debug('CookieInterceptor: intercepting request');
     if (config && config.url) {
@@ -54,6 +61,13 @@ export class CookieInterceptor {
     return config;
   }
 
+  /**
+   * This is called by Axios when a 2xx response has been received.
+   * We'll invoke the configured cookie jar's setCookie() method to handle
+   * the "set-cookie" header.
+   * @param response the Axios response object
+   * @returns the response object
+   */
   public async responseInterceptor(response: AxiosResponse) {
     logger.debug('CookieInterceptor: intercepting response.');
     if (response && response.headers) {
@@ -74,5 +88,25 @@ export class CookieInterceptor {
       logger.debug('CookieInterceptor: no response headers.');
     }
     return response;
+  }
+
+  /**
+   * This is called by Axios when a non-2xx response has been received.
+   * We'll simply invoke the "responseFulfilled" method since we want to
+   * do the same cookie handler as for a success response.
+   * @param error the Axios error object that describes the non-2xx response
+   * @returns the error object
+   */
+  public async responseRejected(error: any) {
+    logger.debug('CookieIntercepter: intercepting error response');
+
+    if (error && error.response) {
+      logger.debug('CookieIntercepter: delegating to responseInterceptor()');
+      await this.responseInterceptor(error.response);
+    } else {
+      logger.debug('CookieInterceptor: no response field in error object, skipping...');
+    }
+
+    return Promise.reject(error);
   }
 }

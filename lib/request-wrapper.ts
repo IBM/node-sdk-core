@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2014, 2022.
+ * (C) Copyright IBM Corp. 2014, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,14 +101,15 @@ export class RequestWrapper {
       this.axiosInstance.defaults.headers[op]['Content-Type'] = 'application/json';
     });
 
-    // if a cookie jar is provided, wrap the axios instance and update defaults
+    // if a cookie jar is provided, register our CookieInterceptor methods with axios
     if (axiosOptions.jar) {
       const cookieInterceptor = new CookieInterceptor(axiosOptions.jar);
       const requestCookieInterceptor = (config) => cookieInterceptor.requestInterceptor(config);
       const responseCookieInterceptor = (response) =>
         cookieInterceptor.responseInterceptor(response);
+      const responseRejected = (error) => cookieInterceptor.responseRejected(error);
       this.axiosInstance.interceptors.request.use(requestCookieInterceptor);
-      this.axiosInstance.interceptors.response.use(responseCookieInterceptor);
+      this.axiosInstance.interceptors.response.use(responseCookieInterceptor, responseRejected);
     }
 
     // get retry config properties and conditionally enable retries
