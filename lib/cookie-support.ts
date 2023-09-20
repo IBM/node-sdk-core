@@ -53,24 +53,20 @@ const internalCreateCookieInterceptor = (cookieJar: CookieJar) => {
    * @returns the response object
    */
   async function responseInterceptor(response: AxiosResponse) {
-    logger.debug('CookieInterceptor: intercepting response.');
-    if (response && response.headers) {
-      logger.debug('CookieInterceptor: checking for set-cookie headers.');
-      const cookies: string[] = response.headers['set-cookie'];
-      if (cookies) {
-        logger.debug(`CookieInterceptor: setting cookies in jar for URL ${response.config.url}.`);
-        // Write cookies sequentially by chaining the promises in a reduce
-        await cookies.reduce(
-          (cookiePromise: Promise<Cookie>, cookie: string) =>
-            cookiePromise.then(() => cookieJar.setCookie(cookie, response.config.url)),
-          Promise.resolve(null)
-        );
-      } else {
-        logger.debug('CookieInterceptor: no set-cookie headers.');
-      }
+    logger.debug('CookieInterceptor: intercepting response to check for set-cookie headers.');
+    const cookies: string[] = response.headers['set-cookie'];
+    if (cookies) {
+      logger.debug(`CookieInterceptor: setting cookies in jar for URL ${response.config.url}.`);
+      // Write cookies sequentially by chaining the promises in a reduce
+      await cookies.reduce(
+        (cookiePromise: Promise<Cookie>, cookie: string) =>
+          cookiePromise.then(() => cookieJar.setCookie(cookie, response.config.url)),
+        Promise.resolve(null)
+      );
     } else {
-      logger.debug('CookieInterceptor: no response headers.');
+      logger.debug('CookieInterceptor: no set-cookie headers.');
     }
+
     return response;
   }
 
