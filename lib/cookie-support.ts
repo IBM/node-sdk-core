@@ -97,11 +97,10 @@ const internalCreateCookieInterceptor = (cookieJar: CookieJar) => {
   return (axios: Axios) => {
     axios.interceptors.request.use(requestInterceptor);
     axios.interceptors.response.use(responseInterceptor, responseRejected);
-  }
-}
+  };
+};
 
 export const createCookieInterceptor = (cookieJar: CookieJar | boolean) => {
-
   if (cookieJar) {
     if (cookieJar === true) {
       logger.debug('CookieInterceptor: creating new CookieJar');
@@ -113,4 +112,4 @@ export const createCookieInterceptor = (cookieJar: CookieJar | boolean) => {
   } else {
     throw new Error('Must supply a cookie jar or true.');
   }
-}
+};

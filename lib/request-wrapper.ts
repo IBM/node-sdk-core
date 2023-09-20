@@ -35,7 +35,7 @@ import {
 } from './helper';
 import logger from './logger';
 import { streamToPromise } from './stream-to-promise';
-import { CookieInterceptor } from './cookie-support';
+import { createCookieInterceptor } from './cookie-support';
 import { chainError } from './chain-error';
 
 /**
@@ -101,7 +101,7 @@ export class RequestWrapper {
       this.axiosInstance.defaults.headers[op]['Content-Type'] = 'application/json';
     });
 
-    // if a cookie jar is provided, register our CookieInterceptor methods with axios
+    // if a cookie jar is provided, register our cookie interceptors with axios
     if (axiosOptions.jar) {
       createCookieInterceptor(axiosOptions.jar)(this.axiosInstance);
     }

@@ -274,18 +274,23 @@ describe('end-to-end tests', () => {
       .get(path)
       .reply(400, 'someone ate the cookies!', { 'set-cookie': 'foo=bar; Secure; HttpOnly' });
 
+    let errorResponse;
     try {
       await service.createRequest(parameters);
       throw new Error('An error response should trigger an error here');
     } catch (e) {
-      expect(scope.isDone()).toBe(true);
-      expect(getCookieStringSpy).toHaveBeenCalled();
-      expect(setCookieSpy).toHaveBeenCalled();
-
-      // Check the error response
-      expect(e.status).toBe(400);
-      expect(e.headers).toBeDefined();
-      expect(e.headers['set-cookie']).toEqual(['foo=bar; Secure; HttpOnly']); 
+      errorResponse = e;
     }
+
+    // Check that the cookie interceptor was called
+    expect(scope.isDone()).toBe(true);
+    expect(getCookieStringSpy).toHaveBeenCalled();
+    expect(setCookieSpy).toHaveBeenCalled();
+
+    // Check the error response for the cookie data
+    expect(errorResponse).toBeDefined();
+    expect(errorResponse.status).toBe(400);
+    expect(errorResponse.headers).toBeDefined();
+    expect(errorResponse.headers['set-cookie']).toEqual(['foo=bar; Secure; HttpOnly']);
   });
 });
