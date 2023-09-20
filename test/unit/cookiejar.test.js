@@ -276,10 +276,16 @@ describe('end-to-end tests', () => {
 
     try {
       await service.createRequest(parameters);
-    } finally {
+      throw new Error('An error response should trigger an error here');
+    } catch (e) {
       expect(scope.isDone()).toBe(true);
       expect(getCookieStringSpy).toHaveBeenCalled();
       expect(setCookieSpy).toHaveBeenCalled();
+
+      // Check the error response
+      expect(e.status).toBe(400);
+      expect(e.headers).toBeDefined();
+      expect(e.headers['set-cookie']).toEqual(['foo=bar; Secure; HttpOnly']); 
     }
   });
 });

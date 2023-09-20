@@ -103,13 +103,7 @@ export class RequestWrapper {
 
     // if a cookie jar is provided, register our CookieInterceptor methods with axios
     if (axiosOptions.jar) {
-      const cookieInterceptor = new CookieInterceptor(axiosOptions.jar);
-      const requestCookieInterceptor = (config) => cookieInterceptor.requestInterceptor(config);
-      const responseCookieInterceptor = (response) =>
-        cookieInterceptor.responseInterceptor(response);
-      const responseRejected = (error) => cookieInterceptor.responseRejected(error);
-      this.axiosInstance.interceptors.request.use(requestCookieInterceptor);
-      this.axiosInstance.interceptors.response.use(responseCookieInterceptor, responseRejected);
+      createCookieInterceptor(axiosOptions.jar)(this.axiosInstance);
     }
 
     // get retry config properties and conditionally enable retries
