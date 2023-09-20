@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/IBM/node-sdk-core/compare/v4.1.0...v4.1.1) (2023-09-20)
+
+
+### Bug Fixes
+
+* process cookies in failed responses ([#251](https://github.com/IBM/node-sdk-core/issues/251)) ([52f758b](https://github.com/IBM/node-sdk-core/commit/52f758bc5700b3ccd283e39cca7401ee8dcb60d9))
+
 # [4.1.0](https://github.com/IBM/node-sdk-core/compare/v4.0.9...v4.1.0) (2023-07-06)
 
 
