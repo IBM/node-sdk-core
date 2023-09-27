@@ -22,7 +22,7 @@ import logger from './logger';
 const internalCreateCookieInterceptor = (cookieJar: CookieJar) => {
   /**
    * This is called by Axios when a request is about to be sent in order to
-   * copy the cookie string from the URL to a request header.
+   * set the "cookie" header in the request.
    *
    * @param config the Axios request config
    * @returns the request config
@@ -54,17 +54,21 @@ const internalCreateCookieInterceptor = (cookieJar: CookieJar) => {
    */
   async function responseInterceptor(response: AxiosResponse) {
     logger.debug('CookieInterceptor: intercepting response to check for set-cookie headers.');
-    const cookies: string[] = response.headers['set-cookie'];
-    if (cookies) {
-      logger.debug(`CookieInterceptor: setting cookies in jar for URL ${response.config.url}.`);
-      // Write cookies sequentially by chaining the promises in a reduce
-      await cookies.reduce(
-        (cookiePromise: Promise<Cookie>, cookie: string) =>
-          cookiePromise.then(() => cookieJar.setCookie(cookie, response.config.url)),
-        Promise.resolve(null)
-      );
+    if (response && response.headers) {
+      const cookies: string[] = response.headers['set-cookie'];
+      if (cookies) {
+        logger.debug(`CookieInterceptor: setting cookies in jar for URL ${response.config.url}.`);
+        // Write cookies sequentially by chaining the promises in a reduce
+        await cookies.reduce(
+          (cookiePromise: Promise<Cookie>, cookie: string) =>
+            cookiePromise.then(() => cookieJar.setCookie(cookie, response.config.url)),
+          Promise.resolve(null)
+        );
+      } else {
+        logger.debug('CookieInterceptor: no set-cookie headers.');
+      }
     } else {
-      logger.debug('CookieInterceptor: no set-cookie headers.');
+      logger.debug('CookieInterceptor: no response headers.');
     }
 
     return response;
@@ -72,15 +76,15 @@ const internalCreateCookieInterceptor = (cookieJar: CookieJar) => {
 
   /**
    * This is called by Axios when a non-2xx response has been received.
-   * We'll simply invoke the "responseFulfilled" method since we want to
-   * do the same cookie handler as for a success response.
+   * We'll simply delegate to the "responseInterceptor" method since we want to
+   * do the same cookie handling as for a success response.
    * @param error the Axios error object that describes the non-2xx response
    * @returns the error object
    */
   async function responseRejected(error: any) {
     logger.debug('CookieIntercepter: intercepting error response');
 
-    if (isAxiosError(error)) {
+    if (isAxiosError(error) && error.response) {
       logger.debug('CookieIntercepter: delegating to responseInterceptor()');
       await responseInterceptor(error.response);
     } else {
