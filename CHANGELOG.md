@@ -1,3 +1,10 @@
+## [4.1.3](https://github.com/IBM/node-sdk-core/compare/v4.1.2...v4.1.3) (2023-10-19)
+
+
+### Bug Fixes
+
+* bump @babel/traverse to avoid CVE-2023-45133 ([#253](https://github.com/IBM/node-sdk-core/issues/253)) ([c95f5b2](https://github.com/IBM/node-sdk-core/commit/c95f5b23f3a74e00d53142520f6c9d408e298b6b))
+
 ## [4.1.2](https://github.com/IBM/node-sdk-core/compare/v4.1.1...v4.1.2) (2023-09-27)
 
 
