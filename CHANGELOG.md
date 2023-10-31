@@ -1,3 +1,10 @@
+## [4.1.4](https://github.com/IBM/node-sdk-core/compare/v4.1.3...v4.1.4) (2023-10-31)
+
+
+### Bug Fixes
+
+* **deps:** resolve vulnerability in axios version ([#256](https://github.com/IBM/node-sdk-core/issues/256)) ([9bc0358](https://github.com/IBM/node-sdk-core/commit/9bc0358a58e05032ad644973e6f60ae09756efa7))
+
 ## [4.1.3](https://github.com/IBM/node-sdk-core/compare/v4.1.2...v4.1.3) (2023-10-19)
 
 
