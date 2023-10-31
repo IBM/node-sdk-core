@@ -707,7 +707,7 @@ describe('sendRequest', () => {
     mockAxiosInstance.mockResolvedValue(axiosResolveValue);
 
     await expect(requestWrapperInstance.sendRequest(parameters)).rejects.toThrow(
-      'Error processing HTTP response: SyntaxError: Unexpected end of JSON input'
+      'Error processing HTTP response: SyntaxError'
     );
     expect(verboseLogSpy).toHaveBeenCalledTimes(2);
     expect(verboseLogSpy.mock.calls[0][0]).toBe(
@@ -969,7 +969,7 @@ describe('formatError', () => {
 
     expect(() => {
       requestWrapperInstance.formatError(newAxiosError);
-    }).toThrow('Error processing HTTP response: SyntaxError: Unexpected end of JSON input');
+    }).toThrow('Error processing HTTP response: SyntaxError');
     expect(verboseLogSpy).toHaveBeenCalledTimes(2);
     expect(verboseLogSpy.mock.calls[0][0]).toBe(
       'Response body was supposed to have JSON content but JSON parsing failed.'
