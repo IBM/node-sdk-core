@@ -23,6 +23,7 @@ const {
   IamAuthenticator,
   ContainerAuthenticator,
   VpcInstanceAuthenticator,
+  McspAuthenticator,
   NoAuthAuthenticator,
 } = require('../../dist/auth');
 
@@ -78,6 +79,13 @@ describe('Get Authenticator From Environment Module', () => {
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(IamAuthenticator);
     expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_IAM);
+  });
+
+  it('should get mcsp authenticator', () => {
+    setUpMcspPayload();
+    const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
+    expect(authenticator).toBeInstanceOf(McspAuthenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_MCSP);
   });
 
   it('should get cp4d authenticator', () => {
@@ -177,6 +185,14 @@ function setUpIamPayloadWithScope() {
     authType: 'iam',
     apikey: APIKEY,
     scope: 'jon snow',
+  }));
+}
+
+function setUpMcspPayload() {
+  readExternalSourcesMock.mockImplementation(() => ({
+    authType: 'mcsp',
+    apikey: APIKEY,
+    authUrl: TOKEN_URL,
   }));
 }
 
