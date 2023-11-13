@@ -1,3 +1,10 @@
+## [4.1.5](https://github.com/IBM/node-sdk-core/compare/v4.1.4...v4.1.5) (2023-11-13)
+
+
+### Bug Fixes
+
+* move @types/debug to 'dependencies' ([#260](https://github.com/IBM/node-sdk-core/issues/260)) ([2eb6ad6](https://github.com/IBM/node-sdk-core/commit/2eb6ad6d506a2bbdadf764e6dfb92228c962522e))
+
 ## [4.1.4](https://github.com/IBM/node-sdk-core/compare/v4.1.3...v4.1.4) (2023-10-31)
 
 
