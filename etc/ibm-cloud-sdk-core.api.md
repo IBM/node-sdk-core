@@ -34,6 +34,8 @@ export class Authenticator implements AuthenticatorInterface {
     // (undocumented)
     static AUTHTYPE_IAM: string;
     // (undocumented)
+    static AUTHTYPE_MCSP: string;
+    // (undocumented)
     static AUTHTYPE_NOAUTH: string;
     // (undocumented)
     static AUTHTYPE_UNKNOWN: string;
@@ -328,6 +330,27 @@ export class JwtTokenManager extends TokenManager {
 
 // @public
 export type JwtTokenManagerOptions = TokenManagerOptions;
+
+// @public
+export class McspAuthenticator extends TokenRequestBasedAuthenticator {
+    // Warning: (ae-forgotten-export) The symbol "Options_12" needs to be exported by the entry point index.d.ts
+    constructor(options: Options_12);
+    authenticationType(): string;
+    // (undocumented)
+    protected requiredOptions: string[];
+    // (undocumented)
+    protected tokenManager: McspTokenManager;
+}
+
+// @public
+export class McspTokenManager extends JwtTokenManager {
+    // Warning: (ae-forgotten-export) The symbol "Options_11" needs to be exported by the entry point index.d.ts
+    constructor(options: Options_11);
+    // (undocumented)
+    protected requestToken(): Promise<any>;
+    // (undocumented)
+    protected requiredOptions: string[];
+}
 
 // @public
 export class NoAuthAuthenticator extends Authenticator {

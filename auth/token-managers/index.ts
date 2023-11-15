@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,17 @@
  * Cloud Pak for Data
  * Container (IKS, etc)
  * VPC Instance
+ * Multi-Cloud Saas Platform (MCSP)
  *
  * The token managers sit inside of an authenticator and do the work to retrieve
- * tokens where as the authenticators add these tokens to the actual request.
+ * tokens, whereas the authenticators add these tokens to the actual request.
  *
  * classes:
  *   IamTokenManager: Token Manager of IAM via apikey.
  *   Cp4dTokenManager: Token Manager of CloudPak for data.
  *   ContainerTokenManager: Token manager of IAM via compute resource token.
  *   VpcInstanceTokenManager: Token manager of VPC Instance Metadata Service API tokens.
+ *   McspTokenManager: Token Manager of MCSP via apikey.
  *   JwtTokenManager: A class for shared functionality for parsing, storing, and requesting JWT tokens.
  */
 
@@ -41,3 +43,4 @@ export { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-ba
 export { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 export { TokenManager, TokenManagerOptions } from './token-manager';
 export { VpcInstanceTokenManager } from './vpc-instance-token-manager';
+export { McspTokenManager } from './mcsp-token-manager';
