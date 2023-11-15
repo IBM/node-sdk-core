@@ -1,3 +1,10 @@
+# [4.2.0](https://github.com/IBM/node-sdk-core/compare/v4.1.5...v4.2.0) (2023-11-15)
+
+
+### Features
+
+* **McspAuthenticator:** add new authenticator for Multi-Cloud Saas Platform ([#258](https://github.com/IBM/node-sdk-core/issues/258)) ([4fe7f71](https://github.com/IBM/node-sdk-core/commit/4fe7f7191c8a93947b359034229f7f966936ae53))
+
 ## [4.1.5](https://github.com/IBM/node-sdk-core/compare/v4.1.4...v4.1.5) (2023-11-13)
 
 
