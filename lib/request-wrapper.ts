@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+/* eslint-disable class-methods-use-this, no-restricted-syntax */
 
 /**
  * (C) Copyright IBM Corp. 2014, 2023.
@@ -238,6 +238,20 @@ export class RequestWrapper {
       data = await this.gzipRequestBody(data, headers);
     }
 
+    // Holds the hostname of the current request.
+    // It's used between redirects.
+    let currentHost = new URL(url).hostname;
+
+    // Headers that are considered being safe
+    // and can be copied during HTTP redirects
+    // on the `cloud.ibm.com` namespace.
+    const safeHeaders = {
+      Authorization: headers.Authorization,
+      Cookie: headers.Cookie,
+      Cookie2: headers.Cookie2,
+      'WWW-Authenticate': headers['WWW-Authenticate'],
+    };
+
     const requestParams = {
       url,
       method,
@@ -247,6 +261,21 @@ export class RequestWrapper {
       raxConfig: this.raxConfig,
       responseType: options.responseType || 'json',
       paramsSerializer: { serialize: (params) => stringify(params) },
+      maxRedirects: 10,
+      beforeRedirect: (nextRequest: any) => {
+        if (shouldCopySafeHeadersOnRedirect(currentHost, nextRequest.hostname)) {
+          for (const [name, value] of Object.entries(safeHeaders)) {
+            // Copy the header to the redirected request if it's defined
+            // and not already present.
+            if (value && nextRequest.headers[name] === undefined) {
+              nextRequest.headers[name] = value;
+            }
+          }
+
+          // Update the host for the next redirect.
+          currentHost = nextRequest.hostname;
+        }
+      },
     };
 
     return this.axiosInstance(requestParams).then(
@@ -579,4 +608,9 @@ function ensureJSONResponseBodyIsObject(response: any): any | string {
   }
 
   return dataAsObject;
+}
+
+// Returns true iff safe headers should be copied to a redirected request.
+function shouldCopySafeHeadersOnRedirect(fromHost: string, toHost: string): boolean {
+  return fromHost.endsWith('.cloud.ibm.com') && toHost.endsWith('.cloud.ibm.com');
 }
