@@ -54,8 +54,8 @@ describe('Node Core redirects', () => {
   });
 
   it('should include safe headers within cloud.ibm.com domain', async () => {
-    const url1 = 'http://region1.cloud.ibm.com';
-    const url2 = 'http://region2.cloud.ibm.com';
+    const url1 = 'https://region1.cloud.ibm.com';
+    const url2 = 'https://region2.cloud.ibm.com';
 
     const { service, parameters } = initService(url1);
 
@@ -85,8 +85,8 @@ describe('Node Core redirects', () => {
   });
 
   it('should exclude safe headers from cloud.ibm.com to not cloud.ibm.com domain', async () => {
-    const url1 = 'http://region1.cloud.ibm.com';
-    const url2 = 'http://region2.notcloud.ibm.com';
+    const url1 = 'https://region1.cloud.ibm.com';
+    const url2 = 'https://region2.notcloud.ibm.com';
 
     const { service, parameters } = initService(url1);
 
@@ -117,8 +117,8 @@ describe('Node Core redirects', () => {
   });
 
   it('should exclude safe headers from not cloud.ibm.com to cloud.ibm.com domain', async () => {
-    const url1 = 'http://region2.notcloud.ibm.com';
-    const url2 = 'http://region1.cloud.ibm.com';
+    const url1 = 'https://region2.notcloud.ibm.com';
+    const url2 = 'https://region1.cloud.ibm.com';
 
     const { service, parameters } = initService(url1);
 
@@ -149,8 +149,8 @@ describe('Node Core redirects', () => {
   });
 
   it('should exclude safe headers from not cloud.ibm.com to not cloud.ibm.com domain', async () => {
-    const url1 = 'http://region1.notcloud.ibm.com';
-    const url2 = 'http://region2.notcloud.ibm.com';
+    const url1 = 'https://region1.notcloud.ibm.com';
+    const url2 = 'https://region2.notcloud.ibm.com';
 
     const { service, parameters } = initService(url1);
 
@@ -180,21 +180,85 @@ describe('Node Core redirects', () => {
     scopes.forEach((s) => s.done());
   });
 
+  it('should include safe headers for the same host within cloud.ibm.com', async () => {
+    const url1 = 'https://region1.cloud.ibm.com';
+    const url2 = 'https://region1.cloud.ibm.com';
+
+    const { service, parameters } = initService(url1);
+
+    const scopes = [
+      nock(url1)
+        .matchHeader('Authorization', safeHeaders.Authorization)
+        .matchHeader('Cookie', safeHeaders.Cookie)
+        .matchHeader('Cookie2', safeHeaders.Cookie2)
+        .matchHeader('WWW-Authenticate', safeHeaders['WWW-Authenticate'])
+        .get('/')
+        .reply(302, 'just about to redirect', { Location: url2 }),
+      nock(url2)
+        .matchHeader('Authorization', safeHeaders.Authorization)
+        .matchHeader('Cookie', safeHeaders.Cookie)
+        .matchHeader('Cookie2', safeHeaders.Cookie2)
+        .matchHeader('WWW-Authenticate', safeHeaders['WWW-Authenticate'])
+        .get('/')
+        .reply(200, 'successfully redirected'),
+    ];
+
+    const result = await service.createRequest(parameters);
+
+    expect(result.result).toBe('successfully redirected');
+    expect(result.status).toBe(200);
+
+    // Ensure all mocks satisfied.
+    scopes.forEach((s) => s.done());
+  });
+
+  it('should include safe headers for the same host outside cloud.ibm.com', async () => {
+    const url1 = 'https://region2.notcloud.ibm.com';
+    const url2 = 'https://region2.notcloud.ibm.com';
+
+    const { service, parameters } = initService(url1);
+
+    const scopes = [
+      nock(url1)
+        .matchHeader('Authorization', safeHeaders.Authorization)
+        .matchHeader('Cookie', safeHeaders.Cookie)
+        .matchHeader('Cookie2', safeHeaders.Cookie2)
+        .matchHeader('WWW-Authenticate', safeHeaders['WWW-Authenticate'])
+        .get('/')
+        .reply(302, 'just about to redirect', { Location: url2 }),
+      nock(url2)
+        .matchHeader('Authorization', safeHeaders.Authorization)
+        .matchHeader('Cookie', safeHeaders.Cookie)
+        .matchHeader('Cookie2', safeHeaders.Cookie2)
+        .matchHeader('WWW-Authenticate', safeHeaders['WWW-Authenticate'])
+        .get('/')
+        .reply(200, 'successfully redirected'),
+    ];
+
+    const result = await service.createRequest(parameters);
+
+    expect(result.result).toBe('successfully redirected');
+    expect(result.status).toBe(200);
+
+    // Ensure all mocks satisfied.
+    scopes.forEach((s) => s.done());
+  });
+
   it('should fail due to exhaustion', async () => {
     const scopes = [];
     for (let i = 1; i <= 11; i++) {
       scopes.push(
-        nock(`http://region${i}.cloud.ibm.com`)
+        nock(`https://region${i}.cloud.ibm.com`)
           .matchHeader('Authorization', safeHeaders.Authorization)
           .matchHeader('Cookie', safeHeaders.Cookie)
           .matchHeader('Cookie2', safeHeaders.Cookie2)
           .matchHeader('WWW-Authenticate', safeHeaders['WWW-Authenticate'])
           .get('/')
-          .reply(302, 'just about to redirect', { Location: `http://region${i + 1}.cloud.ibm.com` })
+          .reply(302, 'just about to redirect', { Location: `https://region${i + 1}.cloud.ibm.com` })
       );
     }
 
-    const { service, parameters } = initService('http://region1.cloud.ibm.com');
+    const { service, parameters } = initService('https://region1.cloud.ibm.com');
 
     let result;
     let error;
