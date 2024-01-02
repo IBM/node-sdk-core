@@ -1,3 +1,10 @@
+## [4.2.1](https://github.com/IBM/node-sdk-core/compare/v4.2.0...v4.2.1) (2024-01-02)
+
+
+### Bug Fixes
+
+* **deps:** bump axios to 1.6.3 to avoid ReDOS vulnerability ([#263](https://github.com/IBM/node-sdk-core/issues/263)) ([b08f9de](https://github.com/IBM/node-sdk-core/commit/b08f9dee9af2b62c520524cfa036e3c8a83e591a))
+
 # [4.2.0](https://github.com/IBM/node-sdk-core/compare/v4.1.5...v4.2.0) (2023-11-15)
 
 
