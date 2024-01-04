@@ -1,6 +1,6 @@
 {
   "name": "ibm-cloud-sdk-core",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "Core functionality to support SDKs generated with IBM's OpenAPI SDK Generator.",
   "main": "./index.js",
   "typings": "./es/index.d.ts",

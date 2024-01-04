@@ -1,3 +1,10 @@
+## [4.2.2](https://github.com/IBM/node-sdk-core/compare/v4.2.1...v4.2.2) (2024-01-04)
+
+
+### Bug Fixes
+
+* **deps:** bump axios to 1.6.4 ([#265](https://github.com/IBM/node-sdk-core/issues/265)) ([48c558b](https://github.com/IBM/node-sdk-core/commit/48c558b3afdb8988ae8559ea1594a1cf950f18db))
+
 ## [4.2.1](https://github.com/IBM/node-sdk-core/compare/v4.2.0...v4.2.1) (2024-01-02)
 
 
