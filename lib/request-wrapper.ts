@@ -612,5 +612,7 @@ function ensureJSONResponseBodyIsObject(response: any): any | string {
 
 // Returns true iff safe headers should be copied to a redirected request.
 function shouldCopySafeHeadersOnRedirect(fromHost: string, toHost: string): boolean {
-  return fromHost.endsWith('.cloud.ibm.com') && toHost.endsWith('.cloud.ibm.com');
+  const sameHost = fromHost === toHost;
+  const safeDomain = fromHost.endsWith('.cloud.ibm.com') && toHost.endsWith('.cloud.ibm.com');
+  return sameHost || safeDomain;
 }
