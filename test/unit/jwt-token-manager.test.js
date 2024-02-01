@@ -22,6 +22,7 @@ const decode = require('jsonwebtoken/decode');
 decode.mockImplementation(() => ({ exp: 100, iat: 100 }));
 
 const { JwtTokenManager } = require('../../dist/auth');
+const logger = require('../../dist/lib/logger').default;
 
 function getCurrentTime() {
   return Math.floor(Date.now() / 1000);
@@ -126,12 +127,17 @@ describe('JWT Token Manager', () => {
       requestTokenSpy.mockRestore();
     });
 
-    it('should request a token if token is stored but needs refresh', async () => {
+    it('should request a token if token is stored but is expired', async () => {
       const instance = new JwtTokenManager();
-      instance.tokenInfo.access_token = CURRENT_ACCESS_TOKEN;
+      instance.accessToken = CURRENT_ACCESS_TOKEN;
 
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
+      const tokenNeedsRefreshSpy = jest.spyOn(instance, 'tokenNeedsRefresh');
       decode.mockImplementation((token) => ({ iat: 10, exp: 100 }));
+
+      const isTokenExpiredSpy = jest
+        .spyOn(instance, 'isTokenExpired')
+        .mockImplementation(() => true);
 
       const requestTokenSpy = jest
         .spyOn(instance, 'requestToken')
@@ -141,14 +147,86 @@ describe('JWT Token Manager', () => {
       expect(requestTokenSpy).toHaveBeenCalled();
       expect(saveTokenInfoSpy).toHaveBeenCalled();
       expect(decode).toHaveBeenCalled();
-      expect(token).toBe(CURRENT_ACCESS_TOKEN);
+      expect(token).toBe(ACCESS_TOKEN);
+      expect(instance.accessToken).toBe(ACCESS_TOKEN);
+      expect(tokenNeedsRefreshSpy).not.toHaveBeenCalled();
 
       saveTokenInfoSpy.mockRestore();
       decode.mockRestore();
       requestTokenSpy.mockRestore();
+      tokenNeedsRefreshSpy.mockRestore();
     });
 
-    it('should not save token info if token request returned an error', async () => {
+    it('should refresh token if token is stored but needs refresh (close to expired)', async () => {
+      const instance = new JwtTokenManager();
+      instance.accessToken = CURRENT_ACCESS_TOKEN;
+
+      const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
+      decode.mockImplementation((token) => ({ iat: 10, exp: 100 }));
+
+      const isTokenExpiredSpy = jest
+        .spyOn(instance, 'isTokenExpired')
+        .mockImplementation(() => false);
+
+      const requestTokenSpy = jest
+        .spyOn(instance, 'requestToken')
+        .mockImplementation(() => Promise.resolve({ result: { access_token: ACCESS_TOKEN } }));
+
+      const token = await instance.getToken();
+      expect(requestTokenSpy).toHaveBeenCalled();
+      expect(saveTokenInfoSpy).toHaveBeenCalled();
+      expect(token).toBe(CURRENT_ACCESS_TOKEN);
+      expect(instance.accessToken).toBe(ACCESS_TOKEN);
+      expect(decode).toHaveBeenCalled();
+
+      saveTokenInfoSpy.mockRestore();
+      requestTokenSpy.mockRestore();
+      isTokenExpiredSpy.mockRestore();
+      decode.mockRestore();
+    });
+
+    it('should return stored token without error if token refresh fails but should not save token info', async () => {
+      const instance = new JwtTokenManager();
+      instance.accessToken = CURRENT_ACCESS_TOKEN;
+
+      const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');
+
+      const isTokenExpiredSpy = jest
+        .spyOn(instance, 'isTokenExpired')
+        .mockImplementation(() => false);
+
+      const requestTokenSpy = jest
+        .spyOn(instance, 'requestToken')
+        .mockImplementation(() => Promise.reject(new Error('Connection Refused')));
+
+      const errorLogSpy = jest.spyOn(logger, 'error');
+      const debugLogSpy = jest.spyOn(logger, 'debug');
+
+      const token = await instance.getToken();
+
+      expect(requestTokenSpy).toHaveBeenCalled();
+      expect(isTokenExpiredSpy).toHaveBeenCalled();
+      expect(saveTokenInfoSpy).not.toHaveBeenCalled();
+      expect(token).toBe(CURRENT_ACCESS_TOKEN);
+
+      expect(errorLogSpy).toHaveBeenCalled();
+      expect(errorLogSpy.mock.calls[0][0]).toMatch(
+        'Attempted token refresh failed. The refresh will be retried with the next request. Connection Refused'
+      );
+
+      expect(debugLogSpy).toHaveBeenCalled();
+      const debugArg = debugLogSpy.mock.calls[0][0];
+      expect(debugArg).toBeInstanceOf(Error);
+      expect(debugArg.stack).toMatch(/Error: Connection Refused\n.*at JwtTokenManager/);
+
+      saveTokenInfoSpy.mockRestore();
+      requestTokenSpy.mockRestore();
+      isTokenExpiredSpy.mockRestore();
+      errorLogSpy.mockRestore();
+      debugLogSpy.mockRestore();
+    });
+
+    it('should not save token info or return token if paced token request returned an error', async () => {
       const instance = new JwtTokenManager();
 
       const saveTokenInfoSpy = jest.spyOn(instance, 'saveTokenInfo');

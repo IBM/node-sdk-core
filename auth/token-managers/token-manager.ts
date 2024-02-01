@@ -104,9 +104,22 @@ export class TokenManager {
     }
     // If refresh needed, kick one off
     if (this.tokenNeedsRefresh()) {
-      this.requestToken().then((tokenResponse) => {
-        this.saveTokenInfo(tokenResponse);
-      });
+      this.requestToken().then(
+        (tokenResponse) => {
+          this.saveTokenInfo(tokenResponse);
+        },
+        (err) => {
+          // If the refresh request failed: catch the error, log a message, and return the stored token.
+          // The attempt to get a new token will be retried upon the next request.
+          let message =
+            'Attempted token refresh failed. The refresh will be retried with the next request.';
+          if (err && err.message) {
+            message += ` ${err.message}`;
+          }
+          logger.error(message);
+          logger.debug(err);
+        }
+      );
     }
     // 2. use valid, managed token
     return Promise.resolve(this.accessToken);
