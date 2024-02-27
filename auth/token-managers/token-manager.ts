@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2020, 2023.
+ * (C) Copyright IBM Corp. 2020, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -214,7 +214,7 @@ export class TokenManager {
   /**
    * Checks if currently-stored token is expired
    */
-  private isTokenExpired(): boolean {
+  protected isTokenExpired(): boolean {
     const { expireTime } = this;
 
     if (!expireTime) {

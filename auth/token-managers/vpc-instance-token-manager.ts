@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2021, 2023.
+ * (C) Copyright IBM Corp. 2021, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
  */
 
 import logger from '../../lib/logger';
-import { atMostOne } from '../utils/helpers';
+import { atMostOne, getCurrentTime } from '../utils/helpers';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
 const DEFAULT_IMS_ENDPOINT = 'http://169.254.169.254';
 const METADATA_SERVICE_VERSION = '2022-03-01';
+const IAM_EXPIRATION_WINDOW = 10;
 
 /** Configuration options for VPC token retrieval. */
 interface Options extends JwtTokenManagerOptions {
@@ -173,5 +174,25 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     }
 
     return token;
+  }
+
+  /**
+   * Returns true iff the currently-cached IAM access token is expired.
+   * We'll consider an access token as expired when we reach its IAM server-reported
+   * expiration time minus our expiration window (10 secs).
+   * We do this to avoid using an access token that might expire in the middle of a long-running
+   * transaction within an IBM Cloud service.
+   *
+   * @returns true if the token has expired, false otherwise
+   */
+  protected isTokenExpired(): boolean {
+    const { expireTime } = this;
+
+    if (!expireTime) {
+      return true;
+    }
+
+    const currentTime = getCurrentTime();
+    return currentTime >= expireTime - IAM_EXPIRATION_WINDOW;
   }
 }

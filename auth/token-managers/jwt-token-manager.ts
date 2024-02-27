@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2022.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ export class JwtTokenManager extends TokenManager {
 
     const decodedResponse = decode(this.accessToken);
     if (!decodedResponse) {
-      const err = 'Access token recieved is not a valid JWT';
+      const err = 'Access token received is not a valid JWT';
       logger.error(err);
       throw new Error(err);
     }

@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * Copyright 2021, 2023 IBM Corp. All Rights Reserved.
+ * Copyright 2021, 2024 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,15 @@
  * limitations under the License.
  */
 
+jest.mock('jsonwebtoken/decode');
+const decode = require('jsonwebtoken/decode');
+
+decode.mockImplementation(() => ({ exp: 100, iat: 100 }));
+
 const path = require('path');
 const { VpcInstanceTokenManager } = require('../../dist/auth');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
+const { getCurrentTime } = require('../../dist/auth/utils/helpers');
 const logger = require('../../dist/lib/logger').default;
 
 // make sure no actual requests are sent
@@ -33,6 +39,7 @@ const debugLogSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
 
 const IAM_PROFILE_CRN = 'some-crn';
 const IAM_PROFILE_ID = 'some-id';
+const EXPIRATION_WINDOW = 10;
 
 describe('VPC Instance Token Manager', () => {
   afterAll(() => {
@@ -197,6 +204,26 @@ describe('VPC Instance Token Manager', () => {
       expect(parameters.options.body).toBeDefined();
       expect(parameters.options.body.trusted_profile).toBeDefined();
       expect(parameters.options.body.trusted_profile.id).toBe('some-id');
+    });
+  });
+  describe('getToken', () => {
+    it('should refresh an expired access token', async () => {
+      const instance = new VpcInstanceTokenManager({ iamProfileId: 'some-id' });
+      const requestMock = jest.spyOn(instance, 'requestToken');
+
+      // Set up the token manager to initially contain the first access token.
+      instance.accessToken = 'not-a-token';
+      instance.expireTime = getCurrentTime() + 1000;
+      instance.refreshTime = getCurrentTime() + 1000;
+
+      let token = await instance.getToken();
+      expect(token).toBe('not-a-token');
+
+      // Set the expiration time so that we'll consider the first token expired.
+      instance.expireTime = getCurrentTime() + EXPIRATION_WINDOW;
+      token = await instance.getToken();
+      expect(token).toBe(TOKEN);
+      expect(requestMock).toHaveBeenCalled();
     });
   });
 });
