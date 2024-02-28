@@ -1,3 +1,10 @@
+## [4.2.4](https://github.com/IBM/node-sdk-core/compare/v4.2.3...v4.2.4) (2024-02-28)
+
+
+### Bug Fixes
+
+* adjust IAM token expiration time ([#268](https://github.com/IBM/node-sdk-core/issues/268)) ([9b975e0](https://github.com/IBM/node-sdk-core/commit/9b975e0da75d46ea29095eebeda5d0b079f058c6))
+
 ## [4.2.3](https://github.com/IBM/node-sdk-core/compare/v4.2.2...v4.2.3) (2024-02-01)
 
 
