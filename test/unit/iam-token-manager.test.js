@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ decode.mockImplementation(() => ({ exp: 100, iat: 100 }));
 
 jest.mock('../../dist/lib/request-wrapper');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
-
 const { IamTokenManager } = require('../../dist/auth');
+const { getCurrentTime } = require('../../dist/auth/utils/helpers');
 
 const mockSendRequest = jest.fn();
 
@@ -32,6 +32,7 @@ RequestWrapper.mockImplementation(() => ({
   sendRequest: mockSendRequest,
 }));
 
+const EXPIRATION_WINDOW = 10;
 const ACCESS_TOKEN = '9012';
 const CURRENT_ACCESS_TOKEN = '1234';
 const REFRESH_TOKEN = '3456';
@@ -41,7 +42,7 @@ const IAM_RESPONSE = {
     refresh_token: REFRESH_TOKEN,
     token_type: 'Bearer',
     expires_in: 3600,
-    expiration: Math.floor(Date.now() / 1000) + 3600,
+    expiration: getCurrentTime() + 3600,
   },
 };
 
@@ -101,16 +102,20 @@ describe('IAM Token Manager', () => {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
     const requestMock = jest.spyOn(instance, 'requestToken');
 
-    const currentTokenInfo = {
-      access_token: CURRENT_ACCESS_TOKEN,
-    };
+    // Set up the token manager to initially contain the first access token.
+    instance.accessToken = CURRENT_ACCESS_TOKEN;
+    instance.expireTime = getCurrentTime() + 1000;
+    instance.refreshTime = getCurrentTime() + 1000;
 
-    instance.tokenInfo = currentTokenInfo;
-    instance.expireTime = Math.floor(Date.now() / 1000) - 1;
+    let token = await instance.getToken();
+    expect(token).toBe(CURRENT_ACCESS_TOKEN);
 
+    // Set the expiration time so that we'll consider the first token expired.
+    instance.expireTime = getCurrentTime() + EXPIRATION_WINDOW;
+
+    // Set up our second mock response, then call getToken() and make sure we got the second access token.
     mockSendRequest.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
-
-    const token = await instance.getToken();
+    token = await instance.getToken();
     expect(token).toBe(ACCESS_TOKEN);
     expect(requestMock).toHaveBeenCalled();
   });
@@ -125,8 +130,8 @@ describe('IAM Token Manager', () => {
 
     instance.tokenInfo = currentTokenInfo;
     instance.accessToken = CURRENT_ACCESS_TOKEN;
-    instance.expireTime = Math.floor(Date.now() / 1000) + 60;
-    instance.refreshTime = Math.floor(Date.now() / 1000) - 1;
+    instance.expireTime = getCurrentTime() + 60;
+    instance.refreshTime = getCurrentTime() - 1;
 
     const requestTokenSpy = jest
       .spyOn(instance, 'requestToken')
@@ -152,8 +157,8 @@ describe('IAM Token Manager', () => {
 
     instance.tokenInfo = currentTokenInfo;
     instance.accessToken = ACCESS_TOKEN;
-    instance.expireTime = Math.floor(Date.now() / 1000) + 60 * 60;
-    instance.refreshTime = Math.floor(Date.now() / 1000) + 48 * 60;
+    instance.expireTime = getCurrentTime() + 60 * 60;
+    instance.refreshTime = getCurrentTime() + 48 * 60;
 
     const token = await instance.getToken();
     expect(token).toBe(ACCESS_TOKEN);

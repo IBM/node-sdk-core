@@ -276,6 +276,7 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
     // (undocumented)
     protected formData: any;
     getRefreshToken(): string;
+    protected isTokenExpired(): boolean;
     // (undocumented)
     protected refreshToken: string;
     protected requestToken(): Promise<any>;
@@ -411,6 +412,7 @@ export class TokenManager {
     getToken(): Promise<any>;
     // (undocumented)
     protected headers: OutgoingHttpHeaders;
+    protected isTokenExpired(): boolean;
     protected pacedRequestToken(): Promise<any>;
     // (undocumented)
     protected refreshTime: number;
@@ -501,6 +503,7 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
 export class VpcInstanceTokenManager extends JwtTokenManager {
     // Warning: (ae-forgotten-export) The symbol "Options_9" needs to be exported by the entry point index.d.ts
     constructor(options: Options_9);
+    protected isTokenExpired(): boolean;
     // (undocumented)
     protected requestToken(): Promise<any>;
     setIamProfileCrn(iamProfileCrn: string): void;
