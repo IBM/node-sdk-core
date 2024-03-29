@@ -18,10 +18,6 @@
   "author": "IBM Corp.",
   "contributors": [
     {
-      "name": "German Attanasio Ruiz",
-      "email": "germanatt@us.ibm.com"
-    },
-    {
       "name": "Dustin Popp",
       "email": "dustinpopp@ibm.com"
     },
@@ -74,7 +70,7 @@
     "@types/isstream": "^0.1.0",
     "@types/node": "~10.14.19",
     "@types/tough-cookie": "^4.0.0",
-    "axios": "1.6.4",
+    "axios": "1.6.8",
     "camelcase": "^5.3.1",
     "debug": "^4.3.4",
     "dotenv": "^6.2.0",
