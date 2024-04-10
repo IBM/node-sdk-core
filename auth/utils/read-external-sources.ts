@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2022.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
  */
 
 import camelcase from 'camelcase';
-import isEmpty from 'lodash.isempty';
 import logger from '../../lib/logger';
+import { isEmptyObject } from '../../lib/helper';
 import { readCredentialsFile } from './file-reading-helpers';
 
 /**
@@ -50,11 +50,11 @@ function getProperties(serviceName: string): any {
 
   properties = filterPropertiesByServiceName(readCredentialsFile(), serviceName);
 
-  if (isEmpty(properties)) {
+  if (isEmptyObject(properties)) {
     properties = filterPropertiesByServiceName(process.env, serviceName);
   }
 
-  if (isEmpty(properties)) {
+  if (isEmptyObject(properties)) {
     properties = getPropertiesFromVCAP(serviceName);
   }
 

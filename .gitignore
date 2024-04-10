@@ -4,6 +4,7 @@ npm-debug.log.*
 coverage
 .DS_Store
 .idea
+.nvmrc
 doc/
 .vscode/
 *.env
@@ -21,7 +22,6 @@ coverage.lcov
 .swagger-codegen-ignore
 /.settings/
 /.project
-.secrets.baseline
 .pre-commit-config.yaml
 dist/
 temp/
