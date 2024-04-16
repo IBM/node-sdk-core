@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * Copyright 2021 IBM Corp. All Rights Reserved.
+ * (C) Copyright IBM Corp. 2021, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 jest.mock('../../dist/lib/request-wrapper');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
+const { getRequestOptions } = require('./utils');
 const logger = require('../../dist/lib/logger').default;
 
 const { IamRequestBasedTokenManager } = require('../../dist/auth');
@@ -29,16 +30,6 @@ const CLIENT_ID = 'some-id';
 const CLIENT_SECRET = 'some-secret';
 const CLIENT_ID_SECRET_WARNING =
   'Warning: Client ID and Secret must BOTH be given, or the header will not be included.';
-
-// a function to pull the arguments out of the `sendRequest` mock
-// and verify the structure looks like it is supposed to
-function getRequestOptions(sendRequestMock) {
-  const sendRequestArgs = sendRequestMock.mock.calls[0][0];
-  expect(sendRequestArgs).toBeDefined();
-  expect(sendRequestArgs.options).toBeDefined();
-
-  return sendRequestArgs.options;
-}
 
 describe('IAM Request Based Token Manager', () => {
   // set up mocks
@@ -186,7 +177,7 @@ describe('IAM Request Based Token Manager', () => {
 
       const requestOptions = getRequestOptions(sendRequestMock);
       expect(requestOptions.headers).toBeDefined();
-      expect(requestOptions.headers['Content-type']).toBe('application/x-www-form-urlencoded');
+      expect(requestOptions.headers['Content-Type']).toBe('application/x-www-form-urlencoded');
     });
 
     // add custom headers if set
@@ -201,7 +192,7 @@ describe('IAM Request Based Token Manager', () => {
 
       const requestOptions = getRequestOptions(sendRequestMock);
       expect(requestOptions.headers).toBeDefined();
-      expect(requestOptions.headers['Content-type']).toBeDefined(); // verify default headers aren't overwritten
+      expect(requestOptions.headers['Content-Type']).toBeDefined(); // verify default headers aren't overwritten
       expect(requestOptions.headers['My-Header']).toBe('some-value');
     });
 

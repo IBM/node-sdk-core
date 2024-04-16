@@ -47,6 +47,8 @@ export type TokenManagerOptions = {
 export class TokenManager {
   protected url: string;
 
+  protected userAgent: string;
+
   protected disableSslVerification: boolean;
 
   protected headers: OutgoingHttpHeaders;

@@ -157,7 +157,8 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
   protected requestToken(): Promise<any> {
     // these cannot be overwritten
     const requiredHeaders = {
-      'Content-type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': this.userAgent,
     } as OutgoingHttpHeaders;
 
     // If both the clientId and secret were specified by the user, then use them.

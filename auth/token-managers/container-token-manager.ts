@@ -1,5 +1,5 @@
 /**
- * Copyright 2021, 2023 IBM Corp. All Rights Reserved.
+ * (C) Copyright IBM Corp. 2021, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import { atLeastOne } from '../utils/helpers';
 import { readCrTokenFile } from '../utils/file-reading-helpers';
+import { buildUserAgent } from '../../lib/build-user-agent';
 import { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-based-token-manager';
 
 const DEFAULT_CR_TOKEN_FILEPATH1 = '/var/run/secrets/tokens/vault-token';
@@ -83,6 +84,8 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
 
     // construct form data for the cr token use case of iam token management
     this.formData.grant_type = 'urn:ibm:params:oauth:grant-type:cr-token';
+
+    this.userAgent = buildUserAgent('container-authenticator');
   }
 
   /**

@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * Copyright 2021, 2024 IBM Corp. All Rights Reserved.
+ * (C) Copyright IBM Corp. 2021, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,12 @@ const path = require('path');
 const { VpcInstanceTokenManager } = require('../../dist/auth');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 const { getCurrentTime } = require('../../dist/auth/utils/helpers');
+const { getRequestOptions } = require('./utils');
 const logger = require('../../dist/lib/logger').default;
 
 // make sure no actual requests are sent
 jest.mock('../../dist/lib/request-wrapper');
 const TOKEN = 'abc123';
-const sendRequestMock = jest.fn().mockImplementation(() => ({ result: { access_token: TOKEN } }));
-RequestWrapper.mockImplementation(() => ({
-  sendRequest: sendRequestMock,
-}));
 
 const debugLogSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
 
@@ -42,6 +39,11 @@ const IAM_PROFILE_ID = 'some-id';
 const EXPIRATION_WINDOW = 10;
 
 describe('VPC Instance Token Manager', () => {
+  const sendRequestMock = jest.fn().mockImplementation(() => ({ result: { access_token: TOKEN } }));
+  RequestWrapper.mockImplementation(() => ({
+    sendRequest: sendRequestMock,
+  }));
+
   afterAll(() => {
     sendRequestMock.mockRestore();
   });
@@ -108,22 +110,20 @@ describe('VPC Instance Token Manager', () => {
       const instance = new VpcInstanceTokenManager({ url: '123.345.567' });
       await instance.getInstanceIdentityToken();
 
-      const parameters = sendRequestMock.mock.calls[0][0];
-      expect(parameters).toBeDefined();
-      expect(parameters.options).toBeDefined();
-      expect(parameters.options.url).toBe('123.345.567/instance_identity/v1/token');
-      expect(parameters.options.method).toBe('PUT');
+      const requestOptions = getRequestOptions(sendRequestMock);
+      expect(requestOptions.url).toBe('123.345.567/instance_identity/v1/token');
+      expect(requestOptions.method).toBe('PUT');
 
-      expect(parameters.options.qs).toBeDefined();
-      expect(parameters.options.qs.version).toBe('2022-03-01');
+      expect(requestOptions.qs).toBeDefined();
+      expect(requestOptions.qs.version).toBe('2022-03-01');
 
-      expect(parameters.options.body).toBeDefined();
-      expect(parameters.options.body.expires_in).toBe(300);
+      expect(requestOptions.body).toBeDefined();
+      expect(requestOptions.body.expires_in).toBe(300);
 
-      expect(parameters.options.headers).toBeDefined();
-      expect(parameters.options.headers['Content-Type']).toBe('application/json');
-      expect(parameters.options.headers.Accept).toBe('application/json');
-      expect(parameters.options.headers['Metadata-Flavor']).toBe('ibm');
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['Content-Type']).toBe('application/json');
+      expect(requestOptions.headers.Accept).toBe('application/json');
+      expect(requestOptions.headers['Metadata-Flavor']).toBe('ibm');
     });
 
     it('should make the request then extract and return the token', async () => {
@@ -152,6 +152,18 @@ describe('VPC Instance Token Manager', () => {
         "Caught exception from VPC 'create_access_token' operation: This is an error."
       );
     });
+
+    it('should set User-Agent header', async () => {
+      const instance = new VpcInstanceTokenManager({ iamProfileId: 'some-id' });
+
+      await instance.requestToken();
+
+      const requestOptions = getRequestOptions(sendRequestMock);
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['User-Agent']).toMatch(
+        /^ibm-node-sdk-core\/vpc-instance-authenticator.*$/
+      );
+    });
   });
 
   describe('requestToken', () => {
@@ -159,22 +171,21 @@ describe('VPC Instance Token Manager', () => {
       const instance = new VpcInstanceTokenManager({ url: '123.345.567' });
       await instance.requestToken();
 
-      const parameters = sendRequestMock.mock.calls[1][0];
-      expect(parameters).toBeDefined();
-      expect(parameters.options).toBeDefined();
-      expect(parameters.options.url).toBe('123.345.567/instance_identity/v1/iam_token');
-      expect(parameters.options.method).toBe('POST');
+      const requestOptions = getRequestOptions(sendRequestMock, 1);
+      expect(requestOptions).toBeDefined();
+      expect(requestOptions.url).toBe('123.345.567/instance_identity/v1/iam_token');
+      expect(requestOptions.method).toBe('POST');
 
-      expect(parameters.options.qs).toBeDefined();
-      expect(parameters.options.qs.version).toBe('2022-03-01');
+      expect(requestOptions.qs).toBeDefined();
+      expect(requestOptions.qs.version).toBe('2022-03-01');
 
       // if neither the profile id or crn is set, then the body should be undefined
-      expect(parameters.options.body).toBeUndefined();
+      expect(requestOptions.body).toBeUndefined();
 
-      expect(parameters.options.headers).toBeDefined();
-      expect(parameters.options.headers['Content-Type']).toBe('application/json');
-      expect(parameters.options.headers.Accept).toBe('application/json');
-      expect(parameters.options.headers.Authorization).toBe(`Bearer ${TOKEN}`);
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['Content-Type']).toBe('application/json');
+      expect(requestOptions.headers.Accept).toBe('application/json');
+      expect(requestOptions.headers.Authorization).toBe(`Bearer ${TOKEN}`);
 
       // check logs
       expect(debugLogSpy.mock.calls[2][0]).toBe(
@@ -186,24 +197,34 @@ describe('VPC Instance Token Manager', () => {
       const instance = new VpcInstanceTokenManager({ iamProfileCrn: 'some-crn' });
       await instance.requestToken();
 
-      const parameters = sendRequestMock.mock.calls[1][0];
-      expect(parameters).toBeDefined();
-      expect(parameters.options).toBeDefined();
-      expect(parameters.options.body).toBeDefined();
-      expect(parameters.options.body.trusted_profile).toBeDefined();
-      expect(parameters.options.body.trusted_profile.crn).toBe('some-crn');
+      const requestOptions = getRequestOptions(sendRequestMock, 1);
+      expect(requestOptions).toBeDefined();
+      expect(requestOptions.body).toBeDefined();
+      expect(requestOptions.body.trusted_profile).toBeDefined();
+      expect(requestOptions.body.trusted_profile.crn).toBe('some-crn');
     });
 
     it('should set trusted profile to iam profile id, if set', async () => {
       const instance = new VpcInstanceTokenManager({ iamProfileId: 'some-id' });
       await instance.requestToken();
 
-      const parameters = sendRequestMock.mock.calls[1][0];
-      expect(parameters).toBeDefined();
-      expect(parameters.options).toBeDefined();
-      expect(parameters.options.body).toBeDefined();
-      expect(parameters.options.body.trusted_profile).toBeDefined();
-      expect(parameters.options.body.trusted_profile.id).toBe('some-id');
+      const requestOptions = getRequestOptions(sendRequestMock, 1);
+      expect(requestOptions).toBeDefined();
+      expect(requestOptions.body).toBeDefined();
+      expect(requestOptions.body.trusted_profile).toBeDefined();
+      expect(requestOptions.body.trusted_profile.id).toBe('some-id');
+    });
+
+    it('should set User-Agent header', async () => {
+      const instance = new VpcInstanceTokenManager({ iamProfileId: 'some-id' });
+
+      await instance.requestToken();
+
+      const requestOptions = getRequestOptions(sendRequestMock, 1);
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['User-Agent']).toMatch(
+        /^ibm-node-sdk-core\/vpc-instance-authenticator.*$/
+      );
     });
   });
   describe('getToken', () => {

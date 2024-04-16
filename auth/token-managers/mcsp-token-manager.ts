@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2023, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 import extend from 'extend';
 import { validateInput } from '../utils/helpers';
+import { buildUserAgent } from '../../lib/build-user-agent';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
 /**
@@ -76,12 +77,15 @@ export class McspTokenManager extends JwtTokenManager {
     validateInput(options, this.requiredOptions);
 
     this.apikey = options.apikey;
+
+    this.userAgent = buildUserAgent('mcsp-authenticator');
   }
 
   protected requestToken(): Promise<any> {
     const requiredHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      'User-Agent': this.userAgent,
     };
 
     const parameters = {

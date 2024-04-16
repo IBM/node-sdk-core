@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * Copyright 2021, 2023 IBM Corp. All Rights Reserved.
+ * (C) Copyright IBM Corp. 2021, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,22 @@
 const path = require('path');
 const { ContainerTokenManager } = require('../../dist/auth');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
+const { getRequestOptions } = require('./utils');
 const logger = require('../../dist/lib/logger').default;
 
 // make sure no actual requests are sent
 jest.mock('../../dist/lib/request-wrapper');
-const sendRequestMock = jest.fn();
-RequestWrapper.mockImplementation(() => ({
-  sendRequest: sendRequestMock,
-}));
 
 const CR_TOKEN_FILENAME = '/path/to/file';
 const IAM_PROFILE_NAME = 'some-name';
 const IAM_PROFILE_ID = 'some-id';
 
 describe('Container Token Manager', () => {
+  const sendRequestMock = jest.fn();
+  RequestWrapper.mockImplementation(() => ({
+    sendRequest: sendRequestMock,
+  }));
+
   afterAll(() => {
     sendRequestMock.mockRestore();
   });
@@ -132,6 +134,21 @@ describe('Container Token Manager', () => {
       expect(instance.formData.profile_name).toBeUndefined();
       expect(instance.formData.profile_id).toBe(IAM_PROFILE_ID);
       expect(instance.formData.profile_id).not.toBe(firstValue);
+    });
+
+    it('should set User-Agent header', async () => {
+      const instance = new ContainerTokenManager({
+        crTokenFilename: pathToTestToken,
+        iamProfileName: IAM_PROFILE_NAME,
+      });
+
+      await instance.requestToken();
+
+      const requestOptions = getRequestOptions(sendRequestMock);
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['User-Agent']).toMatch(
+        /^ibm-node-sdk-core\/container-authenticator.*$/
+      );
     });
   });
 });

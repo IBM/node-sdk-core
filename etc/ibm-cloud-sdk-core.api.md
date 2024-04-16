@@ -426,6 +426,8 @@ export class TokenManager {
     setHeaders(headers: OutgoingHttpHeaders): void;
     // (undocumented)
     protected url: string;
+    // (undocumented)
+    protected userAgent: string;
 }
 
 // @public
