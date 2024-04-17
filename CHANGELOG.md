@@ -1,3 +1,10 @@
+# [4.3.0](https://github.com/IBM/node-sdk-core/compare/v4.2.5...v4.3.0) (2024-04-17)
+
+
+### Features
+
+* send user-agent header with auth token requests ([#272](https://github.com/IBM/node-sdk-core/issues/272)) ([a558274](https://github.com/IBM/node-sdk-core/commit/a558274d3c19a2d0d453b8e9f5bc233f201ebb85))
+
 ## [4.2.5](https://github.com/IBM/node-sdk-core/compare/v4.2.4...v4.2.5) (2024-03-29)
 
 
