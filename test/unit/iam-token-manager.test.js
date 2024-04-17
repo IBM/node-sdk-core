@@ -25,12 +25,7 @@ jest.mock('../../dist/lib/request-wrapper');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 const { IamTokenManager } = require('../../dist/auth');
 const { getCurrentTime } = require('../../dist/auth/utils/helpers');
-
-const mockSendRequest = jest.fn();
-
-RequestWrapper.mockImplementation(() => ({
-  sendRequest: mockSendRequest,
-}));
+const { getRequestOptions } = require('./utils');
 
 const EXPIRATION_WINDOW = 10;
 const ACCESS_TOKEN = '9012';
@@ -47,12 +42,17 @@ const IAM_RESPONSE = {
 };
 
 describe('IAM Token Manager', () => {
+  const sendRequestMock = jest.fn();
+  RequestWrapper.mockImplementation(() => ({
+    sendRequest: sendRequestMock,
+  }));
+
   beforeEach(() => {
-    mockSendRequest.mockReset();
+    sendRequestMock.mockReset();
   });
 
   afterAll(() => {
-    mockSendRequest.mockRestore();
+    sendRequestMock.mockRestore();
   });
 
   it('should throw an error if apikey is not provided', () => {
@@ -77,7 +77,7 @@ describe('IAM Token Manager', () => {
       apikey: 'abcd-1234',
     });
 
-    mockSendRequest.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
+    sendRequestMock.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
 
     await instance.getToken();
 
@@ -91,7 +91,7 @@ describe('IAM Token Manager', () => {
   it('should turn an iam apikey into an access token', async () => {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
 
-    mockSendRequest.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
+    sendRequestMock.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
 
     const token = await instance.getToken();
 
@@ -114,7 +114,7 @@ describe('IAM Token Manager', () => {
     instance.expireTime = getCurrentTime() + EXPIRATION_WINDOW;
 
     // Set up our second mock response, then call getToken() and make sure we got the second access token.
-    mockSendRequest.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
+    sendRequestMock.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
     token = await instance.getToken();
     expect(token).toBe(ACCESS_TOKEN);
     expect(requestMock).toHaveBeenCalled();
@@ -137,7 +137,7 @@ describe('IAM Token Manager', () => {
       .spyOn(instance, 'requestToken')
       .mockImplementation(() => Promise.resolve({ result: { access_token: ACCESS_TOKEN } }));
 
-    mockSendRequest.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
+    sendRequestMock.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
 
     const token = await instance.getToken();
     expect(token).toBe(CURRENT_ACCESS_TOKEN);
@@ -163,5 +163,17 @@ describe('IAM Token Manager', () => {
     const token = await instance.getToken();
     expect(token).toBe(ACCESS_TOKEN);
     expect(requestMock).not.toHaveBeenCalled();
+  });
+
+  it('should set User-Agent header', async () => {
+    const instance = new IamTokenManager({ apikey: 'abcd-1234' });
+
+    await instance.requestToken();
+
+    const requestOptions = getRequestOptions(sendRequestMock);
+    expect(requestOptions.headers).toBeDefined();
+    expect(requestOptions.headers['User-Agent']).toMatch(
+      /^ibm-node-sdk-core\/iam-authenticator.*$/
+    );
   });
 });

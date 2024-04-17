@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -305,7 +305,10 @@ describe('Base Service', () => {
     const parameters = {
       defaultOptions: {
         serviceUrl: DEFAULT_URL,
-        Accept: 'application/json',
+        headers: {
+          Accept: 'application/json',
+          'User-Agent': 'my-user-agent',
+        },
       },
       options: {
         url: '/v2/assistants/{assistant_id}/sessions',
@@ -323,7 +326,43 @@ describe('Base Service', () => {
 
     const args = sendRequestMock.mock.calls[0];
     expect(args[0]).toEqual(parameters);
-    expect(testService.requestWrapperInstance.sendRequest).toBe(sendRequestMock); // verify it is calling the instance
+
+    // verify it is calling the instance
+    expect(testService.requestWrapperInstance.sendRequest).toBe(sendRequestMock);
+  });
+  it('createRequest should set a default User-Agent', async () => {
+    const testService = new TestService({
+      authenticator: AUTHENTICATOR,
+    });
+
+    const parameters = {
+      defaultOptions: {
+        serviceUrl: DEFAULT_URL,
+        headers: {
+          Accept: 'application/json',
+          'x-custom-header': 'foo',
+        },
+      },
+      options: {
+        url: '/v2/assistants/{assistant_id}/sessions',
+        method: 'POST',
+        path: {
+          id: '123',
+        },
+      },
+    };
+
+    await testService.createRequest(parameters);
+
+    expect(authenticateMock).toHaveBeenCalled();
+    expect(sendRequestMock).toHaveBeenCalled();
+
+    const requestOptions = sendRequestMock.mock.calls[0][0];
+    expect(requestOptions.defaultOptions).toBeDefined();
+    expect(requestOptions.defaultOptions.headers).toBeDefined();
+    expect(requestOptions.defaultOptions.headers['User-Agent']).toMatch(/^ibm-node-sdk-core-.*$/);
+    expect(requestOptions.defaultOptions.headers.Accept).toBe('application/json');
+    expect(requestOptions.defaultOptions.headers['x-custom-header']).toBe('foo');
   });
 
   it('createRequest should reject with an error if `serviceUrl` is not set', async () => {

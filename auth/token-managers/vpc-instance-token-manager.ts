@@ -16,6 +16,7 @@
 
 import logger from '../../lib/logger';
 import { atMostOne, getCurrentTime } from '../utils/helpers';
+import { buildUserAgent } from '../../lib/build-user-agent';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 
 const DEFAULT_IMS_ENDPOINT = 'http://169.254.169.254';
@@ -87,6 +88,8 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     if (options.iamProfileId) {
       this.iamProfileId = options.iamProfileId;
     }
+
+    this.userAgent = buildUserAgent('vpc-instance-authenticator');
   }
 
   /**
@@ -130,6 +133,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'User-Agent': this.userAgent,
           Accept: 'application/json',
           Authorization: `Bearer ${instanceIdentityToken}`,
         },
@@ -154,6 +158,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'User-Agent': this.userAgent,
           Accept: 'application/json',
           'Metadata-Flavor': 'ibm',
         },

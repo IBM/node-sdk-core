@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2014, 2023.
+ * (C) Copyright IBM Corp. 2014, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+import extend from 'extend';
 import type { CookieJar } from 'tough-cookie';
 import { OutgoingHttpHeaders } from 'http';
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
 import logger from './logger';
 import { RequestWrapper, RetryOptions } from './request-wrapper';
+import { buildUserAgent } from './build-user-agent';
 
 /**
  * Configuration values for a service.
@@ -70,6 +72,8 @@ export class BaseService {
   private authenticator: AuthenticatorInterface;
 
   private requestWrapperInstance: RequestWrapper;
+
+  private defaultUserAgent;
 
   /**
    * Configuration values for a service.
@@ -131,6 +135,8 @@ export class BaseService {
     }
 
     this.authenticator = options.authenticator;
+
+    this.defaultUserAgent = buildUserAgent();
   }
 
   /**
@@ -270,6 +276,17 @@ export class BaseService {
     if (!serviceUrl || typeof serviceUrl !== 'string') {
       return Promise.reject(new Error('The service URL is required'));
     }
+
+    // make sure the outbound request contains a User-Agent header
+    const userAgent = {
+      'User-Agent': this.defaultUserAgent,
+    };
+    parameters.defaultOptions.headers = extend(
+      true,
+      {},
+      userAgent,
+      parameters.defaultOptions.headers
+    );
 
     return this.authenticator.authenticate(parameters.defaultOptions).then(() =>
       // resolve() handles rejection as well, so resolving the result of sendRequest should allow for proper handling later

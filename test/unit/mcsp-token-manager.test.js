@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2023, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,7 @@ const { McspTokenManager } = require('../../dist/auth');
 // mock sendRequest
 jest.mock('../../dist/lib/request-wrapper');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
-
-const mockSendRequest = jest.fn();
-RequestWrapper.mockImplementation(() => ({
-  sendRequest: mockSendRequest,
-}));
+const { getRequestOptions } = require('./utils');
 
 const APIKEY = 'my-api-key';
 const URL = 'https://mcsp.ibm.com';
@@ -74,8 +70,13 @@ describe('MCSP Token Manager', () => {
   });
 
   describe('requestToken', () => {
+    const sendRequestMock = jest.fn();
+    RequestWrapper.mockImplementation(() => ({
+      sendRequest: sendRequestMock,
+    }));
+
     afterEach(() => {
-      mockSendRequest.mockClear();
+      sendRequestMock.mockClear();
     });
 
     it('should call sendRequest with all request options', () => {
@@ -86,19 +87,30 @@ describe('MCSP Token Manager', () => {
 
       instance.requestToken();
 
-      // extract arguments sendRequest was called with
-      const params = mockSendRequest.mock.calls[0][0];
+      const requestOptions = getRequestOptions(sendRequestMock);
+      expect(requestOptions.url).toBe(FULL_URL);
+      expect(requestOptions.method).toBe('POST');
+      expect(requestOptions.rejectUnauthorized).toBe(true);
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['Content-Type']).toBe('application/json');
+      expect(requestOptions.headers.Accept).toBe('application/json');
+      expect(requestOptions.body).toBeDefined();
+      expect(requestOptions.body.apikey).toBe(APIKEY);
+    });
 
-      expect(mockSendRequest).toHaveBeenCalled();
-      expect(params.options).toBeDefined();
-      expect(params.options.url).toBe(FULL_URL);
-      expect(params.options.method).toBe('POST');
-      expect(params.options.rejectUnauthorized).toBe(true);
-      expect(params.options.headers).toBeDefined();
-      expect(params.options.headers['Content-Type']).toBe('application/json');
-      expect(params.options.headers.Accept).toBe('application/json');
-      expect(params.options.body).toBeDefined();
-      expect(params.options.body.apikey).toBe(APIKEY);
+    it('should set User-Agent header', async () => {
+      const instance = new McspTokenManager({
+        url: URL,
+        apikey: APIKEY,
+      });
+
+      await instance.requestToken();
+
+      const requestOptions = getRequestOptions(sendRequestMock);
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['User-Agent']).toMatch(
+        /^ibm-node-sdk-core\/mcsp-authenticator.*$/
+      );
     });
   });
 });

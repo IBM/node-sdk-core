@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,7 @@ const { Cp4dTokenManager } = require('../../dist/auth');
 // mock sendRequest
 jest.mock('../../dist/lib/request-wrapper');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
-
-const mockSendRequest = jest.fn();
-RequestWrapper.mockImplementation(() => ({
-  sendRequest: mockSendRequest,
-}));
+const { getRequestOptions } = require('./utils');
 
 const USERNAME = 'sherlock';
 const PASSWORD = 'holmes';
@@ -34,6 +30,11 @@ const URL = 'tokenservice.com';
 const FULL_URL = 'tokenservice.com/v1/authorize';
 
 describe('CP4D Token Manager', () => {
+  const sendRequestMock = jest.fn();
+  RequestWrapper.mockImplementation(() => ({
+    sendRequest: sendRequestMock,
+  }));
+
   describe('constructor', () => {
     it('should initialize base variables - password edition', () => {
       const instance = new Cp4dTokenManager({
@@ -130,7 +131,7 @@ describe('CP4D Token Manager', () => {
 
   describe('requestToken', () => {
     afterEach(() => {
-      mockSendRequest.mockClear();
+      sendRequestMock.mockClear();
     });
 
     it('should call sendRequest with all request options - password edition', () => {
@@ -142,20 +143,16 @@ describe('CP4D Token Manager', () => {
 
       instance.requestToken();
 
-      // extract arguments sendRequest was called with
-      const params = mockSendRequest.mock.calls[0][0];
-
-      expect(mockSendRequest).toHaveBeenCalled();
-      expect(params.options).toBeDefined();
-      expect(params.options.url).toBe(FULL_URL);
-      expect(params.options.method).toBe('POST');
-      expect(params.options.rejectUnauthorized).toBe(true);
-      expect(params.options.headers).toBeDefined();
-      expect(params.options.headers['Content-Type']).toBe('application/json');
-      expect(params.options.body).toBeDefined();
-      expect(params.options.body.username).toBe(USERNAME);
-      expect(params.options.body.password).toBe(PASSWORD);
-      expect(params.options.body.api_key).toBeUndefined();
+      const requestOptions = getRequestOptions(sendRequestMock);
+      expect(requestOptions.url).toBe(FULL_URL);
+      expect(requestOptions.method).toBe('POST');
+      expect(requestOptions.rejectUnauthorized).toBe(true);
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['Content-Type']).toBe('application/json');
+      expect(requestOptions.body).toBeDefined();
+      expect(requestOptions.body.username).toBe(USERNAME);
+      expect(requestOptions.body.password).toBe(PASSWORD);
+      expect(requestOptions.body.api_key).toBeUndefined();
     });
 
     it('should call sendRequest with all request options - API key edition', () => {
@@ -167,20 +164,33 @@ describe('CP4D Token Manager', () => {
 
       instance.requestToken();
 
-      // extract arguments sendRequest was called with
-      const params = mockSendRequest.mock.calls[0][0];
+      const requestOptions = getRequestOptions(sendRequestMock);
+      expect(sendRequestMock).toHaveBeenCalled();
+      expect(requestOptions).toBeDefined();
+      expect(requestOptions.url).toBe(FULL_URL);
+      expect(requestOptions.method).toBe('POST');
+      expect(requestOptions.rejectUnauthorized).toBe(true);
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['Content-Type']).toBe('application/json');
+      expect(requestOptions.body).toBeDefined();
+      expect(requestOptions.body.username).toBe(USERNAME);
+      expect(requestOptions.body.password).toBeUndefined();
+    });
 
-      expect(mockSendRequest).toHaveBeenCalled();
-      expect(params.options).toBeDefined();
-      expect(params.options.url).toBe(FULL_URL);
-      expect(params.options.method).toBe('POST');
-      expect(params.options.rejectUnauthorized).toBe(true);
-      expect(params.options.headers).toBeDefined();
-      expect(params.options.headers['Content-Type']).toBe('application/json');
-      expect(params.options.body).toBeDefined();
-      expect(params.options.body.username).toBe(USERNAME);
-      // expect(params.options.body.api_key).toBe(APIKEY);
-      expect(params.options.body.password).toBeUndefined();
+    it('should set User-Agent header', async () => {
+      const instance = new Cp4dTokenManager({
+        url: URL,
+        username: USERNAME,
+        password: PASSWORD,
+      });
+
+      await instance.requestToken();
+
+      const requestOptions = getRequestOptions(sendRequestMock);
+      expect(requestOptions.headers).toBeDefined();
+      expect(requestOptions.headers['User-Agent']).toMatch(
+        /^ibm-node-sdk-core\/cp4d-authenticator.*$/
+      );
     });
   });
 });
