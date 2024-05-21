@@ -1,3 +1,10 @@
+## [4.3.1](https://github.com/IBM/node-sdk-core/compare/v4.3.0...v4.3.1) (2024-05-21)
+
+
+### Bug Fixes
+
+* **deps:** bump `braces` and `micromatch` to avoid vulnerabilities ([#274](https://github.com/IBM/node-sdk-core/issues/274)) ([1ecac01](https://github.com/IBM/node-sdk-core/commit/1ecac01847dbcef18747c0400e5e36f9a981b936))
+
 # [4.3.0](https://github.com/IBM/node-sdk-core/compare/v4.2.5...v4.3.0) (2024-04-17)
 
 
