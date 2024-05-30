@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import expect from 'expect';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { expect } from '@jest/globals';
 
 /**
  * This module provides a set of helper methods used to reduce code duplication in the generated unit tests
