@@ -1,3 +1,10 @@
+## [4.3.2](https://github.com/IBM/node-sdk-core/compare/v4.3.1...v4.3.2) (2024-06-03)
+
+
+### Bug Fixes
+
+* **deps:** remove `expect` as redundant development dependency ([b57b491](https://github.com/IBM/node-sdk-core/commit/b57b49108f17008fdf670ae2364edc908181773c))
+
 ## [4.3.1](https://github.com/IBM/node-sdk-core/compare/v4.3.0...v4.3.1) (2024-05-21)
 
 
