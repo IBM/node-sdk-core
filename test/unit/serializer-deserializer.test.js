@@ -62,6 +62,8 @@ const EMPTY_OBJECT = {}; // careful that nothing is ever added to this object
 
 // mocks need to happen before this is imported
 const { BaseService } = require('../../dist/lib/base-service');
+// eslint-disable-next-line import/order
+const expect = require('expect');
 
 describe('Serializer/Deserializer - Tests', () => {
   describe('Serializer/Deserializer - Integration Tests', () => {
