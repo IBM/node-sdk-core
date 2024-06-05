@@ -90,7 +90,7 @@
     "./lib/sdk-test-helpers": "./lib/sdk-test-helpers.browser"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "scripts": {
     "clean": "rm -fr node_modules",
