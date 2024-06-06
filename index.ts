@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,10 @@
  * @module ibm-cloud-sdk-core
  */
 
-import * as unitTestUtils from './lib/sdk-test-helpers';
-
 export { BaseService, UserOptions } from './lib/base-service';
 export * from './auth';
 export * from './lib/helper';
 export { default as qs } from './lib/querystring';
 export { default as contentType } from './lib/content-type';
 export * from './lib/stream-to-promise';
-export { unitTestUtils };
 export { getNewLogger, SDKLogger } from './lib/get-new-logger';

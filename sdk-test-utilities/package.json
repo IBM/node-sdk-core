@@ -1,0 +1,17 @@
+{
+  "name": "@ibm-cloud/sdk-test-utilities",
+  "version": "1.0.0",
+  "description": "A set of utility methods for unit tests in IBM Cloud SDKs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"N/A\""
+  },
+  "author": "Dustin Popp",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "expect": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

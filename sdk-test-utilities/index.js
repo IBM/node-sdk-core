@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2022.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import expect from 'expect';
+const { expect } = require('expect');
 
 /**
- * This module provides a set of helper methods used to reduce code duplication in the generated unit tests
+ * This module provides a set of utility methods used to reduce code duplication in the generated unit tests
  * for the SDKs that depend on this core package. Note that these methods are not used by the tests for this
  * package - they are meant to be exported and made available to dependent libraries.
  */
@@ -30,7 +30,7 @@ import expect from 'expect';
  * @param url - The URL path of the service endpoint, from the paths section of the API definition
  * @param method - The HTTP method for the request, from the API definition
  */
-export function checkUrlAndMethod(options, url: string, method: any) {
+function checkUrlAndMethod(options, url, method) {
   expect(options.url).toEqual(url);
   expect(options.method).toEqual(method);
 }
@@ -44,7 +44,7 @@ export function checkUrlAndMethod(options, url: string, method: any) {
  * @param accept - the expected value for the `Accept` header
  * @param contentType - the expected value for the `Content-Type` header
  */
-export function checkMediaHeaders(createRequestMock, accept: string, contentType: string) {
+function checkMediaHeaders(createRequestMock, accept, contentType) {
   const { headers } = createRequestMock.mock.calls[0][0].defaultOptions;
   expect(headers.Accept).toEqual(accept);
   expect(headers['Content-Type']).toEqual(contentType);
@@ -59,10 +59,10 @@ export function checkMediaHeaders(createRequestMock, accept: string, contentType
  * @param userHeaderName - the name of the header passed by the user, e.g. `Contained-Content-Type`
  * @param userHeaderValue - the expected value for the header passed by the user
  */
-export function checkUserHeader(
+function checkUserHeader(
   createRequestMock,
-  userHeaderName: string,
-  userHeaderValue: string
+  userHeaderName,
+  userHeaderValue
 ) {
   const { headers } = createRequestMock.mock.calls[0][0].defaultOptions;
   expect(headers[userHeaderName]).toEqual(userHeaderValue);
@@ -74,7 +74,7 @@ export function checkUserHeader(
  *
  * @param createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
  */
-export function checkForSuccessfulExecution(createRequestMock) {
+function checkForSuccessfulExecution(createRequestMock) {
   const sdkParams = createRequestMock.mock.calls[0][0];
   expect(typeof sdkParams).toEqual('object');
 }
@@ -87,7 +87,7 @@ export function checkForSuccessfulExecution(createRequestMock) {
  * @param createRequestMock - the jest mock object for the `createRequest` method in the `RequestWrapper` class
  * @returns Object
  */
-export function getOptions(createRequestMock) {
+function getOptions(createRequestMock) {
   return createRequestMock.mock.calls[0][0].options;
 }
 
@@ -97,6 +97,15 @@ export function getOptions(createRequestMock) {
  *
  * @param sdkPromise - the Promise returned by an SDK method
  */
-export function expectToBePromise(sdkPromise) {
+function expectToBePromise(sdkPromise) {
   expect(typeof sdkPromise.then).toBe('function');
 }
+
+module.exports = {
+  checkUrlAndMethod,
+  checkMediaHeaders,
+  checkUserHeader,
+  checkForSuccessfulExecution,
+  getOptions,
+  expectToBePromise,
+};

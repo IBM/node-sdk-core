@@ -106,18 +106,6 @@ export function buildRequestFileObject(fileParam: FileWithMetadata): Promise<Fil
 export function checkCredentials(obj: any, credsToCheck: string[]): Error | null;
 
 // @public
-function checkForSuccessfulExecution(createRequestMock: any): void;
-
-// @public
-function checkMediaHeaders(createRequestMock: any, accept: string, contentType: string): void;
-
-// @public
-function checkUrlAndMethod(options: any, url: string, method: any): void;
-
-// @public
-function checkUserHeader(createRequestMock: any, userHeaderName: string, userHeaderValue: string): void;
-
-// @public
 export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator {
     // Warning: (ae-forgotten-export) The symbol "Options_4" needs to be exported by the entry point index.d.ts
     constructor(options: Options_4);
@@ -176,9 +164,6 @@ export class Cp4dTokenManager extends JwtTokenManager {
     protected requiredOptions: string[];
 }
 
-// @public
-function expectToBePromise(sdkPromise: any): void;
-
 // @public (undocumented)
 export function fileExistsAtPath(filepath: string): boolean;
 
@@ -235,9 +220,6 @@ export function getMissingParams(params: {
 
 // @public
 export function getNewLogger(moduleName: string): SDKLogger;
-
-// @public
-function getOptions(createRequestMock: any): any;
 
 // @public
 export function getQueryParam(urlStr: string, param: string): string;
@@ -457,18 +439,6 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
 
 // @public
 export function toLowerKeys(obj: Object): Object;
-
-declare namespace unitTestUtils {
-    export {
-        checkUrlAndMethod,
-        checkMediaHeaders,
-        checkUserHeader,
-        checkForSuccessfulExecution,
-        getOptions,
-        expectToBePromise
-    }
-}
-export { unitTestUtils }
 
 // @public
 export interface UserOptions {

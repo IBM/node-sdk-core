@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2020, 2021.
+ * (C) Copyright IBM Corp. 2020, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const { unitTestUtils } = require('../../dist');
+const unitTestUtils = require('../../sdk-test-utilities');
 
 describe('Unit Test Utils', () => {
   it('should be defined', () => {
