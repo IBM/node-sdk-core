@@ -27,3 +27,6 @@ dist/
 temp/
 build/
 es/tsdoc-metadata.json
+
+# For sub-package with test utilities
+!sdk-test-utilities/index.js
