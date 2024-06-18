@@ -1,3 +1,28 @@
+# [5.0.0](https://github.com/IBM/node-sdk-core/compare/v4.3.3...v5.0.0) (2024-06-18)
+
+
+### Bug Fixes
+
+* remove test utilities and dependency from package ([901ece0](https://github.com/IBM/node-sdk-core/commit/901ece06d6f7897164b54d58f316da94ae1fc5da))
+
+
+### Build System
+
+* bump minimum node version to v18 ([3d8fef5](https://github.com/IBM/node-sdk-core/commit/3d8fef5cf6a1b4d01cfa2c132f186bf16cec1a56))
+
+
+### BREAKING CHANGES
+
+* SDK test helpers are no longer exposed in this package.
+
+To continue using the test helpers, which SDK unit tests still rely on, install
+the new "@ibm-cloud/sdk-test-utilities" package as a development dependency.
+
+Signed-off-by: Dustin Popp <dustinpopp@ibm.com>
+* Node v18 or above is now required to use this package.
+
+Signed-off-by: Dustin Popp <dustinpopp@ibm.com>
+
 ## [4.3.3](https://github.com/IBM/node-sdk-core/compare/v4.3.2...v4.3.3) (2024-06-04)
 
 
