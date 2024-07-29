@@ -2,18 +2,15 @@ language: node_js
 
 dist: jammy
 
-node_js:
-- 18
-- 20
-- 22
-
 cache:
   npm: false
 
-before_install:
-  - npm i -g npm@8
-  - npm --version
+stages:
+  - name: Build-Test
+  - name: Semantic-Release
+    if: (branch = main) AND (type IN (push, api)) AND (fork = false)
 
+# Default "before_install" and "script" steps.
 script:
 # Prepare sub-package for tests
 - cd sdk-test-utilities && npm ci && cd ..
@@ -23,10 +20,25 @@ script:
 - npm run lint
 - npm run test-travis
 
-deploy:
-- provider: script
-  skip_cleanup: true
-  script: npx semantic-release
-  on:
-    node: 22
-    branch: main
+jobs:
+  include:
+    - stage: Build-Test
+      language: node_js
+      node_js: 18
+    - node_js: 20
+    - node_js: 22
+
+    - name: Detect-Secrets
+      language: python
+      python: 3.12
+      install:
+        - pip install --upgrade "git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets"
+      script:
+        - detect-secrets scan --update .secrets.baseline
+        - detect-secrets -v audit --report --fail-on-unaudited --fail-on-live --fail-on-audited-real .secrets.baseline
+
+    - stage: Semantic-Release
+      language: node_js
+      node_js: 22
+      script:
+        - npm run semantic-release
