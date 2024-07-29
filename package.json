@@ -112,7 +112,8 @@
     "copy:doc": "mkdir -p dist/docs && cp \"temp/ibm-cloud-sdk-core.api.json\" dist/docs",
     "copy:pkg": "package-json-reducer -s \"config devDependencies directories scripts jestSonar jest\" -o ./dist/package.json package.json",
     "postversion": "publisher --no-checks --dry-run",
-    "all": "npm-run-all build test lint"
+    "all": "npm-run-all build test lint",
+    "semantic-release": "semantic-release"
   },
   "jest": {
     "collectCoverage": true,
