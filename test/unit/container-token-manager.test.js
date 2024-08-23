@@ -16,10 +16,16 @@
  * limitations under the License.
  */
 
+jest.mock('jsonwebtoken/decode');
+const decode = require('jsonwebtoken/decode');
+
+decode.mockImplementation(() => ({ exp: 100, iat: 100 }));
+
 const path = require('path');
 const { ContainerTokenManager } = require('../../dist/auth');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 const { getRequestOptions } = require('./utils');
+const { getCurrentTime } = require('../../dist/auth/utils/helpers');
 const logger = require('../../dist/lib/logger').default;
 
 // make sure no actual requests are sent
@@ -28,13 +34,23 @@ jest.mock('../../dist/lib/request-wrapper');
 const CR_TOKEN_FILENAME = '/path/to/file';
 const IAM_PROFILE_NAME = 'some-name';
 const IAM_PROFILE_ID = 'some-id';
+const ACCESS_TOKEN = 'access-token';
+const IAM_RESPONSE = {
+  result: {
+    access_token: ACCESS_TOKEN,
+    token_type: 'Bearer',
+    expires_in: 3600,
+    expiration: getCurrentTime() + 3600,
+  },
+  status: 200,
+};
 
 describe('Container Token Manager', () => {
   const sendRequestMock = jest.fn();
+  sendRequestMock.mockResolvedValue(IAM_RESPONSE);
   RequestWrapper.mockImplementation(() => ({
     sendRequest: sendRequestMock,
   }));
-
   afterAll(() => {
     sendRequestMock.mockRestore();
   });
@@ -149,6 +165,17 @@ describe('Container Token Manager', () => {
       expect(requestOptions.headers['User-Agent']).toMatch(
         /^ibm-node-sdk-core\/container-authenticator.*$/
       );
+    });
+
+    it('use getToken to invoke requestToken', async () => {
+      const instance = new ContainerTokenManager({
+        crTokenFilename: pathToTestToken,
+        iamProfileName: IAM_PROFILE_NAME,
+      });
+
+      const accessToken = await instance.getToken();
+
+      expect(accessToken).toBe(ACCESS_TOKEN);
     });
   });
 });

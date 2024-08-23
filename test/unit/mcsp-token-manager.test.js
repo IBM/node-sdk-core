@@ -16,16 +16,31 @@
  * limitations under the License.
  */
 
+jest.mock('jsonwebtoken/decode');
+const decode = require('jsonwebtoken/decode');
+
+decode.mockImplementation(() => ({ exp: 100, iat: 100 }));
 const { McspTokenManager } = require('../../dist/auth');
 
 // mock sendRequest
 jest.mock('../../dist/lib/request-wrapper');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 const { getRequestOptions } = require('./utils');
+const { getCurrentTime } = require('../../dist/auth/utils/helpers');
 
 const APIKEY = 'my-api-key';
 const URL = 'https://mcsp.ibm.com';
 const FULL_URL = `${URL}/siusermgr/api/1.0/apikeys/token`;
+const ACCESS_TOKEN = 'access-token';
+const IAM_RESPONSE = {
+  result: {
+    token: ACCESS_TOKEN,
+    token_type: 'Bearer',
+    expires_in: 3600,
+    expiration: getCurrentTime() + 3600,
+  },
+  status: 200,
+};
 
 describe('MCSP Token Manager', () => {
   describe('constructor', () => {
@@ -71,21 +86,22 @@ describe('MCSP Token Manager', () => {
 
   describe('requestToken', () => {
     const sendRequestMock = jest.fn();
+    sendRequestMock.mockResolvedValue(IAM_RESPONSE);
     RequestWrapper.mockImplementation(() => ({
       sendRequest: sendRequestMock,
     }));
-
     afterEach(() => {
       sendRequestMock.mockClear();
     });
 
-    it('should call sendRequest with all request options', () => {
+    it('should call sendRequest with all request options', async () => {
       const instance = new McspTokenManager({
         url: URL,
         apikey: APIKEY,
       });
 
-      instance.requestToken();
+      const response = await instance.requestToken();
+      expect(response).toBe(IAM_RESPONSE);
 
       const requestOptions = getRequestOptions(sendRequestMock);
       expect(requestOptions.url).toBe(FULL_URL);
@@ -104,13 +120,24 @@ describe('MCSP Token Manager', () => {
         apikey: APIKEY,
       });
 
-      await instance.requestToken();
+      const response = await instance.requestToken();
+      expect(response).toBe(IAM_RESPONSE);
 
       const requestOptions = getRequestOptions(sendRequestMock);
       expect(requestOptions.headers).toBeDefined();
       expect(requestOptions.headers['User-Agent']).toMatch(
         /^ibm-node-sdk-core\/mcsp-authenticator.*$/
       );
+    });
+
+    it('use getToken to invoke requestToken', async () => {
+      const instance = new McspTokenManager({
+        url: URL,
+        apikey: APIKEY,
+      });
+
+      const accessToken = await instance.getToken();
+      expect(accessToken).toBe(ACCESS_TOKEN);
     });
   });
 });

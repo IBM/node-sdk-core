@@ -19,6 +19,7 @@ import { OutgoingHttpHeaders } from 'http';
 import { JwtTokenManager } from '../token-managers/jwt-token-manager';
 import { Authenticator } from './authenticator';
 import { AuthenticateOptions } from './authenticator-interface';
+import logger from '../../lib/logger';
 
 /** Configuration options for token-based authentication. */
 export type BaseOptions = {
@@ -118,6 +119,7 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
     return this.tokenManager.getToken().then((token) => {
       const authHeader = { Authorization: `Bearer ${token}` };
       requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
+      logger.debug(`Authenticated outbound request (type=${this.authenticationType()})`);
     });
   }
 }

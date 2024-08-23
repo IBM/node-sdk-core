@@ -1,7 +1,7 @@
 /* eslint-disable no-alert, no-console */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -215,7 +215,7 @@ describe('JWT Token Manager', () => {
       );
 
       expect(debugLogSpy).toHaveBeenCalled();
-      const debugArg = debugLogSpy.mock.calls[0][0];
+      const debugArg = debugLogSpy.mock.calls[1][0];
       expect(debugArg).toBeInstanceOf(Error);
       expect(debugArg.stack).toMatch(/Error: Connection Refused\n.*at JwtTokenManager/);
 

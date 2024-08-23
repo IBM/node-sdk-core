@@ -39,7 +39,11 @@ const IAM_PROFILE_ID = 'some-id';
 const EXPIRATION_WINDOW = 10;
 
 describe('VPC Instance Token Manager', () => {
-  const sendRequestMock = jest.fn().mockImplementation(() => ({ result: { access_token: TOKEN } }));
+  const sendRequestMock = jest.fn();
+  sendRequestMock.mockResolvedValue({
+    result: { access_token: TOKEN },
+    status: 200,
+  });
   RequestWrapper.mockImplementation(() => ({
     sendRequest: sendRequestMock,
   }));
@@ -108,7 +112,8 @@ describe('VPC Instance Token Manager', () => {
   describe('getInstanceIdentityToken', () => {
     it('should correctly construct headers and request parameters', async () => {
       const instance = new VpcInstanceTokenManager({ url: '123.345.567' });
-      await instance.getInstanceIdentityToken();
+      const token = await instance.getInstanceIdentityToken();
+      expect(token).toBe(TOKEN);
 
       const requestOptions = getRequestOptions(sendRequestMock);
       expect(requestOptions.url).toBe('123.345.567/instance_identity/v1/token');

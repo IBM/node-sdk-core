@@ -16,6 +16,11 @@
  * limitations under the License.
  */
 
+jest.mock('jsonwebtoken/decode');
+const decode = require('jsonwebtoken/decode');
+
+decode.mockImplementation(() => ({ exp: 100, iat: 100 }));
+
 const { Cp4dTokenManager } = require('../../dist/auth');
 
 // mock sendRequest
@@ -28,12 +33,23 @@ const PASSWORD = 'holmes';
 const APIKEY = '221b-b4k3r';
 const URL = 'tokenservice.com';
 const FULL_URL = 'tokenservice.com/v1/authorize';
+const ACCESS_TOKEN = 'access-token';
+const CP4D_RESPONSE = {
+  result: {
+    token: ACCESS_TOKEN,
+  },
+  status: 200,
+};
 
 describe('CP4D Token Manager', () => {
   const sendRequestMock = jest.fn();
+  sendRequestMock.mockResolvedValue(CP4D_RESPONSE);
   RequestWrapper.mockImplementation(() => ({
     sendRequest: sendRequestMock,
   }));
+  afterEach(() => {
+    sendRequestMock.mockClear();
+  });
 
   describe('constructor', () => {
     it('should initialize base variables - password edition', () => {
@@ -130,18 +146,15 @@ describe('CP4D Token Manager', () => {
   });
 
   describe('requestToken', () => {
-    afterEach(() => {
-      sendRequestMock.mockClear();
-    });
-
-    it('should call sendRequest with all request options - password edition', () => {
+    it('should call sendRequest with all request options - password edition', async () => {
       const instance = new Cp4dTokenManager({
         url: URL,
         username: USERNAME,
         password: PASSWORD,
       });
 
-      instance.requestToken();
+      const response = await instance.requestToken();
+      expect(response).toBe(CP4D_RESPONSE);
 
       const requestOptions = getRequestOptions(sendRequestMock);
       expect(requestOptions.url).toBe(FULL_URL);
@@ -155,14 +168,15 @@ describe('CP4D Token Manager', () => {
       expect(requestOptions.body.api_key).toBeUndefined();
     });
 
-    it('should call sendRequest with all request options - API key edition', () => {
+    it('should call sendRequest with all request options - API key edition', async () => {
       const instance = new Cp4dTokenManager({
         url: URL,
         username: USERNAME,
         apikey: APIKEY,
       });
 
-      instance.requestToken();
+      const response = await instance.requestToken();
+      expect(response).toBe(CP4D_RESPONSE);
 
       const requestOptions = getRequestOptions(sendRequestMock);
       expect(sendRequestMock).toHaveBeenCalled();
@@ -174,6 +188,7 @@ describe('CP4D Token Manager', () => {
       expect(requestOptions.headers['Content-Type']).toBe('application/json');
       expect(requestOptions.body).toBeDefined();
       expect(requestOptions.body.username).toBe(USERNAME);
+      expect(requestOptions.body.api_key).toBe(APIKEY);
       expect(requestOptions.body.password).toBeUndefined();
     });
 
@@ -191,6 +206,16 @@ describe('CP4D Token Manager', () => {
       expect(requestOptions.headers['User-Agent']).toMatch(
         /^ibm-node-sdk-core\/cp4d-authenticator.*$/
       );
+    });
+    it('use getToken to exercise requestToken', async () => {
+      const instance = new Cp4dTokenManager({
+        url: URL,
+        username: USERNAME,
+        apikey: APIKEY,
+      });
+
+      const token = await instance.getToken();
+      expect(token).toBe(ACCESS_TOKEN);
     });
   });
 });

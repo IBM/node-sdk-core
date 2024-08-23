@@ -141,8 +141,10 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     };
 
     logger.debug(`Invoking VPC 'create_iam_token' operation: ${parameters.options.url}`);
-
-    return this.requestWrapperInstance.sendRequest(parameters);
+    return this.requestWrapperInstance.sendRequest(parameters).then((response) => {
+      logger.debug(`Returned from VPC 'create_iam_token' operation`);
+      return response;
+    });
   }
 
   private async getInstanceIdentityToken(): Promise<string> {

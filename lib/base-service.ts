@@ -156,6 +156,7 @@ export class BaseService {
   public setServiceUrl(url: string): void {
     if (url) {
       this.baseOptions.serviceUrl = stripTrailingSlash(url);
+      logger.debug(`Set service URL: ${this.baseOptions.serviceUrl}`);
     }
   }
 
@@ -238,6 +239,8 @@ export class BaseService {
    * configuration.
    */
   protected configureService(serviceName: string): void {
+    logger.debug(`Configuring BaseService instance with service name: ${serviceName}`);
+
     if (!serviceName) {
       const err = 'Error configuring service. Service name is required.';
       logger.error(err);

@@ -18,6 +18,7 @@ import extend from 'extend';
 import { validateInput } from '../utils/helpers';
 import { buildUserAgent } from '../../lib/build-user-agent';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
+import logger from '../../lib/logger';
 
 /** Configuration options for CP4D token retrieval. */
 interface Options extends JwtTokenManagerOptions {
@@ -121,6 +122,10 @@ export class Cp4dTokenManager extends JwtTokenManager {
         rejectUnauthorized: !this.disableSslVerification,
       },
     };
-    return this.requestWrapperInstance.sendRequest(parameters);
+    logger.debug(`Invoking CP4D token service operation: ${parameters.options.url}`);
+    return this.requestWrapperInstance.sendRequest(parameters).then((response) => {
+      logger.debug('Returned from CP4D token service operation');
+      return response;
+    });
   }
 }

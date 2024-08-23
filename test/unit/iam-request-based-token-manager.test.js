@@ -36,18 +36,24 @@ describe('IAM Request Based Token Manager', () => {
   jest.spyOn(logger, 'warn').mockImplementation(() => {});
 
   const sendRequestMock = jest.fn();
+  sendRequestMock.mockResolvedValue({
+    data: { access_token: 'Hello world!' },
+    status: 200,
+  });
   RequestWrapper.mockImplementation(() => ({
     sendRequest: sendRequestMock,
   }));
 
   beforeEach(() => {
     logger.warn.mockClear();
-    sendRequestMock.mockReset();
   });
 
   afterAll(() => {
     logger.warn.mockRestore();
-    sendRequestMock.mockRestore();
+  });
+
+  afterEach(() => {
+    sendRequestMock.mockClear();
   });
 
   describe('constructor', () => {
@@ -169,7 +175,7 @@ describe('IAM Request Based Token Manager', () => {
     });
   });
 
-  describe('request token', () => {
+  describe('requestToken', () => {
     it('should set required headers by default', async () => {
       const instance = new IamRequestBasedTokenManager();
 
