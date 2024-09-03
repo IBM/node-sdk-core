@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2014, 2023.
+ * (C) Copyright IBM Corp. 2014, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,13 @@
  * limitations under the License.
  */
 
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios';
 import * as rax from 'retry-axios';
 import extend from 'extend';
 import FormData from 'form-data';
@@ -33,6 +39,7 @@ import {
   isJsonMimeType,
   stripTrailingSlash,
 } from './helper';
+import { redactSecrets } from './private-helpers';
 import logger from './logger';
 import { streamToPromise } from './stream-to-promise';
 import { createCookieInterceptor } from './cookie-support';
@@ -118,34 +125,109 @@ export class RequestWrapper {
       this.enableRetries(retryOptions);
     }
 
-    // set debug interceptors
-    if (process.env.NODE_DEBUG === 'axios' || process.env.DEBUG) {
+    // If debug logging is requested, set up interceptors to log http request/response messages.
+    if (logger.debug.enabled || process.env.NODE_DEBUG === 'axios') {
       this.axiosInstance.interceptors.request.use(
-        (config) => {
-          logger.debug('Request:');
-          logger.debug(config);
-          return config;
+        (request) => {
+          logger.debug(`--> HTTP Request:\n${this.formatAxiosRequest(request)}`);
+          return request;
         },
         (error) => {
-          logger.error('Error: ');
-          logger.error(error);
+          logger.debug(`<-- HTTP Error:\n${this.formatAxiosError(error)}`);
           return Promise.reject(error);
         }
       );
-
       this.axiosInstance.interceptors.response.use(
         (response) => {
-          logger.debug('Response:');
-          logger.debug(response);
+          logger.debug(`<-- HTTP Response:\n${this.formatAxiosResponse(response)}`);
           return response;
         },
         (error) => {
-          logger.error('Error: ');
-          logger.error(error);
+          logger.debug(`<-- HTTP Error:\n${this.formatAxiosError(error)}`);
           return Promise.reject(error);
         }
       );
     }
+  }
+
+  /**
+   * Formats the specified Axios request for debug logging.
+   * @param request - the request to be logged
+   * @returns the string representation of the request
+   */
+  private formatAxiosRequest(request: InternalAxiosRequestConfig): string {
+    const { method, url, data, headers } = request;
+
+    const headersOutput = this.formatAxiosHeaders(headers);
+    const body = this.formatAxiosBody(data);
+    const output = `${(method || '??').toUpperCase()} ${url || '??'}\n${headersOutput}\n${body}`;
+    return redactSecrets(output);
+  }
+
+  /**
+   * Formats the specified Axios response for debug logging.
+   * @param response - the response to be logged
+   * @returns the string representation of the response
+   */
+  private formatAxiosResponse(response: AxiosResponse): string {
+    const { status, statusText, headers, data } = response;
+    const headersOutput = this.formatAxiosHeaders(headers);
+    const body = this.formatAxiosBody(data);
+    const statusMsg = statusText || `status_code_${status}`;
+    const output = `${status} ${statusMsg}\n${headersOutput}\n${body}`;
+    return redactSecrets(output);
+  }
+
+  /**
+   * Formats the specified Axios error for debug logging.
+   * @param error - the error to be logged
+   * @returns the string representation of the error
+   */
+  private formatAxiosError(error: AxiosError): string {
+    const { response } = error;
+
+    let output = `HTTP error message=${error.message || ''}, code=${error.code || ''}`;
+    if (response) {
+      output = this.formatAxiosResponse(response);
+    }
+    return output;
+  }
+
+  /**
+   * Formats 'headers' to be included in the debug output
+   * like this:
+   *    Accept: application/json
+   *    Content-Type: application/json
+   *    My-Header: my-value
+   *    ...
+   * @param headers - the headers associated with an Axios request or response
+   * @returns the formatted output to be included in the HTTP message traces
+   */
+  private formatAxiosHeaders(headers: any): string {
+    let output = '';
+    if (headers) {
+      const lines = [];
+      Object.keys(headers).forEach((key) => {
+        lines.push(`${key}: ${headers[key]}`);
+      });
+      output = lines.join('\n');
+    }
+
+    return output;
+  }
+
+  /**
+   * Formats 'body' (either a string or object/array) to be included in the debug output
+   *
+   * @param body - a string, object or array that contains the request or response body
+   * @returns the formatted output to be included in the HTTP message traces
+   */
+  private formatAxiosBody(body: any): string {
+    let output = '';
+    if (body) {
+      output = typeof body === 'string' ? body : JSON.stringify(body);
+    }
+    return output;
   }
 
   public setCompressRequestData(setting: boolean) {
@@ -368,6 +450,7 @@ export class RequestWrapper {
       backoffType: 'exponential',
       checkRetryAfter: true, // use Retry-After header first
       maxRetryDelay: 30 * 1000, // default to 30 sec max delay
+      shouldRetry: this.retryPolicy,
     };
 
     if (retryOptions) {
@@ -391,6 +474,9 @@ export class RequestWrapper {
     }
     this.raxConfig = RequestWrapper.getRaxConfig(this.axiosInstance, retryOptions);
     this.retryInterceptorId = rax.attach(this.axiosInstance);
+    logger.debug(
+      `Enabled retries; maxRetries=${this.raxConfig.retry}, maxRetryInterval=${this.raxConfig.maxRetryDelay}`
+    );
   }
 
   public disableRetries(): void {
@@ -398,7 +484,40 @@ export class RequestWrapper {
       rax.detach(this.retryInterceptorId, this.axiosInstance);
       delete this.retryInterceptorId;
       delete this.raxConfig;
+      logger.debug('Disabled retries');
     }
+  }
+
+  /**
+   * Returns true iff the previously-failed request contained in "error" should be retried.
+   * @param error - an AxiosError instance that contains a previously-failed request
+   * @returns true iff the request should be retried
+   */
+  private static retryPolicy(error: AxiosError) {
+    if (logger.debug.enabled) {
+      const details = [];
+      if (error.response) {
+        const statusText = error.response.statusText || ``;
+        details.push(`status_code=${error.response.status} (${statusText})`);
+      }
+      if (error.config) {
+        if (error.config.method) {
+          details.push(`method=${error.config.method.toUpperCase()}`);
+        }
+        if (error.config.url) {
+          details.push(`url=${error.config.url}`);
+        }
+      }
+
+      logger.debug(`Considering retry attempt; ${details.join(', ')}`);
+    }
+
+    // Delegate to the default function defined by retry-axios.
+    const shouldRetry = rax.shouldRetryRequest(error);
+
+    logger.debug(`Retry will ${shouldRetry ? '' : 'not '}be attempted`);
+
+    return shouldRetry;
   }
 
   private async gzipRequestBody(data: any, headers: OutgoingHttpHeaders): Promise<Buffer | any> {

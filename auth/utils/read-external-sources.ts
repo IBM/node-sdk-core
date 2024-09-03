@@ -48,6 +48,8 @@ function getProperties(serviceName: string): any {
   // only get properties from one source, return null if none found
   let properties = null;
 
+  logger.debug(`Retrieving config properties for service '${serviceName}'`);
+
   properties = filterPropertiesByServiceName(readCredentialsFile(), serviceName);
 
   if (isEmptyObject(properties)) {
@@ -58,6 +60,7 @@ function getProperties(serviceName: string): any {
     properties = getPropertiesFromVCAP(serviceName);
   }
 
+  logger.debug(`Retrieved ${Object.keys(properties).length} properties`);
   return properties;
 }
 

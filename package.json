@@ -82,7 +82,8 @@
     "tough-cookie": "^4.1.3"
   },
   "overrides": {
-    "semver": "^7.5.3"
+    "semver": "^7.5.3",
+    "micromatch": "4.0.8"
   },
   "browser": {
     "./auth/utils/read-credentials-file": "./auth/utils/read-credentials-file.browser"
@@ -91,7 +92,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "clean": "rm -fr node_modules",
+    "clean": "rm -fr node_modules sdk-test-utilities/node_modules",
     "commitmsg": "commitlint -E GIT_PARAMS",
     "eslint:config": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint:fix": "eslint . --fix",

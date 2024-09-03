@@ -43,16 +43,12 @@ const IAM_RESPONSE = {
 
 describe('IAM Token Manager', () => {
   const sendRequestMock = jest.fn();
+  sendRequestMock.mockResolvedValue(IAM_RESPONSE);
   RequestWrapper.mockImplementation(() => ({
     sendRequest: sendRequestMock,
   }));
-
-  beforeEach(() => {
-    sendRequestMock.mockReset();
-  });
-
-  afterAll(() => {
-    sendRequestMock.mockRestore();
+  afterEach(() => {
+    sendRequestMock.mockClear();
   });
 
   it('should throw an error if apikey is not provided', () => {
@@ -77,8 +73,6 @@ describe('IAM Token Manager', () => {
       apikey: 'abcd-1234',
     });
 
-    sendRequestMock.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
-
     await instance.getToken();
 
     expect(instance.refreshToken).toBe(REFRESH_TOKEN);
@@ -90,8 +84,6 @@ describe('IAM Token Manager', () => {
 
   it('should turn an iam apikey into an access token', async () => {
     const instance = new IamTokenManager({ apikey: 'abcd-1234' });
-
-    sendRequestMock.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
 
     const token = await instance.getToken();
 
@@ -113,8 +105,7 @@ describe('IAM Token Manager', () => {
     // Set the expiration time so that we'll consider the first token expired.
     instance.expireTime = getCurrentTime() + EXPIRATION_WINDOW;
 
-    // Set up our second mock response, then call getToken() and make sure we got the second access token.
-    sendRequestMock.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
+    // Call getToken() and make sure we got the second access token.
     token = await instance.getToken();
     expect(token).toBe(ACCESS_TOKEN);
     expect(requestMock).toHaveBeenCalled();
@@ -136,8 +127,6 @@ describe('IAM Token Manager', () => {
     const requestTokenSpy = jest
       .spyOn(instance, 'requestToken')
       .mockImplementation(() => Promise.resolve({ result: { access_token: ACCESS_TOKEN } }));
-
-    sendRequestMock.mockImplementation((parameters) => Promise.resolve(IAM_RESPONSE));
 
     const token = await instance.getToken();
     expect(token).toBe(CURRENT_ACCESS_TOKEN);

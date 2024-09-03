@@ -180,7 +180,11 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
       },
     };
 
-    return this.requestWrapperInstance.sendRequest(parameters);
+    logger.debug(`Invoking IAM get_token operation: ${parameters.options.url}`);
+    return this.requestWrapperInstance.sendRequest(parameters).then((response) => {
+      logger.debug('Returned from IAM get_token operation');
+      return response;
+    });
   }
 
   /**

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2023.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import extend from 'extend';
 import { computeBasicAuthHeader, validateInput } from '../utils/helpers';
 import { Authenticator } from './authenticator';
 import { AuthenticateOptions } from './authenticator-interface';
+import logger from '../../lib/logger';
 
 /** Configuration options for basic authentication. */
 export type Options = {
@@ -72,6 +73,7 @@ export class BasicAuthenticator extends Authenticator {
   public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     return new Promise((resolve) => {
       requestOptions.headers = extend(true, {}, requestOptions.headers, this.authHeader);
+      logger.debug(`Authenticated outbound request (type=${this.authenticationType()})`);
       resolve();
     });
   }

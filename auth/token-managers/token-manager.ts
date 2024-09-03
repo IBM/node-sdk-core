@@ -101,11 +101,14 @@ export class TokenManager {
    */
   public getToken(): Promise<any> {
     if (!this.accessToken || this.isTokenExpired()) {
-      // 1. request a new token
+      // 1. Need a new token.
+      logger.debug('Performing synchronous token refresh');
       return this.pacedRequestToken().then(() => this.accessToken);
     }
-    // If refresh needed, kick one off
+
     if (this.tokenNeedsRefresh()) {
+      // 2. Need to refresh the current (valid) token.
+      logger.debug('Performing background asynchronous token fetch');
       this.requestToken().then(
         (tokenResponse) => {
           this.saveTokenInfo(tokenResponse);
@@ -122,8 +125,10 @@ export class TokenManager {
           logger.debug(err);
         }
       );
+    } else {
+      logger.debug('Using cached access token');
     }
-    // 2. use valid, managed token
+
     return Promise.resolve(this.accessToken);
   }
 

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 const { TokenRequestBasedAuthenticator } = require('../../dist/auth');
 const { JwtTokenManager } = require('../../dist/auth');
 
-describe('Request Based Token Authenticator', () => {
+describe('Token Request Based Authenticator', () => {
   const config = {
     url: 'auth.com',
     disableSslVerification: true,

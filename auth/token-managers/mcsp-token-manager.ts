@@ -18,6 +18,7 @@ import extend from 'extend';
 import { validateInput } from '../utils/helpers';
 import { buildUserAgent } from '../../lib/build-user-agent';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
+import logger from '../../lib/logger';
 
 /**
  * Configuration options for MCSP token retrieval.
@@ -99,6 +100,10 @@ export class McspTokenManager extends JwtTokenManager {
         rejectUnauthorized: !this.disableSslVerification,
       },
     };
-    return this.requestWrapperInstance.sendRequest(parameters);
+    logger.debug(`Invoking MCSP token service operation: ${parameters.options.url}`);
+    return this.requestWrapperInstance.sendRequest(parameters).then((response) => {
+      logger.debug('Returned from MCSP token service operation');
+      return response;
+    });
   }
 }
