@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/IBM/node-sdk-core/compare/v5.0.1...v5.0.2) (2024-09-03)
+
+
+### Bug Fixes
+
+* **logging:** improve node core's debug logging ([#286](https://github.com/IBM/node-sdk-core/issues/286)) ([7bcb404](https://github.com/IBM/node-sdk-core/commit/7bcb404fa88592079571149c4b4224f97798f47d))
+
 ## [5.0.1](https://github.com/IBM/node-sdk-core/compare/v5.0.0...v5.0.1) (2024-08-14)
 
 
