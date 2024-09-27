@@ -79,7 +79,7 @@ To see the output from all of the debugging levels you can use:
 
 ``DEBUG=ibm-cloud-sdk-core*``
 
-The debug logger can be configured to be used for more than one library. In example, you can set a comma-separated string:
+The debug logger can be configured to be used for more than one library. For example, you can set a comma-separated string:
 
 ``DEBUG=ibm-cloud-sdk-core:debug,other-lib:debug``
 
