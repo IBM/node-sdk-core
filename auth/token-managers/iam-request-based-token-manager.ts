@@ -41,11 +41,11 @@ export interface IamRequestOptions extends JwtTokenManagerOptions {
  * class be extended with specific implementations.
  */
 export class IamRequestBasedTokenManager extends JwtTokenManager {
-  private clientId: string;
+  protected clientId: string;
 
-  private clientSecret: string;
+  protected clientSecret: string;
 
-  private scope: string;
+  protected scope: string;
 
   protected refreshToken: string;
 

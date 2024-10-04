@@ -98,7 +98,7 @@
     "eslint:fix": "eslint . --fix",
     "eslint:check": "eslint . --cache",
     "lint": "npm run eslint:check",
-    "lint:fix": "npm run eslint:fix",
+    "fix": "npm run eslint:fix",
     "jest": "jest",
     "test": "jest test/unit/",
     "test-travis": "jest --runInBand test/unit/",
