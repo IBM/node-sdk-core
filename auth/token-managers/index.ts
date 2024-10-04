@@ -17,8 +17,8 @@
 /**
  * @module token-managers
  * The ibm-cloud-sdk-core module supports the following types of token authentication:
- *
- * Identity and Access Management (IAM)
+ * Identity and Access Management (IAM, grant type: apikey)
+ * Identity and Access Management (IAM, grant type: assume)
  * Cloud Pak for Data
  * Container (IKS, etc)
  * VPC Instance
@@ -29,6 +29,7 @@
  *
  * classes:
  *   IamTokenManager: Token Manager of IAM via apikey.
+ *   IamAssumeTokenManager: Token Manager of IAM via apikey and trusted profile.
  *   Cp4dTokenManager: Token Manager of CloudPak for data.
  *   ContainerTokenManager: Token manager of IAM via compute resource token.
  *   VpcInstanceTokenManager: Token manager of VPC Instance Metadata Service API tokens.
@@ -44,3 +45,4 @@ export { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 export { TokenManager, TokenManagerOptions } from './token-manager';
 export { VpcInstanceTokenManager } from './vpc-instance-token-manager';
 export { McspTokenManager } from './mcsp-token-manager';
+export { IamAssumeTokenManager } from './iam-assume-token-manager';

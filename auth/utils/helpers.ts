@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2022.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,20 +92,6 @@ export function getCurrentTime(): number {
 }
 
 /**
- * Checks for only one of two elements being defined.
- * Returns true if a is defined and b is undefined,
- * or vice versa. Returns false if both are defined
- * or both are undefined.
- *
- * @param a - The first object
- * @param b - The second object
- * @returns true if and only if exactly one of a or b is defined
- */
-export function onlyOne(a: any, b: any): boolean {
-  return Boolean((a && !b) || (b && !a));
-}
-
-/**
  * Removes a given suffix if it exists.
  *
  * @param str - the base string to operate on
@@ -122,25 +108,49 @@ export function removeSuffix(str: string, suffix: string): string {
 }
 
 /**
- * Checks for at least one of two elements being defined.
+ * Checks that exactly one of the arguments provided is defined.
+ * Returns true if one argument is defined. Returns false if no
+ * argument are defined or if 2 or more are defined.
  *
- * @param a - the first object
- * @param b - the second object
- * @returns true if a or b is defined; false if both are undefined
+ * @param args - The spread of arguments to check
+ * @returns true if and only if exactly one argument is defined
  */
-export function atLeastOne(a: any, b: any): boolean {
-  return Boolean(a || b);
+export function onlyOne(...args: any): boolean {
+  return countDefinedArgs(args) === 1;
 }
 
 /**
- * Verifies that both properties are not specified.
+ * Checks for at least one of the given elements being defined.
  *
- * @param a - The first object
- * @param b - The second object
- *
- * @returns  false if a and b are both defined, true otherwise
-
+ * @param args - The spread of arguments to check
+ * @returns true if one or more are defined; false if all are undefined
  */
-export function atMostOne(a: any, b: any): boolean {
-  return Boolean(!(a && b));
+export function atLeastOne(...args: any): boolean {
+  return countDefinedArgs(args) >= 1;
+}
+
+/**
+ * Verifies that no more than one of the given elements are defined.
+ * Returns true if one or none are defined, and false otherwise.
+ *
+ * @param args - The spread of arguments to check
+ * @returns  false if more than one elements are defined, true otherwise
+ */
+export function atMostOne(...args: any): boolean {
+  return countDefinedArgs(args) <= 1;
+}
+
+/**
+ * Takes a list of anything (intended to be the arguments passed to one of the
+ * argument checking functions above) and returns how many elements in that
+ * list are not undefined.
+ */
+function countDefinedArgs(args: any[]) {
+  return args.reduce((total, arg) => {
+    if (arg) {
+      total += 1;
+    }
+
+    return total;
+  }, 0);
 }

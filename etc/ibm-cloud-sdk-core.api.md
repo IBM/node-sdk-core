@@ -13,10 +13,10 @@ import { OutgoingHttpHeaders } from 'http';
 import { Stream } from 'stream';
 
 // @public
-export function atLeastOne(a: any, b: any): boolean;
+export function atLeastOne(...args: any): boolean;
 
 // @public
-export function atMostOne(a: any, b: any): boolean;
+export function atMostOne(...args: any): boolean;
 
 // @public
 export class Authenticator implements AuthenticatorInterface {
@@ -33,6 +33,8 @@ export class Authenticator implements AuthenticatorInterface {
     static AUTHTYPE_CP4D: string;
     // (undocumented)
     static AUTHTYPE_IAM: string;
+    // (undocumented)
+    static AUTHTYPE_IAM_ASSUME: string;
     // (undocumented)
     static AUTHTYPE_MCSP: string;
     // (undocumented)
@@ -225,6 +227,24 @@ export function getNewLogger(moduleName: string): SDKLogger;
 export function getQueryParam(urlStr: string, param: string): string;
 
 // @public
+export class IamAssumeAuthenticator extends IamRequestBasedAuthenticator {
+    // Warning: (ae-forgotten-export) The symbol "Options_14" needs to be exported by the entry point index.d.ts
+    constructor(options: Options_14);
+    authenticationType(): string;
+    // (undocumented)
+    protected tokenManager: IamAssumeTokenManager;
+}
+
+// @public
+export class IamAssumeTokenManager extends IamRequestBasedTokenManager {
+    // Warning: (ae-forgotten-export) The symbol "Options_13" needs to be exported by the entry point index.d.ts
+    constructor(options: Options_13);
+    protected requestToken(): Promise<any>;
+    // (undocumented)
+    protected requiredOptions: string[];
+}
+
+// @public
 export class IamAuthenticator extends IamRequestBasedAuthenticator {
     // Warning: (ae-forgotten-export) The symbol "Options_6" needs to be exported by the entry point index.d.ts
     constructor(options: Options_6);
@@ -343,7 +363,7 @@ export class NoAuthAuthenticator extends Authenticator {
 }
 
 // @public
-export function onlyOne(a: any, b: any): boolean;
+export function onlyOne(...args: any): boolean;
 
 // @public
 export const qs: {
