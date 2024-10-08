@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import logger from '../../lib/logger';
 import { onlyOne, validateInput } from '../utils/helpers';
 import { buildUserAgent } from '../../lib/build-user-agent';
 import { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-based-token-manager';
@@ -104,6 +105,12 @@ export class IamAssumeTokenManager extends IamRequestBasedTokenManager {
     // be ignored, so we can pass the options structure to that constructor as-is.
     this.iamDelegate = new IamTokenManager(options);
 
+    // These options are used by the delegate token manager
+    // but they are not supported by this token manager.
+    this.clientId = undefined;
+    this.clientSecret = undefined;
+    this.scope = undefined;
+
     // Set the grant type and user agent for this flavor of authentication.
     this.formData.grant_type = 'urn:ibm:params:oauth:grant-type:assume';
     this.userAgent = buildUserAgent('iam-assume-authenticator');
@@ -126,5 +133,29 @@ export class IamAssumeTokenManager extends IamRequestBasedTokenManager {
     }
 
     return super.requestToken();
+  }
+
+  /**
+   * Extend this method from the parent class to erase the refresh token from
+   * the class - we do not want to expose it for IAM Assume authentication.
+   *
+   * @param tokenResponse - the response object from JWT service request
+   */
+  protected saveTokenInfo(tokenResponse): void {
+    super.saveTokenInfo(tokenResponse);
+    this.refreshToken = undefined;
+  }
+
+  /**
+   * This token manager doesn't save the refresh token but this method is still
+   * exposed by the underlying class, so we override it here to log a warning.
+   *
+   * @returns the refresh token
+   */
+  public getRefreshToken(): string {
+    logger.warn(
+      'The IamAssumeTokenManager does not store the refresh token - it will be undefined.'
+    );
+    return super.getRefreshToken();
   }
 }

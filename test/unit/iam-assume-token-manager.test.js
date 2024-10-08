@@ -63,6 +63,9 @@ describe('IAM Assume Token Manager', () => {
   RequestWrapper.mockImplementation(() => ({
     sendRequest: sendRequestMock,
   }));
+  afterEach(() => {
+    sendRequestMock.mockClear();
+  });
   afterAll(() => {
     sendRequestMock.mockRestore();
   });
@@ -210,6 +213,39 @@ describe('IAM Assume Token Manager', () => {
 
       expect(instance.userAgent).toMatch('iam-assume-authenticator');
     });
+
+    it('should store client id, secret, and scope in delegate but not in the class', () => {
+      const instance = new IamAssumeTokenManager({
+        apikey: IAM_APIKEY,
+        iamProfileCrn: IAM_PROFILE_CRN,
+        clientId: 'some-id',
+        clientSecret: 'some-secret',
+        scope: 'some-scope',
+      });
+
+      expect(instance.clientId).toBeUndefined();
+      expect(instance.clientSecret).toBeUndefined();
+      expect(instance.scope).toBeUndefined();
+      expect(instance.iamDelegate.clientId).toBe('some-id');
+      expect(instance.iamDelegate.clientSecret).toBe('some-secret');
+      expect(instance.iamDelegate.scope).toBe('some-scope');
+    });
+  });
+
+  describe('getters', () => {
+    it('should warn if user calls getRefreshToken', () => {
+      const warnSpy = jest.spyOn(logger, 'warn');
+      const instance = new IamAssumeTokenManager({
+        apikey: IAM_APIKEY,
+        iamProfileCrn: IAM_PROFILE_CRN,
+      });
+
+      instance.getRefreshToken();
+      expect(warnSpy).toHaveBeenCalledWith(
+        'The IamAssumeTokenManager does not store the refresh token - it will be undefined.'
+      );
+      warnSpy.mockRestore();
+    });
   });
 
   describe('requestToken', () => {
@@ -306,6 +342,33 @@ describe('IAM Assume Token Manager', () => {
       const accessToken = await instance.getToken();
 
       expect(accessToken).toBe(OTHER_ACCESS_TOKEN);
+
+      // Ensure the refresh token is NOT saved after `getToken` is called.
+      expect(instance.refreshToken).toBeUndefined();
+    });
+
+    it('should use client id, secret, and scope in delegate request but not the manager request', async () => {
+      const instance = new IamAssumeTokenManager({
+        apikey: IAM_APIKEY,
+        iamProfileCrn: IAM_PROFILE_CRN,
+        clientId: 'some-id',
+        clientSecret: 'some-secret',
+        scope: 'some-scope',
+      });
+
+      await instance.requestToken();
+
+      // Check the IAM delegate's request first.
+      const iamRequestOptions = getRequestOptions(sendRequestMock, 0);
+      expect(iamRequestOptions.headers).toBeDefined();
+      expect(iamRequestOptions.headers.Authorization).toBe('Basic c29tZS1pZDpzb21lLXNlY3JldA==');
+      expect(iamRequestOptions.form.scope).toBe('some-scope');
+
+      // Then, look at the second request from the IAM Assume token manager.
+      const assumeRequestOptions = getRequestOptions(sendRequestMock, 1);
+      expect(assumeRequestOptions.headers).toBeDefined();
+      expect(assumeRequestOptions.headers.Authorization).toBeUndefined();
+      expect(assumeRequestOptions.form.scope).toBeUndefined();
     });
   });
 });
