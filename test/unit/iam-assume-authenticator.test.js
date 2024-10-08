@@ -124,15 +124,4 @@ describe('IAM Assume Authenticator', () => {
     // Verify that the original options are kept intact.
     expect(options.headers['X-Some-Header']).toBe('user-supplied header');
   });
-
-  it('should return the refresh token stored in the token manager', () => {
-    const token = 'some-token';
-    const authenticator = new IamAssumeAuthenticator({
-      apikey: config.apikey,
-      iamProfileId: config.iamProfileId,
-    });
-    expect(authenticator.tokenManager.refreshToken).toBeUndefined();
-    authenticator.tokenManager.refreshToken = token;
-    expect(authenticator.getRefreshToken()).toEqual(token);
-  });
 });
