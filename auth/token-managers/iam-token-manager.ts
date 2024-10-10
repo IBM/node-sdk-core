@@ -66,4 +66,13 @@ export class IamTokenManager extends IamRequestBasedTokenManager {
 
     this.userAgent = buildUserAgent('iam-authenticator');
   }
+
+  /**
+   * Returns the most recently stored refresh token.
+   *
+   * @returns the refresh token
+   */
+  public getRefreshToken(): string {
+    return this.refreshToken;
+  }
 }

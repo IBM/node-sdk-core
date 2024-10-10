@@ -16,7 +16,10 @@
 
 import { Authenticator } from './authenticator';
 import { IamAssumeTokenManager } from '../token-managers';
-import { IamRequestOptions, IamRequestBasedAuthenticator } from './iam-request-based-authenticator';
+import {
+  IamRequestOptions,
+  IamRequestBasedAuthenticatorImmutable,
+} from './iam-request-based-authenticator-immutable';
 
 /** Configuration options for IAM Assume authentication. */
 export interface Options extends IamRequestOptions {
@@ -53,7 +56,7 @@ export interface Options extends IamRequestOptions {
  *
  *      Authorization: Bearer \<bearer-token\>
  */
-export class IamAssumeAuthenticator extends IamRequestBasedAuthenticator {
+export class IamAssumeAuthenticator extends IamRequestBasedAuthenticatorImmutable {
   protected tokenManager: IamAssumeTokenManager;
 
   /**

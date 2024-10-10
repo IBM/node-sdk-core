@@ -165,16 +165,6 @@ describe('IAM Request Based Token Manager', () => {
     });
   });
 
-  describe('getRefreshToken', () => {
-    it('should return the stored refresh token with the getter', () => {
-      const token = 'some-token';
-      const instance = new IamRequestBasedTokenManager();
-      expect(instance.refreshToken).toBeUndefined();
-      instance.refreshToken = token;
-      expect(instance.getRefreshToken()).toEqual(token);
-    });
-  });
-
   describe('requestToken', () => {
     it('should set required headers by default', async () => {
       const instance = new IamRequestBasedTokenManager();

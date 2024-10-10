@@ -124,4 +124,13 @@ export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
   public authenticationType(): string {
     return Authenticator.AUTHTYPE_CONTAINER;
   }
+
+  /**
+   * Return the most recently stored refresh token.
+   *
+   * @returns the refresh token string
+   */
+  public getRefreshToken(): string {
+    return this.tokenManager.getRefreshToken();
+  }
 }
