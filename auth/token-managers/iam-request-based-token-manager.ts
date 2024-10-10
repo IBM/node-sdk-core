@@ -41,11 +41,11 @@ export interface IamRequestOptions extends JwtTokenManagerOptions {
  * class be extended with specific implementations.
  */
 export class IamRequestBasedTokenManager extends JwtTokenManager {
-  private clientId: string;
+  protected clientId: string;
 
-  private clientSecret: string;
+  protected clientSecret: string;
 
-  private scope: string;
+  protected scope: string;
 
   protected refreshToken: string;
 
@@ -123,15 +123,6 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
       // tslint:disable-next-line
       logger.warn(CLIENT_ID_SECRET_WARNING);
     }
-  }
-
-  /**
-   * Returns the most recently stored refresh token.
-   *
-   * @returns the refresh token
-   */
-  public getRefreshToken(): string {
-    return this.refreshToken;
   }
 
   /**

@@ -20,7 +20,8 @@
  *
  * Basic Authentication
  * Bearer Token
- * Identity and Access Management (IAM)
+ * Identity and Access Management (IAM, grant type: apikey)
+ * Identity and Access Management (IAM, grant type: assume)
  * Container (IKS, etc)
  * VPC Instance
  * Cloud Pak for Data
@@ -36,6 +37,7 @@
  *   BearerTokenAuthenticator: Authenticator for passing supplied bearer token to service endpoint.
  *   CloudPakForDataAuthenticator: Authenticator for passing CP4D authentication information to service endpoint.
  *   IAMAuthenticator: Authenticator for passing IAM authentication information to service endpoint.
+ *   IAMAssumeAuthenticator: Authenticator for passing IAM authentication information to service endpoint, assuming a trusted profile.
  *   ContainerAuthenticator: Authenticator for passing IAM authentication to a service, based on a token living on the container.
  *   VpcInstanceAuthenticator: Authenticator that uses the VPC Instance Metadata Service API to retrieve an IAM token.
  *   McspAuthenticator: Authenticator for passing MCSP authentication to a service endpoint.
@@ -54,3 +56,4 @@ export { IamRequestBasedAuthenticator } from './iam-request-based-authenticator'
 export { TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 export { VpcInstanceAuthenticator } from './vpc-instance-authenticator';
 export { McspAuthenticator } from './mcsp-authenticator';
+export { IamAssumeAuthenticator } from './iam-assume-authenticator';

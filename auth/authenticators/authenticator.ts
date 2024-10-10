@@ -32,6 +32,8 @@ export class Authenticator implements AuthenticatorInterface {
 
   static AUTHTYPE_IAM = 'iam';
 
+  static AUTHTYPE_IAM_ASSUME = 'iamAssume';
+
   static AUTHTYPE_CONTAINER = 'container';
 
   static AUTHTYPE_CP4D = 'cp4d';

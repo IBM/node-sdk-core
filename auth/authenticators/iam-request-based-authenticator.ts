@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 202e.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,73 +14,18 @@
  * limitations under the License.
  */
 
-import { IamRequestBasedTokenManager } from '../token-managers/iam-request-based-token-manager';
-import { BaseOptions, TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
+import { OutgoingHttpHeaders } from 'http';
+import { IamRequestBasedAuthenticatorImmutable } from './iam-request-based-authenticator-immutable';
 
-/** Configuration options for IAM Request based authentication. */
-export interface IamRequestOptions extends BaseOptions {
-  /**
-   * The `clientId` and `clientSecret` fields are used to form a "basic"
-   * authorization header for IAM token requests.
-   */
-  clientId?: string;
-  /**
-   * The `clientId` and `clientSecret` fields are used to form a "basic"
-   * authorization header for IAM token requests.
-   */
-  clientSecret?: string;
-
-  /**
-   * The "scope" parameter to use when fetching the bearer token from the IAM token server.
-   */
-  scope?: string;
-}
+/** Shared configuration options for IAM Request based authentication. */
+export { IamRequestOptions } from './iam-request-based-authenticator-immutable';
 
 /**
  * The IamRequestBasedAuthenticator provides shared configuration and functionality
  * for authenticators that interact with the IAM token service. This authenticator
  * is not meant for use on its own.
  */
-export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator {
-  protected tokenManager: IamRequestBasedTokenManager;
-
-  protected clientId: string;
-
-  protected clientSecret: string;
-
-  protected scope: string;
-
-  /**
-   *
-   * Create a new IamRequestBasedAuthenticator instance.
-   *
-   * @param options - Configuration options for IAM authentication.
-   * This should be an object containing these fields:
-   * - url: (optional) the endpoint URL for the token service
-   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
-   * should be disabled or not
-   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
-   * - clientId: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
-   * Authorization header to be included in each request to the token service
-   * - clientSecret: (optional) the "clientId" and "clientSecret" fields are used to form a Basic
-   * Authorization header to be included in each request to the token service
-   * - scope: (optional) the "scope" parameter to use when fetching the bearer token from the token service
-   *
-   * @throws Error: the configuration options are not valid.
-   */
-  constructor(options: IamRequestOptions) {
-    // all parameters are optional
-    options = options || ({} as IamRequestOptions);
-
-    super(options);
-
-    this.clientId = options.clientId;
-    this.clientSecret = options.clientSecret;
-    this.scope = options.scope;
-
-    this.tokenManager = new IamRequestBasedTokenManager(options);
-  }
-
+export class IamRequestBasedAuthenticator extends IamRequestBasedAuthenticatorImmutable {
   /**
    * Setter for the mutually inclusive "clientId" and the "clientSecret" fields.
    * @param clientId - the "clientId" value used to form a Basic Authorization header for IAM token requests
@@ -107,11 +52,31 @@ export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator
   }
 
   /**
-   * Return the most recently stored refresh token.
+   * Set the flag that indicates whether verification of the server's SSL
+   * certificate should be disabled or not.
    *
-   * @returns the refresh token string
+   * @param value - a flag that indicates whether verification of the
+   *   token server's SSL certificate should be disabled or not.
    */
-  public getRefreshToken(): string {
-    return this.tokenManager.getRefreshToken();
+  public setDisableSslVerification(value: boolean): void {
+    // if they try to pass in a non-boolean value,
+    // use the "truthy-ness" of the value
+    this.disableSslVerification = Boolean(value);
+    this.tokenManager.setDisableSslVerification(this.disableSslVerification);
+  }
+
+  /**
+   * Set headers.
+   *
+   * @param headers - a set of HTTP headers to be sent with each outbound token server request.
+   * Overwrites previous default headers.
+   */
+  public setHeaders(headers: OutgoingHttpHeaders): void {
+    if (typeof headers !== 'object') {
+      // do nothing, for now
+      return;
+    }
+    this.headers = headers;
+    this.tokenManager.setHeaders(this.headers);
   }
 }

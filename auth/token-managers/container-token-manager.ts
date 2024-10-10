@@ -113,9 +113,18 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
   }
 
   /**
+   * Returns the most recently stored refresh token.
+   *
+   * @returns the refresh token
+   */
+  public getRefreshToken(): string {
+    return this.refreshToken;
+  }
+
+  /**
    * Request an IAM token using a compute resource token.
    */
-  protected async requestToken(): Promise<any> {
+  protected requestToken(): Promise<any> {
     this.formData.cr_token = this.getCrToken();
 
     // these member variables can be reset, set them in the form data right
