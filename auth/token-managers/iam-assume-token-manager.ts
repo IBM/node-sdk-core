@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import logger from '../../lib/logger';
+import { OutgoingHttpHeaders } from 'http';
 import { onlyOne, validateInput } from '../utils/helpers';
 import { buildUserAgent } from '../../lib/build-user-agent';
 import { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-based-token-manager';
@@ -146,16 +146,46 @@ export class IamAssumeTokenManager extends IamRequestBasedTokenManager {
     this.refreshToken = undefined;
   }
 
+  // Override the inherited "setters". This token manager does not store these options
+  // but they can adjust properties on the stored IAM delegate.
+
   /**
-   * This token manager doesn't save the refresh token but this method is still
-   * exposed by the underlying class, so we override it here to log a warning.
+   * Sets the IAM "scope" value.
+   * This value is sent as the "scope" form parameter in the IAM delegate request.
    *
-   * @returns the refresh token
+   * @param scope - a space-separated string that contains one or more scope names
    */
-  public getRefreshToken(): string {
-    logger.warn(
-      'The IamAssumeTokenManager does not store the refresh token - it will be undefined.'
-    );
-    return super.getRefreshToken();
+  public setScope(scope: string): void {
+    this.iamDelegate.setScope(scope);
+  }
+
+  /**
+   * Sets the IAM "clientId" and "clientSecret" values for the IAM delegate.
+   *
+   * @param clientId - the client id.
+   * @param clientSecret - the client secret.
+   */
+  public setClientIdAndSecret(clientId: string, clientSecret: string): void {
+    this.iamDelegate.setClientIdAndSecret(clientId, clientSecret);
+  }
+
+  /**
+   * Sets the "disableSslVerification" property for the IAM delegate.
+   *
+   * @param value - the new value for the disableSslVerification property
+   */
+  public setDisableSslVerification(value: boolean): void {
+    super.setDisableSslVerification(value);
+    this.iamDelegate.setDisableSslVerification(value);
+  }
+
+  /**
+   * Sets the headers to be included in the IAM delegate's requests.
+   *
+   * @param headers - the set of headers to send with each request to the token server
+   */
+  public setHeaders(headers: OutgoingHttpHeaders): void {
+    super.setHeaders(headers);
+    this.iamDelegate.setHeaders(headers);
   }
 }

@@ -126,15 +126,6 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
   }
 
   /**
-   * Returns the most recently stored refresh token.
-   *
-   * @returns the refresh token
-   */
-  public getRefreshToken(): string {
-    return this.refreshToken;
-  }
-
-  /**
    * Extend this method from the parent class to extract the refresh token from
    * the request and save it.
    *

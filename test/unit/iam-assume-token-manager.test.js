@@ -26,7 +26,6 @@ const { IamAssumeTokenManager, IamTokenManager } = require('../../dist/auth');
 const { RequestWrapper } = require('../../dist/lib/request-wrapper');
 const { getRequestOptions } = require('./utils');
 const { getCurrentTime } = require('../../dist/auth/utils/helpers');
-const logger = require('../../dist/lib/logger').default;
 
 // make sure no actual requests are sent
 jest.mock('../../dist/lib/request-wrapper');
@@ -232,19 +231,69 @@ describe('IAM Assume Token Manager', () => {
     });
   });
 
-  describe('getters', () => {
-    it('should warn if user calls getRefreshToken', () => {
-      const warnSpy = jest.spyOn(logger, 'warn');
+  describe('setters', () => {
+    it('should setScope() on iam delegate', () => {
       const instance = new IamAssumeTokenManager({
         apikey: IAM_APIKEY,
-        iamProfileCrn: IAM_PROFILE_CRN,
+        iamProfileId: IAM_PROFILE_ID,
       });
 
-      instance.getRefreshToken();
-      expect(warnSpy).toHaveBeenCalledWith(
-        'The IamAssumeTokenManager does not store the refresh token - it will be undefined.'
-      );
-      warnSpy.mockRestore();
+      expect(instance.scope).toBeUndefined();
+      expect(instance.iamDelegate.scope).toBeUndefined();
+
+      instance.setScope('some-scope');
+
+      expect(instance.scope).toBeUndefined();
+      expect(instance.iamDelegate.scope).toBe('some-scope');
+    });
+
+    it('should setClientIdAndSecret() on iam delegate', () => {
+      const instance = new IamAssumeTokenManager({
+        apikey: IAM_APIKEY,
+        iamProfileId: IAM_PROFILE_ID,
+      });
+
+      expect(instance.clientId).toBeUndefined();
+      expect(instance.clientSecret).toBeUndefined();
+      expect(instance.iamDelegate.clientId).toBeUndefined();
+      expect(instance.iamDelegate.clientSecret).toBeUndefined();
+
+      instance.setClientIdAndSecret('some-id', 'some-secret');
+
+      expect(instance.clientId).toBeUndefined();
+      expect(instance.clientSecret).toBeUndefined();
+      expect(instance.iamDelegate.clientId).toBe('some-id');
+      expect(instance.iamDelegate.clientSecret).toBe('some-secret');
+    });
+
+    it('should setDisableSslVerification() on class and iam delegate', () => {
+      const instance = new IamAssumeTokenManager({
+        apikey: IAM_APIKEY,
+        iamProfileId: IAM_PROFILE_ID,
+      });
+
+      expect(instance.disableSslVerification).toBe(false);
+      expect(instance.iamDelegate.disableSslVerification).toBe(false);
+
+      instance.setDisableSslVerification(true);
+
+      expect(instance.disableSslVerification).toBe(true);
+      expect(instance.iamDelegate.disableSslVerification).toBe(true);
+    });
+
+    it('should setHeaders() on iam delegate', () => {
+      const instance = new IamAssumeTokenManager({
+        apikey: IAM_APIKEY,
+        iamProfileId: IAM_PROFILE_ID,
+      });
+
+      expect(instance.headers).toEqual({});
+      expect(instance.iamDelegate.headers).toEqual({});
+
+      instance.setHeaders({ 'X-Some-Header': 'some-value' });
+
+      expect(instance.headers).toEqual({ 'X-Some-Header': 'some-value' });
+      expect(instance.iamDelegate.headers).toEqual({ 'X-Some-Header': 'some-value' });
     });
   });
 

@@ -69,14 +69,4 @@ describe('IAM Request Based Authenticator', () => {
       expect(authenticator.tokenManager.clientSecret).toEqual(CLIENT_SECRET);
     });
   });
-
-  describe('getRefreshToken', () => {
-    it('should return the refresh token stored in the token manager', () => {
-      const token = 'some-token';
-      const authenticator = new IamRequestBasedAuthenticator();
-      expect(authenticator.tokenManager.refreshToken).toBeUndefined();
-      authenticator.tokenManager.refreshToken = token;
-      expect(authenticator.getRefreshToken()).toEqual(token);
-    });
-  });
 });

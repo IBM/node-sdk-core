@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2023.
+ * (C) Copyright IBM Corp. 2019, 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,11 @@
  * limitations under the License.
  */
 
-import extend from 'extend';
 import { OutgoingHttpHeaders } from 'http';
-import { JwtTokenManager } from '../token-managers/jwt-token-manager';
-import { Authenticator } from './authenticator';
-import { AuthenticateOptions } from './authenticator-interface';
-import logger from '../../lib/logger';
+import { TokenRequestBasedAuthenticatorImmutable } from './token-request-based-authenticator-immutable';
 
 /** Configuration options for token-based authentication. */
-export type BaseOptions = {
-  /** Headers to be sent with every outbound HTTP requests to token services. */
-  headers?: OutgoingHttpHeaders;
-  /**
-   * A flag that indicates whether verification of the token server's SSL
-   * certificate should be disabled or not.
-   */
-  disableSslVerification?: boolean;
-  /** Endpoint for HTTP token requests. */
-  url?: string;
-  /** Allow additional request config parameters */
-  [propName: string]: any;
-};
+export { BaseOptions } from './token-request-based-authenticator-immutable';
 
 /**
  * Class for common functionality shared by token-request authenticators.
@@ -47,37 +31,7 @@ export type BaseOptions = {
  *
  *      Authorization: Bearer \<bearer-token\>
  */
-export class TokenRequestBasedAuthenticator extends Authenticator {
-  protected tokenManager: JwtTokenManager;
-
-  protected url: string;
-
-  protected headers: OutgoingHttpHeaders;
-
-  protected disableSslVerification: boolean;
-
-  /**
-   * Create a new TokenRequestBasedAuthenticator instance with an internal JwtTokenManager.
-   *
-   * @param options - Configuration options.
-   * This should be an object containing these fields:
-   * - url: (optional) the endpoint URL for the token service
-   * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
-   * should be disabled or not
-   * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
-   */
-  constructor(options: BaseOptions) {
-    super();
-
-    this.disableSslVerification = Boolean(options.disableSslVerification);
-    this.url = options.url;
-
-    // default to empty object
-    this.headers = options.headers || {};
-
-    this.tokenManager = new JwtTokenManager(options);
-  }
-
+export class TokenRequestBasedAuthenticator extends TokenRequestBasedAuthenticatorImmutable {
   /**
    * Set the flag that indicates whether verification of the server's SSL
    * certificate should be disabled or not.
@@ -105,21 +59,5 @@ export class TokenRequestBasedAuthenticator extends Authenticator {
     }
     this.headers = headers;
     this.tokenManager.setHeaders(this.headers);
-  }
-
-  /**
-   * Adds bearer token information to "requestOptions". The bearer token information
-   * will be set in the Authorization property of "requestOptions.headers" in the form:
-   *
-   *     Authorization: Bearer \<bearer-token\>
-   *
-   * @param requestOptions - The request to augment with authentication information.
-   */
-  public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
-    return this.tokenManager.getToken().then((token) => {
-      const authHeader = { Authorization: `Bearer ${token}` };
-      requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
-      logger.debug(`Authenticated outbound request (type=${this.authenticationType()})`);
-    });
   }
 }

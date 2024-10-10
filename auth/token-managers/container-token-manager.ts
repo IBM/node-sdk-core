@@ -113,6 +113,15 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
   }
 
   /**
+   * Returns the most recently stored refresh token.
+   *
+   * @returns the refresh token
+   */
+  public getRefreshToken(): string {
+    return this.refreshToken;
+  }
+
+  /**
    * Request an IAM token using a compute resource token.
    */
   protected requestToken(): Promise<any> {
