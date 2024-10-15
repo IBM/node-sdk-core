@@ -24,8 +24,8 @@ interface Options extends IamRequestOptions {
 }
 
 /**
- * The IAMTokenManager takes an api key and performs the necessary interactions with
- * the IAM token service to obtain and store a suitable bearer token. Additionally, the IAMTokenManager
+ * The IamTokenManager takes an api key and performs the necessary interactions with
+ * the IAM token service to obtain and store a suitable bearer token. Additionally, the IamTokenManager
  * will retrieve bearer tokens via basic auth using a supplied "clientId" and "clientSecret" pair.
  */
 export class IamTokenManager extends IamRequestBasedTokenManager {
@@ -65,5 +65,14 @@ export class IamTokenManager extends IamRequestBasedTokenManager {
     this.formData.response_type = 'cloud_iam';
 
     this.userAgent = buildUserAgent('iam-authenticator');
+  }
+
+  /**
+   * Returns the most recently stored refresh token.
+   *
+   * @returns the refresh token
+   */
+  public getRefreshToken(): string {
+    return this.refreshToken;
   }
 }

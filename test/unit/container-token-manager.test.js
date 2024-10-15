@@ -178,4 +178,14 @@ describe('Container Token Manager', () => {
       expect(accessToken).toBe(ACCESS_TOKEN);
     });
   });
+
+  describe('getRefreshToken', () => {
+    it('should return the stored refresh token with the getter', () => {
+      const token = 'some-token';
+      const instance = new ContainerTokenManager({ iamProfileName: IAM_PROFILE_NAME });
+      expect(instance.refreshToken).toBeUndefined();
+      instance.refreshToken = token;
+      expect(instance.getRefreshToken()).toEqual(token);
+    });
+  });
 });
