@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/IBM/node-sdk-core/compare/v5.0.2...v5.1.0) (2024-10-15)
+
+
+### Features
+
+* **IamAssumeAuthenticator:** add new authentication type for iam assume ([#287](https://github.com/IBM/node-sdk-core/issues/287)) ([addebfc](https://github.com/IBM/node-sdk-core/commit/addebfca36f0b45a1e4df18605984a66073413bb))
+
 ## [5.0.2](https://github.com/IBM/node-sdk-core/compare/v5.0.1...v5.0.2) (2024-09-03)
 
 
