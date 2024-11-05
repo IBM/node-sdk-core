@@ -312,6 +312,11 @@ export class RequestWrapper {
       headers = extend(true, {}, headers, multipartForm.getHeaders());
     }
 
+    // allow axiosInstance to return streams for server side events
+    if (headers.Accept === 'text/event-stream') {
+      options.responseType = 'stream';
+    }
+
     // accept gzip encoded responses if Accept-Encoding is not already set
     headers['Accept-Encoding'] = headers['Accept-Encoding'] || 'gzip';
 
