@@ -1,3 +1,10 @@
+## [5.1.1](https://github.com/IBM/node-sdk-core/compare/v5.1.0...v5.1.1) (2025-01-10)
+
+
+### Bug Fixes
+
+* enable github workflows ([dda9ef1](https://github.com/IBM/node-sdk-core/commit/dda9ef102656afac9a34d309fbdb271334382c79))
+
 # [5.1.0](https://github.com/IBM/node-sdk-core/compare/v5.0.2...v5.1.0) (2024-10-15)
 
 
