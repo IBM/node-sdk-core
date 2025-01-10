@@ -83,7 +83,7 @@ jobs:
         run: |
           npm ci
           cd sdk-test-utilities && npm ci && cd ..
-          npm build
+          npm run build
 
       - name: Run semantic-release
         env:
