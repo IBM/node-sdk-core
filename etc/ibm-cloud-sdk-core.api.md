@@ -132,6 +132,7 @@ export class ContainerAuthenticator extends IamRequestBasedAuthenticator {
     // Warning: (ae-forgotten-export) The symbol "Options_8" needs to be exported by the entry point index.d.ts
     constructor(options: Options_8);
     authenticationType(): string;
+    getRefreshToken(): string;
     setCrTokenFilename(crTokenFilename: string): void;
     setIamProfileId(iamProfileId: string): void;
     setIamProfileName(iamProfileName: string): void;
@@ -144,6 +145,7 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
     // Warning: (ae-forgotten-export) The symbol "Options_7" needs to be exported by the entry point index.d.ts
     constructor(options: Options_7);
     protected getCrToken(): string;
+    getRefreshToken(): string;
     protected requestToken(): Promise<any>;
     setCrTokenFilename(crTokenFilename: string): void;
     setIamProfileId(iamProfileId: string): void;
@@ -226,8 +228,10 @@ export function getNewLogger(moduleName: string): SDKLogger;
 // @public
 export function getQueryParam(urlStr: string, param: string): string;
 
+// Warning: (ae-forgotten-export) The symbol "IamRequestBasedAuthenticatorImmutable" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class IamAssumeAuthenticator extends IamRequestBasedAuthenticator {
+export class IamAssumeAuthenticator extends IamRequestBasedAuthenticatorImmutable {
     // Warning: (ae-forgotten-export) The symbol "Options_14" needs to be exported by the entry point index.d.ts
     constructor(options: Options_14);
     authenticationType(): string;
@@ -242,6 +246,11 @@ export class IamAssumeTokenManager extends IamRequestBasedTokenManager {
     protected requestToken(): Promise<any>;
     // (undocumented)
     protected requiredOptions: string[];
+    protected saveTokenInfo(tokenResponse: any): void;
+    setClientIdAndSecret(clientId: string, clientSecret: string): void;
+    setDisableSslVerification(value: boolean): void;
+    setHeaders(headers: OutgoingHttpHeaders): void;
+    setScope(scope: string): void;
 }
 
 // @public
@@ -249,6 +258,7 @@ export class IamAuthenticator extends IamRequestBasedAuthenticator {
     // Warning: (ae-forgotten-export) The symbol "Options_6" needs to be exported by the entry point index.d.ts
     constructor(options: Options_6);
     authenticationType(): string;
+    getRefreshToken(): string;
     // (undocumented)
     protected requiredOptions: string[];
     // (undocumented)
@@ -256,33 +266,29 @@ export class IamAuthenticator extends IamRequestBasedAuthenticator {
 }
 
 // @public
-export class IamRequestBasedAuthenticator extends TokenRequestBasedAuthenticator {
-    // Warning: (ae-forgotten-export) The symbol "IamRequestOptions_2" needs to be exported by the entry point index.d.ts
-    constructor(options: IamRequestOptions_2);
-    // (undocumented)
-    protected clientId: string;
-    // (undocumented)
-    protected clientSecret: string;
-    getRefreshToken(): string;
-    // (undocumented)
-    protected scope: string;
+export class IamRequestBasedAuthenticator extends IamRequestBasedAuthenticatorImmutable {
     setClientIdAndSecret(clientId: string, clientSecret: string): void;
+    setDisableSslVerification(value: boolean): void;
+    setHeaders(headers: OutgoingHttpHeaders): void;
     setScope(scope: string): void;
-    // (undocumented)
-    protected tokenManager: IamRequestBasedTokenManager;
 }
 
 // @public
 export class IamRequestBasedTokenManager extends JwtTokenManager {
     constructor(options: IamRequestOptions);
     // (undocumented)
+    protected clientId: string;
+    // (undocumented)
+    protected clientSecret: string;
+    // (undocumented)
     protected formData: any;
-    getRefreshToken(): string;
     protected isTokenExpired(): boolean;
     // (undocumented)
     protected refreshToken: string;
     protected requestToken(): Promise<any>;
     protected saveTokenInfo(tokenResponse: any): void;
+    // (undocumented)
+    protected scope: string;
     setClientIdAndSecret(clientId: string, clientSecret: string): void;
     setScope(scope: string): void;
 }
@@ -301,6 +307,7 @@ export interface IamRequestOptions extends JwtTokenManagerOptions {
 export class IamTokenManager extends IamRequestBasedTokenManager {
     // Warning: (ae-forgotten-export) The symbol "Options_5" needs to be exported by the entry point index.d.ts
     constructor(options: Options_5);
+    getRefreshToken(): string;
     // (undocumented)
     protected requiredOptions: string[];
 }
@@ -440,21 +447,12 @@ export type TokenManagerOptions = {
     [propName: string]: any;
 };
 
+// Warning: (ae-forgotten-export) The symbol "TokenRequestBasedAuthenticatorImmutable" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class TokenRequestBasedAuthenticator extends Authenticator {
-    // Warning: (ae-forgotten-export) The symbol "BaseOptions" needs to be exported by the entry point index.d.ts
-    constructor(options: BaseOptions);
-    authenticate(requestOptions: AuthenticateOptions): Promise<void>;
-    // (undocumented)
-    protected disableSslVerification: boolean;
-    // (undocumented)
-    protected headers: OutgoingHttpHeaders;
+export class TokenRequestBasedAuthenticator extends TokenRequestBasedAuthenticatorImmutable {
     setDisableSslVerification(value: boolean): void;
     setHeaders(headers: OutgoingHttpHeaders): void;
-    // (undocumented)
-    protected tokenManager: JwtTokenManager;
-    // (undocumented)
-    protected url: string;
 }
 
 // @public
