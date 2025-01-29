@@ -68,7 +68,7 @@
     "@types/debug": "^4.1.12",
     "@types/node": "~10.14.19",
     "@types/tough-cookie": "^4.0.0",
-    "axios": "1.7.4",
+    "axios": "1.7.9",
     "camelcase": "^6.3.0",
     "debug": "^4.3.4",
     "dotenv": "^16.4.5",
