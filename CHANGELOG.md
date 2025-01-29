@@ -1,3 +1,10 @@
+## [5.1.2](https://github.com/IBM/node-sdk-core/compare/v5.1.1...v5.1.2) (2025-01-29)
+
+
+### Bug Fixes
+
+* **deps:** update axios to resolve vulnerability ([#292](https://github.com/IBM/node-sdk-core/issues/292)) ([9838134](https://github.com/IBM/node-sdk-core/commit/9838134e111de00a686155dd64b7a91680093ef1))
+
 ## [5.1.1](https://github.com/IBM/node-sdk-core/compare/v5.1.0...v5.1.1) (2025-01-10)
 
 
