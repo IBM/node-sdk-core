@@ -1,3 +1,10 @@
+## [5.1.3](https://github.com/IBM/node-sdk-core/compare/v5.1.2...v5.1.3) (2025-02-17)
+
+
+### Bug Fixes
+
+* **build:** fix .releaserc format ([be52706](https://github.com/IBM/node-sdk-core/commit/be52706e9ee9ed62b9227cd0dce33e2e57b705ca)), closes [arf/planning-sdk-squad#4105](https://github.com/arf/planning-sdk-squad/issues/4105)
+
 ## [5.1.2](https://github.com/IBM/node-sdk-core/compare/v5.1.1...v5.1.2) (2025-01-29)
 
 
