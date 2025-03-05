@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2024.
+ * (C) Copyright IBM Corp. 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,4 @@
  * limitations under the License.
  */
 
-/**
- * @module ibm-cloud-sdk-core
- */
-
-export * from './lib/axios-types';
-export { BaseService, UserOptions } from './lib/base-service';
-export * from './auth';
-export * from './lib/helper';
-export { default as qs } from './lib/querystring';
-export { default as contentType } from './lib/content-type';
-export * from './lib/stream-to-promise';
-export { getNewLogger, SDKLogger } from './lib/get-new-logger';
+export { GenericAbortSignal as AbortSignal } from 'axios';
