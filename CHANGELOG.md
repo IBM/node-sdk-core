@@ -1,3 +1,10 @@
+## [5.1.4](https://github.com/IBM/node-sdk-core/compare/v5.1.3...v5.1.4) (2025-03-05)
+
+
+### Bug Fixes
+
+* update node types to align with required node versions ([#298](https://github.com/IBM/node-sdk-core/issues/298)) ([c4d67d7](https://github.com/IBM/node-sdk-core/commit/c4d67d73d5d1767b78af36d2a2ab7584cc5aa4a0))
+
 ## [5.1.3](https://github.com/IBM/node-sdk-core/compare/v5.1.2...v5.1.3) (2025-02-17)
 
 
