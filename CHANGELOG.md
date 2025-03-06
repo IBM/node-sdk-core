@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/IBM/node-sdk-core/compare/v5.1.4...v5.2.0) (2025-03-06)
+
+
+### Features
+
+* add support for accepting axios options in sendRequest ([#299](https://github.com/IBM/node-sdk-core/issues/299)) ([ddd81aa](https://github.com/IBM/node-sdk-core/commit/ddd81aab3103151e387737aff4c83da60b291efc))
+
 ## [5.1.4](https://github.com/IBM/node-sdk-core/compare/v5.1.3...v5.1.4) (2025-03-05)
 
 
