@@ -245,7 +245,7 @@ export class RequestWrapper {
    */
   public async sendRequest(parameters): Promise<any> {
     const options = extend(true, {}, parameters.defaultOptions, parameters.options);
-    const { path, body, form, formData, qs, method, serviceUrl } = options;
+    const { path, body, form, formData, qs, method, serviceUrl, axiosOptions } = options;
     let { headers, url } = options;
 
     const multipartForm = new FormData();
@@ -329,6 +329,7 @@ export class RequestWrapper {
       raxConfig: this.raxConfig,
       responseType: options.responseType || 'json',
       paramsSerializer: { serialize: (params) => stringify(params) },
+      ...axiosOptions,
     };
 
     return this.axiosInstance(requestParams).then(

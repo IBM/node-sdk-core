@@ -6,11 +6,14 @@
 
 /// <reference types="node" />
 
+import { GenericAbortSignal as AbortSignal_2 } from 'axios';
 import { AxiosInstance } from 'axios';
 import type { CookieJar } from 'tough-cookie';
 import { Debugger } from 'debug';
 import { OutgoingHttpHeaders } from 'http';
 import { Stream } from 'stream';
+
+export { AbortSignal_2 as AbortSignal }
 
 // @public
 export function atLeastOne(...args: any): boolean;
