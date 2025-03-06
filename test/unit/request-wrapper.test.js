@@ -227,6 +227,43 @@ describe('sendRequest', () => {
     expect(mockAxiosInstance.mock.calls).toHaveLength(1);
   });
 
+  it('should include any specified axios request options', async () => {
+    const parameters = {
+      defaultOptions: {
+        body: 'post=body',
+        formData: '',
+        qs: {},
+        method: 'POST',
+        url: 'https://example.ibm.com/v1',
+        headers: {
+          'test-header': 'test-header-value',
+        },
+        responseType: 'buffer',
+        axiosOptions: {
+          signal: 'mock',
+        },
+      },
+    };
+
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    const res = await requestWrapperInstance.sendRequest(parameters);
+    // assert results
+    expect(mockAxiosInstance.mock.calls[0][0].data).toEqual('post=body');
+    expect(mockAxiosInstance.mock.calls[0][0].url).toEqual('https://example.ibm.com/v1');
+    expect(mockAxiosInstance.mock.calls[0][0].headers).toEqual({
+      'Accept-Encoding': 'gzip',
+      'test-header': 'test-header-value',
+    });
+    expect(mockAxiosInstance.mock.calls[0][0].method).toEqual(parameters.defaultOptions.method);
+    expect(mockAxiosInstance.mock.calls[0][0].responseType).toEqual(
+      parameters.defaultOptions.responseType
+    );
+    expect(mockAxiosInstance.mock.calls[0][0].signal).toEqual('mock');
+    expect(res).toEqual(expectedResult);
+    expect(mockAxiosInstance.mock.calls).toHaveLength(1);
+  });
+
   it('sendRequest should strip trailing slashes', async () => {
     const parameters = {
       defaultOptions: {
