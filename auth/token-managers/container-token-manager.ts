@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2021, 2024.
+ * (C) Copyright IBM Corp. 2021, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import { IamRequestBasedTokenManager, IamRequestOptions } from './iam-request-ba
 
 const DEFAULT_CR_TOKEN_FILEPATH1 = '/var/run/secrets/tokens/vault-token';
 const DEFAULT_CR_TOKEN_FILEPATH2 = '/var/run/secrets/tokens/sa-token';
+const DEFAULT_CR_TOKEN_FILEPATH3 =
+  '/var/run/secrets/codeengine.cloud.ibm.com/compute-resource-token/token';
 
 /** Configuration options for IAM token retrieval. */
 interface Options extends IamRequestOptions {
@@ -144,6 +146,7 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
    * 1. User-specified filename (if specified)
    * 2. Default file #1 (/var/run/secrets/tokens/vault-token)
    * 3. Default file #2 (/var/run/secrets/tokens/sa-token)
+   * 4. Default file #3 (/var/run/secrets/codeengine.cloud.ibm.com/compute-resource-token/token)
    * First one found wins.
    *
    * @returns the CR token value as a string
@@ -159,7 +162,11 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
         try {
           crToken = readCrTokenFile(DEFAULT_CR_TOKEN_FILEPATH1);
         } catch (err) {
-          crToken = readCrTokenFile(DEFAULT_CR_TOKEN_FILEPATH2);
+          try {
+            crToken = readCrTokenFile(DEFAULT_CR_TOKEN_FILEPATH2);
+          } catch (err1) {
+            crToken = readCrTokenFile(DEFAULT_CR_TOKEN_FILEPATH3);
+          }
         }
       }
       return crToken;
