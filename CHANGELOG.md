@@ -1,3 +1,10 @@
+# [5.3.0](https://github.com/IBM/node-sdk-core/compare/v5.2.0...v5.3.0) (2025-03-07)
+
+
+### Features
+
+* **ContainerAuthenticator:** add support for code engine workload ([#296](https://github.com/IBM/node-sdk-core/issues/296)) ([f8e2b43](https://github.com/IBM/node-sdk-core/commit/f8e2b43632d32ae809dc71a4e0d9b76fed535bac))
+
 # [5.2.0](https://github.com/IBM/node-sdk-core/compare/v5.1.4...v5.2.0) (2025-03-06)
 
 
