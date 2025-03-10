@@ -1,3 +1,10 @@
+## [5.3.2](https://github.com/IBM/node-sdk-core/compare/v5.3.1...v5.3.2) (2025-03-10)
+
+
+### Bug Fixes
+
+* downgrade node types to align with minimum supported node version ([#301](https://github.com/IBM/node-sdk-core/issues/301)) ([519d516](https://github.com/IBM/node-sdk-core/commit/519d5166b1ef3c61d7d30fb7ab3c3598b77c7d2d))
+
 ## [5.3.1](https://github.com/IBM/node-sdk-core/compare/v5.3.0...v5.3.1) (2025-03-10)
 
 
