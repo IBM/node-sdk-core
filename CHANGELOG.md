@@ -1,3 +1,10 @@
+## [5.3.1](https://github.com/IBM/node-sdk-core/compare/v5.3.0...v5.3.1) (2025-03-10)
+
+
+### Bug Fixes
+
+* **deps:** upgrade axios to 1.8.2 ([#300](https://github.com/IBM/node-sdk-core/issues/300)) ([d34a1d1](https://github.com/IBM/node-sdk-core/commit/d34a1d10603e09d744ecd40719d45cffdda65e3d))
+
 # [5.3.0](https://github.com/IBM/node-sdk-core/compare/v5.2.0...v5.3.0) (2025-03-07)
 
 
