@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2023, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,6 @@ export class McspAuthenticator extends TokenRequestBasedAuthenticator {
    * @param options - Configuration options for CloudPakForData authentication.
    * This should be an object containing these fields:
    * - url: (required) the endpoint URL for the CloudPakForData token service
-   * - username: (required) the username used to obtain a bearer token
-   * - password: (optional) the password used to obtain a bearer token (required if apikey is not specified)
    * - apikey: (optional) the API key used to obtain a bearer token (required if password is not specified)
    * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
    * should be disabled or not
@@ -67,7 +65,7 @@ export class McspAuthenticator extends TokenRequestBasedAuthenticator {
   }
 
   /**
-   * Returns the authenticator's type ('cp4d').
+   * Returns the authenticator's type ('mcsp').
    *
    * @returns a string that indicates the authenticator's type
    */

@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2014, 2024.
+ * (C) Copyright IBM Corp. 2014, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,11 +156,15 @@ export class RequestWrapper {
    * @returns the string representation of the request
    */
   private formatAxiosRequest(request: InternalAxiosRequestConfig): string {
-    const { method, url, data, headers } = request;
-
+    const { method, url, data, headers, params } = request;
+    let queryString = stringify(params);
+    if (queryString) {
+      queryString = `?${queryString}`;
+    }
     const headersOutput = this.formatAxiosHeaders(headers);
     const body = this.formatAxiosBody(data);
-    const output = `${(method || '??').toUpperCase()} ${url || '??'}\n${headersOutput}\n${body}`;
+    const urlStr = url ? url + queryString : '??';
+    const output = `${(method || '??').toUpperCase()} ${urlStr}\n${headersOutput}\n${body}`;
     return redactSecrets(output);
   }
 

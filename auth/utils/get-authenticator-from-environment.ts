@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2022.
+ * (C) Copyright IBM Corp. 2019, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import {
   NoAuthAuthenticator,
   VpcInstanceAuthenticator,
   McspAuthenticator,
+  McspV2Authenticator,
 } from '../authenticators';
 
 import { readExternalSources } from './read-external-sources';
@@ -47,7 +48,6 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
 
   // construct the credentials object from the environment
   const credentials = readExternalSources(serviceName);
-
   if (credentials === null) {
     throw new Error('Unable to create an authenticator from the environment.');
   }
@@ -104,6 +104,8 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
     authenticator = new VpcInstanceAuthenticator(credentials);
   } else if (authType === Authenticator.AUTHTYPE_MCSP.toLowerCase()) {
     authenticator = new McspAuthenticator(credentials);
+  } else if (authType === Authenticator.AUTHTYPE_MCSPV2.toLowerCase()) {
+    authenticator = new McspV2Authenticator(credentials);
   } else {
     throw new Error(`Invalid value for AUTH_TYPE: ${authType}`);
   }
