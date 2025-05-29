@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2023.
+ * (C) Copyright IBM Corp. 2019, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@ export class Authenticator implements AuthenticatorInterface {
   static AUTHTYPE_VPC = 'vpc';
 
   static AUTHTYPE_MCSP = 'mcsp';
+
+  static AUTHTYPE_MCSPV2 = 'mcspv2';
 
   static AUTHTYPE_UNKNOWN = 'unknown';
 

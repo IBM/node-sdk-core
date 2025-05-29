@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2019, 2024.
+ * (C) Copyright IBM Corp. 2019, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,9 +87,11 @@ export class JwtTokenManager extends TokenManager {
       throw new Error(err);
     }
 
-    // the time of expiration is found by decoding the JWT access token
-    // 'exp' is the time of expire and 'iat' is the time of token retrieval
+    // The expiration time is found by decoding the JWT access token.
+    // 'exp' is the "expiration time" claim.
+    // 'iat' is the 'issued at' claim.
     const { exp, iat } = decodedResponse;
+
     // There are no required claims in JWT
     if (!exp || !iat) {
       this.expireTime = 0;
@@ -98,6 +100,9 @@ export class JwtTokenManager extends TokenManager {
       const fractionOfTtl = 0.8;
       const timeToLive = exp - iat;
       this.expireTime = exp;
+
+      // The refresh time represents the time when the token has effectively
+      // existed for 80% of its time to live.
       this.refreshTime = exp - timeToLive * (1.0 - fractionOfTtl);
     }
 

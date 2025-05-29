@@ -40,7 +40,8 @@
  *   IAMAssumeAuthenticator: Authenticator for passing IAM authentication information to service endpoint, assuming a trusted profile.
  *   ContainerAuthenticator: Authenticator for passing IAM authentication to a service, based on a token living on the container.
  *   VpcInstanceAuthenticator: Authenticator that uses the VPC Instance Metadata Service API to retrieve an IAM token.
- *   McspAuthenticator: Authenticator for passing MCSP authentication to a service endpoint.
+ *   McspAuthenticator: Authenticator for passing MCSP v1 authentication to a service endpoint.
+ *   McspV2Authenticator: Authenticator for passing MCSP v2 authentication to a service endpoint.
  *   NoAuthAuthenticator: Performs no authentication. Useful for testing purposes.
  */
 
@@ -56,4 +57,5 @@ export { IamRequestBasedAuthenticator } from './iam-request-based-authenticator'
 export { TokenRequestBasedAuthenticator } from './token-request-based-authenticator';
 export { VpcInstanceAuthenticator } from './vpc-instance-authenticator';
 export { McspAuthenticator } from './mcsp-authenticator';
+export { McspV2Authenticator } from './mcspv2-authenticator';
 export { IamAssumeAuthenticator } from './iam-assume-authenticator';

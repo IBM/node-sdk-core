@@ -41,6 +41,8 @@ export class Authenticator implements AuthenticatorInterface {
     // (undocumented)
     static AUTHTYPE_MCSP: string;
     // (undocumented)
+    static AUTHTYPE_MCSPV2: string;
+    // (undocumented)
     static AUTHTYPE_NOAUTH: string;
     // (undocumented)
     static AUTHTYPE_UNKNOWN: string;
@@ -235,8 +237,8 @@ export function getQueryParam(urlStr: string, param: string): string;
 //
 // @public
 export class IamAssumeAuthenticator extends IamRequestBasedAuthenticatorImmutable {
-    // Warning: (ae-forgotten-export) The symbol "Options_14" needs to be exported by the entry point index.d.ts
-    constructor(options: Options_14);
+    // Warning: (ae-forgotten-export) The symbol "Options_16" needs to be exported by the entry point index.d.ts
+    constructor(options: Options_16);
     authenticationType(): string;
     // (undocumented)
     protected tokenManager: IamAssumeTokenManager;
@@ -244,8 +246,8 @@ export class IamAssumeAuthenticator extends IamRequestBasedAuthenticatorImmutabl
 
 // @public
 export class IamAssumeTokenManager extends IamRequestBasedTokenManager {
-    // Warning: (ae-forgotten-export) The symbol "Options_13" needs to be exported by the entry point index.d.ts
-    constructor(options: Options_13);
+    // Warning: (ae-forgotten-export) The symbol "Options_15" needs to be exported by the entry point index.d.ts
+    constructor(options: Options_15);
     protected requestToken(): Promise<any>;
     // (undocumented)
     protected requiredOptions: string[];
@@ -359,6 +361,25 @@ export class McspAuthenticator extends TokenRequestBasedAuthenticator {
 export class McspTokenManager extends JwtTokenManager {
     // Warning: (ae-forgotten-export) The symbol "Options_11" needs to be exported by the entry point index.d.ts
     constructor(options: Options_11);
+    // (undocumented)
+    protected requestToken(): Promise<any>;
+    // (undocumented)
+    protected requiredOptions: string[];
+}
+
+// @public
+export class McspV2Authenticator extends TokenRequestBasedAuthenticator {
+    // Warning: (ae-forgotten-export) The symbol "Options_14" needs to be exported by the entry point index.d.ts
+    constructor(options: Options_14);
+    authenticationType(): string;
+    // (undocumented)
+    protected tokenManager: McspV2TokenManager;
+}
+
+// @public
+export class McspV2TokenManager extends JwtTokenManager {
+    // Warning: (ae-forgotten-export) The symbol "Options_13" needs to be exported by the entry point index.d.ts
+    constructor(options: Options_13);
     // (undocumented)
     protected requestToken(): Promise<any>;
     // (undocumented)

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ const {
   ContainerAuthenticator,
   VpcInstanceAuthenticator,
   McspAuthenticator,
+  McspV2Authenticator,
   NoAuthAuthenticator,
 } = require('../../dist/auth');
 
@@ -81,11 +82,27 @@ describe('Get Authenticator From Environment Module', () => {
     expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_IAM);
   });
 
-  it('should get mcsp authenticator', () => {
+  it('should get mcsp v1 authenticator', () => {
     setUpMcspPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
     expect(authenticator).toBeInstanceOf(McspAuthenticator);
     expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_MCSP);
+  });
+
+  it('should get mcsp v2 authenticator', () => {
+    setUpMcspV2Payload();
+    const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
+    expect(authenticator).toBeInstanceOf(McspV2Authenticator);
+    expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_MCSPV2);
+    expect(authenticator.tokenManager.apikey).toEqual(APIKEY);
+    expect(authenticator.tokenManager.url).toEqual(TOKEN_URL);
+    expect(authenticator.tokenManager.scopeCollectionType).toEqual('accounts');
+    expect(authenticator.tokenManager.scopeId).toEqual('global_account');
+    expect(authenticator.tokenManager.includeBuiltinActions).toBe(true);
+    expect(authenticator.tokenManager.includeCustomActions).toBe(true);
+    expect(authenticator.tokenManager.includeRoles).toBe(false);
+    expect(authenticator.tokenManager.prefixRoles).toEqual(true);
+    expect(authenticator.tokenManager.callerExtClaim).toEqual({ productID: 'prod-123' });
   });
 
   it('should get cp4d authenticator', () => {
@@ -193,6 +210,21 @@ function setUpMcspPayload() {
     authType: 'mcsp',
     apikey: APIKEY,
     authUrl: TOKEN_URL,
+  }));
+}
+
+function setUpMcspV2Payload() {
+  readExternalSourcesMock.mockImplementation(() => ({
+    authType: 'mcspv2',
+    apikey: APIKEY,
+    authUrl: TOKEN_URL,
+    scopeCollectionType: 'accounts',
+    scopeId: 'global_account',
+    includeBuiltinActions: 'true',
+    includeCustomActions: 'true',
+    includeRoles: 'false',
+    prefixRoles: 'true',
+    callerExtClaim: '{"productID": "prod-123"}',
   }));
 }
 

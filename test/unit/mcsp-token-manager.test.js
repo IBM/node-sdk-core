@@ -42,7 +42,7 @@ const IAM_RESPONSE = {
   status: 200,
 };
 
-describe('MCSP Token Manager', () => {
+describe('MCSP V1 Token Manager', () => {
   describe('constructor', () => {
     it('should initialize base variables', () => {
       const instance = new McspTokenManager({

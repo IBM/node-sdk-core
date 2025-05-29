@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 IBM Corp. All Rights Reserved.
+ * Copyright 2025 IBM Corp. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,39 @@
  */
 
 const { getAuthenticatorFromEnvironment } = require('../../dist');
+const { McspV2Authenticator } = require('../../dist/auth');
 
 // Note: Only the unit tests are run by default.
 //
-// In order to test with a live MCSP server, create file "mcsptest.env" in the project root.
+// In order to test with a live token server, create file "mcspv2test.env" in the project root.
 // It should look like this:
 //
-//	MCSPTEST_AUTH_URL=<url>   e.g. https://iam.platform.test.saas.ibm.com
-//	MCSPTEST_AUTH_TYPE=mcsp
-//	MCSPTEST_APIKEY=<apikey>
+// required properties:
+//
+//	MCSPV2TEST1_AUTH_URL=<url>   e.g. https://account-iam.platform.dev.saas.ibm.com
+//	MCSPV2TEST1_AUTH_TYPE=mcspv2
+//	MCSPV2TEST1_APIKEY=<apikey>
+//	MCSPV2TEST1_SCOPE_COLLECTION_TYPE=accounts  (use any valid collection type value)
+//	MCSPV2TEST1_SCOPE_ID=global_account         (use any valid scope id)
+//
+// optional properties:
+//
+//	MCSPV2TEST1_INCLUDE_BUILTIN_ACTIONS=true|false
+//	MCSPV2TEST1_INCLUDE_CUSTOM_ACTIONS=true|false
+//	MCSPV2TEST1_INCLUDE_ROLES=true|false
+//	MCSPV2TEST1_PREFIX_ROLES=true|false
+//	MCSPV2TEST1_CALLER_EXT_CLAIM={"productID":"prod123"}
+//
 //
 // Then run this command from the project root:
-// npm run jest test/integration/mcsp-authenticator.test.js
+// npm run jest test/integration/mcspv2-authenticator.test.js
 
-describe('MCSP V1 Authenticator - Integration Test', () => {
-  process.env.IBM_CREDENTIALS_FILE = `${__dirname}/../../mcsptest.env`;
+describe('MCSP V2 Authenticator - Integration Test', () => {
+  process.env.IBM_CREDENTIALS_FILE = `${__dirname}/../../mcspv2test.env`;
 
   it('should retrieve an MCSP access token successfully', async () => {
     // set up environment
-    const authenticator = getAuthenticatorFromEnvironment('mcsptest1');
+    const authenticator = getAuthenticatorFromEnvironment('mcspv2test1');
 
     // build a mock request
     const requestOptions = {};

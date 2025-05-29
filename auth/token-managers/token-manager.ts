@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, class-methods-use-this */
 
 /**
- * (C) Copyright IBM Corp. 2020, 2024.
+ * (C) Copyright IBM Corp. 2020, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,7 +199,7 @@ export class TokenManager {
    * @returns Promise
    */
   protected requestToken(): Promise<any> {
-    const errMsg = '`requestToken` MUST be overridden by a subclass of TokenManagerV1.';
+    const errMsg = '`requestToken` MUST be overridden by a subclass of TokenManager.';
     const err = new Error(errMsg);
     logger.error(errMsg);
     return Promise.reject(err);
