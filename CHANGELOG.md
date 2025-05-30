@@ -1,3 +1,10 @@
+# [5.4.0](https://github.com/IBM/node-sdk-core/compare/v5.3.2...v5.4.0) (2025-05-30)
+
+
+### Features
+
+* **auth:** add support for MCSP V2 authentication ([69b644b](https://github.com/IBM/node-sdk-core/commit/69b644b1e81896b2b29dfcdd4f8117802918e50b))
+
 ## [5.3.2](https://github.com/IBM/node-sdk-core/compare/v5.3.1...v5.3.2) (2025-03-10)
 
 
