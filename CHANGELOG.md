@@ -1,3 +1,10 @@
+## [5.4.1](https://github.com/IBM/node-sdk-core/compare/v5.4.0...v5.4.1) (2025-07-22)
+
+
+### Bug Fixes
+
+* **deps:** bump dependencies to avoid CVEs ([#305](https://github.com/IBM/node-sdk-core/issues/305)) ([44ad30b](https://github.com/IBM/node-sdk-core/commit/44ad30bda841e9ebe9b8ac01a5e49131e7a237cc))
+
 # [5.4.0](https://github.com/IBM/node-sdk-core/compare/v5.3.2...v5.4.0) (2025-05-30)
 
 
