@@ -1,3 +1,10 @@
+## [5.4.3](https://github.com/IBM/node-sdk-core/compare/v5.4.2...v5.4.3) (2025-09-16)
+
+
+### Bug Fixes
+
+* **deps:** bump axios to 1.12.2 to avoid CVEs ([#307](https://github.com/IBM/node-sdk-core/issues/307)) ([a4273e0](https://github.com/IBM/node-sdk-core/commit/a4273e04f77b06993800a3c3e8c5f5718702815a))
+
 ## [5.4.2](https://github.com/IBM/node-sdk-core/compare/v5.4.1...v5.4.2) (2025-07-24)
 
 
