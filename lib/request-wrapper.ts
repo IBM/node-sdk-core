@@ -648,18 +648,20 @@ function hasStringProperty(obj: any, property: string): boolean {
 function parseServiceErrorMessage(response: any): string | undefined {
   let message;
 
-  if (
-    Array.isArray(response.errors) &&
-    response.errors.length > 0 &&
-    hasStringProperty(response.errors[0], 'message')
-  ) {
-    message = response.errors[0].message;
-  } else if (hasStringProperty(response, 'error')) {
-    message = response.error;
-  } else if (hasStringProperty(response, 'message')) {
-    message = response.message;
-  } else if (hasStringProperty(response, 'errorMessage')) {
-    message = response.errorMessage;
+  if (response) {
+    if (
+      Array.isArray(response.errors) &&
+      response.errors.length > 0 &&
+      hasStringProperty(response.errors[0], 'message')
+    ) {
+      message = response.errors[0].message;
+    } else if (hasStringProperty(response, 'error')) {
+      message = response.error;
+    } else if (hasStringProperty(response, 'message')) {
+      message = response.message;
+    } else if (hasStringProperty(response, 'errorMessage')) {
+      message = response.errorMessage;
+    }
   }
 
   logger.info(`Parsing service error message: ${message}`);

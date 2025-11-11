@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2019, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1014,6 +1014,20 @@ describe('formatError', () => {
     expect(verboseLogSpy.mock.calls[1][0]).toBe(
       'Malformed JSON string: { "errorMessage": "some error"'
     );
+  });
+
+  it('should not throw TypeError reading properties for a response with no data', () => {
+    expect(() =>
+      requestWrapperInstance.formatError({
+        request: 'fake-http-request-object',
+        response: {
+          statusText: 'OK',
+          status: 200,
+        },
+        message: 'timed out',
+        code: 'ETIMEDOUT',
+      })
+    ).not.toThrow();
   });
 });
 
