@@ -1,3 +1,10 @@
+## [5.4.4](https://github.com/IBM/node-sdk-core/compare/v5.4.3...v5.4.4) (2025-11-11)
+
+
+### Bug Fixes
+
+* check data is present before reading errors ([#309](https://github.com/IBM/node-sdk-core/issues/309)) ([3001a0f](https://github.com/IBM/node-sdk-core/commit/3001a0fb503bad5b693a3b8499bfea7b77992e5f))
+
 ## [5.4.3](https://github.com/IBM/node-sdk-core/compare/v5.4.2...v5.4.3) (2025-09-16)
 
 
