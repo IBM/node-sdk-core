@@ -1,3 +1,10 @@
+## [5.4.5](https://github.com/IBM/node-sdk-core/compare/v5.4.4...v5.4.5) (2025-12-05)
+
+
+### Bug Fixes
+
+* **deps:** bump jws and jsonwebtoken to avoid CVE ([#312](https://github.com/IBM/node-sdk-core/issues/312)) ([95e5f42](https://github.com/IBM/node-sdk-core/commit/95e5f425cae3136576d5ead88a21eecd65293d19))
+
 ## [5.4.4](https://github.com/IBM/node-sdk-core/compare/v5.4.3...v5.4.4) (2025-11-11)
 
 
