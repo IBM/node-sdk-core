@@ -539,7 +539,7 @@ export class RequestWrapper {
     try {
       if (isStream(data)) {
         const streamData = await streamToPromise(data);
-        reqBuffer = Buffer.isBuffer(streamData) ? streamData : Buffer.from(streamData);
+        reqBuffer = Buffer.isBuffer(streamData) ? streamData : Buffer.from(streamData.join(''));
       } else if (Buffer.isBuffer(data)) {
         reqBuffer = data;
       } else if (data.toString && data.toString() !== '[object Object]' && !Array.isArray(data)) {

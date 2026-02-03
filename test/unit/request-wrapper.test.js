@@ -1131,6 +1131,7 @@ describe('gzipRequestBody', () => {
     expect(data).toBeInstanceOf(Buffer);
     expect(gzipSpy).toHaveBeenCalled();
     expect(headers['Content-Encoding']).toBe('gzip');
+    expect(zlib.gunzipSync(data).toString()).toBe('request body');
   });
 
   it('should compress buffer data into a buffer', async () => {
