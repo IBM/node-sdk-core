@@ -1,3 +1,10 @@
+## [5.4.6](https://github.com/IBM/node-sdk-core/compare/v5.4.5...v5.4.6) (2026-02-04)
+
+
+### Bug Fixes
+
+* compression handling of string streams ([#313](https://github.com/IBM/node-sdk-core/issues/313)) ([b05f1aa](https://github.com/IBM/node-sdk-core/commit/b05f1aadd85d8bcab41464bb30790f84f0a31b7e))
+
 ## [5.4.5](https://github.com/IBM/node-sdk-core/compare/v5.4.4...v5.4.5) (2025-12-05)
 
 
