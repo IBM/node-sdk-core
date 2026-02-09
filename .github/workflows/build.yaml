@@ -64,12 +64,12 @@ jobs:
 
   results:
     if: ${{ always() }}
-    runs-on: ibm-x86-64-small
+    runs-on: ubuntu-latest
     name: Final Test Results
-    needs: [build-test]
+    needs: [build]
     steps:
       - run: |
-          result="${{ needs.build-test.result }}"
+          result="${{ needs.build.result }}"
           if [[ $result == "success" || $result == "skipped" ]]; then
             exit 0
           else
