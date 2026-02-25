@@ -1,3 +1,10 @@
+## [5.4.8](https://github.com/IBM/node-sdk-core/compare/v5.4.7...v5.4.8) (2026-02-25)
+
+
+### Bug Fixes
+
+* **token-manager:** reset `requestTime` on token acquisition failure ([#316](https://github.com/IBM/node-sdk-core/issues/316)) ([6ea6f2b](https://github.com/IBM/node-sdk-core/commit/6ea6f2b30e4a0d2aa2370146c48624000a8f0fa6))
+
 ## [5.4.7](https://github.com/IBM/node-sdk-core/compare/v5.4.6...v5.4.7) (2026-02-19)
 
 
