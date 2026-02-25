@@ -189,6 +189,9 @@ export class TokenManager {
         this.pendingRequests.forEach(({ reject }) => {
           reject(err);
         });
+        // Reset the queue and the request time if the token acquisition fails.
+        this.pendingRequests = [];
+        this.requestTime = 0;
         throw err;
       });
   }
