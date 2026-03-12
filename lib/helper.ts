@@ -76,7 +76,7 @@ export async function getContentType(inputData: NodeJS.ReadableStream | Buffer):
     contentType = { mime: mimeType || null };
   } else if (Buffer.isBuffer(inputData)) {
     // if the inputData is a Buffer
-    contentType = await FileType.fromBuffer(inputData);
+    contentType = await FileType(inputData);
   }
 
   return contentType ? contentType.mime : null;
