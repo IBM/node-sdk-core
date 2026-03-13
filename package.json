@@ -102,7 +102,7 @@
     "fix": "npm run eslint:fix",
     "jest": "jest",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest test/unit/",
-    "test-travis": "jest --runInBand test/unit/",
+    "test-travis": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/unit/",
     "build:clean": "rimraf dist",
     "build": "npm-run-all build:code build:doc copy:pkg",
     "build:code": "npm-run-all -p build:umd build:es",
