@@ -17,9 +17,9 @@
 import { isReadable } from 'isstream';
 import { lookup } from 'mime-types';
 import { basename } from 'path';
+import { loadEsm } from "load-esm";
 import logger from './logger';
 
-const FileType = require('file-type');
 
 export interface FileObject {
   value: NodeJS.ReadableStream | Buffer | string;
@@ -76,7 +76,17 @@ export async function getContentType(inputData: NodeJS.ReadableStream | Buffer):
     contentType = { mime: mimeType || null };
   } else if (Buffer.isBuffer(inputData)) {
     // if the inputData is a Buffer
-    contentType = await FileType.fromBuffer(inputData);
+    try {
+      // Import a pure ESM package from a CommonJS TS project
+      const { fileTypeFromBuffer } = await loadEsm<typeof import("file-type")>(
+        "file-type"
+      );
+
+      contentType = await fileTypeFromBuffer(inputData);
+      logger.debug(contentType);
+    } catch (error) {
+      logger.debug("Error importing module:", error);
+    }
   }
 
   return contentType ? contentType.mime : null;
