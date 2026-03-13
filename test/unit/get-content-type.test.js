@@ -34,7 +34,7 @@ describe('getContentType', () => {
 
   it('should read content type from buffer', async () => {
     const bufferFile = fs.readFileSync(filepath);
-    expect(await getContentType(bufferFile)).toBe('audio/vnd.wave');
+    expect(await getContentType(bufferFile)).toBe('audio/wav');
   });
 
   it('should not read content type from a string', async () => {
