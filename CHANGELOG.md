@@ -1,3 +1,10 @@
+## [5.4.9](https://github.com/IBM/node-sdk-core/compare/v5.4.8...v5.4.9) (2026-03-13)
+
+
+### Bug Fixes
+
+* bump file-type to avoid CVEs ([#318](https://github.com/IBM/node-sdk-core/issues/318)) ([32f597c](https://github.com/IBM/node-sdk-core/commit/32f597cb8752cc16e48db62b603b4b64401425c4))
+
 ## [5.4.8](https://github.com/IBM/node-sdk-core/compare/v5.4.7...v5.4.8) (2026-02-25)
 
 
