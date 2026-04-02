@@ -1,3 +1,10 @@
+## [5.4.10](https://github.com/IBM/node-sdk-core/compare/v5.4.9...v5.4.10) (2026-04-02)
+
+
+### Bug Fixes
+
+* **deps:** lock axios to fix CVE ([#321](https://github.com/IBM/node-sdk-core/issues/321)) ([cd6defa](https://github.com/IBM/node-sdk-core/commit/cd6defaf34bdd77249d3f62d8375520e7e5549e1))
+
 ## [5.4.9](https://github.com/IBM/node-sdk-core/compare/v5.4.8...v5.4.9) (2026-03-13)
 
 
