@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import extend from 'extend';
 import { validateInput } from '../utils/helpers';
 import { buildUserAgent } from '../../lib/build-user-agent';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
@@ -174,7 +173,7 @@ export class McspV2TokenManager extends JwtTokenManager {
       'User-Agent': this.userAgent,
     };
 
-    const requestHeaders = extend(true, {}, this.headers, requiredHeaders);
+    const requestHeaders = { ...this.headers, ...requiredHeaders };
 
     // The keys used here must match the path parameter references in PATH_TEMPLATE above.
     const pathParams = {
