@@ -1,3 +1,10 @@
+## [5.4.11](https://github.com/IBM/node-sdk-core/compare/v5.4.10...v5.4.11) (2026-04-10)
+
+
+### Bug Fixes
+
+* correct contributors in package.json ([#324](https://github.com/IBM/node-sdk-core/issues/324)) ([de1f011](https://github.com/IBM/node-sdk-core/commit/de1f011aaf013bc8b2340d321c7a2413a4dda4ac))
+
 ## [5.4.10](https://github.com/IBM/node-sdk-core/compare/v5.4.9...v5.4.10) (2026-04-02)
 
 
