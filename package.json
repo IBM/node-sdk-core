@@ -18,12 +18,16 @@
   "author": "IBM Corp.",
   "contributors": [
     {
-      "name": "Dustin Popp",
-      "email": "dustinpopp@ibm.com"
+      "name": "Norbert Biczo",
+      "email": "Norbert.Biczo@ibm.com"
     },
     {
-      "name": "Phil Adams",
-      "email": "phil_adams@us.ibm.com"
+      "name": "Lidia Tarcza",
+      "email": "Lidia.Tarcza@ibm.com"
+    },
+    {
+      "name": "Andras Felleg",
+      "email": "Andras.Felleg@ibm.com"
     }
   ],
   "license": "Apache-2.0",
