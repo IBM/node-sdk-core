@@ -493,12 +493,73 @@ describe('sendRequest', () => {
     expect(mockAxiosInstance.mock.calls).toHaveLength(1);
   });
 
+  it('should properly merge nested objects in deep merge', async () => {
+    const parameters = {
+      defaultOptions: {
+        method: 'GET',
+        serviceUrl: 'https://example.ibm.com',
+        url: '/v1/test',
+        headers: {
+          'default-header': 'default-value',
+        },
+        axiosOptions: {
+          httpsAgent: {
+            rejectUnauthorized: true,
+            keepAlive: true,
+          },
+          proxy: {
+            host: 'default-proxy.com',
+            port: 8080,
+          },
+        },
+      },
+      options: {
+        headers: {
+          'override-header': 'override-value',
+        },
+        axiosOptions: {
+          httpsAgent: {
+            rejectUnauthorized: false,
+          },
+          timeout: 5000,
+        },
+      },
+    };
+
+    mockAxiosInstance.mockResolvedValue(axiosResolveValue);
+
+    const res = await requestWrapperInstance.sendRequest(parameters);
+
+    // Assert that nested objects are properly merged
+    const axiosCall = mockAxiosInstance.mock.calls[0][0];
+
+    // Headers should be merged correctly (both default and override should be present)
+    expect(axiosCall.headers).toEqual({
+      'Accept-Encoding': 'gzip',
+      'default-header': 'default-value',
+      'override-header': 'override-value',
+    });
+
+    // Check if httpsAgent was properly merged with deep merge
+    // With extend (deep merge), both rejectUnauthorized and keepAlive should be present
+    // With deep merge, proxy should be preserved from defaultOptions
+    expect(axiosCall.httpsAgent).toBeDefined();
+    expect(axiosCall.httpsAgent.rejectUnauthorized).toBe(false);
+    expect(axiosCall.httpsAgent.keepAlive).toBe(true);
+    expect(axiosCall.proxy).toBeDefined();
+    expect(axiosCall.proxy.host).toBe('default-proxy.com');
+    expect(axiosCall.proxy.port).toBe(8080);
+    expect(axiosCall.timeout).toBe(5000);
+
+    expect(res).toEqual(expectedResult);
+  });
+
   it('should send a request with multiform data', async () => {
     const parameters = {
       defaultOptions: {
         formData: '',
         qs: {
-          version: '2017-10-15',
+          version: '2026-04-14',
         },
         method: 'POST',
         serviceUrl: 'https://example.ibm.com',
