@@ -32,6 +32,7 @@ import { stringify } from 'querystring';
 import { gzipSync } from 'zlib';
 import {
   buildRequestFileObject,
+  deepMerge,
   isEmptyObject,
   isFileData,
   isFileWithMetadata,
@@ -245,11 +246,9 @@ export class RequestWrapper {
    * @throws Error
    */
   public async sendRequest(parameters): Promise<any> {
-    const options = { ...parameters.defaultOptions, ...parameters.options };
-    let headers = { ...parameters.defaultOptions?.headers, ...parameters.options?.headers };
-    const qs = { ...parameters.defaultOptions?.qs, ...parameters.options?.qs };
-    const { path, body, form, formData, method, serviceUrl, axiosOptions } = options;
-    let { url } = options;
+    const options = deepMerge(parameters.defaultOptions || {}, parameters.options || {});
+    const { path, body, form, formData, qs, method, serviceUrl, axiosOptions } = options;
+    let { headers, url } = options;
 
     const multipartForm = new FormData();
 
