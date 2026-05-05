@@ -1,3 +1,10 @@
+## [5.4.14](https://github.com/IBM/node-sdk-core/compare/v5.4.13...v5.4.14) (2026-05-05)
+
+
+### Bug Fixes
+
+* **deps:** lock api-documenter version ([#349](https://github.com/IBM/node-sdk-core/issues/349)) ([6a60588](https://github.com/IBM/node-sdk-core/commit/6a6058898450c934841dad55f3c9cbe27b2758f0))
+
 ## [5.4.13](https://github.com/IBM/node-sdk-core/compare/v5.4.12...v5.4.13) (2026-05-04)
 
 
