@@ -1,3 +1,10 @@
+## [5.4.13](https://github.com/IBM/node-sdk-core/compare/v5.4.12...v5.4.13) (2026-05-04)
+
+
+### Bug Fixes
+
+* **deps:** bump and lock dependencies to fix vulnerabilties ([#342](https://github.com/IBM/node-sdk-core/issues/342)) ([46a93f2](https://github.com/IBM/node-sdk-core/commit/46a93f222ef7d67166d46b895100976c7f69def3))
+
 ## [5.4.12](https://github.com/IBM/node-sdk-core/compare/v5.4.11...v5.4.12) (2026-04-24)
 
 

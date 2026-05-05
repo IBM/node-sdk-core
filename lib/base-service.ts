@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import type { CookieJar } from 'tough-cookie';
 import { OutgoingHttpHeaders } from 'http';
+import type { CookieJar } from 'tough-cookie';
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
 import { stripTrailingSlash } from './helper';
 import logger from './logger';
