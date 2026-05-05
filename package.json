@@ -61,7 +61,7 @@
     "eslint-plugin-node": "9.0.0",
     "eslint-plugin-prettier": "3.0.1",
     "jest": "29.7.0",
-    "nock": "13.5.4",
+    "nock": "13.5.6",
     "npm-run-all2": "5.0.0",
     "package-json-reducer": "1.0.18",
     "prettier": "2.3.0",
