@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import extend from 'extend';
 import { computeBasicAuthHeader, validateInput } from '../utils/helpers';
 import { Authenticator } from './authenticator';
 import { AuthenticateOptions } from './authenticator-interface';
@@ -72,7 +71,7 @@ export class BasicAuthenticator extends Authenticator {
    */
   public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     return new Promise((resolve) => {
-      requestOptions.headers = extend(true, {}, requestOptions.headers, this.authHeader);
+      requestOptions.headers = { ...requestOptions.headers, ...this.authHeader };
       logger.debug(`Authenticated outbound request (type=${this.authenticationType()})`);
       resolve();
     });

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import extend from 'extend';
 import { OutgoingHttpHeaders } from 'http';
 import type { CookieJar } from 'tough-cookie';
 import { AuthenticatorInterface, checkCredentials, readExternalSources } from '../auth';
@@ -284,12 +283,10 @@ export class BaseService {
     const userAgent = {
       'User-Agent': this.defaultUserAgent,
     };
-    parameters.defaultOptions.headers = extend(
-      true,
-      {},
-      userAgent,
-      parameters.defaultOptions.headers
-    );
+    parameters.defaultOptions.headers = {
+      ...userAgent,
+      ...parameters.defaultOptions.headers,
+    };
 
     return this.authenticator.authenticate(parameters.defaultOptions).then(() =>
       // resolve() handles rejection as well, so resolving the result of sendRequest should allow for proper handling later

@@ -356,3 +356,17 @@ export function isJsonMimeType(mimeType: string) {
   logger.debug(`Determining if the mime type '${mimeType}' specifies JSON content.`);
   return !!mimeType && /^application\/json(\s*;.*)?$/i.test(mimeType);
 }
+
+const isObj = (val: unknown) => val && typeof val === 'object' && !Array.isArray(val);
+
+export function deepMerge(target: any, source: any) {
+  const result = { ...target };
+  Object.keys(source).forEach((key) => {
+    if (isObj(target[key]) && isObj(source[key])) {
+      result[key] = deepMerge(target[key], source[key]);
+    } else {
+      result[key] = source[key];
+    }
+  });
+  return result;
+}

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import extend from 'extend';
 import { validateInput } from '../utils/helpers';
 import { Authenticator } from './authenticator';
 import { AuthenticateOptions } from './authenticator-interface';
@@ -76,7 +75,7 @@ export class BearerTokenAuthenticator extends Authenticator {
   public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     return new Promise((resolve) => {
       const authHeader = { Authorization: `Bearer ${this.bearerToken}` };
-      requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
+      requestOptions.headers = { ...requestOptions.headers, ...authHeader };
       logger.debug(`Authenticated outbound request (type=${this.authenticationType()})`);
       resolve();
     });

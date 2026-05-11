@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define,object-shorthand */
 // eslint-disable-next-line max-classes-per-file
-const extend = require('extend');
 const { BaseService } = require('../../dist/lib/base-service');
+const { deepMerge } = require('../../dist/lib/helper');
 
 // eslint-disable-next-line import/prefer-default-export
 class MockSerDeService extends BaseService {
@@ -16,9 +16,7 @@ class MockSerDeService extends BaseService {
         url: '/nestedModelSchema',
         method: 'HEAD',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -31,9 +29,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -44,9 +40,7 @@ class MockSerDeService extends BaseService {
         url: '/anyType',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -59,9 +53,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -72,9 +64,7 @@ class MockSerDeService extends BaseService {
         url: '/nestedModelSchema',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequestAndDeserializeResponse(parameters, NestedModelSchema.deserialize);
   }
@@ -87,9 +77,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -100,9 +88,7 @@ class MockSerDeService extends BaseService {
         url: '/multipartNestedModelSchema',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequestAndDeserializeResponse(parameters, NestedModelSchema.deserialize);
   }
@@ -115,9 +101,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -128,9 +112,7 @@ class MockSerDeService extends BaseService {
         url: '/modelSchema',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequestAndDeserializeResponse(parameters, ModelSchema.deserialize);
   }
@@ -143,9 +125,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -156,9 +136,7 @@ class MockSerDeService extends BaseService {
         url: '/listOfSchemas',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequestAndDeserializeResponse(parameters, ModelSchema.deserialize);
   }
@@ -171,9 +149,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -184,9 +160,7 @@ class MockSerDeService extends BaseService {
         url: '/listOfPrimitives',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -199,9 +173,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -212,9 +184,7 @@ class MockSerDeService extends BaseService {
         url: '/listOfMapsOfSchemas',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequestAndDeserializeResponse(parameters, JsonObject.deserialize);
   }
@@ -227,9 +197,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -240,9 +208,7 @@ class MockSerDeService extends BaseService {
         url: '/mapOfSchemas',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequestAndDeserializeResponse(parameters, ModelSchema.deserialize, true);
   }
@@ -255,9 +221,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -268,9 +232,7 @@ class MockSerDeService extends BaseService {
         url: '/mapOfPrimitives',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -285,9 +247,7 @@ class MockSerDeService extends BaseService {
         method: 'POST',
         body,
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequest(parameters);
   }
@@ -298,9 +258,7 @@ class MockSerDeService extends BaseService {
         url: '/mapOfListOfSchemas',
         method: 'GET',
       },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, {}, params.headers),
-      }),
+      defaultOptions: deepMerge(this.baseOptions, { headers: params.headers }),
     };
     return this.createRequestAndDeserializeResponse(parameters, MapOfListOfSchemas.deserialize);
   }

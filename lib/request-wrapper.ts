@@ -24,7 +24,6 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import * as rax from 'retry-axios';
-import extend from 'extend';
 import FormData from 'form-data';
 import { OutgoingHttpHeaders } from 'http';
 import { Agent } from 'https';
@@ -33,6 +32,7 @@ import { stringify } from 'querystring';
 import { gzipSync } from 'zlib';
 import {
   buildRequestFileObject,
+  deepMerge,
   isEmptyObject,
   isFileData,
   isFileWithMetadata,
@@ -70,17 +70,15 @@ export class RequestWrapper {
   private raxConfig: rax.RetryConfig;
 
   constructor(axiosOptions?) {
-    axiosOptions = axiosOptions || {};
+    axiosOptions ??= {};
     this.compressRequestData = Boolean(axiosOptions.enableGzipCompression);
 
-    // override a couple axios defaults
+    // override a couple axios defaults then merge axios config into default
     const axiosConfig: AxiosRequestConfig = {
       maxContentLength: -1,
       maxBodyLength: Infinity,
+      ...axiosOptions,
     };
-
-    // merge axios config into default
-    extend(true, axiosConfig, axiosOptions);
 
     // if the user explicitly sets `disableSslVerification` to true,
     // `rejectUnauthorized` must be set to false in the https agent
@@ -248,7 +246,7 @@ export class RequestWrapper {
    * @throws Error
    */
   public async sendRequest(parameters): Promise<any> {
-    const options = extend(true, {}, parameters.defaultOptions, parameters.options);
+    const options = deepMerge(parameters.defaultOptions || {}, parameters.options || {});
     const { path, body, form, formData, qs, method, serviceUrl, axiosOptions } = options;
     let { headers, url } = options;
 
@@ -313,11 +311,11 @@ export class RequestWrapper {
     if (formData) {
       data = multipartForm;
       // form-data generates headers that MUST be included or the request will fail
-      headers = extend(true, {}, headers, multipartForm.getHeaders());
+      headers = { ...headers, ...multipartForm.getHeaders() };
     }
 
     // accept gzip encoded responses if Accept-Encoding is not already set
-    headers['Accept-Encoding'] = headers['Accept-Encoding'] || 'gzip';
+    headers['Accept-Encoding'] ||= 'gzip';
 
     // compress request body data if enabled
     if (this.compressRequestData) {
