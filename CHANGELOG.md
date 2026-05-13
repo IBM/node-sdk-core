@@ -1,3 +1,10 @@
+## [5.4.15](https://github.com/IBM/node-sdk-core/compare/v5.4.14...v5.4.15) (2026-05-12)
+
+
+### Bug Fixes
+
+* add test cases for new functions ([#350](https://github.com/IBM/node-sdk-core/issues/350)) ([c4b80da](https://github.com/IBM/node-sdk-core/commit/c4b80daee3c1f18a84d756ac60c1d7d9a2b76d46))
+
 ## [5.4.14](https://github.com/IBM/node-sdk-core/compare/v5.4.13...v5.4.14) (2026-05-05)
 
 
