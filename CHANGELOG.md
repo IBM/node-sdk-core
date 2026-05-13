@@ -1,3 +1,10 @@
+## [5.4.16](https://github.com/IBM/node-sdk-core/compare/v5.4.15...v5.4.16) (2026-05-13)
+
+
+### Bug Fixes
+
+* **deps:** regenerate package-lock.json ([#351](https://github.com/IBM/node-sdk-core/issues/351)) ([9e76ad6](https://github.com/IBM/node-sdk-core/commit/9e76ad6596b779eaae5c4dfdd572f145522de96e))
+
 ## [5.4.15](https://github.com/IBM/node-sdk-core/compare/v5.4.14...v5.4.15) (2026-05-12)
 
 
