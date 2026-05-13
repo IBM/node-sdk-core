@@ -359,13 +359,46 @@ export function isJsonMimeType(mimeType: string) {
 
 const isObj = (val: unknown) => val && typeof val === 'object' && !Array.isArray(val);
 
+/**
+ * Deep clone a value (object, array, or primitive)
+ * @param value - The value to clone
+ * @returns A deep clone of the value
+ */
+function deepClone(value: any): any {
+  if (value == null) {
+    return value;
+  }
+
+  // Handle arrays - create a new array with cloned elements
+  if (Array.isArray(value)) {
+    return value.map((item) => deepClone(item));
+  }
+
+  // Handle objects - create a new object with cloned properties
+  if (typeof value === 'object') {
+    const cloned: any = {};
+    Object.keys(value).forEach((key) => {
+      cloned[key] = deepClone(value[key]);
+    });
+    return cloned;
+  }
+
+  // Handle primitives (string, number, boolean, etc.)
+  return value;
+}
+
 export function deepMerge(target: any, source: any) {
-  const result = { ...target };
-  Object.keys(source).forEach((key) => {
-    if (isObj(target[key]) && isObj(source[key])) {
-      result[key] = deepMerge(target[key], source[key]);
+  // Handle null/undefined inputs by treating them as empty objects
+  const safeTarget = target || {};
+  const safeSource = source || {};
+
+  const result = { ...safeTarget };
+  Object.keys(safeSource).forEach((key) => {
+    if (isObj(safeTarget[key]) && isObj(safeSource[key])) {
+      result[key] = deepMerge(safeTarget[key], safeSource[key]);
     } else {
-      result[key] = source[key];
+      // Clone the source value to prevent mutation of the original
+      result[key] = deepClone(safeSource[key]);
     }
   });
   return result;
