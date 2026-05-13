@@ -1338,7 +1338,7 @@ describe('gzipRequestBody', () => {
       expect(Array.isArray(originalGroups)).toBe(true);
       expect(originalGroups).toEqual(['group-id-123']);
       expect(typeof originalGroups[0]).toBe('string');
-      
+
       // Also check the original params object
       expect(Array.isArray(originalParams.groups)).toBe(true);
       expect(originalParams.groups).toEqual(['group-id-123']);
@@ -1346,7 +1346,7 @@ describe('gzipRequestBody', () => {
 
     it('should not mutate nested query parameters in defaultOptions', async () => {
       const originalGroups = ['group-id-456', 'group-id-789'];
-      
+
       const parameters = {
         defaultOptions: {
           url: 'https://api.example.com/v1/secrets',
@@ -1379,13 +1379,13 @@ describe('gzipRequestBody', () => {
       // Original array should remain unchanged
       expect(Array.isArray(originalGroups)).toBe(true);
       expect(originalGroups).toEqual(['group-id-456', 'group-id-789']);
-      expect(originalGroups.length).toBe(2);
+      expect(originalGroups).toHaveLength(2);
     });
 
     it('should handle multiple array parameters without mutation', async () => {
       const groups = ['group-1', 'group-2'];
       const tags = ['tag-a', 'tag-b', 'tag-c'];
-      
+
       const parameters = {
         defaultOptions: {
           url: 'https://api.example.com/v1/secrets',
@@ -1420,14 +1420,14 @@ describe('gzipRequestBody', () => {
       // Both arrays should remain unchanged
       expect(Array.isArray(groups)).toBe(true);
       expect(groups).toEqual(['group-1', 'group-2']);
-      
+
       expect(Array.isArray(tags)).toBe(true);
       expect(tags).toEqual(['tag-a', 'tag-b', 'tag-c']);
     });
 
     it('should allow reusing the same parameters object for multiple requests', async () => {
       const groups = ['group-id-xyz'];
-      
+
       const parameters = {
         defaultOptions: {
           url: 'https://api.example.com/v1/secrets',
