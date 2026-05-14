@@ -174,9 +174,6 @@ export class Cp4dTokenManager extends JwtTokenManager {
 }
 
 // @public (undocumented)
-export function deepMerge(target: any, source: any): any;
-
-// @public (undocumented)
 export function fileExistsAtPath(filepath: string): boolean;
 
 // @public

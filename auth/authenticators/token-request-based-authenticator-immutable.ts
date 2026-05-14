@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import extend from 'extend';
 import { OutgoingHttpHeaders } from 'http';
 import { JwtTokenManager } from '../token-managers/jwt-token-manager';
 import { Authenticator } from './authenticator';
@@ -88,7 +89,7 @@ export class TokenRequestBasedAuthenticatorImmutable extends Authenticator {
   public authenticate(requestOptions: AuthenticateOptions): Promise<void> {
     return this.tokenManager.getToken().then((token) => {
       const authHeader = { Authorization: `Bearer ${token}` };
-      requestOptions.headers = { ...requestOptions.headers, ...authHeader };
+      requestOptions.headers = extend(true, {}, requestOptions.headers, authHeader);
       logger.debug(`Authenticated outbound request (type=${this.authenticationType()})`);
     });
   }
