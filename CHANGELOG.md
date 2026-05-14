@@ -1,3 +1,10 @@
+## [5.4.17](https://github.com/IBM/node-sdk-core/compare/v5.4.16...v5.4.17) (2026-05-14)
+
+
+### Bug Fixes
+
+* add cloning to deepmerge ([#352](https://github.com/IBM/node-sdk-core/issues/352)) ([3e05fb3](https://github.com/IBM/node-sdk-core/commit/3e05fb3229a0f080865f3278f4ec7b658eed3b67))
+
 ## [5.4.16](https://github.com/IBM/node-sdk-core/compare/v5.4.15...v5.4.16) (2026-05-13)
 
 
