@@ -1,3 +1,10 @@
+## [5.4.18](https://github.com/IBM/node-sdk-core/compare/v5.4.17...v5.4.18) (2026-05-14)
+
+
+### Bug Fixes
+
+* **deps:** revert extend removal ([#353](https://github.com/IBM/node-sdk-core/issues/353)) ([bbd8b7f](https://github.com/IBM/node-sdk-core/commit/bbd8b7f6d810c0c3f5d86ea66bc6ddf9427fccf0))
+
 ## [5.4.17](https://github.com/IBM/node-sdk-core/compare/v5.4.16...v5.4.17) (2026-05-14)
 
 
