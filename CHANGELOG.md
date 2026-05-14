@@ -1,3 +1,10 @@
+## [5.4.19](https://github.com/IBM/node-sdk-core/compare/v5.4.18...v5.4.19) (2026-05-14)
+
+
+### Bug Fixes
+
+* **deps:** update typescript to fix incompatibility ([#355](https://github.com/IBM/node-sdk-core/issues/355)) ([ba450c6](https://github.com/IBM/node-sdk-core/commit/ba450c67b185ddfe9158b77c02bd365da0cec1bb))
+
 ## [5.4.18](https://github.com/IBM/node-sdk-core/compare/v5.4.17...v5.4.18) (2026-05-14)
 
 
