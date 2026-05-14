@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@types/debug": "4.1.12",
-    "@types/node": "18.19.80",
+    "@types/node": "18.19.130",
     "@types/tough-cookie": "4.0.0",
     "axios": "1.15.2",
     "camelcase": "6.3.0",
