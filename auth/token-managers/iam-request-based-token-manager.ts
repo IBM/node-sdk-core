@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import extend from 'extend';
 import { OutgoingHttpHeaders } from 'http';
 import logger from '../../lib/logger';
 import { computeBasicAuthHeader, getCurrentTime, onlyOne, removeSuffix } from '../utils/helpers';
@@ -164,7 +165,7 @@ export class IamRequestBasedTokenManager extends JwtTokenManager {
       options: {
         url: this.url + OPERATION_PATH,
         method: 'POST',
-        headers: { ...this.headers, ...requiredHeaders },
+        headers: extend(true, {}, this.headers, requiredHeaders),
         form: this.formData,
         rejectUnauthorized: !this.disableSslVerification,
       },

@@ -15,6 +15,7 @@
  */
 
 import { Axios, AxiosResponse, InternalAxiosRequestConfig, isAxiosError } from 'axios';
+import extend from 'extend';
 import { Cookie, CookieJar } from 'tough-cookie';
 import logger from './logger';
 
@@ -33,7 +34,8 @@ const internalCreateCookieInterceptor = (cookieJar: CookieJar) => {
       const cookieHeaderValue = await cookieJar.getCookieString(config.url);
       if (cookieHeaderValue) {
         logger.debug('CookieInterceptor: setting cookie header');
-        config.headers.cookie = cookieHeaderValue;
+        const cookieHeader = { cookie: cookieHeaderValue };
+        config.headers = extend(true, {}, config.headers, cookieHeader);
       } else {
         logger.debug(`CookieInterceptor: no cookies for: ${config.url}`);
       }

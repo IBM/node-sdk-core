@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import extend from 'extend';
 import { validateInput } from '../utils/helpers';
 import { buildUserAgent } from '../../lib/build-user-agent';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
@@ -95,7 +96,7 @@ export class McspTokenManager extends JwtTokenManager {
           apikey: this.apikey,
         },
         method: 'POST',
-        headers: { ...this.headers, ...requiredHeaders },
+        headers: extend(true, {}, this.headers, requiredHeaders),
         rejectUnauthorized: !this.disableSslVerification,
       },
     };
