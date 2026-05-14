@@ -246,7 +246,7 @@ export class RequestWrapper {
    * @throws Error
    */
   public async sendRequest(parameters): Promise<any> {
-    const options = deepMerge(parameters.defaultOptions, parameters.options);
+    const options = deepMerge(parameters.defaultOptions || {}, parameters.options || {});
     const { path, body, form, formData, qs, method, serviceUrl, axiosOptions } = options;
     let { headers, url } = options;
 
