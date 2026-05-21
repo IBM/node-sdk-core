@@ -1,3 +1,10 @@
+## [5.4.20](https://github.com/IBM/node-sdk-core/compare/v5.4.19...v5.4.20) (2026-05-21)
+
+
+### Bug Fixes
+
+* **deps:** bump axios to 1.16.1 ([#358](https://github.com/IBM/node-sdk-core/issues/358)) ([d10af78](https://github.com/IBM/node-sdk-core/commit/d10af781a918d3ccf843f293e51ca2ac1faeac8b))
+
 ## [5.4.19](https://github.com/IBM/node-sdk-core/compare/v5.4.18...v5.4.19) (2026-05-14)
 
 
