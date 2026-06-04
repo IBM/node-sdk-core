@@ -231,7 +231,82 @@ describe('VPC Instance Token Manager', () => {
         /^ibm-node-sdk-core\/vpc-instance-authenticator.*$/
       );
     });
+    
+    it('should use default service version and token lifetime', () => {
+      const instance = new VpcInstanceTokenManager();
+      
+      // Test default service version
+      expect(instance.serviceVersion).toBe('2022-03-01');
+      
+      // Test default token lifetime
+      expect(instance.tokenLifetime).toBe(300);
+      
+      // Test default paths for old service version
+      expect(instance.getAccessTokenPath()).toBe('/instance_identity/v1/token');
+      expect(instance.getIamTokenPath()).toBe('/instance_identity/v1/iam_token');
+    });
+
+    it('should use custom service version and token lifetime', () => {
+      const instance = new VpcInstanceTokenManager({
+        serviceVersion: '2025-08-26',
+        tokenLifetime: 600,
+      });
+      
+      // Test custom service version
+      expect(instance.serviceVersion).toBe('2025-08-26');
+      
+      // Test custom token lifetime
+      expect(instance.tokenLifetime).toBe(600);
+      
+      // Test new paths for new service version
+      expect(instance.getAccessTokenPath()).toBe('/identity/v1/token');
+      expect(instance.getIamTokenPath()).toBe('/identity/v1/iam_tokens');
+    });
+
+    it('should set service version and token lifetime with setters', () => {
+      const instance = new VpcInstanceTokenManager();
+      
+      instance.setServiceVersion('2025-08-26');
+      instance.setTokenLifetime(600);
+      
+      // Test service version from setter
+      expect(instance.serviceVersion).toBe('2025-08-26');
+      
+      // Test token lifetime from setter
+      expect(instance.tokenLifetime).toBe(600);
+      
+      // Test new paths for new service version
+      expect(instance.getAccessTokenPath()).toBe('/identity/v1/token');
+      expect(instance.getIamTokenPath()).toBe('/identity/v1/iam_tokens');
+    });
+
+    it('should use old paths for old service version', () => {
+      const instance = new VpcInstanceTokenManager({
+        serviceVersion: '2022-03-01',
+      });
+      
+      // Test old service version
+      expect(instance.serviceVersion).toBe('2022-03-01');
+      
+      // Test old paths for old service version
+      expect(instance.getAccessTokenPath()).toBe('/instance_identity/v1/token');
+      expect(instance.getIamTokenPath()).toBe('/instance_identity/v1/iam_token');
+    });
+
+    it('should use old paths for non-2025-05-26 service version', () => {
+      const instance = new VpcInstanceTokenManager({
+        serviceVersion: '2024-01-01',
+      });
+      
+      // Test custom service version (not 2025-05-26)
+      expect(instance.serviceVersion).toBe('2024-01-01');
+      
+      // Test old paths for non-2025-05-26 service version
+      expect(instance.getAccessTokenPath()).toBe('/instance_identity/v1/token');
+      expect(instance.getIamTokenPath()).toBe('/instance_identity/v1/iam_token');
+    });
   });
+
   describe('getToken', () => {
     it('should refresh an expired access token', async () => {
       const instance = new VpcInstanceTokenManager({ iamProfileId: 'some-id' });

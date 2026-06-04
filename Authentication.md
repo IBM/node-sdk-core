@@ -492,6 +492,13 @@ The IAM access token is added to each outbound request in the `Authorization` he
 The default value of this property is `http://169.254.169.254`. However, if the VPC Instance Metadata Service is configured
 with the HTTP Secure Protocol setting (`https`), then you should configure this property to be `https://api.metadata.cloud.ibm.com`.
 
+- serviceVersion: (optional) The VPC Instance Metadata Service version to use.
+The default value is `2022-03-01`. When set to `2025-08-26`, the authenticator will use the new API paths
+(`/identity/v1/token` and `/identity/v1/iam_tokens`) instead of the legacy paths.
+
+- tokenLifetime: (optional) The lifetime (in seconds) of the instance identity token.
+The default value is `300` seconds. This property can only be configured programmatically (not via environment variables).
+
 Usage Notes:
 1. At most one of `iamProfileCrn` or `iamProfileId` may be specified. The specified value must map
 to a trusted IAM profile that has been linked to the compute resource (virtual server instance).
@@ -533,6 +540,8 @@ const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const options = {
   serviceName: 'example_service',
+  serviceVersion: '2025-08-26',
+  tokenLifetime: 600,
 };
 
 const service = ExampleServiceV1.newInstance(options);

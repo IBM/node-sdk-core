@@ -24,6 +24,10 @@ export interface Options extends BaseOptions {
   iamProfileCrn?: string;
   /** The ID of the linked trusted IAM profile to be used when obtaining the IAM access token */
   iamProfileId?: string;
+  
+  serviceVersion: string;
+
+  tokenLifetime: number;
 }
 
 /**
@@ -42,6 +46,10 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
   private iamProfileCrn: string;
 
   private iamProfileId: string;
+
+  private serviceVersion: string;
+
+  private tokenLifetime: number;
 
   /**
    * Create a new VpcInstanceAuthenticator instance.
@@ -67,6 +75,12 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
     }
     if (options.iamProfileId) {
       this.iamProfileId = options.iamProfileId;
+    }
+    if (options.serviceVersion) {
+      this.serviceVersion = options.serviceVersion;
+    }
+    if (options.tokenLifetime) {
+      this.tokenLifetime = options.tokenLifetime
     }
 
     // the param names are shared between the authenticator and the token
@@ -95,6 +109,18 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
 
     // update properties in token manager
     this.tokenManager.setIamProfileId(iamProfileId);
+  }
+
+  public setServiceVersion(serviceVersion: string): void {
+    this.serviceVersion = serviceVersion;
+
+    this.tokenManager.setServiceVersion(serviceVersion);
+  }
+
+  public setTokenLifetime(tokenLifetime: number): void {
+    this.tokenLifetime = tokenLifetime;
+
+    this.tokenManager.setTokenLifetime(tokenLifetime);
   }
 
   /**

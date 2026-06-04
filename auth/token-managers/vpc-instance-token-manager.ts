@@ -22,6 +22,7 @@ import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
 const DEFAULT_IMS_ENDPOINT = 'http://169.254.169.254';
 const METADATA_SERVICE_VERSION = '2022-03-01';
 const IAM_EXPIRATION_WINDOW = 10;
+const METADATA_TOKEN_LIFETIME = 300;
 
 /** Configuration options for VPC token retrieval. */
 interface Options extends JwtTokenManagerOptions {
@@ -29,6 +30,10 @@ interface Options extends JwtTokenManagerOptions {
   iamProfileCrn?: string;
   /** The ID of the linked trusted IAM profile to be used when obtaining the IAM access token */
   iamProfileId?: string;
+
+  serviceVersion: string;
+
+  tokenLifetime: number;
 }
 
 // this interface is a representation of the response received from
@@ -57,6 +62,10 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
 
   private iamProfileId: string;
 
+  private serviceVersion: string;
+
+  private tokenLifetime: number;
+
   /**
    * Create a new VpcInstanceTokenManager instance.
    *
@@ -81,6 +90,8 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     }
 
     this.url = options.url || DEFAULT_IMS_ENDPOINT;
+    this.serviceVersion = options.serviceVersion || METADATA_SERVICE_VERSION
+    this.tokenLifetime = options.tokenLifetime || METADATA_TOKEN_LIFETIME
 
     if (options.iamProfileCrn) {
       this.iamProfileCrn = options.iamProfileCrn;
@@ -108,6 +119,28 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     this.iamProfileId = iamProfileId;
   }
 
+  public setServiceVersion(serviceVersion: string): void {
+    this.serviceVersion = serviceVersion;
+  }
+
+  public setTokenLifetime(tokenLifetime: number): void {
+    this.tokenLifetime = tokenLifetime;
+  }
+
+  protected getAccessTokenPath(): string {
+    if ((this.serviceVersion) === '2025-08-26') {
+      return '/identity/v1/token';
+    }
+    return '/instance_identity/v1/token';
+  }
+
+  protected getIamTokenPath(): string {
+    if ((this.serviceVersion) === '2025-08-26') {
+      return '/identity/v1/iam_tokens';
+    }
+    return '/instance_identity/v1/iam_token';
+  }
+
   protected async requestToken(): Promise<any> {
     const instanceIdentityToken: string = await this.getInstanceIdentityToken();
 
@@ -125,9 +158,9 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
 
     const parameters = {
       options: {
-        url: `${this.url}/instance_identity/v1/iam_token`,
+        url: `${this.url}${this.getIamTokenPath()}`,
         qs: {
-          version: METADATA_SERVICE_VERSION,
+          version: this.serviceVersion,
         },
         body,
         method: 'POST',
@@ -150,12 +183,12 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   private async getInstanceIdentityToken(): Promise<string> {
     const parameters = {
       options: {
-        url: `${this.url}/instance_identity/v1/token`,
+        url: `${this.url}${this.getAccessTokenPath()}`,
         qs: {
-          version: METADATA_SERVICE_VERSION,
+          version: this.serviceVersion,
         },
         body: {
-          expires_in: 300,
+          expires_in: this.tokenLifetime,
         },
         method: 'PUT',
         headers: {

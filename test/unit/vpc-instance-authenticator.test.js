@@ -76,6 +76,99 @@ describe('VPC Instance Authenticator', () => {
     expect(authenticator.tokenManager.iamProfileId).toEqual(config.iamProfileId);
   });
 
+  it('should store serviceVersion and tokenLifetime when provided in config', () => {
+    const authenticator = new VpcInstanceAuthenticator({
+      serviceVersion: '2025-05-26',
+      tokenLifetime: 600,
+    });
+
+    expect(authenticator.serviceVersion).toBe('2025-05-26');
+    expect(authenticator.tokenManager.serviceVersion).toBe('2025-05-26');
+    expect(authenticator.tokenLifetime).toBe(600);
+    expect(authenticator.tokenManager.tokenLifetime).toBe(600);
+  });
+
+  it('should use default serviceVersion and tokenLifetime when not provided', () => {
+    const authenticator = new VpcInstanceAuthenticator();
+
+    expect(authenticator.tokenManager.serviceVersion).toBe('2022-03-01');
+    expect(authenticator.tokenManager.tokenLifetime).toBe(300);
+  });
+
+  it('should set serviceVersion using the setter even when not declared in constructor', () => {
+    const authenticator = new VpcInstanceAuthenticator();
+
+    // Initially should be undefined on authenticator (but token manager has default)
+    expect(authenticator.serviceVersion).toBeUndefined();
+    expect(authenticator.tokenManager.serviceVersion).toBe('2022-03-01');
+
+    authenticator.setServiceVersion('2025-05-26');
+    expect(authenticator.serviceVersion).toBe('2025-05-26');
+
+    // also, verify that the underlying token manager has been updated
+    expect(authenticator.tokenManager.serviceVersion).toBe('2025-05-26');
+  });
+
+  it('should set tokenLifetime using the setter even when not declared in constructor', () => {
+    const authenticator = new VpcInstanceAuthenticator();
+
+    // Initially should be undefined on authenticator (but token manager has default)
+    expect(authenticator.tokenLifetime).toBeUndefined();
+    expect(authenticator.tokenManager.tokenLifetime).toBe(300);
+
+    authenticator.setTokenLifetime(900);
+    expect(authenticator.tokenLifetime).toBe(900);
+
+    // also, verify that the underlying token manager has been updated
+    expect(authenticator.tokenManager.tokenLifetime).toBe(900);
+  });
+
+  it('should re-set serviceVersion using the setter when already set in constructor', () => {
+    const authenticator = new VpcInstanceAuthenticator({
+      serviceVersion: '2022-03-01',
+    });
+
+    expect(authenticator.serviceVersion).toBe('2022-03-01');
+    expect(authenticator.tokenManager.serviceVersion).toBe('2022-03-01');
+
+    authenticator.setServiceVersion('2025-05-26');
+    expect(authenticator.serviceVersion).toBe('2025-05-26');
+
+    // also, verify that the underlying token manager has been updated
+    expect(authenticator.tokenManager.serviceVersion).toBe('2025-05-26');
+  });
+
+  it('should re-set tokenLifetime using the setter when already set in constructor', () => {
+    const authenticator = new VpcInstanceAuthenticator({
+      tokenLifetime: 300,
+    });
+
+    expect(authenticator.tokenLifetime).toBe(300);
+    expect(authenticator.tokenManager.tokenLifetime).toBe(300);
+
+    authenticator.setTokenLifetime(900);
+    expect(authenticator.tokenLifetime).toBe(900);
+
+    // also, verify that the underlying token manager has been updated
+    expect(authenticator.tokenManager.tokenLifetime).toBe(900);
+  });
+
+  it('should pass all config options to token manager', () => {
+    const fullConfig = {
+      iamProfileId: 'some-id',
+      url: 'someurl.com',
+      serviceVersion: '2025-05-26',
+      tokenLifetime: 600,
+    };
+
+    const authenticator = new VpcInstanceAuthenticator(fullConfig);
+
+    expect(authenticator.tokenManager.iamProfileId).toBe(fullConfig.iamProfileId);
+    expect(authenticator.tokenManager.url).toBe(fullConfig.url);
+    expect(authenticator.tokenManager.serviceVersion).toBe(fullConfig.serviceVersion);
+    expect(authenticator.tokenManager.tokenLifetime).toBe(fullConfig.tokenLifetime);
+  });
+
   // "end to end" style test, to make sure this authenticator integrates properly with parent classes
   it('should update the options and resolve with `null` when `authenticate` is called', async () => {
     const authenticator = new VpcInstanceAuthenticator({ iamProfileCrn: config.iamProfileCrn });
