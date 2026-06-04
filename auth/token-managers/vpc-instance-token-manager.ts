@@ -90,8 +90,8 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     }
 
     this.url = options.url || DEFAULT_IMS_ENDPOINT;
-    this.serviceVersion = options.serviceVersion || METADATA_SERVICE_VERSION
-    this.tokenLifetime = options.tokenLifetime || METADATA_TOKEN_LIFETIME
+    this.serviceVersion = options.serviceVersion || METADATA_SERVICE_VERSION;
+    this.tokenLifetime = options.tokenLifetime || METADATA_TOKEN_LIFETIME;
 
     if (options.iamProfileCrn) {
       this.iamProfileCrn = options.iamProfileCrn;
@@ -128,14 +128,14 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   }
 
   protected getAccessTokenPath(): string {
-    if ((this.serviceVersion) === '2025-08-26') {
+    if (this.serviceVersion === '2025-08-26') {
       return '/identity/v1/token';
     }
     return '/instance_identity/v1/token';
   }
 
   protected getIamTokenPath(): string {
-    if ((this.serviceVersion) === '2025-08-26') {
+    if (this.serviceVersion === '2025-08-26') {
       return '/identity/v1/iam_tokens';
     }
     return '/instance_identity/v1/iam_token';

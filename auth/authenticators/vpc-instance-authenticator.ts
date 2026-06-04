@@ -24,7 +24,7 @@ export interface Options extends BaseOptions {
   iamProfileCrn?: string;
   /** The ID of the linked trusted IAM profile to be used when obtaining the IAM access token */
   iamProfileId?: string;
-  
+
   serviceVersion: string;
 
   tokenLifetime: number;
@@ -80,7 +80,7 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
       this.serviceVersion = options.serviceVersion;
     }
     if (options.tokenLifetime) {
-      this.tokenLifetime = options.tokenLifetime
+      this.tokenLifetime = options.tokenLifetime;
     }
 
     // the param names are shared between the authenticator and the token
