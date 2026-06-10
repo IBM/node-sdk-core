@@ -17,6 +17,13 @@
 const { Authenticator, VpcInstanceAuthenticator } = require('../../dist/auth');
 const { VpcInstanceTokenManager } = require('../../dist/auth');
 
+// Constants for repeated values
+const SERVICE_VERSION_2022 = '2022-03-01';
+const SERVICE_VERSION_2025 = '2025-08-26';
+const DEFAULT_TOKEN_LIFETIME = 300;
+const CUSTOM_TOKEN_LIFETIME = 600;
+const INVALID_SERVICE_VERSION_ERROR = `Invalid serviceVersion. Must be one of: ${SERVICE_VERSION_2022}, ${SERVICE_VERSION_2025}`;
+
 // mock the `getToken` method in the token manager - dont make any rest calls
 const fakeToken = 'iam-acess-token';
 const mockedTokenManager = new VpcInstanceTokenManager();
@@ -78,21 +85,21 @@ describe('VPC Instance Authenticator', () => {
 
   it('should store serviceVersion and tokenLifetime when provided in config', () => {
     const authenticator = new VpcInstanceAuthenticator({
-      serviceVersion: '2025-08-26',
-      tokenLifetime: 600,
+      serviceVersion: SERVICE_VERSION_2025,
+      tokenLifetime: CUSTOM_TOKEN_LIFETIME,
     });
 
-    expect(authenticator.serviceVersion).toBe('2025-08-26');
-    expect(authenticator.tokenManager.serviceVersion).toBe('2025-08-26');
-    expect(authenticator.tokenLifetime).toBe(600);
-    expect(authenticator.tokenManager.tokenLifetime).toBe(600);
+    expect(authenticator.serviceVersion).toBe(SERVICE_VERSION_2025);
+    expect(authenticator.tokenManager.serviceVersion).toBe(SERVICE_VERSION_2025);
+    expect(authenticator.tokenLifetime).toBe(CUSTOM_TOKEN_LIFETIME);
+    expect(authenticator.tokenManager.tokenLifetime).toBe(CUSTOM_TOKEN_LIFETIME);
   });
 
   it('should use default serviceVersion and tokenLifetime when not provided', () => {
     const authenticator = new VpcInstanceAuthenticator();
 
-    expect(authenticator.tokenManager.serviceVersion).toBe('2022-03-01');
-    expect(authenticator.tokenManager.tokenLifetime).toBe(300);
+    expect(authenticator.tokenManager.serviceVersion).toBe(SERVICE_VERSION_2022);
+    expect(authenticator.tokenManager.tokenLifetime).toBe(DEFAULT_TOKEN_LIFETIME);
   });
 
   it('should set serviceVersion using the setter even when not declared in constructor', () => {
@@ -100,13 +107,13 @@ describe('VPC Instance Authenticator', () => {
 
     // Initially should be undefined on authenticator (but token manager has default)
     expect(authenticator.serviceVersion).toBeUndefined();
-    expect(authenticator.tokenManager.serviceVersion).toBe('2022-03-01');
+    expect(authenticator.tokenManager.serviceVersion).toBe(SERVICE_VERSION_2022);
 
-    authenticator.setServiceVersion('2025-08-26');
-    expect(authenticator.serviceVersion).toBe('2025-08-26');
+    authenticator.setServiceVersion(SERVICE_VERSION_2025);
+    expect(authenticator.serviceVersion).toBe(SERVICE_VERSION_2025);
 
     // also, verify that the underlying token manager has been updated
-    expect(authenticator.tokenManager.serviceVersion).toBe('2025-08-26');
+    expect(authenticator.tokenManager.serviceVersion).toBe(SERVICE_VERSION_2025);
   });
 
   it('should set tokenLifetime using the setter even when not declared in constructor', () => {
@@ -114,7 +121,7 @@ describe('VPC Instance Authenticator', () => {
 
     // Initially should be undefined on authenticator (but token manager has default)
     expect(authenticator.tokenLifetime).toBeUndefined();
-    expect(authenticator.tokenManager.tokenLifetime).toBe(300);
+    expect(authenticator.tokenManager.tokenLifetime).toBe(DEFAULT_TOKEN_LIFETIME);
 
     authenticator.setTokenLifetime(900);
     expect(authenticator.tokenLifetime).toBe(900);
@@ -123,28 +130,13 @@ describe('VPC Instance Authenticator', () => {
     expect(authenticator.tokenManager.tokenLifetime).toBe(900);
   });
 
-  it('should re-set serviceVersion using the setter when already set in constructor', () => {
-    const authenticator = new VpcInstanceAuthenticator({
-      serviceVersion: '2022-03-01',
-    });
-
-    expect(authenticator.serviceVersion).toBe('2022-03-01');
-    expect(authenticator.tokenManager.serviceVersion).toBe('2022-03-01');
-
-    authenticator.setServiceVersion('2025-05-26');
-    expect(authenticator.serviceVersion).toBe('2025-05-26');
-
-    // also, verify that the underlying token manager has been updated
-    expect(authenticator.tokenManager.serviceVersion).toBe('2025-05-26');
-  });
-
   it('should re-set tokenLifetime using the setter when already set in constructor', () => {
     const authenticator = new VpcInstanceAuthenticator({
-      tokenLifetime: 300,
+      tokenLifetime: DEFAULT_TOKEN_LIFETIME,
     });
 
-    expect(authenticator.tokenLifetime).toBe(300);
-    expect(authenticator.tokenManager.tokenLifetime).toBe(300);
+    expect(authenticator.tokenLifetime).toBe(DEFAULT_TOKEN_LIFETIME);
+    expect(authenticator.tokenManager.tokenLifetime).toBe(DEFAULT_TOKEN_LIFETIME);
 
     authenticator.setTokenLifetime(900);
     expect(authenticator.tokenLifetime).toBe(900);
@@ -157,8 +149,8 @@ describe('VPC Instance Authenticator', () => {
     const fullConfig = {
       iamProfileId: 'some-id',
       url: 'someurl.com',
-      serviceVersion: '2025-08-26',
-      tokenLifetime: 600,
+      serviceVersion: SERVICE_VERSION_2025,
+      tokenLifetime: CUSTOM_TOKEN_LIFETIME,
     };
 
     const authenticator = new VpcInstanceAuthenticator(fullConfig);
@@ -174,23 +166,23 @@ describe('VPC Instance Authenticator', () => {
     // via getAuthenticatorFromEnvironment -> readExternalSources
     const envConfig = {
       iamProfileId: 'some-id',
-      serviceVersion: '2025-08-26', // This would come from SERVICE_NAME_SERVICE_VERSION env var
+      serviceVersion: SERVICE_VERSION_2025, // This would come from SERVICE_NAME_SERVICE_VERSION env var
     };
 
     const authenticator = new VpcInstanceAuthenticator(envConfig);
 
-    expect(authenticator.serviceVersion).toBe('2025-08-26');
-    expect(authenticator.tokenManager.serviceVersion).toBe('2025-08-26');
+    expect(authenticator.serviceVersion).toBe(SERVICE_VERSION_2025);
+    expect(authenticator.tokenManager.serviceVersion).toBe(SERVICE_VERSION_2025);
     expect(authenticator.iamProfileId).toBe('some-id');
   });
 
   it('should throw an error for invalid service version', () => {
     expect(
       () =>
-        new VpcInstanceTokenManager({
-          serviceVersion: '2024-01-01',
+        new VpcInstanceAuthenticator({
+          serviceVersion: 'invalid-version',
         })
-    ).toThrow('Invalid serviceVersion. Must be one of: 2022-03-01, 2025-08-26');
+    ).toThrow(INVALID_SERVICE_VERSION_ERROR);
   });
 
   // "end to end" style test, to make sure this authenticator integrates properly with parent classes

@@ -23,7 +23,10 @@ const DEFAULT_IMS_ENDPOINT = 'http://169.254.169.254';
 const METADATA_SERVICE_VERSION = '2022-03-01';
 const IAM_EXPIRATION_WINDOW = 10;
 const METADATA_TOKEN_LIFETIME = 300;
-
+const DEFAULT_OPERATION_PATH_CREATE_ACCESS_TOKEN = '/instance_identity/v1/token';
+const DEFAULT_OPERATION_PATH_CREATE_IAM_TOKEN = '/instance_identity/v1/iam_token';
+const DEFAULT_OPERATION_PATH_CREATE_ACCESS_TOKEN2 = '/identity/v1/token';
+const DEFAULT_OPERATION_PATH_CREATE_IAM_TOKEN2 = '/identity/v1/iam_tokens';
 const metadataServiceSupportedVersions = ['2022-03-01', '2025-08-26'];
 
 /** Configuration options for VPC token retrieval. */
@@ -128,6 +131,11 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   }
 
   public setServiceVersion(serviceVersion: string): void {
+    if (!metadataServiceSupportedVersions.includes(serviceVersion)) {
+      throw new Error(
+        `Invalid serviceVersion. Must be one of: ${metadataServiceSupportedVersions.join(', ')}`
+      );
+    }
     this.serviceVersion = serviceVersion;
   }
 
@@ -137,16 +145,16 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
 
   protected getAccessTokenPath(): string {
     if (this.serviceVersion === '2025-08-26') {
-      return '/identity/v1/token';
+      return DEFAULT_OPERATION_PATH_CREATE_ACCESS_TOKEN2;
     }
-    return '/instance_identity/v1/token';
+    return DEFAULT_OPERATION_PATH_CREATE_ACCESS_TOKEN;
   }
 
   protected getIamTokenPath(): string {
     if (this.serviceVersion === '2025-08-26') {
-      return '/identity/v1/iam_tokens';
+      return DEFAULT_OPERATION_PATH_CREATE_IAM_TOKEN2;
     }
-    return '/instance_identity/v1/iam_token';
+    return DEFAULT_OPERATION_PATH_CREATE_IAM_TOKEN;
   }
 
   protected async requestToken(): Promise<any> {

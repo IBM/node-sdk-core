@@ -37,6 +37,11 @@ const debugLogSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
 const IAM_PROFILE_CRN = 'some-crn';
 const IAM_PROFILE_ID = 'some-id';
 const EXPIRATION_WINDOW = 10;
+const SERVICE_VERSION_2022 = '2022-03-01';
+const SERVICE_VERSION_2025 = '2025-08-26';
+const DEFAULT_TOKEN_LIFETIME = 300;
+const CUSTOM_TOKEN_LIFETIME = 600;
+const INVALID_SERVICE_VERSION_ERROR = `Invalid serviceVersion. Must be one of: ${SERVICE_VERSION_2022}, ${SERVICE_VERSION_2025}`;
 
 describe('VPC Instance Token Manager', () => {
   const sendRequestMock = jest.fn();
@@ -120,10 +125,10 @@ describe('VPC Instance Token Manager', () => {
       expect(requestOptions.method).toBe('PUT');
 
       expect(requestOptions.qs).toBeDefined();
-      expect(requestOptions.qs.version).toBe('2022-03-01');
+      expect(requestOptions.qs.version).toBe(SERVICE_VERSION_2022);
 
       expect(requestOptions.body).toBeDefined();
-      expect(requestOptions.body.expires_in).toBe(300);
+      expect(requestOptions.body.expires_in).toBe(DEFAULT_TOKEN_LIFETIME);
 
       expect(requestOptions.headers).toBeDefined();
       expect(requestOptions.headers['Content-Type']).toBe('application/json');
@@ -182,7 +187,7 @@ describe('VPC Instance Token Manager', () => {
       expect(requestOptions.method).toBe('POST');
 
       expect(requestOptions.qs).toBeDefined();
-      expect(requestOptions.qs.version).toBe('2022-03-01');
+      expect(requestOptions.qs.version).toBe(SERVICE_VERSION_2022);
 
       // if neither the profile id or crn is set, then the body should be undefined
       expect(requestOptions.body).toBeUndefined();
@@ -236,10 +241,10 @@ describe('VPC Instance Token Manager', () => {
       const instance = new VpcInstanceTokenManager();
 
       // Test default service version
-      expect(instance.serviceVersion).toBe('2022-03-01');
+      expect(instance.serviceVersion).toBe(SERVICE_VERSION_2022);
 
       // Test default token lifetime
-      expect(instance.tokenLifetime).toBe(300);
+      expect(instance.tokenLifetime).toBe(DEFAULT_TOKEN_LIFETIME);
 
       // Test default paths for old service version
       expect(instance.getAccessTokenPath()).toBe('/instance_identity/v1/token');
@@ -248,15 +253,15 @@ describe('VPC Instance Token Manager', () => {
 
     it('should use custom service version and token lifetime', () => {
       const instance = new VpcInstanceTokenManager({
-        serviceVersion: '2025-08-26',
-        tokenLifetime: 600,
+        serviceVersion: SERVICE_VERSION_2025,
+        tokenLifetime: CUSTOM_TOKEN_LIFETIME,
       });
 
       // Test custom service version
-      expect(instance.serviceVersion).toBe('2025-08-26');
+      expect(instance.serviceVersion).toBe(SERVICE_VERSION_2025);
 
       // Test custom token lifetime
-      expect(instance.tokenLifetime).toBe(600);
+      expect(instance.tokenLifetime).toBe(CUSTOM_TOKEN_LIFETIME);
 
       // Test new paths for new service version
       expect(instance.getAccessTokenPath()).toBe('/identity/v1/token');
@@ -266,27 +271,33 @@ describe('VPC Instance Token Manager', () => {
     it('should set service version and token lifetime with setters', () => {
       const instance = new VpcInstanceTokenManager();
 
-      instance.setServiceVersion('2025-08-26');
-      instance.setTokenLifetime(600);
+      instance.setServiceVersion(SERVICE_VERSION_2025);
+      instance.setTokenLifetime(CUSTOM_TOKEN_LIFETIME);
 
       // Test service version from setter
-      expect(instance.serviceVersion).toBe('2025-08-26');
+      expect(instance.serviceVersion).toBe(SERVICE_VERSION_2025);
 
       // Test token lifetime from setter
-      expect(instance.tokenLifetime).toBe(600);
+      expect(instance.tokenLifetime).toBe(CUSTOM_TOKEN_LIFETIME);
 
       // Test new paths for new service version
       expect(instance.getAccessTokenPath()).toBe('/identity/v1/token');
       expect(instance.getIamTokenPath()).toBe('/identity/v1/iam_tokens');
     });
 
+    it('should throw an error when setting invalid service version with setter', () => {
+      const instance = new VpcInstanceTokenManager();
+
+      expect(() => instance.setServiceVersion('2024-01-01')).toThrow(INVALID_SERVICE_VERSION_ERROR);
+    });
+
     it('should use old paths for old service version', () => {
       const instance = new VpcInstanceTokenManager({
-        serviceVersion: '2022-03-01',
+        serviceVersion: SERVICE_VERSION_2022,
       });
 
       // Test old service version
-      expect(instance.serviceVersion).toBe('2022-03-01');
+      expect(instance.serviceVersion).toBe(SERVICE_VERSION_2022);
 
       // Test old paths for old service version
       expect(instance.getAccessTokenPath()).toBe('/instance_identity/v1/token');
@@ -299,7 +310,7 @@ describe('VPC Instance Token Manager', () => {
           new VpcInstanceTokenManager({
             serviceVersion: '2024-01-01',
           })
-      ).toThrow('Invalid serviceVersion. Must be one of: 2022-03-01, 2025-08-26');
+      ).toThrow(INVALID_SERVICE_VERSION_ERROR);
     });
   });
 
