@@ -24,6 +24,8 @@ const METADATA_SERVICE_VERSION = '2022-03-01';
 const IAM_EXPIRATION_WINDOW = 10;
 const METADATA_TOKEN_LIFETIME = 300;
 
+const metadataServiceSupportedVersions = ['2022-03-01', '2025-08-26'];
+
 /** Configuration options for VPC token retrieval. */
 interface Options extends JwtTokenManagerOptions {
   /** The CRN of the linked trusted IAM profile to be used as the identity of the compute resource */
@@ -92,6 +94,12 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     this.url = options.url || DEFAULT_IMS_ENDPOINT;
     this.serviceVersion = options.serviceVersion || METADATA_SERVICE_VERSION;
     this.tokenLifetime = options.tokenLifetime || METADATA_TOKEN_LIFETIME;
+
+    if (!metadataServiceSupportedVersions.includes(this.serviceVersion)) {
+      throw new Error(
+        `Invalid serviceVersion. Must be one of: ${metadataServiceSupportedVersions.join(', ')}`
+      );
+    }
 
     if (options.iamProfileCrn) {
       this.iamProfileCrn = options.iamProfileCrn;

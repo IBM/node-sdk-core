@@ -293,17 +293,13 @@ describe('VPC Instance Token Manager', () => {
       expect(instance.getIamTokenPath()).toBe('/instance_identity/v1/iam_token');
     });
 
-    it('should use old paths for non-2025-05-26 service version', () => {
-      const instance = new VpcInstanceTokenManager({
-        serviceVersion: '2024-01-01',
-      });
-
-      // Test custom service version (not 2025-05-26)
-      expect(instance.serviceVersion).toBe('2024-01-01');
-
-      // Test old paths for non-2025-05-26 service version
-      expect(instance.getAccessTokenPath()).toBe('/instance_identity/v1/token');
-      expect(instance.getIamTokenPath()).toBe('/instance_identity/v1/iam_token');
+    it('should throw an error for invalid service version', () => {
+      expect(
+        () =>
+          new VpcInstanceTokenManager({
+            serviceVersion: '2024-01-01',
+          })
+      ).toThrow('Invalid serviceVersion. Must be one of: 2022-03-01, 2025-08-26');
     });
   });
 
