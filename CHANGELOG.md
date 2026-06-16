@@ -1,3 +1,10 @@
+## [5.4.21](https://github.com/IBM/node-sdk-core/compare/v5.4.20...v5.4.21) (2026-06-16)
+
+
+### Bug Fixes
+
+* **deps:** bump form-data to avoid CVE ([#361](https://github.com/IBM/node-sdk-core/issues/361)) ([52bd7c1](https://github.com/IBM/node-sdk-core/commit/52bd7c18a1615ba1221fda8437f45771d7f5a140))
+
 ## [5.4.20](https://github.com/IBM/node-sdk-core/compare/v5.4.19...v5.4.20) (2026-05-21)
 
 
