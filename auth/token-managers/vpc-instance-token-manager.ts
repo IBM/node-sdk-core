@@ -36,9 +36,9 @@ interface Options extends JwtTokenManagerOptions {
   iamProfileCrn?: string;
   /** The ID of the linked trusted IAM profile to be used when obtaining the IAM access token */
   iamProfileId?: string;
-  /** The version of the base service version to be used with the service */
+  /** The version of the Instance Metadata Service to be used obtaining tokens */
   serviceVersion?: string;
-  /** The base token lifetime to use */
+  /** The lifetime of the Instance Identity Token */
   tokenLifetime?: number;
 }
 

@@ -528,24 +528,13 @@ const service = new ExampleServiceV1(options);
 // 'service' can now be used to invoke operations.
 ```
 
-### Programming example with the new service version and custom token lifetime
+To use the new service version with custom token lifetime:
 ```js
-const { VpcInstanceAuthenticator } = require('ibm-cloud-sdk-core');
-const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
-
 const authenticator = new VpcInstanceAuthenticator({
   iamProfileCrn: 'crn:iam-profile-123',
   serviceVersion: '2025-08-26',
   tokenLifetime: 600,
 });
-
-const options = {
-  authenticator,
-};
-
-const service = new ExampleServiceV1(options);
-
-// 'service' can now be used to invoke operations.
 ```
 
 ### Configuration example
@@ -554,33 +543,20 @@ External configuration:
 export EXAMPLE_SERVICE_AUTH_TYPE=vpc
 export EXAMPLE_SERVICE_IAM_PROFILE_CRN=crn:iam-profile-123
 ```
-Application code:
-```js
-const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
-const options = {
-  serviceName: 'example_service',
-};
-
-const service = ExampleServiceV1.newInstance(options);
-
-// 'service' can now be used to invoke operations.
-```
-
-### Configuration example with the new service version and custom token lifetime
-External configuration:
+To use the new service version:
 ```
 export EXAMPLE_SERVICE_AUTH_TYPE=vpc
 export EXAMPLE_SERVICE_IAM_PROFILE_CRN=crn:iam-profile-123
-export EXAMPLE_SERVICE_VERSION=2025-08-26
+export EXAMPLE_SERVICE_VPC_IMS_VERSION=2025-08-26
 ```
+
 Application code:
 ```js
 const ExampleServiceV1 = require('<sdk-package-name>/example-service/v1');
 
 const options = {
   serviceName: 'example_service',
-  tokenLifetime: 600,
 };
 
 const service = ExampleServiceV1.newInstance(options);
