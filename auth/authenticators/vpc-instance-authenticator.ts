@@ -24,10 +24,10 @@ export interface Options extends BaseOptions {
   iamProfileCrn?: string;
   /** The ID of the linked trusted IAM profile to be used when obtaining the IAM access token */
   iamProfileId?: string;
-
-  serviceVersion: string;
-
-  tokenLifetime: number;
+  /** The version of the base service version to be used with the service */
+  serviceVersion?: string;
+  /** The base token lifetime to use */
+  tokenLifetime?: number;
 }
 
 /**
