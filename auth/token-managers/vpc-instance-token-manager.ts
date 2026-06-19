@@ -96,7 +96,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     }
 
     this.url = options.url || DEFAULT_IMS_ENDPOINT;
-    
+
     // Validate and set serviceVersion
     const serviceVersion = options.serviceVersion || METADATA_SERVICE_VERSION;
     if (!metadataServiceSupportedVersions.includes(serviceVersion)) {
@@ -105,7 +105,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
       );
     }
     this.serviceVersion = serviceVersion;
-    
+
     // Validate and set tokenLifetime
     const tokenLifetime = options.tokenLifetime || METADATA_TOKEN_LIFETIME;
     if (typeof tokenLifetime !== 'number' || tokenLifetime < 0) {
