@@ -197,6 +197,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
           'User-Agent': this.userAgent,
           Accept: 'application/json',
           Authorization: `Bearer ${instanceIdentityToken}`,
+          'Metadata-Flavor': 'ibm',
         },
       },
     };
