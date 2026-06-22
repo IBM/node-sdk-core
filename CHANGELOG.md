@@ -1,3 +1,10 @@
+# [5.5.0](https://github.com/IBM/node-sdk-core/compare/v5.4.22...v5.5.0) (2026-06-19)
+
+
+### Features
+
+* **auth:** add support for new service version in VPC Instance Auth ([#359](https://github.com/IBM/node-sdk-core/issues/359)) ([966b12f](https://github.com/IBM/node-sdk-core/commit/966b12f8a5a1adb06b9c8264a01067529765d03e))
+
 ## [5.4.22](https://github.com/IBM/node-sdk-core/compare/v5.4.21...v5.4.22) (2026-06-17)
 
 

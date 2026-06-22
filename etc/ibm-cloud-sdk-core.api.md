@@ -510,6 +510,10 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
     setIamProfileCrn(iamProfileCrn: string): void;
     setIamProfileId(iamProfileId: string): void;
     // (undocumented)
+    setServiceVersion(serviceVersion: string): void;
+    // (undocumented)
+    setTokenLifetime(tokenLifetime: number): void;
+    // (undocumented)
     protected tokenManager: VpcInstanceTokenManager;
 }
 
@@ -517,11 +521,19 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
 export class VpcInstanceTokenManager extends JwtTokenManager {
     // Warning: (ae-forgotten-export) The symbol "Options_9" needs to be exported by the entry point index.d.ts
     constructor(options: Options_9);
+    // (undocumented)
+    protected getAccessTokenPath(): string;
+    // (undocumented)
+    protected getIamTokenPath(): string;
     protected isTokenExpired(): boolean;
     // (undocumented)
     protected requestToken(): Promise<any>;
     setIamProfileCrn(iamProfileCrn: string): void;
     setIamProfileId(iamProfileId: string): void;
+    // (undocumented)
+    setServiceVersion(serviceVersion: string): void;
+    // (undocumented)
+    setTokenLifetime(tokenLifetime: number): void;
 }
 
 // (No @packageDocumentation comment for this package)
