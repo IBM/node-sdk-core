@@ -509,6 +509,7 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
     authenticationType(): string;
     setIamProfileCrn(iamProfileCrn: string): void;
     setIamProfileId(iamProfileId: string): void;
+    setIamProfileName(iamProfileName: string): void;
     // (undocumented)
     setServiceVersion(serviceVersion: string): void;
     // (undocumented)
@@ -530,6 +531,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     protected requestToken(): Promise<any>;
     setIamProfileCrn(iamProfileCrn: string): void;
     setIamProfileId(iamProfileId: string): void;
+    setIamProfileName(iamProfileName: string): void;
     // (undocumented)
     setServiceVersion(serviceVersion: string): void;
     // (undocumented)
