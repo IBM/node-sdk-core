@@ -36,6 +36,8 @@ interface Options extends JwtTokenManagerOptions {
   iamProfileCrn?: string;
   /** The ID of the linked trusted IAM profile to be used when obtaining the IAM access token */
   iamProfileId?: string;
+  /** The name of the linked trusted IAM profile to be used when obtaining the IAM access token */
+  iamProfileName?: string;
   /** The version of the Instance Metadata Service to be used obtaining tokens */
   serviceVersion?: string;
   /** The lifetime of the Instance Identity Token */
@@ -54,6 +56,7 @@ interface VpcTokenResponse {
 interface TrustedProfile {
   id?: string;
   crn?: string;
+  name?: string;
 }
 
 interface CreateIamTokenBody {
@@ -68,6 +71,8 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
 
   private iamProfileId: string;
 
+  private iamProfileName: string;
+
   private serviceVersion: string;
 
   private tokenLifetime: number;
@@ -80,9 +85,10 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
    * - url: (optional) the endpoint URL for the VPC Instance Metadata Service (default value: "http://169.254.169.254")
    * - iamProfileCrn: (optional) the CRN of the linked IAM trusted profile to be used to obtain the IAM access token
    * - iamProfileId: (optional) the ID of the linked IAM trusted profile to be used to obtain the IAM access token
+   * - iamProfileName: (optional) the name of the linked IAM trusted profile to be used to obtain the IAM access token
    *
    * @remarks
-   * At most one of "iamProfileCrn" or "iamProfileId" may be specified. If neither one is specified,
+   * At most one of "iamProfileCrn", "iamProfileId" or "iamProfileName" may be specified. If neither one is specified,
    * then the default IAM profile defined for the compute resource will be used.
    */
   constructor(options: Options) {
@@ -91,8 +97,8 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
 
     super(options);
 
-    if (!atMostOne(options.iamProfileId, options.iamProfileCrn)) {
-      throw new Error('At most one of `iamProfileId` or `iamProfileCrn` may be specified.');
+    if (!atMostOne(options.iamProfileId, options.iamProfileCrn, options.iamProfileName)) {
+      throw new Error('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
     }
 
     this.url = options.url || DEFAULT_IMS_ENDPOINT;
@@ -119,6 +125,9 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     if (options.iamProfileId) {
       this.iamProfileId = options.iamProfileId;
     }
+    if (options.iamProfileName) {
+      this.iamProfileName = options.iamProfileName;
+    }
 
     this.userAgent = buildUserAgent('vpc-instance-authenticator');
   }
@@ -137,6 +146,14 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
    */
   public setIamProfileId(iamProfileId: string): void {
     this.iamProfileId = iamProfileId;
+  }
+
+  /**
+   * Sets the name of the IAm trusted profile to use when fetching access token from the IAM token server.
+   * @param iamProfileName - the name of the IAM trusted profile
+   */
+  public setIamProfileName(iamProfileName: string): void {
+    this.iamProfileName = iamProfileName;
   }
 
   public setServiceVersion(serviceVersion: string): void {
@@ -181,6 +198,10 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     } else if (this.iamProfileCrn) {
       body = {
         trusted_profile: { crn: this.iamProfileCrn },
+      };
+    } else if (this.iamProfileName) {
+      body = {
+        trusted_profile: { name: this.iamProfileName },
       };
     }
 

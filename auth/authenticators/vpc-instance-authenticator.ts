@@ -24,6 +24,8 @@ export interface Options extends BaseOptions {
   iamProfileCrn?: string;
   /** The ID of the linked trusted IAM profile to be used when obtaining the IAM access token */
   iamProfileId?: string;
+  /** The name of the linked trusted IAM profile to be used when obtaining the IAM access token */
+  iamProfileName?: string;
   /** The version of the Instance Metadata Service to be used obtaining tokens */
   serviceVersion?: string;
   /** The lifetime of the Instance Identity Token */
@@ -47,6 +49,8 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
 
   private iamProfileId: string;
 
+  private iamProfileName: string;
+
   private serviceVersion: string;
 
   private tokenLifetime: number;
@@ -59,9 +63,10 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
    * - url: (optional) the endpoint URL for the VPC Instance Metadata Service (default value: "http://169.254.169.254")
    * - iamProfileCrn: (optional) the CRN of the linked IAM trusted profile to be used to obtain the IAM access token
    * - iamProfileId: (optional) the ID of the linked IAM trusted profile to be used to obtain the IAM access token
+   * - iamProfileName: (optional) the name of the linked IAM trusted profile to be used to obtain the IAM access token
    *
    * @remarks
-   * At most one of "iamProfileCrn" or "iamProfileId" may be specified. If neither one is specified,
+   * At most one of "iamProfileCrn", "iamProfileId" or "iamProfileName" may be specified. If neither one is specified,
    * then the default IAM profile defined for the compute resource will be used.
    */
   constructor(options: Options) {
@@ -75,6 +80,9 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
     }
     if (options.iamProfileId) {
       this.iamProfileId = options.iamProfileId;
+    }
+    if (options.iamProfileName) {
+      this.iamProfileName = options.iamProfileName;
     }
     if (options.serviceVersion) {
       this.serviceVersion = options.serviceVersion;
@@ -109,6 +117,17 @@ export class VpcInstanceAuthenticator extends TokenRequestBasedAuthenticator {
 
     // update properties in token manager
     this.tokenManager.setIamProfileId(iamProfileId);
+  }
+
+  /**
+   * Sets the "iamProfileName" value to be used when obtaining an IAM access token
+   * @param iamProfileName - the name of the linked IAM trusted profile to use when obtaining an IAM access token
+   */
+  public setIamProfileName(iamProfileName: string): void {
+    this.iamProfileName = iamProfileName;
+
+    // update properties in token manager
+    this.tokenManager.setIamProfileName(iamProfileName);
   }
 
   public setServiceVersion(serviceVersion: string): void {
