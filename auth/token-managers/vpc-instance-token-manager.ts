@@ -98,7 +98,9 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
     super(options);
 
     if (!atMostOne(options.iamProfileId, options.iamProfileCrn, options.iamProfileName)) {
-      throw new Error('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+      throw new Error(
+        'At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.'
+      );
     }
 
     this.url = options.url || DEFAULT_IMS_ENDPOINT;

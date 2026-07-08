@@ -57,7 +57,9 @@ describe('VPC Instance Authenticator', () => {
         iamProfileCrn: 'crn',
         iamProfileId: 'id',
       });
-    }).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+    }).toThrow(
+      'At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.'
+    );
   });
 
   it('should throw an error when both iamProfileCrn and iamProfileName are provided', () => {
@@ -66,7 +68,9 @@ describe('VPC Instance Authenticator', () => {
         iamProfileCrn: 'crn',
         iamProfileName: IAM_PROFILE_NAME,
       });
-    }).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+    }).toThrow(
+      'At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.'
+    );
   });
 
   it('should throw an error when both iamProfileId and iamProfileName are provided', () => {
@@ -75,7 +79,9 @@ describe('VPC Instance Authenticator', () => {
         iamProfileId: 'id',
         iamProfileName: IAM_PROFILE_NAME,
       });
-    }).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+    }).toThrow(
+      'At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.'
+    );
   });
 
   it('should store iamProfileName when provided in config', () => {

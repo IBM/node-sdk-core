@@ -71,7 +71,9 @@ describe('VPC Instance Token Manager', () => {
             iamProfileCrn: IAM_PROFILE_CRN,
             iamProfileId: IAM_PROFILE_ID,
           })
-      ).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+      ).toThrow(
+        'At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.'
+      );
     });
 
     it('should throw an error when both `iamProfileCrn` and `iamProfileName` are provided', () => {
@@ -81,7 +83,9 @@ describe('VPC Instance Token Manager', () => {
             iamProfileCrn: IAM_PROFILE_CRN,
             iamProfileName: IAM_PROFILE_NAME,
           })
-      ).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+      ).toThrow(
+        'At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.'
+      );
     });
 
     it('should throw an error when both `iamProfileId` and `iamProfileName` are provided', () => {
@@ -91,7 +95,9 @@ describe('VPC Instance Token Manager', () => {
             iamProfileId: IAM_PROFILE_ID,
             iamProfileName: IAM_PROFILE_NAME,
           })
-      ).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+      ).toThrow(
+        'At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.'
+      );
     });
 
     it('should set given profile name', () => {
