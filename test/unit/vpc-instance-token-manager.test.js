@@ -36,6 +36,7 @@ const debugLogSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
 
 const IAM_PROFILE_CRN = 'some-crn';
 const IAM_PROFILE_ID = 'some-id';
+const IAM_PROFILE_NAME = 'some-name';
 const EXPIRATION_WINDOW = 10;
 const SERVICE_VERSION_2022 = '2022-03-01';
 const SERVICE_VERSION_2025 = '2025-08-26';
@@ -70,7 +71,37 @@ describe('VPC Instance Token Manager', () => {
             iamProfileCrn: IAM_PROFILE_CRN,
             iamProfileId: IAM_PROFILE_ID,
           })
-      ).toThrow('At most one of `iamProfileId` or `iamProfileCrn` may be specified.');
+      ).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+    });
+
+    it('should throw an error when both `iamProfileCrn` and `iamProfileName` are provided', () => {
+      expect(
+        () =>
+          new VpcInstanceTokenManager({
+            iamProfileCrn: IAM_PROFILE_CRN,
+            iamProfileName: IAM_PROFILE_NAME,
+          })
+      ).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+    });
+
+    it('should throw an error when both `iamProfileId` and `iamProfileName` are provided', () => {
+      expect(
+        () =>
+          new VpcInstanceTokenManager({
+            iamProfileId: IAM_PROFILE_ID,
+            iamProfileName: IAM_PROFILE_NAME,
+          })
+      ).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+    });
+
+    it('should set given profile name', () => {
+      const instance = new VpcInstanceTokenManager({
+        iamProfileName: IAM_PROFILE_NAME,
+      });
+
+      expect(instance.iamProfileName).toBe(IAM_PROFILE_NAME);
+      expect(instance.iamProfileCrn).toBeUndefined();
+      expect(instance.iamProfileId).toBeUndefined();
     });
 
     it('should use default url if none is given', () => {
@@ -111,6 +142,22 @@ describe('VPC Instance Token Manager', () => {
 
       instance.setIamProfileId(IAM_PROFILE_ID);
       expect(instance.iamProfileId).toBe(IAM_PROFILE_ID);
+    });
+
+    it('should set iamProfileName with the setter', () => {
+      const instance = new VpcInstanceTokenManager();
+      expect(instance.iamProfileName).toBeUndefined();
+
+      instance.setIamProfileName(IAM_PROFILE_NAME);
+      expect(instance.iamProfileName).toBe(IAM_PROFILE_NAME);
+    });
+
+    it('should update iamProfileName with the setter when already set in constructor', () => {
+      const instance = new VpcInstanceTokenManager({ iamProfileName: 'initial-name' });
+      expect(instance.iamProfileName).toBe('initial-name');
+
+      instance.setIamProfileName(IAM_PROFILE_NAME);
+      expect(instance.iamProfileName).toBe(IAM_PROFILE_NAME);
     });
   });
 
@@ -223,6 +270,17 @@ describe('VPC Instance Token Manager', () => {
       expect(requestOptions.body).toBeDefined();
       expect(requestOptions.body.trusted_profile).toBeDefined();
       expect(requestOptions.body.trusted_profile.id).toBe('some-id');
+    });
+
+    it('should set trusted profile to iam profile name, if set', async () => {
+      const instance = new VpcInstanceTokenManager({ iamProfileName: IAM_PROFILE_NAME });
+      await instance.requestToken();
+
+      const requestOptions = getRequestOptions(sendRequestMock, 1);
+      expect(requestOptions).toBeDefined();
+      expect(requestOptions.body).toBeDefined();
+      expect(requestOptions.body.trusted_profile).toBeDefined();
+      expect(requestOptions.body.trusted_profile.name).toBe(IAM_PROFILE_NAME);
     });
 
     it('should set User-Agent header', async () => {

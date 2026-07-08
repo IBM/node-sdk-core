@@ -23,6 +23,7 @@ const SERVICE_VERSION_2025 = '2025-08-26';
 const DEFAULT_TOKEN_LIFETIME = 300;
 const CUSTOM_TOKEN_LIFETIME = 600;
 const INVALID_SERVICE_VERSION_ERROR = `Invalid serviceVersion. Must be one of: ${SERVICE_VERSION_2022}, ${SERVICE_VERSION_2025}`;
+const IAM_PROFILE_NAME = 'some-name';
 
 // mock the `getToken` method in the token manager - dont make any rest calls
 const fakeToken = 'iam-acess-token';
@@ -56,7 +57,59 @@ describe('VPC Instance Authenticator', () => {
         iamProfileCrn: 'crn',
         iamProfileId: 'id',
       });
-    }).toThrow('At most one of `iamProfileId` or `iamProfileCrn` may be specified.');
+    }).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+  });
+
+  it('should throw an error when both iamProfileCrn and iamProfileName are provided', () => {
+    expect(() => {
+      const unused = new VpcInstanceAuthenticator({
+        iamProfileCrn: 'crn',
+        iamProfileName: IAM_PROFILE_NAME,
+      });
+    }).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+  });
+
+  it('should throw an error when both iamProfileId and iamProfileName are provided', () => {
+    expect(() => {
+      const unused = new VpcInstanceAuthenticator({
+        iamProfileId: 'id',
+        iamProfileName: IAM_PROFILE_NAME,
+      });
+    }).toThrow('At most one of `iamProfileId`, `iamProfileCrn` or `iamProfileName` may be specified.');
+  });
+
+  it('should store iamProfileName when provided in config', () => {
+    const authenticator = new VpcInstanceAuthenticator({ iamProfileName: IAM_PROFILE_NAME });
+
+    expect(authenticator.iamProfileName).toBe(IAM_PROFILE_NAME);
+    expect(authenticator.iamProfileCrn).toBeUndefined();
+    expect(authenticator.iamProfileId).toBeUndefined();
+
+    // should also be set on the token manager
+    expect(authenticator.tokenManager.iamProfileName).toBe(IAM_PROFILE_NAME);
+  });
+
+  it('should re-set iamProfileName using the setter', () => {
+    const authenticator = new VpcInstanceAuthenticator({ iamProfileName: 'initial-name' });
+    expect(authenticator.iamProfileName).toBe('initial-name');
+
+    authenticator.setIamProfileName(IAM_PROFILE_NAME);
+    expect(authenticator.iamProfileName).toBe(IAM_PROFILE_NAME);
+
+    // also, verify that the underlying token manager has been updated
+    expect(authenticator.tokenManager.iamProfileName).toBe(IAM_PROFILE_NAME);
+  });
+
+  it('should set iamProfileName using the setter when not declared in constructor', () => {
+    const authenticator = new VpcInstanceAuthenticator();
+    expect(authenticator.iamProfileName).toBeUndefined();
+    expect(authenticator.tokenManager.iamProfileName).toBeUndefined();
+
+    authenticator.setIamProfileName(IAM_PROFILE_NAME);
+    expect(authenticator.iamProfileName).toBe(IAM_PROFILE_NAME);
+
+    // also, verify that the underlying token manager has been updated
+    expect(authenticator.tokenManager.iamProfileName).toBe(IAM_PROFILE_NAME);
   });
 
   it('should re-set iamProfileCrn using the setter', () => {
