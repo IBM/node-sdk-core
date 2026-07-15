@@ -505,7 +505,7 @@ Usage Notes:
 1. At most one of `iamProfileCrn`, `iamProfileId` or `IamProfileName` may be specified. The specified value must map
 to a trusted IAM profile that has been linked to the compute resource (virtual server instance).
 
-2. If more than one from `iamProfileCrn`, `iamProfileId` or `iamProfileName` are specified, then an error occurs.
+2. If more than one of `iamProfileCrn`, `iamProfileId` or `iamProfileName` are specified, then an error occurs.
 
 3. If neither `iamProfileCrn`, `iamProfileId` nor `iamProfileName` are specified, then the default trusted profile linked to the
 compute resource will be used to perform the IAM token exchange.
