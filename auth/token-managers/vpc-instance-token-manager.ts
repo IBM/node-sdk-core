@@ -151,7 +151,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   }
 
   /**
-   * Sets the name of the IAm trusted profile to use when fetching access token from the IAM token server.
+   * Sets the name of the IAM trusted profile to use when fetching access token from the IAM token server.
    * @param iamProfileName - the name of the IAM trusted profile
    */
   public setIamProfileName(iamProfileName: string): void {

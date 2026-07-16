@@ -502,7 +502,7 @@ The default value is `2022-03-01`. When set to `2025-08-26`, the authenticator w
 The default value is `300` seconds. This property can only be configured programmatically (not via environment variables).
 
 Usage Notes:
-1. At most one of `iamProfileCrn`, `iamProfileId` or `IamProfileName` may be specified. The specified value must map
+1. At most one of `iamProfileCrn`, `iamProfileId` or `iamProfileName` may be specified. The specified value must map
 to a trusted IAM profile that has been linked to the compute resource (virtual server instance).
 
 2. If more than one of `iamProfileCrn`, `iamProfileId` or `iamProfileName` are specified, then an error occurs.
