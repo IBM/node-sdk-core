@@ -1,3 +1,10 @@
+## [5.6.1](https://github.com/IBM/node-sdk-core/compare/v5.6.0...v5.6.1) (2026-09-08)
+
+
+### Bug Fixes
+
+* **deps:** update axios to 1.20 ([#367](https://github.com/IBM/node-sdk-core/issues/367)) ([58fdf9d](https://github.com/IBM/node-sdk-core/commit/58fdf9db7b315b84acd7ed9eccc9b09e81873ec8))
+
 # [5.6.0](https://github.com/IBM/node-sdk-core/compare/v5.5.0...v5.6.0) (2026-07-16)
 
 
