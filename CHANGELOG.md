@@ -1,3 +1,10 @@
+## [5.6.2](https://github.com/IBM/node-sdk-core/compare/v5.6.1...v5.6.2) (2026-09-18)
+
+
+### Bug Fixes
+
+* **deps:** bump packages to latest patch version ([#370](https://github.com/IBM/node-sdk-core/issues/370)) ([0fd0974](https://github.com/IBM/node-sdk-core/commit/0fd09744eeeeba5781f5b9679d9c706b648dbe1e))
+
 ## [5.6.1](https://github.com/IBM/node-sdk-core/compare/v5.6.0...v5.6.1) (2026-09-08)
 
 
