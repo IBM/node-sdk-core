@@ -87,7 +87,8 @@
     "tough-cookie": "4.1.4"
   },
   "overrides": {
-    "semver": "7.5.3"
+    "semver": "7.5.3",
+    "js-yaml": "4.3.2"
   },
   "browser": {
     "./auth/utils/read-credentials-file": "./auth/utils/read-credentials-file.browser"
