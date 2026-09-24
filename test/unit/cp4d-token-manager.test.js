@@ -31,6 +31,7 @@ const { getRequestOptions } = require('./utils');
 const USERNAME = 'sherlock';
 const PASSWORD = 'holmes';
 const APIKEY = '221b-b4k3r';
+const ACCOUNT_ID = 'my-account-id';
 const URL = 'tokenservice.com';
 const FULL_URL = 'tokenservice.com/v1/authorize';
 const ACCESS_TOKEN = 'access-token';
@@ -78,6 +79,17 @@ describe('CP4D Token Manager', () => {
       expect(instance.username).toBe(USERNAME);
       expect(instance.apikey).toBe(APIKEY);
       expect(instance.disableSslVerification).toBe(false);
+    });
+
+    it('should initialize accountId if provided', () => {
+      const instance = new Cp4dTokenManager({
+        url: URL,
+        username: USERNAME,
+        password: PASSWORD,
+        accountId: ACCOUNT_ID,
+      });
+
+      expect(instance.accountId).toBe(ACCOUNT_ID);
     });
 
     it('should not append the token path if supplied by user', () => {
@@ -166,6 +178,24 @@ describe('CP4D Token Manager', () => {
       expect(requestOptions.body.username).toBe(USERNAME);
       expect(requestOptions.body.password).toBe(PASSWORD);
       expect(requestOptions.body.api_key).toBeUndefined();
+      expect(requestOptions.body.account_id).toBeUndefined();
+    });
+
+    it('should include account_id in request body when provided', async () => {
+      const instance = new Cp4dTokenManager({
+        url: URL,
+        username: USERNAME,
+        password: PASSWORD,
+        accountId: ACCOUNT_ID,
+      });
+
+      await instance.requestToken();
+
+      const requestOptions = getRequestOptions(sendRequestMock);
+      expect(requestOptions.body).toBeDefined();
+      expect(requestOptions.body.username).toBe(USERNAME);
+      expect(requestOptions.body.password).toBe(PASSWORD);
+      expect(requestOptions.body.account_id).toBe(ACCOUNT_ID);
     });
 
     it('should call sendRequest with all request options - API key edition', async () => {
