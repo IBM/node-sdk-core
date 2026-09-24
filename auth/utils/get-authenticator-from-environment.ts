@@ -67,6 +67,11 @@ export function getAuthenticatorFromEnvironment(serviceName: string): Authentica
     delete credentials.authDisableSsl;
   }
 
+  if (credentials.cp4dAccountId) {
+    credentials.accountId = credentials.cp4dAccountId;
+    delete credentials.cp4dAccountId;
+  }
+
   // in the situation where the auth type is not provided:
   // if an apikey is provided, default to IAM
   // if not, default to container auth

@@ -30,6 +30,8 @@ interface Options extends JwtTokenManagerOptions {
   password?: string;
   /** The API key used to obtain a bearer token [required if password not specified]. */
   apikey?: string;
+  /** The account ID used to obtain a bearer token [optional]. */
+  accountId?: string;
 }
 
 // this interface is a representation of the response
@@ -62,6 +64,8 @@ export class Cp4dTokenManager extends JwtTokenManager {
 
   private apikey: string;
 
+  private accountId: string;
+
   /**
    * Create a new Cp4dTokenManager instance.
    *
@@ -71,6 +75,7 @@ export class Cp4dTokenManager extends JwtTokenManager {
    * - username: (required) the username used to obtain a bearer token
    * - password: (optional) the password used to obtain a bearer token (required if apikey is not specified)
    * - apikey: (optional) the API key used to obtain a bearer token (required if password is not specified)
+   * - accountId: (optional) the account ID used to obtain a bearer token
    * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
    * should be disabled or not
    * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
@@ -98,6 +103,7 @@ export class Cp4dTokenManager extends JwtTokenManager {
     this.username = options.username;
     this.password = options.password;
     this.apikey = options.apikey;
+    this.accountId = options.accountId;
 
     this.userAgent = buildUserAgent('cp4d-authenticator');
   }
@@ -116,6 +122,7 @@ export class Cp4dTokenManager extends JwtTokenManager {
           username: this.username,
           password: this.password,
           api_key: this.apikey,
+          account_id: this.accountId,
         },
         method: 'POST',
         headers: extend(true, {}, this.headers, requiredHeaders),
