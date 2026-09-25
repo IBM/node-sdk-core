@@ -43,8 +43,8 @@ const redactedTokens = redactedKeywords.join('|');
 
 // Pre-compiled regular expressions used by redactSecrets().
 const reAuthHeader = new RegExp(`^(Authorization|X-Auth\\S*): .*$`, 'gim');
-const rePropertySetting = new RegExp(`(${redactedTokens})=[^&]*(&|$)`, 'gi');
-const reJsonField = new RegExp(`"([^"]*(${redactedTokens})[^"_]*)":\\s*"[^\\,]*"`, 'gi');
+const rePropertySetting = new RegExp(`(${redactedTokens})=[^&\\n]*(&|$)`, 'gim');
+const reJsonField = new RegExp(`"([^"]*(${redactedTokens})[^"_]*)":\\s*"[^"\\n]*"`, 'gi');
 
 // RedactSecrets() returns the input string with secrets redacted.
 /**

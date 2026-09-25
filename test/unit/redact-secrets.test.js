@@ -76,4 +76,86 @@ connection: keep-alive
 
     expect(redactSecrets(input)).toBe(output);
   });
+
+  it('multiline: rePropertySetting', () => {
+    // Secret keyword=value at end of line must not bleed into the next line.
+    let result = redactSecrets('password=secret\nnextline');
+    expect(result).not.toContain('secret');
+    expect(result).toContain('nextline');
+
+    // Two secret pairs on consecutive lines — each is independently redacted.
+    result = redactSecrets('password=secret1\ntoken=secret2\nsafe=safe2');
+    expect(result).not.toContain('secret1');
+    expect(result).not.toContain('secret2');
+    expect(result).toContain('safe=safe2');
+
+    // Non-secret key on the line before a secret key — must not be touched.
+    result = redactSecrets('username=alice\npassword=hunter2');
+    expect(result).toContain('username=alice');
+    expect(result).not.toContain('hunter2');
+
+    // Secret key embedded in a query string: value stops at & and the rest is kept.
+    result = redactSecrets('password=secret&other=kept');
+    expect(result).not.toContain('secret');
+    expect(result).toContain('other=kept');
+
+    // Multiple secret keys in one query string on a single line.
+    result = redactSecrets('apikey=k1&password=p2&token=t3');
+    expect(result).not.toContain('k1');
+    expect(result).not.toContain('p2');
+    expect(result).not.toContain('t3');
+
+    // Non-secret key: must be left untouched.
+    result = redactSecrets('username=alice');
+    expect(result).toContain('username=alice');
+
+    // Secret keyword=value preceded by unrelated text on the same line.
+    result = redactSecrets('grant_type=urn:ietf:params:oauth:grant-type:iam-authz&apikey=mysecret');
+    expect(result).not.toContain('mysecret');
+    expect(result).toContain('grant_type=urn');
+  });
+
+  it('multiline: reJsonField', () => {
+    // Secret JSON field at end of line must not consume the next line.
+    let result = redactSecrets('"project_id": "secret"\n"other": "value"');
+    expect(result).not.toContain('secret');
+    expect(result).toContain('"other": "value"');
+
+    // Two secret JSON fields on consecutive lines — each redacted independently.
+    result = redactSecrets(
+      '{\n  "project_id": "secret1",\n  "key": "secret2",\n  "name": "alice"\n}'
+    );
+    expect(result).not.toContain('secret1');
+    expect(result).not.toContain('secret2');
+    expect(result).toContain('"name": "alice"');
+
+    // Non-secret JSON field on the line before a secret field — must be preserved.
+    result = redactSecrets('"username": "alice"\n"project_id": "abc123"');
+    expect(result).toContain('"username": "alice"');
+    expect(result).not.toContain('abc123');
+
+    // Non-secret JSON field on the line after a secret field — must be preserved.
+    result = redactSecrets('"project_id": "abc123"\n"username": "alice"');
+    expect(result).not.toContain('abc123');
+    expect(result).toContain('"username": "alice"');
+
+    // Secret JSON field with surrounding non-secret fields on the same line.
+    result = redactSecrets('{"name": "alice", "project_id": "abc123", "role": "admin"}');
+    expect(result).not.toContain('abc123');
+    expect(result).toContain('"name": "alice"');
+    expect(result).toContain('"role": "admin"');
+  });
+
+  it('multiline: reAuthHeader', () => {
+    // Authorization header at EOL must not consume the line that follows.
+    let result = redactSecrets('Authorization: Bearer tok\nContent-Type: application/json');
+    expect(result).not.toContain('tok');
+    expect(result).toContain('Content-Type: application/json');
+
+    // Two auth headers on consecutive lines — each redacted, body line preserved.
+    result = redactSecrets('Authorization: Bearer tok1\nX-Auth-Token: tok2\nbody');
+    expect(result).not.toContain('tok1');
+    expect(result).not.toContain('tok2');
+    expect(result).toContain('body');
+  });
 });
