@@ -1,3 +1,10 @@
+## [5.6.3](https://github.com/IBM/node-sdk-core/compare/v5.6.2...v5.6.3) (2026-09-28)
+
+
+### Bug Fixes
+
+* prevent secret redaction from bleeding past EOL ([#374](https://github.com/IBM/node-sdk-core/issues/374)) ([aede2dd](https://github.com/IBM/node-sdk-core/commit/aede2dd9e09c35e574743096e35861078da80bd9))
+
 ## [5.6.2](https://github.com/IBM/node-sdk-core/compare/v5.6.1...v5.6.2) (2026-09-18)
 
 
