@@ -40,7 +40,7 @@ export interface CpdTokenData {
   permissions: string[];
   sub: string;
   iss: string;
-  aud: string;
+  aud: string | string[];
   uid: string;
   _messageCode_: string;
   message: string;
