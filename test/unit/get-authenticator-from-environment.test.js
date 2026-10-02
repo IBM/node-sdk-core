@@ -112,6 +112,19 @@ describe('Get Authenticator From Environment Module', () => {
     expect(authenticator.authenticationType()).toEqual(Authenticator.AUTHTYPE_CP4D);
   });
 
+  it('should remap cp4dAccountId to accountId for cp4d authenticator', () => {
+    readExternalSourcesMock.mockImplementation(() => ({
+      authtype: 'cp4d',
+      username: 'a',
+      password: 'b',
+      authUrl: TOKEN_URL,
+      cp4dAccountId: 'test-account-id',
+    }));
+    const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
+    expect(authenticator).toBeInstanceOf(CloudPakForDataAuthenticator);
+    expect(authenticator.accountId).toBe('test-account-id');
+  });
+
   it('should get container authenticator', () => {
     setUpContainerPayload();
     const authenticator = getAuthenticatorFromEnvironment(SERVICE_NAME);
