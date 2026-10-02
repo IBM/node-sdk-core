@@ -1,3 +1,10 @@
+# [5.7.0](https://github.com/IBM/node-sdk-core/compare/v5.6.3...v5.7.0) (2026-10-02)
+
+
+### Features
+
+* upgrade tough-cookie dependency to v6 ([#377](https://github.com/IBM/node-sdk-core/issues/377)) ([aa7dd1a](https://github.com/IBM/node-sdk-core/commit/aa7dd1aac9ed27d2792052cdcea93c420554a4c5)), closes [tou#cookie](https://github.com/tou/issues/cookie)
+
 ## [5.6.3](https://github.com/IBM/node-sdk-core/compare/v5.6.2...v5.6.3) (2026-09-28)
 
 
