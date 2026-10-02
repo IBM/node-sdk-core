@@ -1,3 +1,10 @@
+# [5.8.0](https://github.com/IBM/node-sdk-core/compare/v5.7.0...v5.8.0) (2026-10-02)
+
+
+### Features
+
+* support `aud` with array type in JWT (RFC 7519 §4.1.3) ([#376](https://github.com/IBM/node-sdk-core/issues/376)) ([ab92af3](https://github.com/IBM/node-sdk-core/commit/ab92af3adda8be50c44939a34db42f7e307948f1))
+
 # [5.7.0](https://github.com/IBM/node-sdk-core/compare/v5.6.3...v5.7.0) (2026-10-02)
 
 
