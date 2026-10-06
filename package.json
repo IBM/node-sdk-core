@@ -71,7 +71,6 @@
   "dependencies": {
     "@types/debug": "4.1.13",
     "@types/node": "18.19.130",
-    "@types/tough-cookie": "4.0.5",
     "axios": "1.20.0",
     "camelcase": "6.3.0",
     "debug": "4.4.3",
@@ -84,7 +83,7 @@
     "load-esm": "1.0.3",
     "mime-types": "2.1.35",
     "retry-axios": "2.6.0",
-    "tough-cookie": "4.1.4"
+    "tough-cookie": "6.0.2"
   },
   "overrides": {
     "semver": "7.5.3",

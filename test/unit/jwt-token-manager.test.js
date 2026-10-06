@@ -363,6 +363,21 @@ describe('JWT Token Manager', () => {
 
       expect(() => instance.saveTokenInfo(tokenResponse)).toThrow();
     });
+
+    it('should accept a token with an array aud claim (RFC 7519 §4.1.3)', () => {
+      const instance = new JwtTokenManager();
+      decode.mockImplementation(() => ({
+        iat: 100,
+        exp: 200,
+        aud: ['account-iam.platform.saas.ibm.com'],
+      }));
+
+      const tokenResponse = { result: { access_token: ACCESS_TOKEN } };
+      expect(() => instance.saveTokenInfo(tokenResponse)).not.toThrow();
+      expect(instance.expireTime).toBe(200);
+
+      decode.mockRestore();
+    });
   });
 
   describe('calculateTimeForNewToken', () => {
