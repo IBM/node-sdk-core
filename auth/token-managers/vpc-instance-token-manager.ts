@@ -18,6 +18,7 @@ import logger from '../../lib/logger';
 import { atMostOne, getCurrentTime } from '../utils/helpers';
 import { buildUserAgent } from '../../lib/build-user-agent';
 import { JwtTokenManager, JwtTokenManagerOptions } from './jwt-token-manager';
+import { redactSecrets } from '../../lib/private-helpers';
 
 const DEFAULT_IMS_ENDPOINT = 'http://169.254.169.254';
 const METADATA_SERVICE_VERSION = '2022-03-01';
@@ -207,10 +208,9 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
       };
     }
 
-    const iamTokenUrl = `${this.url}${this.getIamTokenPath()}`;
     const parameters = {
       options: {
-        url: iamTokenUrl,
+        url: `${this.url}${this.getIamTokenPath()}`,
         qs: {
           version: this.serviceVersion,
         },
@@ -226,7 +226,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
       },
     };
 
-    logger.debug(`Invoking VPC 'create_iam_token' operation: ${iamTokenUrl}`);
+    logger.debug(`Invoking VPC 'create_iam_token' operation: ${redactSecrets(`${this.url}${this.getIamTokenPath()}`)}`);
     return this.requestWrapperInstance.sendRequest(parameters).then((response) => {
       logger.debug(`Returned from VPC 'create_iam_token' operation`);
       return response;
