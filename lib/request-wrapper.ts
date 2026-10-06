@@ -479,9 +479,8 @@ export class RequestWrapper {
     }
     this.raxConfig = RequestWrapper.getRaxConfig(this.axiosInstance, retryOptions);
     this.retryInterceptorId = rax.attach(this.axiosInstance);
-    logger.debug(
-      `Enabled retries; maxRetries=${this.raxConfig.retry}, maxRetryInterval=${this.raxConfig.maxRetryDelay}`
-    );
+    const { retry, maxRetryDelay } = this.raxConfig;
+    logger.debug(`Enabled retries; maxRetries=${retry}, maxRetryInterval=${maxRetryDelay}`);
   }
 
   public disableRetries(): void {

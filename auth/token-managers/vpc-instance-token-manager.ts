@@ -207,9 +207,10 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
       };
     }
 
+    const iamTokenUrl = `${this.url}${this.getIamTokenPath()}`;
     const parameters = {
       options: {
-        url: `${this.url}${this.getIamTokenPath()}`,
+        url: iamTokenUrl,
         qs: {
           version: this.serviceVersion,
         },
@@ -225,7 +226,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
       },
     };
 
-    logger.debug(`Invoking VPC 'create_iam_token' operation: ${parameters.options.url}`);
+    logger.debug(`Invoking VPC 'create_iam_token' operation: ${iamTokenUrl}`);
     return this.requestWrapperInstance.sendRequest(parameters).then((response) => {
       logger.debug(`Returned from VPC 'create_iam_token' operation`);
       return response;
@@ -233,9 +234,10 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
   }
 
   private async getInstanceIdentityToken(): Promise<string> {
+    const accessTokenUrl = `${this.url}${this.getAccessTokenPath()}`;
     const parameters = {
       options: {
-        url: `${this.url}${this.getAccessTokenPath()}`,
+        url: accessTokenUrl,
         qs: {
           version: this.serviceVersion,
         },
@@ -254,7 +256,7 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
 
     let token: string = null;
     try {
-      logger.debug(`Invoking VPC 'create_access_token' operation: ${parameters.options.url}`);
+      logger.debug(`Invoking VPC 'create_access_token' operation: ${accessTokenUrl}`);
       const response = await this.requestWrapperInstance.sendRequest(parameters);
       logger.debug(`Returned from VPC 'create_access_token' operation.`);
 

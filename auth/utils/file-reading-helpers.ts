@@ -17,7 +17,7 @@
 import { parse } from 'dotenv';
 import { existsSync, readFileSync, lstatSync } from 'fs';
 import { homedir } from 'os';
-import { join } from 'path';
+import { basename, join } from 'path';
 import logger from '../../lib/logger';
 
 // Putting all file-reading related code in this file to isolate the usage of the
@@ -94,9 +94,9 @@ export function readCrTokenFile(filepath: string): string {
 
   try {
     let token: string = '';
-    logger.debug(`Attempting to read CR token from file: ${filepath}`);
+    logger.debug(`Attempting to read CR token from file: ${basename(filepath)}`);
     token = readFileSync(filepath, 'utf8');
-    logger.debug(`Successfully read CR token from file: ${filepath}`);
+    logger.debug(`Successfully read CR token from file: ${basename(filepath)}`);
     return token;
   } catch (err) {
     const msg = `Error reading CR token: ${err.toString()}`;
