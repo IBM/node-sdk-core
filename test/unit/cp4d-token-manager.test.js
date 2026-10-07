@@ -81,15 +81,15 @@ describe('CP4D Token Manager', () => {
       expect(instance.disableSslVerification).toBe(false);
     });
 
-    it('should initialize accountId if provided', () => {
+    it('should initialize cp4dAccountId if provided', () => {
       const instance = new Cp4dTokenManager({
         url: URL,
         username: USERNAME,
         password: PASSWORD,
-        accountId: ACCOUNT_ID,
+        cp4dAccountId: ACCOUNT_ID,
       });
 
-      expect(instance.accountId).toBe(ACCOUNT_ID);
+      expect(instance.cp4dAccountId).toBe(ACCOUNT_ID);
     });
 
     it('should not append the token path if supplied by user', () => {
@@ -186,7 +186,7 @@ describe('CP4D Token Manager', () => {
         url: URL,
         username: USERNAME,
         password: PASSWORD,
-        accountId: ACCOUNT_ID,
+        cp4dAccountId: ACCOUNT_ID,
       });
 
       await instance.requestToken();

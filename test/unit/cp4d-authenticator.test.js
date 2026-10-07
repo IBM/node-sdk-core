@@ -67,15 +67,15 @@ describe('CP4D Authenticator', () => {
     expect(authenticator.apikey).toBe(APIKEY);
   });
 
-  it('should store accountId on the class if provided', () => {
+  it('should store cp4dAccountId on the class if provided', () => {
     const authenticator = new CloudPakForDataAuthenticator({
       url: URL,
       username: USERNAME,
       password: PASSWORD,
-      accountId: 'my-account-id',
+      cp4dAccountId: 'my-account-id',
     });
 
-    expect(authenticator.accountId).toBe('my-account-id');
+    expect(authenticator.cp4dAccountId).toBe('my-account-id');
   });
 
   it('should throw an error when username is not provided', () => {
