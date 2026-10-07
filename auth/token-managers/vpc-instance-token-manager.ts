@@ -226,7 +226,11 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
       },
     };
 
-    logger.debug(`Invoking VPC 'create_iam_token' operation: ${redactSecrets(`${this.url}${this.getIamTokenPath()}`)}`);
+    logger.debug(
+      `Invoking VPC 'create_iam_token' operation: ${redactSecrets(
+        `${this.url}${this.getIamTokenPath()}`
+      )}`
+    );
     return this.requestWrapperInstance.sendRequest(parameters).then((response) => {
       logger.debug(`Returned from VPC 'create_iam_token' operation`);
       return response;
@@ -256,7 +260,9 @@ export class VpcInstanceTokenManager extends JwtTokenManager {
 
     let token: string = null;
     try {
-      logger.debug(`Invoking VPC 'create_access_token' operation: ${accessTokenUrl}`);
+      logger.debug(
+        `Invoking VPC 'create_access_token' operation: ${redactSecrets(accessTokenUrl)}`
+      );
       const response = await this.requestWrapperInstance.sendRequest(parameters);
       logger.debug(`Returned from VPC 'create_access_token' operation.`);
 

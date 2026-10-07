@@ -129,7 +129,7 @@ describe('Container Token Manager', () => {
 
       // expect file reading utils and logger to both be called
       expect(logger.debug).toHaveBeenCalledWith(
-        `Attempting to read CR token from file: ${path.basename(pathToTestToken)}`
+        `Attempting to read CR token from file: ${pathToTestToken}`
       );
     });
 
