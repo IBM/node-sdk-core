@@ -589,6 +589,9 @@ Exactly one of password or apikey should be specified.
 - url: (required) The URL representing the Cloud Pak for Data token service endpoint's base URL string.
 This value should not include the `/v1/authorize` path portion.
 
+- cp4dAccountId: (optional) the account ID passed to the Cloud Pak for Data token service to scope
+the generated bearer token.
+
 - disableSslVerification: (optional) A flag that indicates whether verification of the server's SSL
 certificate should be disabled or not. The default value is `false`.
 
@@ -604,6 +607,7 @@ const authenticator = new CloudPakForDataAuthenticator({
   username: 'myuser',
   apikey: 'myapikey',
   url: 'https://mycp4dhost.com',
+  cp4dAccountId: 'myaccountid',
 });
 
 const options = {
@@ -623,6 +627,7 @@ export EXAMPLE_SERVICE_AUTH_TYPE=cp4d
 export EXAMPLE_SERVICE_USERNAME=myuser
 export EXAMPLE_SERVICE_APIKEY=myapikey
 export EXAMPLE_SERVICE_URL=https://mycp4dhost.com
+export EXAMPLE_SERVICE_CP4D_ACCOUNT_ID=myaccountid
 ```
 Application code:
 ```js

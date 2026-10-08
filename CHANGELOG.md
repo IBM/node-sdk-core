@@ -1,3 +1,10 @@
+# [5.9.0](https://github.com/IBM/node-sdk-core/compare/v5.8.0...v5.9.0) (2026-10-08)
+
+
+### Features
+
+* **auth:** add support for account ID in CP4D authenticator ([#371](https://github.com/IBM/node-sdk-core/issues/371)) ([45b781a](https://github.com/IBM/node-sdk-core/commit/45b781a2ba363a483815df416d2e81e2ad914b1d))
+
 # [5.8.0](https://github.com/IBM/node-sdk-core/compare/v5.7.0...v5.8.0) (2026-10-02)
 
 

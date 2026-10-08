@@ -28,6 +28,8 @@ export interface Options extends BaseOptions {
   apikey?: string;
   /** The URL representing the Cloud Pak for Data token service endpoint. */
   url: string;
+  /** The CP4D account ID used to obtain a bearer token [optional]. */
+  cp4dAccountId?: string;
 }
 
 /**
@@ -49,6 +51,8 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
 
   private apikey: string;
 
+  private cp4dAccountId: string;
+
   /**
    * Create a new CloudPakForDataAuthenticator instance.
    *
@@ -58,6 +62,7 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
    * - username: (required) the username used to obtain a bearer token
    * - password: (optional) the password used to obtain a bearer token (required if apikey is not specified)
    * - apikey: (optional) the API key used to obtain a bearer token (required if password is not specified)
+   * - cp4dAccountId: (optional) the CP4D account ID used to obtain a bearer token
    * - disableSslVerification: (optional) a flag that indicates whether verification of the token server's SSL certificate
    * should be disabled or not
    * - headers: (optional) a set of HTTP headers to be sent with each request to the token service
@@ -70,6 +75,7 @@ export class CloudPakForDataAuthenticator extends TokenRequestBasedAuthenticator
     this.username = options.username;
     this.password = options.password;
     this.apikey = options.apikey;
+    this.cp4dAccountId = options.cp4dAccountId;
 
     // the param names are shared between the authenticator and the token
     // manager so we can just pass along the options object.
