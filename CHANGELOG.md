@@ -1,3 +1,10 @@
+## [5.9.1](https://github.com/IBM/node-sdk-core/compare/v5.9.0...v5.9.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* **deps:** bump vulnerable packages ([#381](https://github.com/IBM/node-sdk-core/issues/381)) ([cadef53](https://github.com/IBM/node-sdk-core/commit/cadef535f4b2c79c5f454f1dad5b73c8e860f90a))
+
 # [5.9.0](https://github.com/IBM/node-sdk-core/compare/v5.8.0...v5.9.0) (2026-10-08)
 
 
