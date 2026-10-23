@@ -9,7 +9,7 @@
   "author": "Dustin Popp",
   "license": "Apache-2.0",
   "dependencies": {
-    "expect": "^29.7.0"
+    "expect": "^30.0.0"
   },
   "overrides": {
     "micromatch": "4.0.8"
