@@ -4,8 +4,6 @@
 
 ```ts
 
-/// <reference types="node" />
-
 import { GenericAbortSignal as AbortSignal_2 } from 'axios';
 import { AxiosInstance } from 'axios';
 import type { CookieJar } from 'tough-cookie';
@@ -159,7 +157,7 @@ export class ContainerTokenManager extends IamRequestBasedTokenManager {
 
 // @public (undocumented)
 export const contentType: {
-    fromFilename: (file: String | File | FileObject | NodeJS.ReadableStream | Buffer) => string;
+    fromFilename: (file: String | NodeJS.ReadableStream | FileObject | Buffer | File) => string;
     fromHeader: (buffer: Buffer) => string;
 };
 
