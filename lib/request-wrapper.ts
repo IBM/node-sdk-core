@@ -451,7 +451,6 @@ export class RequestWrapper {
         [500, 500],
         [502, 599],
       ],
-      instance: axiosInstance,
       backoffType: 'exponential',
       checkRetryAfter: true, // use Retry-After header first
       maxRetryDelay: 30 * 1000, // default to 30 sec max delay
