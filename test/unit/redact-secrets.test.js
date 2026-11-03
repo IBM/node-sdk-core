@@ -146,6 +146,65 @@ connection: keep-alive
     expect(result).toContain('"role": "admin"');
   });
 
+  it('credential headers', () => {
+    const headers = [
+      'Authorization',
+      'Proxy-Authorization',
+      'Cookie',
+      'Set-Cookie',
+      'Secret',
+      'X-Auth-Token',
+      'X-Authorization',
+      'X-Auth-Foo-Bar',
+    ];
+    headers.forEach((header) => {
+      [header, header.toLowerCase(), header.toUpperCase()].forEach((name) => {
+        const result = redactSecrets(`${name}: s3cr3tvalue`);
+        expect(result).not.toContain('s3cr3tvalue');
+        expect(result).toBe(`${name}: [redacted]`);
+      });
+    });
+
+    // Cookie-style values with multiple attributes.
+    let result = redactSecrets('Set-Cookie: sid=abc123; Path=/; HttpOnly');
+    expect(result).not.toContain('abc123');
+    result = redactSecrets('Cookie: a=firstval; b=secondval');
+    expect(result).not.toContain('firstval');
+    expect(result).not.toContain('secondval');
+
+    // A full CRLF-delimited HTTP dump: only credential headers are redacted, CRLF preserved.
+    const dump =
+      'POST /v1/token HTTP/1.1\r\n' +
+      'Host: example.com\r\n' +
+      'authorization: Bearer tok1\r\n' +
+      'Proxy-Authorization: Basic tok2\r\n' +
+      'COOKIE: sid=tok3\r\n' +
+      'Content-Type: application/json\r\n' +
+      'X-Auth-Token: tok4\r\n' +
+      '\r\n' +
+      'body\r\n';
+    result = redactSecrets(dump);
+    ['tok1', 'tok2', 'tok3', 'tok4'].forEach((tok) => expect(result).not.toContain(tok));
+    expect(result).toContain('Host: example.com\r\n');
+    expect(result).toContain('Content-Type: application/json\r\n');
+    expect(result).toContain('authorization: [redacted]\r\n');
+    expect(result).toContain('\r\n\r\nbody\r\n');
+
+    // Response containing Set-Cookie.
+    result = redactSecrets('200 OK\nSet-Cookie: session=tok5\nContent-Length: 2\n\n{}');
+    expect(result).not.toContain('tok5');
+    expect(result).toContain('Content-Length: 2');
+
+    // Non-credential headers, and names that merely resemble credential names, are untouched.
+    [
+      'Content-Type: text/plain',
+      'Accept: */*',
+      'X-Request-Id: abc',
+      'Cookies: yes',
+      'Xx-Auth: keep',
+    ].forEach((h) => expect(redactSecrets(h)).toBe(h));
+  });
+
   it('multiline: reAuthHeader', () => {
     // Authorization header at EOL must not consume the line that follows.
     let result = redactSecrets('Authorization: Bearer tok\nContent-Type: application/json');
