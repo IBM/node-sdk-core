@@ -93,7 +93,7 @@
     "./auth/utils/read-credentials-file": "./auth/utils/read-credentials-file.browser"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "clean": "rm -fr node_modules sdk-test-utilities/node_modules",
