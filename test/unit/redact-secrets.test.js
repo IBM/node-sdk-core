@@ -205,7 +205,7 @@ connection: keep-alive
     ].forEach((h) => expect(redactSecrets(h)).toBe(h));
   });
 
-  it('multiline: reAuthHeader', () => {
+  it('multiline: reHeaderLine', () => {
     // Authorization header at EOL must not consume the line that follows.
     let result = redactSecrets('Authorization: Bearer tok\nContent-Type: application/json');
     expect(result).not.toContain('tok');
