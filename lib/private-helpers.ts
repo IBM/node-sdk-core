@@ -41,12 +41,33 @@ const redactedKeywords = [
 
 const redactedTokens = redactedKeywords.join('|');
 
+// Names (lower-case) of HTTP headers whose values must never be logged.
+// In addition to these, any header whose name starts with "x-auth" is also redacted.
+// NOTE: keep this list consistent with the other SDK cores (Go, Java, Python).
+const redactedHeaderNames = new Set([
+  'authorization',
+  'proxy-authorization',
+  'cookie',
+  'set-cookie',
+  'secret',
+]);
+const redactedHeaderPrefix = 'x-auth';
+
 // Pre-compiled regular expressions used by redactSecrets().
-const reAuthHeader = new RegExp(`^(Authorization|X-Auth\\S*): .*$`, 'gim');
+// reHeaderLine matches a single "Name: value" header line (line terminators are not consumed).
+const reHeaderLine = /^([!#$%&'*+.^_`|~0-9A-Za-z-]+):[^\r\n]*/gm;
 const rePropertySetting = new RegExp(`(${redactedTokens})=[^&\\n]*(&|$)`, 'gim');
 const reJsonField = new RegExp(`"([^"]*(${redactedTokens})[^"_]*)":\\s*"[^"\\n]*"`, 'gi');
 
-// RedactSecrets() returns the input string with secrets redacted.
+/**
+ * Returns true iff the header "name" (compared case-insensitively)
+ * is one whose value must be redacted.
+ */
+function isRedactedHeader(name: string): boolean {
+  const lowerName = name.toLowerCase();
+  return redactedHeaderNames.has(lowerName) || lowerName.startsWith(redactedHeaderPrefix);
+}
+
 /**
  * Redacts secrets found in "input" so that the resulting string
  * is suitable for debug logging.
@@ -57,7 +78,9 @@ export function redactSecrets(input: string): string {
   const redacted = '[redacted]';
 
   let redactedString = input;
-  redactedString = redactedString.replace(reAuthHeader, `$1: ${redacted}`);
+  redactedString = redactedString.replace(reHeaderLine, (line: string, name: string) =>
+    isRedactedHeader(name) ? `${name}: ${redacted}` : line
+  );
   redactedString = redactedString.replace(rePropertySetting, `$1=${redacted}$2`);
   redactedString = redactedString.replace(reJsonField, `"$1":"${redacted}"`);
 
