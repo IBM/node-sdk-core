@@ -1,3 +1,10 @@
+## [5.9.4](https://github.com/IBM/node-sdk-core/compare/v5.9.3...v5.9.4) (2026-11-06)
+
+
+### Bug Fixes
+
+* **logging:** redact credential headers in debug output ([#384](https://github.com/IBM/node-sdk-core/issues/384)) ([34bcedd](https://github.com/IBM/node-sdk-core/commit/34bcedd118f702ebaa6018545679b11fe9a9acc4))
+
 ## [5.9.3](https://github.com/IBM/node-sdk-core/compare/v5.9.2...v5.9.3) (2026-11-03)
 
 
